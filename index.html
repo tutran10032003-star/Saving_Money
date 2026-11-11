@@ -115,30 +115,6 @@
             border-radius: 22px;
             min-height: 100px;
         }
-        .chat-mascot {
-            width: 140px;
-            height: 140px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .mascot-idle { animation: buddy-breathe 2s infinite; }
-        .mascot-happy { animation: mascot-float .55s ease-in-out 2; }
-        .mascot-work { animation: buddy-work .7s ease-in-out infinite; }
-        .mascot-walk { animation: buddy-walk .45s ease-in-out infinite alternate; }
-
-        @keyframes buddy-breathe {
-            0%,100% { transform: translateY(0) scale(1); }
-            50% { transform: translateY(-4px) scale(1.02); }
-        }
-        @keyframes buddy-work {
-            0%,100% { transform: rotate(-3deg); }
-            50% { transform: rotate(3deg); }
-        }
-        @keyframes buddy-walk {
-            from { transform: translateX(-4px) rotate(-2deg); }
-            to { transform: translateX(4px) rotate(2deg); }
-        }
         .chat-choice {
             width: 100%;
             padding: 12px;
@@ -153,67 +129,62 @@
             background: #f0e6d6;
         }
 
-        /* CSS MASCOT MỚI CHUẨN ĐẸP */
-        .eco-mascot {
-            width: 160px;
-            height: 160px;
-            margin: 0 auto;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #fffdf8;
-            border-radius: 50%;
-            border: 3px solid #5c4738;
-            box-shadow: 3px 3px 0px #5c4738;
-            overflow: visible;
+        /* ECO BABY MASCOT STYLES */
+        .eco-baby {
+            width: 220px;
+            height: 185px;
+            margin: auto;
         }
-        .eco-character {
+        .eco-baby svg {
             width: 100%;
             height: 100%;
             overflow: visible;
-            animation: mascot-float 3s ease-in-out infinite;
-            transform-origin: center bottom;
         }
-        .mascot-leaves {
-            transform-origin: 150px 60px;
-            animation: mascot-leaves 3s ease-in-out infinite;
+        .eco-baby .scene,
+        .eco-baby .pose {
+            display: none;
         }
-        .mascot-arm-right {
-            transform-origin: 235px 165px;
-            animation: mascot-wave 2.8s ease-in-out infinite;
+        .eco-baby[data-action="plug"] .plug,
+        .eco-baby[data-action="light"] .light,
+        .eco-baby[data-action="wipe"] .wipe,
+        .eco-baby[data-action="oven"] .oven {
+            display: inline;
         }
-        .mascot-arm-left {
-            animation: mascot-hand 3s ease-in-out infinite;
+        .eco-baby .body {
+            transform-box: fill-box;
+            transform-origin: center;
+            animation: baby-breathe 2.2s ease-in-out infinite;
         }
-        .mascot-sparkle {
-            animation: mascot-twinkle 1.8s ease-in-out infinite;
+        .eco-baby .leaf {
+            transform-box: fill-box;
+            transform-origin: bottom center;
+            animation: leaf-sway 2s ease-in-out infinite;
         }
-        .mascot-battery {
-            animation: mascot-breathe 3s ease-in-out infinite;
+        .eco-baby .action-motion {
+            transform-box: fill-box;
+            transform-origin: center;
+            animation: baby-action .8s ease-in-out infinite alternate;
         }
-        @keyframes mascot-float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-6px); }
+        .eco-baby .wipe-motion {
+            animation: wipe-motion .7s ease-in-out infinite alternate;
+            transform-box: fill-box;
+            transform-origin: center;
         }
-        @keyframes mascot-leaves {
-            0%, 100% { transform: rotate(0deg); }
-            50% { transform: rotate(5deg); }
+        @keyframes baby-breathe {
+            0%,100% { transform: translateY(0); }
+            50% { transform: translateY(-3px); }
         }
-        @keyframes mascot-wave {
-            0%, 100% { transform: rotate(0deg); }
-            50% { transform: rotate(-7deg); }
+        @keyframes leaf-sway {
+            0%,100% { transform: rotate(-3deg); }
+            50% { transform: rotate(4deg); }
         }
-        @keyframes mascot-hand {
-            0%, 100% { transform: rotate(0deg); }
-            50% { transform: rotate(-3deg); }
+        @keyframes baby-action {
+            from { transform: translateY(0); }
+            to { transform: translateY(-2px); }
         }
-        @keyframes mascot-twinkle {
-            0%, 100% { opacity: .45; }
-            50% { opacity: 1; }
-        }
-        @keyframes mascot-breathe {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(2px); }
+        @keyframes wipe-motion {
+            from { transform: translateX(-4px) rotate(-3deg); }
+            to { transform: translateX(5px) rotate(3deg); }
         }
     </style>
 </head>
@@ -245,76 +216,111 @@
         
         <!-- MASCOT & INTRO CARD -->
         <div class="vintage-panel p-5 flex flex-col items-center text-center">
-            <div class="relative mb-3">
-                <div class="eco-mascot">
-                  <svg class="eco-character" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
-                    <defs>
-                      <filter id="softShadow">
-                        <feGaussianBlur stdDeviation="3"/>
-                      </filter>
-                    </defs>
-                    <ellipse cx="150" cy="267" rx="72" ry="9" fill="#b9a27b" opacity=".18"/>
-                    <g class="mascot-legs">
-                      <path d="M112 226 Q102 246 105 255 Q111 264 133 257 L143 237" fill="#fff9ed" stroke="#75604d" stroke-width="5" stroke-linejoin="round"/>
-                      <ellipse cx="119" cy="258" rx="19" ry="10" fill="#fff9ed" stroke="#75604d" stroke-width="4"/>
-                      <path d="M174 234 Q187 244 185 256 Q179 265 158 258 L151 237" fill="#fff9ed" stroke="#75604d" stroke-width="5" stroke-linejoin="round"/>
-                      <ellipse cx="177" cy="258" rx="19" ry="10" fill="#fff9ed" stroke="#75604d" stroke-width="4"/>
-                    </g>
-                    <path d="M78 174 Q60 162 65 143 Q47 127 61 107 Q66 91 86 87 Q89 62 115 65 Q132 43 151 59 Q172 42 190 63 Q219 60 224 87 Q248 95 244 119 Q260 139 240 155 Q246 180 222 190 Q220 219 193 228 Q177 239 150 237 Q123 243 103 229 Q76 221 78 198 Q61 191 78 174 Z" fill="#fff9ed" stroke="#75604d" stroke-width="5" stroke-linejoin="round"/>
-                    <g class="mascot-leaves">
-                      <path d="M145 60 Q105 47 101 24 Q133 17 151 48 Z" fill="#a3a875" stroke="#756b49" stroke-width="4"/>
-                      <path d="M151 49 Q171 13 198 25 Q194 53 158 63 Z" fill="#7d9368" stroke="#756b49" stroke-width="4"/>
-                      <path d="M111 29 Q129 36 145 52" fill="none" stroke="#6e8056" stroke-width="2"/>
-                      <path d="M190 30 Q172 40 158 54" fill="none" stroke="#6e8056" stroke-width="2"/>
-                    </g>
-                    <ellipse cx="105" cy="140" rx="13" ry="10" fill="#f5bca8"/>
-                    <ellipse cx="197" cy="140" rx="13" ry="10" fill="#f5bca8"/>
-                    <ellipse cx="128" cy="128" rx="5" ry="7" fill="#574b40"/>
-                    <ellipse cx="177" cy="128" rx="5" ry="7" fill="#574b40"/>
-                    <path d="M146 143 Q151 151 157 143" fill="none" stroke="#574b40" stroke-width="3.5" stroke-linecap="round"/>
-                    <g>
-                      <path d="M75 164 Q112 178 151 163 Q190 178 230 159 L225 183 Q185 200 150 183 Q112 200 80 183 Z" fill="#8e9973" stroke="#6e7457" stroke-width="4"/>
-                      <path d="M91 170 L104 187 M117 174 L130 191 M157 171 L170 190 M191 169 L205 184" stroke="#c3bd91" stroke-width="3" opacity=".8"/>
-                      <path d="M205 180 Q225 194 214 219 L197 206 L193 190" fill="#9ca17a" stroke="#6e7457" stroke-width="4"/>
-                    </g>
-                    <g class="mascot-arm-left">
-                      <path d="M80 170 Q55 169 49 190 Q43 203 55 209 Q69 215 81 194" fill="#fff9ed" stroke="#75604d" stroke-width="5" stroke-linecap="round"/>
-                      <path d="M53 197 Q45 202 50 211" fill="none" stroke="#75604d" stroke-width="3"/>
-                    </g>
-                    <g class="mascot-arm-right">
-                      <path d="M221 166 Q245 160 249 137" fill="none" stroke="#75604d" stroke-width="15" stroke-linecap="round"/>
-                      <path d="M221 166 Q245 160 249 137" fill="none" stroke="#fff9ed" stroke-width="9" stroke-linecap="round"/>
-                      <g transform="translate(227 67) rotate(13 25 40)">
-                        <rect x="12" y="24" width="42" height="49" rx="12" fill="#b7a78b" stroke="#75604d" stroke-width="4"/>
-                        <rect x="19" y="3" width="7" height="28" rx="3" fill="#75604d"/>
-                        <rect x="41" y="3" width="7" height="28" rx="3" fill="#75604d"/>
-                        <path d="M32 39 L24 52 L32 52 L27 64 L43 47 L34 47 Z" fill="#f6d36d"/>
-                      </g>
-                    </g>
-                    <g class="mascot-battery">
-                      <path d="M95 184 Q122 177 141 185 L143 225 Q119 239 96 223 Z" fill="#a4a981" stroke="#6e7457" stroke-width="4"/>
-                      <rect x="108" y="193" width="28" height="27" rx="6" fill="#e8e3c9" stroke="#72805f" stroke-width="3"/>
-                      <path d="M122 198 L116 208 L122 208 L118 216 L130 204 L124 204 Z" fill="#e7b947"/>
-                    </g>
-                    <g>
-                      <rect x="157" y="193" width="36" height="28" rx="7" fill="#e8e0c7" stroke="#8b8b66" stroke-width="3"/>
-                      <rect x="169" y="189" width="12" height="6" rx="3" fill="#a4a981"/>
-                      <path d="M174 198 L168 208 L176 208 L172 216 L183 204 L177 204 Z" fill="#d7ad4e"/>
-                    </g>
-                    <path d="M69 118 Q60 111 66 104" stroke="#d4b66d" stroke-width="4" fill="none" stroke-linecap="round"/>
-                    <path d="M236 98 Q245 89 251 99" stroke="#d4b66d" stroke-width="4" fill="none" stroke-linecap="round"/>
-                    <g class="mascot-sparkle" fill="#d9b85f">
-                      <path d="M48 76 L52 87 L63 91 L52 95 L48 106 L44 95 L33 91 L44 87 Z"/>
-                      <path d="M263 174 L266 182 L274 185 L266 188 L263 196 L260 188 L252 185 L260 182 Z"/>
-                    </g>
-                  </svg>
+            <div class="relative mb-2 w-full flex justify-center">
+                <div class="eco-baby" id="ecoBaby" data-action="plug">
+                    <svg viewBox="0 0 240 205" xmlns="http://www.w3.org/2000/svg">
+                        <ellipse cx="112" cy="190" rx="48" ry="6" fill="#E8DDC9"/>
+                        <!-- PLUG SCENE -->
+                        <g class="scene plug">
+                          <rect x="8" y="91" width="37" height="48" rx="7" fill="#F6EBD8" stroke="#806A53" stroke-width="2.5"/>
+                          <rect x="16" y="101" width="21" height="26" rx="5" fill="#E7D9C4" stroke="#806A53" stroke-width="1.5"/>
+                          <circle cx="23" cy="110" r="2" fill="#806A53"/>
+                          <circle cx="30" cy="110" r="2" fill="#806A53"/>
+                          <g class="action-motion">
+                            <path d="M55 119 Q48 115 42 118" fill="none" stroke="#806A53" stroke-width="3" stroke-linecap="round"/>
+                            <rect x="34" y="110" width="22" height="23" rx="7" fill="#B9A78B" stroke="#806A53" stroke-width="2"/>
+                            <rect x="38" y="102" width="5" height="11" rx="2.5" fill="#C5B69D" stroke="#806A53" stroke-width="1.3"/>
+                            <rect x="47" y="102" width="5" height="11" rx="2.5" fill="#C5B69D" stroke="#806A53" stroke-width="1.3"/>
+                            <path d="M42 116 L39 123 L44 123 L42 129 L49 120 L44 120Z" fill="#F5D16A"/>
+                          </g>
+                        </g>
+                        <!-- LIGHT SCENE -->
+                        <g class="scene light">
+                          <path d="M174 10 L174 26" stroke="#806A53" stroke-width="3"/>
+                          <path d="M153 26 Q174 15 195 26 L184 52 L164 52Z" fill="#D7C8A9" stroke="#806A53" stroke-width="2.5"/>
+                          <path d="M168 52 H180" stroke="#806A53" stroke-width="3"/>
+                          <circle cx="174" cy="57" r="6" fill="#F2CF75" stroke="#806A53" stroke-width="1.5"/>
+                          <path d="M174 65 V71 M155 60 L150 64 M193 60 L198 64" stroke="#D5B66E" stroke-width="2"/>
+                          <rect x="187" y="91" width="27" height="37" rx="6" fill="#F5EAD7" stroke="#806A53" stroke-width="2"/>
+                          <rect x="195" y="99" width="11" height="20" rx="3" fill="#D0C1A9" stroke="#806A53" stroke-width="1.5"/>
+                        </g>
+                        <!-- WIPE SCENE -->
+                        <g class="scene wipe">
+                          <rect x="145" y="137" width="88" height="12" rx="4" fill="#BDA88C" stroke="#806A53" stroke-width="2"/>
+                          <path d="M150 149 H228 L221 164 H157Z" fill="#E9D8BD" stroke="#806A53" stroke-width="2"/>
+                          <g class="wipe-motion">
+                            <path d="M168 127 Q183 118 199 127 L195 140 L165 140Z" fill="#A5B58F" stroke="#806A53" stroke-width="2"/>
+                            <path d="M173 131 Q182 126 192 131" fill="none" stroke="#DCE4C9" stroke-width="2"/>
+                          </g>
+                          <path d="M204 120 L211 116 M211 124 L219 121" stroke="#D7B967" stroke-width="2" stroke-linecap="round"/>
+                        </g>
+                        <!-- OVEN SCENE -->
+                        <g class="scene oven">
+                          <rect x="155" y="77" width="72" height="92" rx="9" fill="#D9C9AD" stroke="#806A53" stroke-width="2.5"/>
+                          <rect x="164" y="102" width="54" height="57" rx="5" fill="#A7B6A0" stroke="#806A53" stroke-width="2"/>
+                          <rect x="169" y="107" width="44" height="46" rx="3" fill="#F0E4D0"/>
+                          <circle cx="173" cy="88" r="5" fill="#806A53"/>
+                          <circle cx="208" cy="88" r="5" fill="#806A53"/>
+                          <path d="M184 126 Q191 117 199 126" fill="none" stroke="#D9A15D" stroke-width="2"/>
+                        </g>
+                        <!-- MASCOT -->
+                        <g class="body">
+                          <path d="M88 162 Q78 173 84 181 Q96 188 106 178 L105 164Z" fill="#FFF8EA" stroke="#806A53" stroke-width="2.5"/>
+                          <path d="M116 164 L116 178 Q126 188 138 181 Q144 173 133 162Z" fill="#FFF8EA" stroke="#806A53" stroke-width="2.5"/>
+                          <path d="M61 127 Q48 123 53 108 Q42 91 58 80 Q59 60 79 59 Q90 43 107 54 Q124 42 140 57 Q159 58 160 79 Q178 94 165 112 Q169 128 151 134 Q106 143 61 127Z" fill="#FFF9ED" stroke="#806A53" stroke-width="3" stroke-linejoin="round"/>
+                          <g class="leaf">
+                            <path d="M108 55 Q81 29 83 22 Q105 22 112 51Z" fill="#92A67A" stroke="#657653" stroke-width="2"/>
+                            <path d="M110 52 Q119 22 143 24 Q146 40 110 55Z" fill="#B0BE91" stroke="#657653" stroke-width="2"/>
+                          </g>
+                          <circle cx="88" cy="91" r="3.5" fill="#594A3D"/>
+                          <circle cx="132" cy="91" r="3.5" fill="#594A3D"/>
+                          <ellipse cx="75" cy="105" rx="7" ry="5" fill="#F4BDB0"/>
+                          <ellipse cx="145" cy="105" rx="7" ry="5" fill="#F4BDB0"/>
+                          <path d="M104 100 Q110 107 116 100" fill="none" stroke="#594A3D" stroke-width="2.2" stroke-linecap="round"/>
+                          <path d="M63 119 Q105 136 157 117 L152 132 Q105 151 68 133Z" fill="#A5B58E" stroke="#806A53" stroke-width="2"/>
+                          <path d="M130 131 Q148 139 142 153 L130 148 L123 155 L121 135Z" fill="#A5B58E" stroke="#806A53" stroke-width="2"/>
+                          <rect x="93" y="137" width="26" height="24" rx="6" fill="#D7E0C2" stroke="#806A53" stroke-width="2"/>
+                          <rect x="101" y="133" width="10" height="4" rx="1" fill="#806A53"/>
+                          <path d="M107 140 L102 150 H107 L105 156 L114 146 H109 L112 140Z" fill="#E8BD55"/>
+                          <!-- Arms: plug -->
+                          <g class="pose plug">
+                            <path d="M65 119 Q49 119 48 127" fill="none" stroke="#FFF9ED" stroke-width="10" stroke-linecap="round"/>
+                            <path d="M65 119 Q49 119 48 127" fill="none" stroke="#806A53" stroke-width="2.5" stroke-linecap="round"/>
+                            <circle cx="48" cy="127" r="6" fill="#FFF9ED" stroke="#806A53" stroke-width="2"/>
+                            <path d="M155 119 Q168 126 161 139" fill="none" stroke="#FFF9ED" stroke-width="10" stroke-linecap="round"/>
+                            <path d="M155 119 Q168 126 161 139" fill="none" stroke="#806A53" stroke-width="2.5" stroke-linecap="round"/>
+                          </g>
+                          <!-- Arms: light -->
+                          <g class="pose light">
+                            <path d="M154 118 Q173 102 183 91" fill="none" stroke="#FFF9ED" stroke-width="11" stroke-linecap="round"/>
+                            <path d="M154 118 Q173 102 183 91" fill="none" stroke="#806A53" stroke-width="2.5"/>
+                            <circle cx="183" cy="91" r="6" fill="#FFF9ED" stroke="#806A53" stroke-width="2"/>
+                            <path d="M66 120 Q51 129 60 140" fill="none" stroke="#FFF9ED" stroke-width="10" stroke-linecap="round"/>
+                            <path d="M66 120 Q51 129 60 140" fill="none" stroke="#806A53" stroke-width="2"/>
+                          </g>
+                          <!-- Arms: wipe -->
+                          <g class="pose wipe">
+                            <path d="M154 119 Q166 129 176 130 M65 119 Q91 135 165 130" fill="none" stroke="#FFF9ED" stroke-width="10" stroke-linecap="round"/>
+                            <path d="M154 119 Q166 129 176 130 M65 119 Q91 135 165 130" fill="none" stroke="#806A53" stroke-width="2.5" stroke-linecap="round"/>
+                            <circle cx="176" cy="130" r="5" fill="#FFF9ED" stroke="#806A53" stroke-width="2"/>
+                          </g>
+                          <!-- Arms: oven -->
+                          <g class="pose oven">
+                            <path d="M154 119 Q167 109 175 101" fill="none" stroke="#FFF9ED" stroke-width="10" stroke-linecap="round"/>
+                            <path d="M154 119 Q167 109 175 101" fill="none" stroke="#806A53" stroke-width="2.5"/>
+                            <circle cx="175" cy="101" r="6" fill="#FFF9ED" stroke="#806A53" stroke-width="2"/>
+                            <path d="M65 120 Q53 130 62 141" fill="none" stroke="#FFF9ED" stroke-width="10"/>
+                            <path d="M65 120 Q53 130 62 141" fill="none" stroke="#806A53" stroke-width="2"/>
+                          </g>
+                        </g>
+                    </svg>
                 </div>
                 <div id="status-badge" class="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-[#87a96b] text-white text-[11px] font-extrabold px-4 py-1 rounded-full shadow border-2 border-[#5c4738] whitespace-nowrap">
                     Normal Hours ☀️
                 </div>
             </div>
             <h3 class="font-bold text-[#4a3b32] text-base mt-2">Bé Mây Xanh</h3>
-            <p class="text-[11px] text-[#7a6452] font-semibold italic mt-0.5">🌿 Có chiếc pin nhỏ trên người, tai là lá cây, luôn mang phích cắm bên mình.</p>
+            <p class="text-[11px] text-[#7a6452] font-semibold italic mt-0.5">🌿 Có chiếc pin nhỏ trên người, tai là lá cây, luôn đồng hành cùng bạn.</p>
             <p id="mascot-speech" class="text-xs text-[#5c4738] font-medium bg-[#f5ede2] p-3 rounded-2xl border-1.5 border-[#5c4738] w-full mt-3 leading-relaxed">
                 "Tiết kiệm điện cùng mình nhé! 🤍"
             </p>
@@ -352,7 +358,7 @@
                 </div>
             </div>
 
-            <!-- ECO-TIPS: ĐỦ 4 NOTE, GỌN GÀNG TRÊN 1 DÒNG -->
+            <!-- ECO-TIPS: ĐỦ 4 NOTE -->
             <div class="vintage-panel p-5 space-y-3">
                 <h3 class="font-bold text-[#4a3b32] text-sm flex items-center gap-2">
                     <span>💡</span> Nhắc Nhở & Mẹo Xanh Hàng Ngày:
@@ -436,7 +442,29 @@
                     </h4>
                     <div class="grid grid-cols-1 gap-2.5">
                         <div class="bg-white p-3 rounded-xl border-1.5 border-[#5c4738] text-xs text-[#4a3b32] flex items-center gap-2.5 shadow-sm">
-                            <span id="outfit-icon-1" class="text-xl">🧥</span> <span id="outfit-text-1" class="font-medium">Đang cập nhật...</span>
+                            <div class="flex-shrink-0 w-8 h-8 flex items-center justify-center">
+                                <svg viewBox="0 0 100 100" width="32" height="32" xmlns="http://www.w3.org/2000/svg">
+                                  <path d="M31 30 Q22 7 50 7 Q78 7 69 30 L64 39 L36 39Z" fill="#C5D3B5" stroke="#75634F" stroke-width="2.2"/>
+                                  <path d="M37 24 Q50 15 63 24 Q59 34 50 34 Q41 34 37 24Z" fill="#82947A" stroke="#75634F" stroke-width="1.8"/>
+                                  <path d="M34 27 Q37 35 43 36 M66 27 Q63 35 57 36" fill="none" stroke="#F5EBD8" stroke-width="3" stroke-linecap="round"/>
+                                  <path d="M34 30 L23 35 Q13 40 10 54 L7 79 Q7 87 16 88 L84 88 Q93 87 93 79 L90 54 Q87 40 77 35 L66 30 Q50 40 34 30Z" fill="#A9BEA0" stroke="#75634F" stroke-width="2.2" stroke-linejoin="round"/>
+                                  <path d="M23 38 Q14 40 11 54 L5 76 Q4 84 13 87 Q21 89 25 78 L31 51Z" fill="#B7C9AB" stroke="#75634F" stroke-width="2.2"/>
+                                  <path d="M77 38 Q86 40 89 54 L95 76 Q96 84 87 87 Q79 89 75 78 L69 51Z" fill="#B7C9AB" stroke="#75634F" stroke-width="2.2"/>
+                                  <path d="M12 53 Q19 60 27 54 M9 68 Q17 75 24 69 M88 53 Q81 60 73 54 M91 68 Q83 75 76 69" fill="none" stroke="#829B7D" stroke-width="3" stroke-linecap="round"/>
+                                  <path d="M31 46 Q50 53 69 46 M29 62 Q50 69 71 62 M26 78 Q50 84 74 78" fill="none" stroke="#D4DFCB" stroke-width="3" stroke-linecap="round"/>
+                                  <path d="M50 35 L50 88" stroke="#75634F" stroke-width="2"/>
+                                  <circle cx="50" cy="44" r="1.5" fill="#F5EBD8"/>
+                                  <circle cx="50" cy="56" r="1.5" fill="#F5EBD8"/>
+                                  <circle cx="50" cy="68" r="1.5" fill="#F5EBD8"/>
+                                  <path d="M42 32 L42 50 M58 32 L58 50" stroke="#F5EBD8" stroke-width="2" stroke-linecap="round"/>
+                                  <circle cx="42" cy="52" r="3" fill="#F5EBD8"/>
+                                  <circle cx="58" cy="52" r="3" fill="#F5EBD8"/>
+                                  <path d="M29 60 L41 62 L37 75 L26 72Z M71 60 L59 62 L63 75 L74 72Z" fill="#C5D3B5" stroke="#75634F" stroke-width="1.8"/>
+                                  <path d="M7 79 Q15 85 24 80 L22 90 Q14 94 6 87Z M93 79 Q85 85 76 80 L78 90 Q86 94 94 87Z" fill="#C5D3B5" stroke="#75634F" stroke-width="1.8"/>
+                                  <path d="M23 87 Q50 94 77 87 L76 94 Q50 99 24 94Z" fill="#C5D3B5" stroke="#75634F" stroke-width="1.8"/>
+                                </svg>
+                            </div> 
+                            <span id="outfit-text-1" class="font-medium">Đang cập nhật...</span>
                         </div>
                         <div class="bg-white p-3 rounded-xl border-1.5 border-[#5c4738] text-xs text-[#4a3b32] flex items-center gap-2.5 shadow-sm">
                             <span id="outfit-icon-2" class="text-xl">👟</span> <span id="outfit-text-2" class="font-medium">Đang cập nhật...</span>
@@ -467,10 +495,19 @@
                     </div>
                 </div>
 
-                <!-- Active Timer Display -->
-                <div id="timer-display-box" class="hidden p-4 rounded-2xl bg-[#f5ede2] border-1.5 border-[#5c4738] text-center space-y-2 shadow-[2px_2px_0px_#5c4738]">
-                    <p class="text-xs font-bold text-[#5c3232]">⏳ Đang đếm ngược thời gian nấu nướng...</p>
-                    <p id="countdown-text" class="text-3xl font-black text-[#4a3b32]">00:00</p>
+                <!-- Active Timer Display & Kitchen Door Reminder -->
+                <div id="timer-display-box" class="hidden p-4 rounded-2xl bg-[#f5ede2] border-1.5 border-[#5c4738] text-center space-y-3 shadow-[2px_2px_0px_#5c4738]">
+                    <div>
+                        <p class="text-xs font-bold text-[#5c3232]">⏳ Đang đếm ngược thời gian nấu nướng...</p>
+                        <p id="countdown-text" class="text-3xl font-black text-[#4a3b32] mt-1">00:00</p>
+                    </div>
+                    
+                    <!-- Nhắc nhở đóng cửa nhà bếp kèm checkbox ngay bên dưới -->
+                    <div class="bg-white p-3 rounded-xl border border-[#5c4738]/40 flex items-center justify-between gap-2 text-xs">
+                        <span class="font-bold text-[#4a3b32] flex items-center gap-1.5">🚪 Bạn đã đóng cửa nhà bếp chưa?</span>
+                        <input type="checkbox" id="kitchen-door-checkbox" class="w-4 h-4 accent-[#8c7355] cursor-pointer">
+                    </div>
+
                     <button onclick="stopTimer()" class="px-3 py-1 bg-[#fbe8e6] hover:bg-[#f5d0cd] text-[#5c3232] rounded-lg text-xs font-bold border border-[#5c4738]">Hủy Hẹn Giờ</button>
                 </div>
             </div>
@@ -478,7 +515,7 @@
 
     </main>
 
-    <!-- CỬA SỔ HỘI THOẠI BÉ MÂY XANH (SAFETY CHAT OVERLAY - ĐÃ FIX DÙNG CHUNG MASCOT MỚI) -->
+    <!-- CỬA SỔ HỘI THOẠI BÉ MÂY XANH (SAFETY CHAT OVERLAY) -->
     <section id="safety-chat-overlay"
       class="chat-overlay hidden"
       role="dialog"
@@ -502,65 +539,105 @@
           </button>
         </div>
 
-        <div class="flex flex-col items-center py-4 gap-2">
-
-          <div id="chat-mascot" class="chat-mascot mascot-idle">
-            <svg class="eco-character" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
-              <ellipse cx="150" cy="267" rx="72" ry="9" fill="#b9a27b" opacity=".18"/>
-              <g class="mascot-legs">
-                <path d="M112 226 Q102 246 105 255 Q111 264 133 257 L143 237" fill="#fff9ed" stroke="#75604d" stroke-width="5" stroke-linejoin="round"/>
-                <ellipse cx="119" cy="258" rx="19" ry="10" fill="#fff9ed" stroke="#75604d" stroke-width="4"/>
-                <path d="M174 234 Q187 244 185 256 Q179 265 158 258 L151 237" fill="#fff9ed" stroke="#75604d" stroke-width="5" stroke-linejoin="round"/>
-                <ellipse cx="177" cy="258" rx="19" ry="10" fill="#fff9ed" stroke="#75604d" stroke-width="4"/>
-              </g>
-              <path d="M78 174 Q60 162 65 143 Q47 127 61 107 Q66 91 86 87 Q89 62 115 65 Q132 43 151 59 Q172 42 190 63 Q219 60 224 87 Q248 95 244 119 Q260 139 240 155 Q246 180 222 190 Q220 219 193 228 Q177 239 150 237 Q123 243 103 229 Q76 221 78 198 Q61 191 78 174 Z" fill="#fff9ed" stroke="#75604d" stroke-width="5" stroke-linejoin="round"/>
-              <g class="mascot-leaves">
-                <path d="M145 60 Q105 47 101 24 Q133 17 151 48 Z" fill="#a3a875" stroke="#756b49" stroke-width="4"/>
-                <path d="M151 49 Q171 13 198 25 Q194 53 158 63 Z" fill="#7d9368" stroke="#756b49" stroke-width="4"/>
-                <path d="M111 29 Q129 36 145 52" fill="none" stroke="#6e8056" stroke-width="2"/>
-                <path d="M190 30 Q172 40 158 54" fill="none" stroke="#6e8056" stroke-width="2"/>
-              </g>
-              <ellipse cx="105" cy="140" rx="13" ry="10" fill="#f5bca8"/>
-              <ellipse cx="197" cy="140" rx="13" ry="10" fill="#f5bca8"/>
-              <ellipse cx="128" cy="128" rx="5" ry="7" fill="#574b40"/>
-              <ellipse cx="177" cy="128" rx="5" ry="7" fill="#574b40"/>
-              <path d="M146 143 Q151 151 157 143" fill="none" stroke="#574b40" stroke-width="3.5" stroke-linecap="round"/>
-              <g>
-                <path d="M75 164 Q112 178 151 163 Q190 178 230 159 L225 183 Q185 200 150 183 Q112 200 80 183 Z" fill="#8e9973" stroke="#6e7457" stroke-width="4"/>
-                <path d="M91 170 L104 187 M117 174 L130 191 M157 171 L170 190 M191 169 L205 184" stroke="#c3bd91" stroke-width="3" opacity=".8"/>
-                <path d="M205 180 Q225 194 214 219 L197 206 L193 190" fill="#9ca17a" stroke="#6e7457" stroke-width="4"/>
-              </g>
-              <g class="mascot-arm-left">
-                <path d="M80 170 Q55 169 49 190 Q43 203 55 209 Q69 215 81 194" fill="#fff9ed" stroke="#75604d" stroke-width="5" stroke-linecap="round"/>
-                <path d="M53 197 Q45 202 50 211" fill="none" stroke="#75604d" stroke-width="3"/>
-              </g>
-              <g class="mascot-arm-right">
-                <path d="M221 166 Q245 160 249 137" fill="none" stroke="#75604d" stroke-width="15" stroke-linecap="round"/>
-                <path d="M221 166 Q245 160 249 137" fill="none" stroke="#fff9ed" stroke-width="9" stroke-linecap="round"/>
-                <g transform="translate(227 67) rotate(13 25 40)">
-                  <rect x="12" y="24" width="42" height="49" rx="12" fill="#b7a78b" stroke="#75604d" stroke-width="4"/>
-                  <rect x="19" y="3" width="7" height="28" rx="3" fill="#75604d"/>
-                  <rect x="41" y="3" width="7" height="28" rx="3" fill="#75604d"/>
-                  <path d="M32 39 L24 52 L32 52 L27 64 L43 47 L34 47 Z" fill="#f6d36d"/>
-                </g>
-              </g>
-              <g class="mascot-battery">
-                <path d="M95 184 Q122 177 141 185 L143 225 Q119 239 96 223 Z" fill="#a4a981" stroke="#6e7457" stroke-width="4"/>
-                <rect x="108" y="193" width="28" height="27" rx="6" fill="#e8e3c9" stroke="#72805f" stroke-width="3"/>
-                <path d="M122 198 L116 208 L122 208 L118 216 L130 204 L124 204 Z" fill="#e7b947"/>
-              </g>
-              <g>
-                <rect x="157" y="193" width="36" height="28" rx="7" fill="#e8e0c7" stroke="#8b8b66" stroke-width="3"/>
-                <rect x="169" y="189" width="12" height="6" rx="3" fill="#a4a981"/>
-                <path d="M174 198 L168 208 L176 208 L172 216 L183 204 L177 204 Z" fill="#d7ad4e"/>
-              </g>
-              <path d="M69 118 Q60 111 66 104" stroke="#d4b66d" stroke-width="4" fill="none" stroke-linecap="round"/>
-              <path d="M236 98 Q245 89 251 99" stroke="#d4b66d" stroke-width="4" fill="none" stroke-linecap="round"/>
-              <g class="mascot-sparkle" fill="#d9b85f">
-                <path d="M48 76 L52 87 L63 91 L52 95 L48 106 L44 95 L33 91 L44 87 Z"/>
-                <path d="M263 174 L266 182 L274 185 L266 188 L263 196 L260 188 L252 185 L260 182 Z"/>
-              </g>
-            </svg>
+        <div class="flex flex-col items-center py-3 gap-2">
+          <!-- MASCOT TRONG CHAT -->
+          <div class="eco-baby" id="chatEcoBaby" data-action="oven">
+              <svg viewBox="0 0 240 205" xmlns="http://www.w3.org/2000/svg">
+                  <ellipse cx="112" cy="190" rx="48" ry="6" fill="#E8DDC9"/>
+                  <!-- PLUG SCENE -->
+                  <g class="scene plug">
+                    <rect x="8" y="91" width="37" height="48" rx="7" fill="#F6EBD8" stroke="#806A53" stroke-width="2.5"/>
+                    <rect x="16" y="101" width="21" height="26" rx="5" fill="#E7D9C4" stroke="#806A53" stroke-width="1.5"/>
+                    <circle cx="23" cy="110" r="2" fill="#806A53"/>
+                    <circle cx="30" cy="110" r="2" fill="#806A53"/>
+                    <g class="action-motion">
+                      <path d="M55 119 Q48 115 42 118" fill="none" stroke="#806A53" stroke-width="3" stroke-linecap="round"/>
+                      <rect x="34" y="110" width="22" height="23" rx="7" fill="#B9A78B" stroke="#806A53" stroke-width="2"/>
+                      <rect x="38" y="102" width="5" height="11" rx="2.5" fill="#C5B69D" stroke="#806A53" stroke-width="1.3"/>
+                      <rect x="47" y="102" width="5" height="11" rx="2.5" fill="#C5B69D" stroke="#806A53" stroke-width="1.3"/>
+                      <path d="M42 116 L39 123 L44 123 L42 129 L49 120 L44 120Z" fill="#F5D16A"/>
+                    </g>
+                  </g>
+                  <!-- LIGHT SCENE -->
+                  <g class="scene light">
+                    <path d="M174 10 L174 26" stroke="#806A53" stroke-width="3"/>
+                    <path d="M153 26 Q174 15 195 26 L184 52 L164 52Z" fill="#D7C8A9" stroke="#806A53" stroke-width="2.5"/>
+                    <path d="M168 52 H180" stroke="#806A53" stroke-width="3"/>
+                    <circle cx="174" cy="57" r="6" fill="#F2CF75" stroke="#806A53" stroke-width="1.5"/>
+                    <path d="M174 65 V71 M155 60 L150 64 M193 60 L198 64" stroke="#D5B66E" stroke-width="2"/>
+                    <rect x="187" y="91" width="27" height="37" rx="6" fill="#F5EAD7" stroke="#806A53" stroke-width="2"/>
+                    <rect x="195" y="99" width="11" height="20" rx="3" fill="#D0C1A9" stroke="#806A53" stroke-width="1.5"/>
+                  </g>
+                  <!-- WIPE SCENE -->
+                  <g class="scene wipe">
+                    <rect x="145" y="137" width="88" height="12" rx="4" fill="#BDA88C" stroke="#806A53" stroke-width="2"/>
+                    <path d="M150 149 H228 L221 164 H157Z" fill="#E9D8BD" stroke="#806A53" stroke-width="2"/>
+                    <g class="wipe-motion">
+                      <path d="M168 127 Q183 118 199 127 L195 140 L165 140Z" fill="#A5B58F" stroke="#806A53" stroke-width="2"/>
+                      <path d="M173 131 Q182 126 192 131" fill="none" stroke="#DCE4C9" stroke-width="2"/>
+                    </g>
+                    <path d="M204 120 L211 116 M211 124 L219 121" stroke="#D7B967" stroke-width="2" stroke-linecap="round"/>
+                  </g>
+                  <!-- OVEN SCENE -->
+                  <g class="scene oven">
+                    <rect x="155" y="77" width="72" height="92" rx="9" fill="#D9C9AD" stroke="#806A53" stroke-width="2.5"/>
+                    <rect x="164" y="102" width="54" height="57" rx="5" fill="#A7B6A0" stroke="#806A53" stroke-width="2"/>
+                    <rect x="169" y="107" width="44" height="46" rx="3" fill="#F0E4D0"/>
+                    <circle cx="173" cy="88" r="5" fill="#806A53"/>
+                    <circle cx="208" cy="88" r="5" fill="#806A53"/>
+                    <path d="M184 126 Q191 117 199 126" fill="none" stroke="#D9A15D" stroke-width="2"/>
+                  </g>
+                  <!-- MASCOT -->
+                  <g class="body">
+                    <path d="M88 162 Q78 173 84 181 Q96 188 106 178 L105 164Z" fill="#FFF8EA" stroke="#806A53" stroke-width="2.5"/>
+                    <path d="M116 164 L116 178 Q126 188 138 181 Q144 173 133 162Z" fill="#FFF8EA" stroke="#806A53" stroke-width="2.5"/>
+                    <path d="M61 127 Q48 123 53 108 Q42 91 58 80 Q59 60 79 59 Q90 43 107 54 Q124 42 140 57 Q159 58 160 79 Q178 94 165 112 Q169 128 151 134 Q106 143 61 127Z" fill="#FFF9ED" stroke="#806A53" stroke-width="3" stroke-linejoin="round"/>
+                    <g class="leaf">
+                      <path d="M108 55 Q81 29 83 22 Q105 22 112 51Z" fill="#92A67A" stroke="#657653" stroke-width="2"/>
+                      <path d="M110 52 Q119 22 143 24 Q146 40 110 55Z" fill="#B0BE91" stroke="#657653" stroke-width="2"/>
+                    </g>
+                    <circle cx="88" cy="91" r="3.5" fill="#594A3D"/>
+                    <circle cx="132" cy="91" r="3.5" fill="#594A3D"/>
+                    <ellipse cx="75" cy="105" rx="7" ry="5" fill="#F4BDB0"/>
+                    <ellipse cx="145" cy="105" rx="7" ry="5" fill="#F4BDB0"/>
+                    <path d="M104 100 Q110 107 116 100" fill="none" stroke="#594A3D" stroke-width="2.2" stroke-linecap="round"/>
+                    <path d="M63 119 Q105 136 157 117 L152 132 Q105 151 68 133Z" fill="#A5B58E" stroke="#806A53" stroke-width="2"/>
+                    <path d="M130 131 Q148 139 142 153 L130 148 L123 155 L121 135Z" fill="#A5B58E" stroke="#806A53" stroke-width="2"/>
+                    <rect x="93" y="137" width="26" height="24" rx="6" fill="#D7E0C2" stroke="#806A53" stroke-width="2"/>
+                    <rect x="101" y="133" width="10" height="4" rx="1" fill="#806A53"/>
+                    <path d="M107 140 L102 150 H107 L105 156 L114 146 H109 L112 140Z" fill="#E8BD55"/>
+                    <!-- Arms: plug -->
+                    <g class="pose plug">
+                      <path d="M65 119 Q49 119 48 127" fill="none" stroke="#FFF9ED" stroke-width="10" stroke-linecap="round"/>
+                      <path d="M65 119 Q49 119 48 127" fill="none" stroke="#806A53" stroke-width="2.5" stroke-linecap="round"/>
+                      <circle cx="48" cy="127" r="6" fill="#FFF9ED" stroke="#806A53" stroke-width="2"/>
+                      <path d="M155 119 Q168 126 161 139" fill="none" stroke="#FFF9ED" stroke-width="10" stroke-linecap="round"/>
+                      <path d="M155 119 Q168 126 161 139" fill="none" stroke="#806A53" stroke-width="2.5" stroke-linecap="round"/>
+                    </g>
+                    <!-- Arms: light -->
+                    <g class="pose light">
+                      <path d="M154 118 Q173 102 183 91" fill="none" stroke="#FFF9ED" stroke-width="11" stroke-linecap="round"/>
+                      <path d="M154 118 Q173 102 183 91" fill="none" stroke="#806A53" stroke-width="2.5"/>
+                      <circle cx="183" cy="91" r="6" fill="#FFF9ED" stroke="#806A53" stroke-width="2"/>
+                      <path d="M66 120 Q51 129 60 140" fill="none" stroke="#FFF9ED" stroke-width="10" stroke-linecap="round"/>
+                      <path d="M66 120 Q51 129 60 140" fill="none" stroke="#806A53" stroke-width="2"/>
+                    </g>
+                    <!-- Arms: wipe -->
+                    <g class="pose wipe">
+                      <path d="M154 119 Q166 129 176 130 M65 119 Q91 135 165 130" fill="none" stroke="#FFF9ED" stroke-width="10" stroke-linecap="round"/>
+                      <path d="M154 119 Q166 129 176 130 M65 119 Q91 135 165 130" fill="none" stroke="#806A53" stroke-width="2.5" stroke-linecap="round"/>
+                      <circle cx="176" cy="130" r="5" fill="#FFF9ED" stroke="#806A53" stroke-width="2"/>
+                    </g>
+                    <!-- Arms: oven -->
+                    <g class="pose oven">
+                      <path d="M154 119 Q167 109 175 101" fill="none" stroke="#FFF9ED" stroke-width="10" stroke-linecap="round"/>
+                      <path d="M154 119 Q167 109 175 101" fill="none" stroke="#806A53" stroke-width="2.5"/>
+                      <circle cx="175" cy="101" r="6" fill="#FFF9ED" stroke="#806A53" stroke-width="2"/>
+                      <path d="M65 120 Q53 130 62 141" fill="none" stroke="#FFF9ED" stroke-width="10"/>
+                      <path d="M65 120 Q53 130 62 141" fill="none" stroke="#806A53" stroke-width="2"/>
+                    </g>
+                  </g>
+              </svg>
           </div>
 
           <div class="chat-bubble">
@@ -574,7 +651,7 @@
         </div>
 
         <div id="chat-scene"
-          class="chat-scene text-center text-5xl py-4 flex items-center justify-center shadow-inner">
+          class="chat-scene text-center text-5xl py-3 flex items-center justify-center shadow-inner">
           🔥
         </div>
 
@@ -671,19 +748,23 @@
             const hour = now.getHours();
             const badge = document.getElementById('status-badge');
             const speech = document.getElementById('mascot-speech');
+            const mainBaby = document.getElementById('ecoBaby');
 
             if (hour >= 17 && hour < 19) {
                 badge.className = "absolute -bottom-2 left-1/2 -translate-x-1/2 bg-[#bc6c25] text-white text-[11px] font-extrabold px-4 py-1 rounded-full shadow border-2 border-[#5c4738] whitespace-nowrap animate-pulse";
                 badge.innerText = "🔴 Peak Hours!";
                 speech.innerText = "⚠️ Giờ cao điểm rồi! Tạm ngưng thiết bị lớn nha!";
+                if (mainBaby) mainBaby.dataset.action = "plug";
             } else if (hour >= 23 || hour < 8) {
                 badge.className = "absolute -bottom-2 left-1/2 -translate-x-1/2 bg-[#87a96b] text-white text-[11px] font-extrabold px-4 py-1 rounded-full shadow border-2 border-[#5c4738] whitespace-nowrap";
                 badge.innerText = "🟢 Night Saver ON";
                 speech.innerText = "🌙 Giờ đêm rẻ nhất, tranh thủ giặt sấy nào!";
+                if (mainBaby) mainBaby.dataset.action = "plug";
             } else {
                 badge.className = "absolute -bottom-2 left-1/2 -translate-x-1/2 bg-[#d4a373] text-white text-[11px] font-extrabold px-4 py-1 rounded-full shadow border-2 border-[#5c4738] whitespace-nowrap";
                 badge.innerText = "Normal Hours ☀️";
                 speech.innerText = "Tiết kiệm điện cùng mình nhé! 🤍";
+                if (mainBaby) mainBaby.dataset.action = "plug";
             }
         }
 
@@ -785,6 +866,10 @@
                 return;
             }
 
+            // Reset checkbox khi bắt đầu đếm ngược mới
+            const checkbox = document.getElementById('kitchen-door-checkbox');
+            if (checkbox) checkbox.checked = false;
+
             clearInterval(countdownInterval);
             let remaining = totalSecs;
             const displayBox = document.getElementById('timer-display-box');
@@ -810,13 +895,14 @@
             document.getElementById('timer-display-box').classList.add('hidden');
         }
 
+        // Danh sách 4 bước chuẩn an toàn khu vực bếp trong popup
         const safetySteps = [
           {
             title: "Tắt bếp",
             question: "Bạn đã tắt bếp chưa?",
             hint: "Kiểm tra núm bếp đã về vị trí OFF nhé!",
             scene: "🔥",
-            action: "buddy-work",
+            action: "oven",
             yes: "Tuyệt vời! Bé Mây vui quá!",
             no: "Mình cùng kiểm tra núm bếp nhé!"
           },
@@ -825,27 +911,27 @@
             question: "Bạn đã tắt lò nướng chưa?",
             hint: "Kiểm tra nút nguồn và màn hình của oven nhé.",
             scene: "🎛️",
-            action: "buddy-walk",
+            action: "oven",
             yes: "Oven đã được tắt. Giỏi lắm!",
             no: "Bé Mây đợi bạn kiểm tra nha!"
           },
           {
-            title: "Tắt đèn",
-            question: "Đèn phòng & cầu thang đã tắt chưa?",
+            title: "Tắt đèn bếp",
+            question: "Đèn khu vực bếp đã tắt chưa?",
             hint: "Đảm bảo đã tắt hết đèn không dùng nhé!",
             scene: "💡",
-            action: "buddy-jump",
+            action: "light",
             yes: "Căn nhà đã tiết kiệm thêm điện rồi!",
             no: "Mình đi tắt đèn thôi nào!"
           },
           {
-            title: "Kiểm tra cửa & bếp",
-            question: "Đã khóa cửa kỹ và đóng cửa nhà bếp chưa?",
-            hint: "Kiểm tra lại chốt cửa và cửa bếp cho an toàn.",
-            scene: "🔒",
-            action: "buddy-work",
-            yes: "Tuyệt đối an toàn! Bé Mây tự hào về bạn!",
-            no: "Mình cùng kiểm tra lại cửa nhé!"
+            title: "Lau bếp",
+            question: "Bạn đã lau sạch mặt bếp chưa?",
+            hint: "Đợi bếp nguội và dùng khăn ẩm lau sạch nhé.",
+            scene: "🧽",
+            action: "wipe",
+            yes: "Bếp sạch bong! Bé Mây tự hào về bạn!",
+            no: "Mình cùng dọn dẹp nhé!"
           }
         ];
 
@@ -866,17 +952,17 @@
         }
 
         function renderSafetyStep() {
-          const mascot = document.getElementById("chat-mascot");
+          const chatBaby = document.getElementById("chatEcoBaby");
           const question = document.getElementById("chat-question");
           const scene = document.getElementById("chat-scene");
           const actions = document.getElementById("chat-actions");
 
           if (safetyStepIndex >= safetySteps.length) {
             question.textContent =
-              "Hoàn thành rồi! Cảm ơn bạn đã cùng Bé Mây tiết kiệm điện và giữ an toàn cho ngôi nhà nhé! 💚";
+              "Hoàn thành rồi! Cảm ơn bạn đã cùng Bé Mây kiểm tra căn bếp an toàn nhé! 💚";
 
             scene.textContent = "🌱✨💚";
-            mascot.className = "chat-mascot mascot-happy";
+            if (chatBaby) chatBaby.dataset.action = "plug";
 
             document.getElementById("chat-action-title")
               .textContent = "Hoàn thành kiểm tra!";
@@ -902,7 +988,9 @@
           question.textContent = step.question;
           scene.textContent = step.scene;
 
-          mascot.className = "chat-mascot " + step.action;
+          if (chatBaby) {
+              chatBaby.dataset.action = step.action;
+          }
 
           document.getElementById("chat-action-title")
             .textContent = step.title;
@@ -951,9 +1039,6 @@
           document.getElementById("chat-question")
             .textContent = step.yes;
 
-          const mascot = document.getElementById("chat-mascot");
-          mascot.className = "chat-mascot mascot-happy";
-
           setTimeout(() => {
             safetyStepIndex++;
             renderSafetyStep();
@@ -967,7 +1052,6 @@
             const weatherIcon = document.getElementById('weather-icon-lg');
             const outfitText1 = document.getElementById('outfit-text-1');
             const outfitText2 = document.getElementById('outfit-text-2');
-            const outfitIcon1 = document.getElementById('outfit-icon-1');
             const outfitIcon2 = document.getElementById('outfit-icon-2');
 
             try {
@@ -984,28 +1068,28 @@
 
                     let condition = "Trời quang đãng";
                     let icon = "☀️";
-                    let o1 = { icon: "🧥", text: "Áo khoác nhẹ hoặc cardigan" };
+                    let o1 = { text: "Áo khoác nhẹ hoặc cardigan" };
                     let o2 = { icon: "👟", text: "Giày sneaker thoải mái dạo phố" };
 
                     if (precip > 0 || (wcode >= 50 && wcode < 68)) {
                         condition = "Trời có mưa nhẹ";
                         icon = "🌧️";
-                        o1 = { icon: "☔", text: "Mang theo ô (dù) và áo mưa" };
+                        o1 = { text: "Mang theo ô (dù) và áo mưa" };
                         o2 = { icon: "👢", text: "Giày chống thấm nước" };
                     } else if (temp < 8) {
                         condition = "Trời rất lạnh";
                         icon = "❄️";
-                        o1 = { icon: "🧣", text: "Khăn choàng cổ và găng tay ấm" };
+                        o1 = { text: "Khăn choàng cổ và găng tay ấm" };
                         o2 = { icon: "🧥", text: "Áo phao hoặc áo khoác mùa đông" };
                     } else if (temp <= 15) {
                         condition = "Trời se lạnh, lộng gió";
                         icon = "⛅";
-                        o1 = { icon: "🧶", text: "Áo len mỏng hoặc áo khoác ngoài" };
+                        o1 = { text: "Áo len mỏng hoặc áo khoác ngoài" };
                         o2 = { icon: "👖", text: "Quần dài và giày kín chân" };
                     } else if (temp > 20) {
                         condition = "Trời ấm áp, dễ chịu";
                         icon = "☀️";
-                        o1 = { icon: "👕", text: "Áo thun hoặc áo sơ mi thoáng mát" };
+                        o1 = { text: "Áo thun hoặc áo sơ mi thoáng mát" };
                         o2 = { icon: "🕶️", text: "Kính mát và dép/giày nhẹ nhàng" };
                     }
 
@@ -1014,7 +1098,6 @@
                     weatherWind.innerText = `Gió: ${Math.round(wind)} km/h`;
                     weatherIcon.innerText = icon;
 
-                    outfitIcon1.innerText = o1.icon;
                     outfitText1.innerText = o1.text;
                     outfitIcon2.innerText = o2.icon;
                     outfitText2.innerText = o2.text;
