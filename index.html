@@ -11,12 +11,12 @@
     <style>
         body {
             font-family: 'Quicksand', sans-serif;
-            background-color: #fcfbf7; 
-            color: #2d3748;
+            background-color: #fcf8f2; 
+            color: #4a3b32;
         }
         @keyframes float {
             0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-6px) rotate(1deg); }
+            50% { transform: translateY(-5px) rotate(1deg); }
         }
         .mascot-float {
             animation: float 3s ease-in-out infinite;
@@ -25,49 +25,49 @@
             width: 6px;
         }
         ::-webkit-scrollbar-track {
-            background: #f1ede1;
+            background: #f4ecdf;
             border-radius: 3px;
         }
         ::-webkit-scrollbar-thumb {
-            background: #d1cbb9;
+            background: #d8c7b0;
             border-radius: 3px;
         }
         .vintage-panel { 
-            background: linear-gradient(145deg, #ffffff 0%, #fbf7ed 100%); 
-            border: 2px solid #2d3748; 
-            box-shadow: 4px 4px 0px #2d3748; 
+            background: linear-gradient(145deg, #fffdfa 0%, #f7f1e5 100%); 
+            border: 2px solid #5c4738; 
+            box-shadow: 4px 4px 0px #5c4738; 
             border-radius: 1.5rem;
         }
         .vint-card {
-            background: #fffaf0;
-            border: 1.5px solid #2d3748;
+            background: #fffaf4;
+            border: 1.5px solid #5c4738;
             border-radius: 1rem;
-            box-shadow: 2px 2px 0px #2d3748;
+            box-shadow: 2px 2px 0px #5c4738;
         }
     </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between selection:bg-amber-200">
 
     <!-- HEADER -->
-    <header class="bg-white/95 backdrop-blur-sm shadow-sm sticky top-0 z-50 border-b-2 border-[#2d3748]">
+    <header class="bg-[#fffdfa]/95 backdrop-blur-sm shadow-sm sticky top-0 z-50 border-b-2 border-[#5c4738]">
         <div class="max-w-xl mx-auto px-4 py-3 flex flex-col sm:flex-row items-center justify-between gap-3">
             <div class="flex items-center space-x-2.5">
-                <span class="text-2xl">☁️</span>
+                <span class="text-2xl">🌿</span>
                 <div>
-                    <h1 class="font-bold text-base text-amber-950 leading-tight">Eco-Buddy Home Manager</h1>
-                    <p class="text-[11px] text-amber-800 font-medium">Live Tariff & Weather ⚡ <span id="realtime-clock" class="text-amber-900 font-bold"></span></p>
+                    <h1 class="font-bold text-base text-[#4a3b32] leading-tight">Eco-Buddy Home Manager</h1>
+                    <p class="text-[11px] text-[#7a6452] font-medium">Live Tariff & Weather ⚡ <span id="realtime-clock" class="text-[#5c4738] font-bold"></span></p>
                 </div>
             </div>
             
-            <!-- Tab Switchers -->
-            <div class="flex bg-[#f0eade] p-1 rounded-full border-1.5 border-[#2d3748] flex-wrap justify-center">
-                <button onclick="switchTab('tracker')" id="tab-btn-tracker" class="px-3 py-1.5 rounded-full text-xs font-bold transition-all bg-amber-600 text-white shadow-inner">
+            <!-- Tab Switchers (Vintage Pastel) -->
+            <div class="flex bg-[#f0e6d6] p-1 rounded-full border-1.5 border-[#5c4738] flex-wrap justify-center">
+                <button onclick="switchTab('tracker')" id="tab-btn-tracker" class="px-3 py-1.5 rounded-full text-xs font-bold transition-all bg-[#8c7355] text-white shadow-inner">
                     ⚡ Tariff
                 </button>
-                <button onclick="switchTab('weather')" id="tab-btn-weather" class="px-3 py-1.5 rounded-full text-xs font-bold transition-all text-amber-950 hover:bg-white/60">
+                <button onclick="switchTab('weather')" id="tab-btn-weather" class="px-3 py-1.5 rounded-full text-xs font-bold transition-all text-[#4a3b32] hover:bg-white/60">
                     🌦️ Weather
                 </button>
-                <button onclick="switchTab('checklist')" id="tab-btn-checklist" class="px-3 py-1.5 rounded-full text-xs font-bold transition-all text-amber-950 hover:bg-white/60">
+                <button onclick="switchTab('checklist')" id="tab-btn-checklist" class="px-3 py-1.5 rounded-full text-xs font-bold transition-all text-[#4a3b32] hover:bg-white/60">
                     🍳 Nấu Nướng
                 </button>
             </div>
@@ -77,76 +77,81 @@
     <!-- MAIN CONTAINER -->
     <main class="max-w-xl mx-auto px-4 py-6 flex-grow w-full space-y-6">
         
-        <!-- MASCOT & STATUS CARD (Dùng SVG thay thế ảnh để tránh lỗi tuyệt đối) -->
+        <!-- MASCOT & INTRO CARD (Bé Mây Xanh Style) -->
         <div class="vintage-panel p-5 flex flex-col items-center text-center">
             <div class="relative mb-3">
-                <div id="mascot-container" class="w-32 h-32 sm:w-36 sm:h-36 mascot-float flex items-center justify-center p-2 bg-[#fffdf4] rounded-full border-3 border-[#2d3748] shadow-md relative overflow-hidden">
-                    <svg viewBox="0 0 200 200" class="w-full h-full drop-br drop-shadow-sm">
-                        <!-- Thân mây hồng/trắng đáng yêu -->
-                        <path d="M50 130 C30 130 20 110 30 90 C35 75 50 65 65 70 C75 50 100 45 115 65 C130 50 160 65 160 85 C175 90 180 115 165 130 Z" fill="#fff5f5" stroke="#2d3748" stroke-width="4"/>
-                        <!-- Má hồng -->
-                        <circle cx="70" cy="100" r="10" fill="#ffb6b9" opacity="0.8"/>
-                        <circle cx="130" cy="100" r="10" fill="#ffb6b9" opacity="0.8"/>
+                <div id="mascot-container" class="w-32 h-32 sm:w-36 sm:h-36 mascot-float flex items-center justify-center p-2 bg-[#fffefb] rounded-full border-3 border-[#5c4738] shadow-md relative overflow-hidden">
+                    <svg viewBox="0 0 200 200" class="w-full h-full drop-shadow-sm">
+                        <!-- Thân mây trắng/kem sữa -->
+                        <path d="M50 130 C30 130 20 110 30 90 C35 75 50 65 65 70 C75 50 100 45 115 65 C130 50 160 65 160 85 C175 90 180 115 165 130 Z" fill="#fffaf5" stroke="#5c4738" stroke-width="4"/>
+                        <!-- Lá cây trên đầu -->
+                        <path d="M100 45 Q110 25 120 40 Q110 50 100 45" fill="#87a96b" stroke="#5c4738" stroke-width="3"/>
+                        <path d="M100 45 Q90 25 80 40 Q90 50 100 45" fill="#87a96b" stroke="#5c4738" stroke-width="3"/>
+                        <!-- Má hồng pastel -->
+                        <circle cx="72" cy="100" r="9" fill="#f4b183" opacity="0.7"/>
+                        <circle cx="128" cy="100" r="9" fill="#f4b183" opacity="0.7"/>
                         <!-- Mắt cute -->
-                        <circle cx="80" cy="90" r="5" fill="#2d3748"/>
-                        <circle cx="120" cy="90" r="5" fill="#2d3748"/>
+                        <circle cx="82" cy="92" r="4.5" fill="#5c4738"/>
+                        <circle cx="118" cy="92" r="4.5" fill="#5c4738"/>
                         <!-- Miệng cười -->
-                        <path d="M 95 105 Q 100 112 105 105" fill="none" stroke="#2d3748" stroke-width="3" stroke-linecap="round"/>
-                        <!-- Tia chớp nhỏ trên đầu -->
-                        <polygon points="100,30 90,50 105,50 95,70 120,45 105,45" fill="#ecc94b" stroke="#2d3748" stroke-width="3"/>
+                        <path d="M 96 104 Q 100 110 104 104" fill="none" stroke="#5c4738" stroke-width="3" stroke-linecap="round"/>
+                        <!-- Đeo túi pin nhỏ -->
+                        <rect x="85" y="115" width="30" height="20" rx="5" fill="#87a96b" stroke="#5c4738" stroke-width="2.5"/>
+                        <text x="94" y="130" font-size="12" fill="#fff">⚡</text>
                     </svg>
                 </div>
-                <div id="status-badge" class="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-emerald-500 text-white text-[11px] font-extrabold px-4 py-1 rounded-full shadow border-2 border-[#2d3748] whitespace-nowrap">
+                <div id="status-badge" class="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-[#87a96b] text-white text-[11px] font-extrabold px-4 py-1 rounded-full shadow border-2 border-[#5c4738] whitespace-nowrap">
                     Normal Hours ☀️
                 </div>
             </div>
-            <h3 class="font-bold text-amber-950 text-base mt-2">Cloudy Battery Buddy</h3>
-            <p id="mascot-speech" class="text-xs text-amber-900 font-medium bg-[#fdf8ec] p-3 rounded-2xl border-1.5 border-[#2d3748] w-full mt-3 leading-relaxed">
-                "Chào bạn! Cục Pin Mây luôn sẵn sàng đồng hành cùng bạn quản lý điện năng và bếp núc!"
+            <h3 class="font-bold text-[#4a3b32] text-base mt-2">Bé Mây Xanh (Cloudy Battery Buddy)</h3>
+            <p class="text-[11px] text-[#7a6452] font-semibold italic mt-0.5">🌿 Có chiếc pin nhỏ trên người, tai là lá cây, luôn mang phích cắm bên mình[cite: 18].</p>
+            <p id="mascot-speech" class="text-xs text-[#5c4738] font-medium bg-[#f5ede2] p-3 rounded-2xl border-1.5 border-[#5c4738] w-full mt-3 leading-relaxed">
+                "Tiết kiệm điện cùng mình nhé! 🤍"[cite: 18]
             </p>
         </div>
 
         <!-- TAB 1: TARIFF & TIPS -->
         <div id="tab-content-tracker" class="space-y-6">
             <div class="vintage-panel p-5 space-y-4">
-                <h2 class="font-bold text-amber-950 text-base flex items-center gap-2 border-b-2 border-[#2d3748] pb-2.5">
+                <h2 class="font-bold text-[#4a3b32] text-base flex items-center gap-2 border-b-2 border-[#5c4738] pb-2.5">
                     <span>⚡</span> Biểu Giá Điện Trong Ngày (SST Saver+)
                 </h2>
                 
                 <div class="space-y-3 text-xs sm:text-sm">
                     <!-- Giờ bình thường -->
-                    <div class="vint-card p-3.5 flex items-start justify-between gap-3 bg-[#eef7f2]">
+                    <div class="vint-card p-3.5 flex items-start justify-between gap-3 bg-[#f2f7ec]">
                         <div class="flex-1 min-w-0">
-                            <p class="font-extrabold text-amber-950">☀️ Giờ Bình Thường</p>
-                            <p class="text-amber-900 text-[11px] mt-0.5">08:00 - 17:00 & 19:00 - 23:00</p>
-                            <p class="text-amber-800 text-[11px] mt-1 italic">Sử dụng thiết bị hợp lý.</p>
+                            <p class="font-extrabold text-[#3b4a32]">☀️ Giờ Bình Thường</p>
+                            <p class="text-[#5c6a52] text-[11px] mt-0.5">08:00 - 17:00 & 19:00 - 23:00</p>
+                            <p class="text-[#6c7a62] text-[11px] mt-1 italic">Sử dụng thiết bị hợp lý.</p>
                         </div>
-                        <span class="font-black text-amber-950 bg-amber-200 px-2.5 py-1 rounded-xl border border-[#2d3748] whitespace-nowrap">€0.3719/kWh</span>
+                        <span class="font-black text-[#3b4a32] bg-[#d9e8cc] px-2.5 py-1 rounded-xl border border-[#5c4738] whitespace-nowrap">€0.3719/kWh</span>
                     </div>
-                    <!-- Giờ cao điểm (Đã có đủ viền đen retro chuẩn chỉnh) -->
-                    <div class="p-3.5 rounded-2xl bg-rose-100 border-2 border-[#2d3748] flex items-start justify-between gap-3 shadow-[2px_2px_0px_#2d3748]">
+                    <!-- Giờ cao điểm -->
+                    <div class="p-3.5 rounded-2xl bg-[#fbe8e6] border-2 border-[#5c4738] flex items-start justify-between gap-3 shadow-[2px_2px_0px_#5c4738]">
                         <div class="flex-1 min-w-0">
-                            <p class="font-extrabold text-rose-950">🔴 Giờ Cao Điểm</p>
-                            <p class="text-rose-900 text-[11px] mt-0.5">17:00 - 19:00</p>
-                            <p class="text-rose-800 text-[11px] mt-1 italic">⚠️ Hạn chế máy giặt, lò nướng.</p>
+                            <p class="font-extrabold text-[#5c3232]">🔴 Giờ Cao Điểm</p>
+                            <p class="text-[#7c4d4d] text-[11px] mt-0.5">17:00 - 19:00</p>
+                            <p class="text-[#8c5d5d] text-[11px] mt-1 italic">⚠️ Hạn chế máy giặt, lò nướng.</p>
                         </div>
-                        <span class="font-black text-rose-900 bg-rose-200 px-2.5 py-1 rounded-xl border border-[#2d3748] whitespace-nowrap">€0.3968/kWh</span>
+                        <span class="font-black text-[#5c3232] bg-[#f5d0cd] px-2.5 py-1 rounded-xl border border-[#5c4738] whitespace-nowrap">€0.3968/kWh</span>
                     </div>
                     <!-- Giờ đêm -->
-                    <div class="vint-card p-3.5 flex items-start justify-between gap-3 bg-sky-50">
+                    <div class="vint-card p-3.5 flex items-start justify-between gap-3 bg-[#eaf2f8]">
                         <div class="flex-1 min-w-0">
-                            <p class="font-extrabold text-sky-950">🟢 Giờ Đêm (Rẻ Nhất)</p>
-                            <p class="text-sky-900 text-[11px] mt-0.5">23:00 - 08:00 sáng</p>
-                            <p class="text-sky-800 text-[11px] mt-1 italic">✨ Tranh thủ giặt sấy giờ này.</p>
+                            <p class="font-extrabold text-[#32455c]">🟢 Giờ Đêm (Rẻ Nhất)</p>
+                            <p class="text-[#4e647d] text-[11px] mt-0.5">23:00 - 08:00 sáng</p>
+                            <p class="text-[#5c728c] text-[11px] mt-1 italic">✨ Tranh thủ giặt sấy giờ này.</p>
                         </div>
-                        <span class="font-black text-sky-950 bg-sky-200 px-2.5 py-1 rounded-xl border border-[#2d3748] whitespace-nowrap">€0.1954/kWh</span>
+                        <span class="font-black text-[#32455c] bg-[#cfe2f3] px-2.5 py-1 rounded-xl border border-[#5c4738] whitespace-nowrap">€0.1954/kWh</span>
                     </div>
                 </div>
             </div>
 
             <div class="vintage-panel p-5 space-y-3">
-                <h3 class="font-bold text-amber-950 text-sm">💡 Mẹo Tiết Kiệm Vàng:</h3>
-                <ul class="text-xs space-y-1.5 text-slate-800 list-disc list-inside leading-relaxed pl-1">
+                <h3 class="font-bold text-[#4a3b32] text-sm">💡 Mẹo Tiết Kiệm Vàng:</h3>
+                <ul class="text-xs space-y-1.5 text-[#6c584c] list-disc list-inside leading-relaxed pl-1">
                     <li><strong>Nước nóng:</strong> Tắt bình ngay sau khi tắm xong.</li>
                     <li><strong>Nấu nướng:</strong> Đậy nắp xoong nồi để nấu nhanh hơn.</li>
                     <li><strong>Thiết bị chờ:</strong> Rút phích cắm khi không dùng.</li>
@@ -157,38 +162,38 @@
         <!-- TAB 2: WEATHER & OUTFIT -->
         <div id="tab-content-weather" class="hidden space-y-6">
             <div class="vintage-panel p-5 space-y-4">
-                <div class="flex items-center justify-between gap-2 border-b-2 border-[#2d3748] pb-2.5">
+                <div class="flex items-center justify-between gap-2 border-b-2 border-[#5c4738] pb-2.5">
                     <div>
-                        <h3 class="font-bold text-amber-950 text-base flex items-center gap-2">
+                        <h3 class="font-bold text-[#4a3b32] text-base flex items-center gap-2">
                             <span>🌦️</span> Thời Tiết Dublin & Gợi Ý Mặc Đồ
                         </h3>
-                        <p class="text-xs text-amber-800 mt-0.5">Dữ liệu thực tế cập nhật liên tục.</p>
+                        <p class="text-xs text-[#7a6452] mt-0.5">Dữ liệu thực tế cập nhật liên tục.</p>
                     </div>
-                    <button onclick="fetchWeatherData()" class="bg-[#f0eade] hover:bg-[#e9dfcd] text-amber-950 text-xs font-bold px-3 py-2 rounded-xl border-1.5 border-[#2d3748] shadow-[2px_2px_0px_#2d3748] transition">
+                    <button onclick="fetchWeatherData()" class="bg-[#f0e6d6] hover:bg-[#e4d8c5] text-[#4a3b32] text-xs font-bold px-3 py-2 rounded-xl border-1.5 border-[#5c4738] shadow-[2px_2px_0px_#5c4738] transition">
                         🔄 Làm Mới
                     </button>
                 </div>
 
-                <!-- Weather Card (Xanh pastel vintage) -->
-                <div id="weather-card-bg" class="bg-gradient-to-br from-sky-400 to-indigo-500 text-white p-5 rounded-2xl shadow-[3px_3px_0px_#2d3748] border-2 border-[#2d3748] flex items-center justify-between gap-3">
+                <!-- Weather Card (Vintage Pastel Blue) -->
+                <div id="weather-card-bg" class="bg-gradient-to-br from-[#8fa8be] to-[#6a849b] text-white p-5 rounded-2xl shadow-[3px_3px_0px_#5c4738] border-2 border-[#5c4738] flex items-center justify-between gap-3">
                     <div class="space-y-1">
                         <p id="weather-condition" class="text-sm font-extrabold">Đang tải thời tiết...</p>
                         <p id="weather-temp" class="text-3xl font-black">--°C</p>
-                        <p id="weather-wind" class="text-[11px] text-sky-100 font-semibold">Gió: -- km/h</p>
+                        <p id="weather-wind" class="text-[11px] text-[#e2ecf5] font-semibold">Gió: -- km/h</p>
                     </div>
                     <div id="weather-icon-lg" class="text-6xl drop-shadow-md">☁️</div>
                 </div>
 
                 <!-- Outfit Recommendations -->
-                <div class="bg-[#fdf8ec] border-1.5 border-[#2d3748] p-4 rounded-2xl space-y-3 shadow-[2px_2px_0px_#2d3748]">
-                    <h4 class="font-bold text-amber-950 text-xs sm:text-sm flex items-center gap-2">
+                <div class="bg-[#f5ede2] border-1.5 border-[#5c4738] p-4 rounded-2xl space-y-3 shadow-[2px_2px_0px_#5c4738]">
+                    <h4 class="font-bold text-[#4a3b32] text-xs sm:text-sm flex items-center gap-2">
                         <span>👕</span> Gợi ý trang phục khi ra ngoài:
                     </h4>
                     <div class="grid grid-cols-1 gap-2.5">
-                        <div class="bg-white p-3 rounded-xl border-1.5 border-[#2d3748] text-xs text-amber-950 flex items-center gap-2.5 shadow-sm">
+                        <div class="bg-white p-3 rounded-xl border-1.5 border-[#5c4738] text-xs text-[#4a3b32] flex items-center gap-2.5 shadow-sm">
                             <span id="outfit-icon-1" class="text-xl">🧥</span> <span id="outfit-text-1" class="font-medium">Đang cập nhật...</span>
                         </div>
-                        <div class="bg-white p-3 rounded-xl border-1.5 border-[#2d3748] text-xs text-amber-950 flex items-center gap-2.5 shadow-sm">
+                        <div class="bg-white p-3 rounded-xl border-1.5 border-[#5c4738] text-xs text-[#4a3b32] flex items-center gap-2.5 shadow-sm">
                             <span id="outfit-icon-2" class="text-xl">👟</span> <span id="outfit-text-2" class="font-medium">Đang cập nhật...</span>
                         </div>
                     </div>
@@ -196,59 +201,59 @@
             </div>
         </div>
 
-        <!-- TAB 3: COOKING CHECKLIST & TIMER (Chỉ 4 mục: bếp, oven, đèn, lau bếp) -->
+        <!-- TAB 3: COOKING CHECKLIST & TIMER (Chỉ sổ ra khi hết giờ đếm ngược) -->
         <div id="tab-content-checklist" class="hidden space-y-6">
             <div class="vintage-panel p-5 space-y-4">
-                <h2 class="font-bold text-amber-950 text-base flex items-center gap-2 border-b-2 border-[#2d3748] pb-2.5">
+                <h2 class="font-bold text-[#4a3b32] text-base flex items-center gap-2 border-b-2 border-[#5c4738] pb-2.5">
                     <span>🍳</span> Hẹn Giờ Nấu Nướng & Kiểm Tra An Toàn
                 </h2>
                 
                 <!-- Timer Setup -->
                 <div class="vint-card p-4 space-y-3 bg-white">
-                    <p class="text-xs font-bold text-amber-950">⏱️ Chọn thời gian nấu (hoặc nhập số phút tùy ý):</p>
+                    <p class="text-xs font-bold text-[#4a3b32]">⏱️ Chọn thời gian nấu (hoặc nhập số phút tùy ý):</p>
                     <div class="flex flex-wrap gap-2">
-                        <button onclick="setTimerMinutes(15)" class="px-3 py-1.5 bg-amber-100 hover:bg-amber-200 text-amber-950 rounded-xl text-xs font-bold border border-[#2d3748] transition">15 phút</button>
-                        <button onclick="setTimerMinutes(30)" class="px-3 py-1.5 bg-amber-100 hover:bg-amber-200 text-amber-950 rounded-xl text-xs font-bold border border-[#2d3748] transition">30 phút</button>
-                        <button onclick="setTimerMinutes(45)" class="px-3 py-1.5 bg-amber-100 hover:bg-amber-200 text-amber-950 rounded-xl text-xs font-bold border border-[#2d3748] transition">45 phút</button>
-                        <button onclick="setTimerMinutes(60)" class="px-3 py-1.5 bg-amber-100 hover:bg-amber-200 text-amber-950 rounded-xl text-xs font-bold border border-[#2d3748] transition">60 phút</button>
+                        <button onclick="setTimerMinutes(1)" class="px-3 py-1.5 bg-[#f5ede2] hover:bg-[#e8dac7] text-[#4a3b32] rounded-xl text-xs font-bold border border-[#5c4738] transition">1 phút (Test)</button>
+                        <button onclick="setTimerMinutes(15)" class="px-3 py-1.5 bg-[#f5ede2] hover:bg-[#e8dac7] text-[#4a3b32] rounded-xl text-xs font-bold border border-[#5c4738] transition">15 phút</button>
+                        <button onclick="setTimerMinutes(30)" class="px-3 py-1.5 bg-[#f5ede2] hover:bg-[#e8dac7] text-[#4a3b32] rounded-xl text-xs font-bold border border-[#5c4738] transition">30 phút</button>
+                        <button onclick="setTimerMinutes(45)" class="px-3 py-1.5 bg-[#f5ede2] hover:bg-[#e8dac7] text-[#4a3b32] rounded-xl text-xs font-bold border border-[#5c4738] transition">45 phút</button>
                     </div>
                     <div class="flex items-center gap-2 pt-1">
-                        <input type="number" id="custom-minutes" placeholder="Nhập số phút..." min="1" max="180" class="flex-1 px-3 py-2 rounded-xl border-1.5 border-[#2d3748] text-xs bg-[#fdf8ec]">
-                        <button onclick="startCustomTimer()" class="px-4 py-2 bg-amber-600 text-white text-xs font-bold rounded-xl border-1.5 border-[#2d3748] shadow-[2px_2px_0px_#2d3748] transition">Bắt Đầu</button>
+                        <input type="number" id="custom-minutes" placeholder="Nhập số phút..." min="1" max="180" class="flex-1 px-3 py-2 rounded-xl border-1.5 border-[#5c4738] text-xs bg-[#fffaf4]">
+                        <button onclick="startCustomTimer()" class="px-4 py-2 bg-[#8c7355] text-white text-xs font-bold rounded-xl border-1.5 border-[#5c4738] shadow-[2px_2px_0px_#5c4738] transition">Bắt Đầu</button>
                     </div>
                 </div>
 
                 <!-- Active Timer Display -->
-                <div id="timer-display-box" class="hidden p-4 rounded-2xl bg-amber-50 border-1.5 border-[#2d3748] text-center space-y-2 shadow-[2px_2px_0px_#2d3748]">
-                    <p class="text-xs font-bold text-amber-900">⏳ Thời gian nấu đang đếm ngược:</p>
-                    <p id="countdown-text" class="text-3xl font-black text-amber-950">00:00</p>
-                    <button onclick="stopTimer()" class="px-3 py-1 bg-rose-200 hover:bg-rose-300 text-rose-950 rounded-lg text-xs font-bold border border-[#2d3748]">Hủy Hẹn Giờ</button>
+                <div id="timer-display-box" class="hidden p-4 rounded-2xl bg-[#f5ede2] border-1.5 border-[#5c4738] text-center space-y-2 shadow-[2px_2px_0px_#5c4738]">
+                    <p class="text-xs font-bold text-[#5c4738]">⏳ Thời gian nấu đang đếm ngược (Đang hầm canh/nấu đồ...):</p>
+                    <p id="countdown-text" class="text-3xl font-black text-[#4a3b32]">00:00</p>
+                    <button onclick="stopTimer()" class="px-3 py-1 bg-[#fbe8e6] hover:bg-[#f5d0cd] text-[#5c3232] rounded-lg text-xs font-bold border border-[#5c4738]">Hủy Hẹn Giờ</button>
                 </div>
 
-                <!-- Safety Checklist Box -->
-                <div id="safety-checklist-box" class="vintage-panel p-4 space-y-3 bg-[#fffaf0] border-2 border-[#2d3748]">
+                <!-- Safety Checklist Box (Ban đầu bị ẩn, chỉ sổ ra khi hết giờ) -->
+                <div id="safety-checklist-box" class="hidden vintage-panel p-4 space-y-3 bg-[#fffaf4] border-2 border-[#5c4738] animate-bounce">
                     <div class="flex items-center justify-between">
-                        <h4 class="font-extrabold text-amber-950 text-xs sm:text-sm flex items-center gap-1.5">
-                            <span>🔔</span> Bảng Kiểm Tra An Toàn Bếp Núc:
+                        <h4 class="font-extrabold text-[#4a3b32] text-xs sm:text-sm flex items-center gap-1.5">
+                            <span>🔔</span> Hết giờ! Bé Mây Xanh nhắc bạn kiểm tra:
                         </h4>
-                        <span class="text-[10px] bg-rose-200 text-rose-950 px-2 py-0.5 rounded-full font-bold border border-[#2d3748]">Cần kiểm tra ngay!</span>
+                        <span class="text-[10px] bg-[#fbe8e6] text-[#5c3232] px-2 py-0.5 rounded-full font-bold border border-[#5c4738]">Cần kiểm tra ngay!</span>
                     </div>
-                    <div class="space-y-2 text-xs text-slate-900 font-medium">
-                        <label class="flex items-center gap-2.5 p-2 bg-white rounded-xl border border-[#2d3748] cursor-pointer hover:bg-amber-50/50">
-                            <input type="checkbox" class="w-4 h-4 accent-amber-600 rounded">
-                            <span>☑️ Tắt bếp chưa?</span>
+                    <div class="space-y-2 text-xs text-[#4a3b32] font-medium">
+                        <label class="flex items-center gap-2.5 p-2 bg-white rounded-xl border border-[#5c4738] cursor-pointer hover:bg-[#f5ede2]/50">
+                            <input type="checkbox" class="w-4 h-4 accent-[#8c7355] rounded">
+                            <span>☑️ Đã tắt bếp chưa?</span>
                         </label>
-                        <label class="flex items-center gap-2.5 p-2 bg-white rounded-xl border border-[#2d3748] cursor-pointer hover:bg-amber-50/50">
-                            <input type="checkbox" class="w-4 h-4 accent-amber-600 rounded">
-                            <span>☑️ Tắt oven chưa?</span>
+                        <label class="flex items-center gap-2.5 p-2 bg-white rounded-xl border border-[#5c4738] cursor-pointer hover:bg-[#f5ede2]/50">
+                            <input type="checkbox" class="w-4 h-4 accent-[#8c7355] rounded">
+                            <span>☑️ Đã tắt oven chưa?</span>
                         </label>
-                        <label class="flex items-center gap-2.5 p-2 bg-white rounded-xl border border-[#2d3748] cursor-pointer hover:bg-amber-50/50">
-                            <input type="checkbox" class="w-4 h-4 accent-amber-600 rounded">
-                            <span>☑️ Tắt đèn chưa?</span>
+                        <label class="flex items-center gap-2.5 p-2 bg-white rounded-xl border border-[#5c4738] cursor-pointer hover:bg-[#f5ede2]/50">
+                            <input type="checkbox" class="w-4 h-4 accent-[#8c7355] rounded">
+                            <span>☑️ Đã tắt đèn chưa?</span>
                         </label>
-                        <label class="flex items-center gap-2.5 p-2 bg-white rounded-xl border border-[#2d3748] cursor-pointer hover:bg-amber-50/50">
-                            <input type="checkbox" class="w-4 h-4 accent-amber-600 rounded">
-                            <span>☑️ Lau bếp chưa?</span>
+                        <label class="flex items-center gap-2.5 p-2 bg-white rounded-xl border border-[#5c4738] cursor-pointer hover:bg-[#f5ede2]/50">
+                            <input type="checkbox" class="w-4 h-4 accent-[#8c7355] rounded">
+                            <span>☑️ Lau bếp sạch sẽ chưa?</span>
                         </label>
                     </div>
                 </div>
@@ -258,8 +263,8 @@
     </main>
 
     <!-- FOOTER -->
-    <footer class="text-center py-5 text-xs text-amber-800 font-medium border-t-2 border-[#2d3748] bg-[#fbf7ed] mt-4">
-        Eco-Buddy Home Manager · Vintage Edition ☁️✨
+    <footer class="text-center py-5 text-xs text-[#7a6452] font-medium border-t-2 border-[#5c4738] bg-[#f7f1e5] mt-4">
+        Eco-Buddy Home Manager · Vintage Pastel Edition 🌿🤍
     </footer>
 
     <!-- JAVASCRIPT -->
@@ -295,19 +300,19 @@
             weatherTab.classList.add('hidden');
             checklistTab.classList.add('hidden');
 
-            btnTracker.className = "px-3 py-1.5 rounded-full text-xs font-bold transition-all text-amber-950 hover:bg-white/60";
-            btnWeather.className = "px-3 py-1.5 rounded-full text-xs font-bold transition-all text-amber-950 hover:bg-white/60";
-            btnChecklist.className = "px-3 py-1.5 rounded-full text-xs font-bold transition-all text-amber-950 hover:bg-white/60";
+            btnTracker.className = "px-3 py-1.5 rounded-full text-xs font-bold transition-all text-[#4a3b32] hover:bg-white/60";
+            btnWeather.className = "px-3 py-1.5 rounded-full text-xs font-bold transition-all text-[#4a3b32] hover:bg-white/60";
+            btnChecklist.className = "px-3 py-1.5 rounded-full text-xs font-bold transition-all text-[#4a3b32] hover:bg-white/60";
 
             if (tabName === 'tracker') {
                 trackerTab.classList.remove('hidden');
-                btnTracker.className = "px-3 py-1.5 rounded-full text-xs font-bold transition-all bg-amber-600 text-white shadow-inner";
+                btnTracker.className = "px-3 py-1.5 rounded-full text-xs font-bold transition-all bg-[#8c7355] text-white shadow-inner";
             } else if (tabName === 'weather') {
                 weatherTab.classList.remove('hidden');
-                btnWeather.className = "px-3 py-1.5 rounded-full text-xs font-bold transition-all bg-amber-600 text-white shadow-inner";
+                btnWeather.className = "px-3 py-1.5 rounded-full text-xs font-bold transition-all bg-[#8c7355] text-white shadow-inner";
             } else {
                 checklistTab.classList.remove('hidden');
-                btnChecklist.className = "px-3 py-1.5 rounded-full text-xs font-bold transition-all bg-amber-600 text-white shadow-inner";
+                btnChecklist.className = "px-3 py-1.5 rounded-full text-xs font-bold transition-all bg-[#8c7355] text-white shadow-inner";
             }
         }
 
@@ -318,17 +323,17 @@
             const speech = document.getElementById('mascot-speech');
 
             if (hour >= 17 && hour < 19) {
-                badge.className = "absolute -bottom-2 left-1/2 -translate-x-1/2 bg-rose-500 text-white text-[11px] font-extrabold px-4 py-1 rounded-full shadow border-2 border-[#2d3748] whitespace-nowrap animate-pulse";
+                badge.className = "absolute -bottom-2 left-1/2 -translate-x-1/2 bg-[#bc6c25] text-white text-[11px] font-extrabold px-4 py-1 rounded-full shadow border-2 border-[#5c4738] whitespace-nowrap animate-pulse";
                 badge.innerText = "🔴 Peak Hours!";
                 speech.innerText = "⚠️ GIỜ CAO ĐIỂM (17h-19h)! Giá điện đang cao, tạm ngưng máy giặt và lò nướng nhé! 🔥";
             } else if (hour >= 23 || hour < 8) {
-                badge.className = "absolute -bottom-2 left-1/2 -translate-x-1/2 bg-emerald-500 text-white text-[11px] font-extrabold px-4 py-1 rounded-full shadow border-2 border-[#2d3748] whitespace-nowrap";
+                badge.className = "absolute -bottom-2 left-1/2 -translate-x-1/2 bg-[#87a96b] text-white text-[11px] font-extrabold px-4 py-1 rounded-full shadow border-2 border-[#5c4738] whitespace-nowrap";
                 badge.innerText = "🟢 Night Saver ON";
                 speech.innerText = "🌙 GIỜ ĐÊM RẺ NHẤT! Tranh thủ giặt sấy lúc này để tiết kiệm tiền điện tối đa nha! 🌿";
             } else {
-                badge.className = "absolute -bottom-2 left-1/2 -translate-x-1/2 bg-amber-500 text-white text-[11px] font-extrabold px-4 py-1 rounded-full shadow border-2 border-[#2d3748] whitespace-nowrap";
+                badge.className = "absolute -bottom-2 left-1/2 -translate-x-1/2 bg-[#d4a373] text-white text-[11px] font-extrabold px-4 py-1 rounded-full shadow border-2 border-[#5c4738] whitespace-nowrap";
                 badge.innerText = "Normal Hours ☀️";
-                speech.innerText = "☕ Khung giờ giá bình thường. Sử dụng thiết bị hợp lý và giữ tinh thần thoải mái nhé! 😊";
+                speech.innerText = "Tiết kiệm điện cùng mình nhé! 🤍";
             }
         }
 
@@ -345,6 +350,9 @@
                 return;
             }
 
+            // Ẩn khung checklist khi bắt đầu đếm ngược
+            document.getElementById('safety-checklist-box').classList.add('hidden');
+
             clearInterval(countdownInterval);
             let remaining = totalSecs;
             const displayBox = document.getElementById('timer-display-box');
@@ -358,8 +366,10 @@
                 
                 if (remaining <= 0) {
                     clearInterval(countdownInterval);
-                    alert("⏰ Đã hết thời gian nấu! Hãy kiểm tra ngay bảng an toàn bên dưới nhé!");
                     displayBox.classList.add('hidden');
+                    // Sổ ra khung reminder an toàn khi hết giờ
+                    document.getElementById('safety-checklist-box').classList.remove('hidden');
+                    alert("⏰ Đã hết thời gian! Bé Mây Xanh đã mở bảng kiểm tra an toàn, bạn check ngay nhé!");
                 }
                 remaining--;
             }, 1000);
@@ -396,13 +406,7 @@
                     let condition = "Trời quang đãng";
                     let icon = "☀️";
                     let o1 = { icon: "🧥", text: "Áo khoác nhẹ hoặc cardigan" };
-                    let o2 = { icon: "👟", text: "Giày sneaker thoải mái dạo phố" };
-
-                    if (temp < 10) {
-                        weatherCardBg.className = "bg-gradient-to-br from-sky-500 to-indigo-600 text-white p-5 rounded-2xl shadow-[3px_3px_0px_#2d3748] border-2 border-[#2d3748] flex items-center justify-between gap-3";
-                    } else {
-                        weatherCardBg.className = "bg-gradient-to-br from-amber-400 to-orange-500 text-white p-5 rounded-2xl shadow-[3px_3px_0px_#2d3748] border-2 border-[#2d3748] flex items-center justify-between gap-3";
-                    }
+                    let o2 = { icon: "👟", text: "Gi giày sneaker thoải mái dạo phố" };
 
                     if (precip > 0 || (wcode >= 50 && wcode < 68)) {
                         condition = "Trời có mưa nhẹ";
