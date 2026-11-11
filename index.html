@@ -1,214 +1,534 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Eco-Buddy Home Manager</title>
+    <title>Eco-Buddy Home Manager ⚡☁️</title>
+    
+    <!-- CẤU HÌNH PWA CHO GITHUB PAGES -->
+    <link rel="manifest" href="/Saving_Money/manifest.json">
+    <meta name="theme-color" content="#fcf8f2">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Eco-Buddy">
+    <link rel="apple-touch-icon" href="/Saving_Money/icons/icon-192.png">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Quicksand -->
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --bg-color: #fdfbf7;
-            --card-bg: #ffffff;
-            --border-color: #e6dec5;
-            --text-main: #3d332a;
-            --accent-brown: #5c4033;
-        }
-
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            margin: 0;
-            padding: 12px;
-            box-sizing: border-box;
+            font-family: 'Quicksand', sans-serif;
+            background-color: #fcf8f2; 
+            color: #4a3b32;
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f4ecdf;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #d8c7b0;
+            border-radius: 3px;
+        }
+        .vintage-panel { 
+            background: linear-gradient(145deg, #fffdfa 0%, #f7f1e5 100%); 
+            border: 2px solid #5c4738; 
+            box-shadow: 4px 4px 0px #5c4738; 
+            border-radius: 1.5rem;
+        }
+        .vint-card {
+            background: #fffaf4;
+            border: 1.5px solid #5c4738;
+            border-radius: 1rem;
+            box-shadow: 2px 2px 0px #5c4738;
         }
 
-        .container {
-            max-width: 480px;
-            margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
+        /* Thanh điều hướng 1 hàng 4 tab ngang hàng gọn gàng */
+        .nav-pills {
+            width: 100%;
+            max-width: 380px;
+            padding: 5px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 3px;
+            background: #f0e6d6;
+            border-radius: 30px;
+            border: 1px solid #e4d8c5;
         }
-
-        /* Thẻ chung */
-        .card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 16px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
-        }
-
-        /* 1. Biểu giá điện trong ngày (1 hàng ngang) */
-        .tariff-single-row {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: #fdfbf7;
-            padding: 10px 12px;
-            border-radius: 12px;
-            border: 1px solid #e6dec5;
-            font-size: 13px;
-            overflow-x: auto;
+        .nav-btn {
+            border: 2px solid transparent;
+            border-radius: 20px;
+            padding: 6px 2px;
+            font-size: 11px;
+            font-weight: 700;
+            color: #4a3b32;
+            background: transparent;
+            transition: .2s;
+            text-align: center;
             white-space: nowrap;
         }
-
-        .tariff-title {
-            font-weight: bold;
-            color: #b87333;
+        .nav-btn.active {
+            background: #8c7355;
+            color: white;
+            border-color: #5c4738;
+            box-shadow: 2px 2px 0 #5c4738;
         }
 
-        .tariff-item {
-            background: #fff;
-            padding: 4px 8px;
-            border-radius: 6px;
-            border: 1px solid #eee;
-        }
-
-        /* 2. Nhắc nhở & Mẹo xanh (1 hàng ngang gọn) */
-        .reminder-single-row {
+        /* KHUNG 1 HÀNG NGANG CHO BIỂU GIÁ VÀ NHẮC NHỞ (TRÁNH RỚT DÒNG) */
+        .single-row-box {
             display: flex;
             align-items: center;
             gap: 10px;
-            background: #fffbe6;
-            padding: 10px 12px;
-            border-radius: 12px;
-            border: 1px solid #ffe58f;
-            font-size: 13px;
+            background: #fffaf4;
+            border: 1.5px solid #5c4738;
+            border-radius: 1rem;
+            padding: 10px 14px;
             overflow-x: auto;
             white-space: nowrap;
+            box-shadow: 2px 2px 0px #5c4738;
         }
-
-        .reminder-label {
-            font-weight: bold;
-            color: #d48806;
-        }
-
-        /* 3. Phần Hẹn Giờ Nấu Nướng & An Toàn */
-        .cooking-card h3 {
-            font-size: 18px; /* Tăng size chữ tiêu đề to rõ */
-            font-weight: bold;
-            margin-top: 0;
-            margin-bottom: 6px;
-        }
-
-        .cooking-instruction {
-            font-size: 15px; /* Tăng size chữ hướng dẫn */
-            color: #555;
-            margin-bottom: 12px;
-        }
-
-        .cooking-time-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-            margin-bottom: 12px;
-        }
-
-        .time-btn {
-            background: #fff;
-            border: 1px solid #dcd3b8;
-            padding: 12px;
+        .single-row-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #f5ede2;
+            padding: 5px 10px;
             border-radius: 10px;
-            font-size: 15px; /* Tăng size chữ nút bấm */
-            font-weight: 500;
-            cursor: pointer;
-            text-align: center;
-            transition: all 0.2s;
+            border: 1px solid #d8c7b0;
+            font-size: 12px;
+            font-weight: 600;
         }
 
-        .time-btn.full-width {
-            grid-column: span 3; /* Đưa nút 60 phút xuống hàng riêng, kéo dài cân đối */
-            background: #f5efe6;
-            font-weight: bold;
-        }
-
-        .time-btn:active {
-            background: #e3d7c1;
-        }
-
-        .custom-time-box {
+        /* Cửa sổ hội thoại Safety Chat */
+        .chat-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: #fcf8f2;
             display: flex;
-            gap: 8px;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+        }
+        .chat-overlay.hidden {
+            display: none;
+        }
+        .chat-window {
+            width: min(560px, 100%);
+            max-height: 95vh;
+            overflow-y: auto;
+            padding: 22px;
+            background: linear-gradient(145deg, #fffdfa, #f7f1e5);
+            border: 2px solid #5c4738;
+            border-radius: 26px;
+            box-shadow: 6px 6px 0 #5c4738;
+        }
+        .chat-bubble {
+            background: #f5ede2;
+            border: 1px solid #d8c7b0;
+            padding: 15px;
+            border-radius: 20px;
+            width: 100%;
+        }
+        .chat-scene {
+            background: #fffaf4;
+            border: 1.5px dashed #b9a487;
+            border-radius: 22px;
+            min-height: 100px;
+        }
+        .chat-choice {
+            width: 100%;
+            padding: 12px;
+            background: #fffdfa;
+            border: 1.5px solid #8c7355;
+            border-radius: 15px;
+            text-align: left;
+            font-weight: 700;
+            font-size: 13px;
+        }
+        .chat-choice:hover {
+            background: #f0e6d6;
         }
 
-        .custom-time-box input {
-            flex: 1;
-            padding: 10px 12px;
-            border-radius: 10px;
-            border: 1px solid #dcd3b8;
-            font-size: 14px;
-            outline: none;
+        /* MASCOT STYLES CHUẨN MỚI */
+        .eco-mascot {
+            width: 180px;
+            height: 180px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: visible;
+        }
+        .eco-character {
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+            animation: mascot-float 3s ease-in-out infinite;
+            transform-origin: center bottom;
+        }
+        .mascot-leaves {
+            transform-origin: 150px 60px;
+            animation: mascot-leaves 3s ease-in-out infinite;
+        }
+        .mascot-arm-right {
+            transform-origin: 235px 165px;
+            animation: mascot-wave 2.8s ease-in-out infinite;
+        }
+        .mascot-arm-left {
+            transform-origin: 80px 180px;
+            animation: mascot-hand 3s ease-in-out infinite;
+        }
+        .mascot-sparkle {
+            animation: mascot-twinkle 1.8s ease-in-out infinite;
+        }
+        .mascot-battery {
+            animation: mascot-breathe 3s ease-in-out infinite;
+            transform-origin: center;
+        }
+        @keyframes mascot-float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+        }
+        @keyframes mascot-leaves {
+            0%, 100% { transform: rotate(0); }
+            50% { transform: rotate(5deg); }
+        }
+        @keyframes mascot-wave {
+            0%, 100% { transform: rotate(0); }
+            50% { transform: rotate(-7deg); }
+        }
+        @keyframes mascot-hand {
+            0%, 100% { transform: rotate(0); }
+            50% { transform: rotate(-3deg); }
+        }
+        @keyframes mascot-twinkle {
+            0%, 100% { opacity: .45; }
+            50% { opacity: 1; }
+        }
+        @keyframes mascot-breathe {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(2px); }
         }
 
-        .start-btn {
-            background: var(--accent-brown);
-            color: #fff;
-            border: none;
-            padding: 10px 18px;
-            border-radius: 10px;
-            font-size: 14px;
-            font-weight: bold;
-            cursor: pointer;
+        /* ===== MASCOT ACTION ANIMATIONS ===== */
+        .eco-character.pose-happy .mascot-arm-left {
+            animation: arm-cheer-left 0.6s ease-in-out infinite alternate;
+        }
+        .eco-character.pose-happy .mascot-arm-right {
+            animation: arm-cheer-right 0.6s ease-in-out infinite alternate;
+        }
+        .eco-character.pose-wait {
+            animation: mascot-wait 1.2s ease-in-out infinite;
+        }
+        .eco-character.pose-dance {
+            animation: mascot-dance 0.55s ease-in-out infinite;
+        }
+
+        /* Tắt bếp */
+        .eco-character.pose-stove .mascot-arm-right {
+            animation: stove-check 0.8s ease-in-out infinite alternate;
+        }
+        .eco-character.pose-stove {
+            animation: mascot-check 1.2s ease-in-out infinite;
+        }
+        @keyframes stove-check {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(-15deg); }
+        }
+
+        /* Tắt lò nướng */
+        .eco-character.pose-oven .mascot-arm-right {
+            animation: oven-check 0.7s ease-in-out infinite alternate;
+        }
+        @keyframes oven-check {
+            from { transform: rotate(-5deg); }
+            to { transform: rotate(12deg); }
+        }
+
+        /* Tắt đèn */
+        .eco-character.pose-light .mascot-arm-left {
+            animation: light-left 0.6s ease-in-out infinite alternate;
+        }
+        .eco-character.pose-light .mascot-arm-right {
+            animation: light-right 0.6s ease-in-out infinite alternate;
+        }
+        @keyframes light-left {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(-35deg); }
+        }
+        @keyframes light-right {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(25deg); }
+        }
+
+        /* Lau bếp */
+        .eco-character.pose-wipe .mascot-arm-left {
+            animation: wipe-left 0.45s ease-in-out infinite alternate;
+        }
+        .eco-character.pose-wipe .mascot-arm-right {
+            animation: wipe-right 0.45s ease-in-out infinite alternate;
+        }
+        @keyframes wipe-left {
+            from { transform: rotate(-18deg) translateX(-2px); }
+            to { transform: rotate(18deg) translateX(5px); }
+        }
+        @keyframes wipe-right {
+            from { transform: rotate(15deg) translateX(2px); }
+            to { transform: rotate(-15deg) translateX(-5px); }
+        }
+
+        @keyframes arm-cheer-left {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(-18deg); }
+        }
+        @keyframes arm-cheer-right {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(15deg); }
+        }
+        @keyframes mascot-check {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-4px) rotate(-3deg); }
+        }
+        @keyframes mascot-wait {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(3px) rotate(2deg); }
+        }
+        @keyframes mascot-dance {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-9px) rotate(-5deg); }
+            75% { transform: translateY(-9px) rotate(5deg); }
         }
     </style>
 </head>
-<body>
+<body class="min-h-screen flex flex-col justify-between selection:bg-amber-200">
 
-<div class="container">
+    <!-- HEADER -->
+    <header class="bg-[#fffdfa]/95 backdrop-blur-sm shadow-sm sticky top-0 z-50 border-b-2 border-[#5c4738]">
+        <div class="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between gap-4 flex-wrap">
+            <div class="flex items-center space-x-2.5">
+                <span class="text-2xl">🌿</span>
+                <div>
+                    <h1 class="font-bold text-base text-[#4a3b32] leading-tight">Eco-Buddy Home Manager</h1>
+                    <p class="text-[11px] text-[#7a6452] font-medium">Live Tariff & Weather ⚡ <span id="realtime-clock" class="text-[#5c4738] font-bold"></span></p>
+                </div>
+            </div>
+            
+            <!-- 4 TAB NGANG HÀNG -->
+            <div class="nav-pills">
+              <button onclick="switchTab('tracker')" id="tab-btn-tracker" class="nav-btn active">⚡ Tariff</button>
+              <button onclick="switchTab('weather')" id="tab-btn-weather" class="nav-btn">🌦️ Weather</button>
+              <button onclick="switchTab('checklist')" id="tab-btn-checklist" class="nav-btn">🍳 Nấu Nướng</button>
+              <button onclick="switchTab('calendar')" id="tab-btn-calendar" class="nav-btn">📅 Calendar</button>
+            </div>
+        </div>
+    </header>
 
-    <!-- 1. BẢNG GIÁ ĐIỆN (1 HÀNG NGANG) -->
-    <div class="tariff-single-row">
-        <span class="tariff-title">⚡ Biểu Giá (SS Saver):</span>
-        <span class="tariff-item">🌞 Bình Thường: <b>€0.3719</b></span>
-        <span class="tariff-item">🔴 Cao Điểm: <b>€0.3968</b></span>
-        <span class="tariff-item">🟢 Đêm: <b>€0.1954</b></span>
-    </div>
-
-    <!-- 2. NHẮC NHỞ & MẸO XANH (1 HÀNG NGANG) -->
-    <div class="reminder-single-row">
-        <span class="reminder-label">💡 Nhắc Nhở:</span>
-        <span>💡 Tắt đèn phòng</span> • 
-        <span>🔒 Khóa cửa cẩn thận</span> • 
-        <span>🔌 Rút phích cắm chờ</span> • 
-        <span>🚿 Tắt bình nước nóng</span>
-    </div>
-
-    <!-- 3. HẸN GIỜ NẤU NƯỚNG & AN TOÀN (TĂNG FONT CHỮ & 60 PHÚT XUỐNG DƯỚI) -->
-    <div class="card cooking-card">
-        <h3>🕒 Hẹn Giờ Nấu Nướng & Kiểm Tra An Toàn</h3>
-        <p class="cooking-instruction">Chọn thời gian nấu (hoặc nhập số phút tùy ý):</p>
+    <!-- MAIN CONTAINER -->
+    <main class="max-w-xl mx-auto px-4 py-6 flex-grow w-full space-y-6">
         
-        <div class="cooking-time-grid">
-            <button class="time-btn" onclick="setCookingTime(15)">15 phút</button>
-            <button class="time-btn" onclick="setCookingTime(30)">30 phút</button>
-            <button class="time-btn" onclick="setCookingTime(45)">45 phút</button>
-            <!-- 60 phút đã được đưa xuống hàng dưới độc lập -->
-            <button class="time-btn full-width" onclick="setCookingTime(60)">60 phút</button>
+        <!-- MASCOT & INTRO CARD -->
+        <div class="vintage-panel p-5 flex flex-col items-center text-center">
+            <div class="relative mb-2 w-full flex justify-center">
+                <div class="eco-mascot">
+                    <svg id="main-mascot-svg" class="eco-character" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                          <filter id="ecoShadow">
+                            <feGaussianBlur stdDeviation="3"/>
+                          </filter>
+                        </defs>
+                        <ellipse cx="150" cy="269" rx="66" ry="8" fill="#b9a27b" opacity=".18"/>
+                        <g class="mascot-legs">
+                          <path d="M116 220 Q105 239 107 252 Q110 261 134 257 L145 229" fill="#fff9ed" stroke="#75604d" stroke-width="5" stroke-linejoin="round"/>
+                          <ellipse cx="121" cy="257" rx="19" ry="10" fill="#fff9ed" stroke="#75604d" stroke-width="4"/>
+                          <path d="M174 222 Q188 239 185 252 Q182 262 159 257 L151 229" fill="#fff9ed" stroke="#75604d" stroke-width="5" stroke-linejoin="round"/>
+                          <ellipse cx="176" cy="257" rx="19" ry="10" fill="#fff9ed" stroke="#75604d" stroke-width="4"/>
+                        </g>
+                        <path d="M83 164 Q65 153 69 134 Q53 119 65 101 Q71 82 91 81 Q96 58 119 62 Q137 43 153 57 Q171 43 189 61 Q215 58 224 82 Q246 89 241 111 Q257 129 240 147 Q249 168 229 184 Q232 207 211 220 Q194 236 170 233 Q150 241 128 233 Q102 237 87 218 Q68 207 77 186 Q64 176 83 164 Z" fill="#fff9ed" stroke="#75604d" stroke-width="5" stroke-linejoin="round"/>
+                        <g class="mascot-leaves">
+                          <path d="M145 57 Q108 45 103 23 Q134 17 151 46 Z" fill="#a3a875" stroke="#756b49" stroke-width="4"/>
+                          <path d="M151 48 Q171 13 198 25 Q194 52 158 62 Z" fill="#7d9368" stroke="#756b49" stroke-width="4"/>
+                          <path d="M111 29 Q130 37 145 51" fill="none" stroke="#6e8056" stroke-width="2"/>
+                          <path d="M190 30 Q172 41 158 54" fill="none" stroke="#6e8056" stroke-width="2"/>
+                        </g>
+                        <ellipse cx="105" cy="137" rx="13" ry="9" fill="#f5bca8"/>
+                        <ellipse cx="197" cy="137" rx="13" ry="9" fill="#f5bca8"/>
+                        <ellipse cx="128" cy="124" rx="5" ry="7" fill="#574b40"/>
+                        <ellipse cx="177" cy="124" rx="5" ry="7" fill="#574b40"/>
+                        <path d="M146 140 Q151 148 157 140" fill="none" stroke="#574b40" stroke-width="3.5" stroke-linecap="round"/>
+                        <g class="mascot-scarf">
+                          <path d="M78 159 Q113 173 151 158 Q190 173 226 154 L223 178 Q186 194 150 178 Q113 195 81 178 Z" fill="#8e9973" stroke="#6e7457" stroke-width="4"/>
+                          <path d="M94 165 L107 183 M119 168 L132 186 M157 165 L170 184 M190 163 L204 179" stroke="#c3bd91" stroke-width="3" opacity=".8"/>
+                          <path d="M204 175 Q224 190 214 217 L197 204 L193 187" fill="#9ca17a" stroke="#6e7457" stroke-width="4"/>
+                        </g>
+                        <g class="mascot-arm-left">
+                          <path d="M83 165 Q62 161 52 179 Q42 193 51 205 Q62 217 77 198 Q83 190 89 183" fill="#fff9ed" stroke="#75604d" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </g>
+                        <g class="mascot-arm-right">
+                          <path d="M220 163 Q244 158 249 136" fill="none" stroke="#75604d" stroke-width="17" stroke-linecap="round"/>
+                          <path d="M220 163 Q244 158 249 136" fill="none" stroke="#fff9ed" stroke-width="11" stroke-linecap="round"/>
+                          <g transform="translate(227 67) rotate(13 25 40)">
+                            <rect x="12" y="24" width="42" height="49" rx="12" fill="#b7a78b" stroke="#75604d" stroke-width="4"/>
+                            <rect x="19" y="3" width="7" height="28" rx="3" fill="#75604d"/>
+                            <rect x="41" y="3" width="7" height="28" rx="3" fill="#75604d"/>
+                            <path d="M32 39 L24 52 L32 52 L27 64 L43 47 L34 47 Z" fill="#f6d36d"/>
+                          </g>
+                        </g>
+                        <g class="mascot-battery">
+                          <path d="M95 181 Q120 174 141 182 L143 224 Q119 238 96 222 Z" fill="#a4a981" stroke="#6e7457" stroke-width="4"/>
+                          <rect x="108" y="192" width="28" height="27" rx="6" fill="#e8e3c9" stroke="#72805f" stroke-width="3"/>
+                          <path d="M122 197 L116 207 L122 207 L118 215 L130 203 L124 203 Z" fill="#e7b947"/>
+                        </g>
+                        <g>
+                          <rect x="157" y="191" width="36" height="29" rx="7" fill="#e8e0c7" stroke="#8b8b66" stroke-width="3"/>
+                          <rect x="169" y="187" width="12" height="6" rx="3" fill="#a4a981"/>
+                          <path d="M174 197 L168 207 L176 207 L172 215 L183 203 L177 203 Z" fill="#d7ad4e"/>
+                        </g>
+                        <path d="M69 116 Q60 109 66 102" stroke="#d4b66d" stroke-width="4" fill="none" stroke-linecap="round"/>
+                        <path d="M236 98 Q245 89 251 99" stroke="#d4b66d" stroke-width="4" fill="none" stroke-linecap="round"/>
+                        <g class="mascot-sparkle" fill="#d9b85f">
+                          <path d="M48 76 L52 87 L63 91 L52 95 L48 106 L44 95 L33 91 L44 87 Z"/>
+                          <path d="M263 174 L266 182 L274 185 L266 188 L263 196 L260 188 L252 185 L260 182 Z"/>
+                        </g>
+                    </svg>
+                </div>
+                <div id="status-badge" class="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-[#87a96b] text-white text-[11px] font-extrabold px-4 py-1 rounded-full shadow border-2 border-[#5c4738] whitespace-nowrap">
+                    Normal Hours ☀️
+                </div>
+            </div>
+            <h3 class="font-bold text-[#4a3b32] text-base mt-2">Bé Mây Xanh</h3>
+            <p class="text-[11px] text-[#7a6452] font-semibold italic mt-0.5">🌿 Có chiếc pin nhỏ trên người, tai là lá cây, luôn đồng hành cùng bạn.</p>
+            <p id="mascot-speech" class="text-xs text-[#5c4738] font-medium bg-[#f5ede2] p-3 rounded-2xl border-1.5 border-[#5c4738] w-full mt-3 leading-relaxed">
+                "Tiết kiệm điện cùng mình nhé! 🤍"
+            </p>
         </div>
 
-        <div class="custom-time-box">
-            <input type="number" id="customMinutes" placeholder="Nhập số phút tùy ý...">
-            <button class="start-btn" onclick="startCustomTimer()">Bắt Đầu</button>
+        <!-- TAB 1: TARIFF & TIPS -->
+        <div id="tab-content-tracker" class="space-y-6">
+            
+            <!-- 1. BIỂU GIÁ ĐIỆN: 1 HÀNG NGANG DUY NHẤT -->
+            <div class="vintage-panel p-4 space-y-3">
+                <h2 class="font-bold text-[#4a3b32] text-sm flex items-center gap-2 border-b-2 border-[#5c4738] pb-2">
+                    <span>⚡</span> Biểu Giá Điện Trong Ngày (SS Saver)
+                </h2>
+                <div class="single-row-box">
+                    <div class="single-row-item bg-[#f2f7ec]">
+                        <span>☀️ Bình Thường:</span>
+                        <strong class="text-[#3b4a32]">€0.3719/kWh</strong>
+                    </div>
+                    <div class="single-row-item bg-[#fbe8e6]">
+                        <span>🔴 Cao Điểm:</span>
+                        <strong class="text-[#5c3232]">€0.3968/kWh</strong>
+                    </div>
+                    <div class="single-row-item bg-[#eaf2f8]">
+                        <span>🟢 Đêm:</span>
+                        <strong class="text-[#2b4c7e]">€0.1954/kWh</strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. NHẮC NHỞ & MẸO XANH: 1 HÀNG NGANG DUY NHẤT -->
+            <div class="vintage-panel p-4 space-y-3">
+                <h2 class="font-bold text-[#4a3b32] text-sm flex items-center gap-2 border-b-2 border-[#5c4738] pb-2">
+                    <span>💡</span> Nhắc Nhở & Mẹo Xanh Hàng Ngày
+                </h2>
+                <div class="single-row-box">
+                    <div class="single-row-item">
+                        <span>💡 Tắt đèn:</span> Nhớ tắt khi ra khỏi phòng
+                    </div>
+                    <div class="single-row-item">
+                        <span>🔒 Kiểm tra cửa:</span> Khóa cửa cẩn thận
+                    </div>
+                    <div class="single-row-item">
+                        <span>🔌 Rút phích cắm:</span> Ngắt thiết bị chờ
+                    </div>
+                    <div class="single-row-item">
+                        <span>🚿 Bình nước nóng:</span> Tắt sau khi dùng
+                    </div>
+                </div>
+            </div>
+
         </div>
-    </div>
 
-</div>
+        <!-- TAB 3: NẤU NƯỚNG (TĂNG SIZE CHỮ & 60 PHÚT XUỐNG DÒNG) -->
+        <div id="tab-content-checklist" class="space-y-6 hidden">
+            <div class="vintage-panel p-5 space-y-4">
+                <h2 class="font-bold text-[#4a3b32] text-lg flex items-center gap-2 border-b-2 border-[#5c4738] pb-2.5">
+                    <span>🍳</span> Hẹn Giờ Nấu Nướng & Kiểm Tra An Toàn
+                </h2>
+                <p class="text-sm font-semibold text-[#5c4738]">Chọn thời gian nấu (hoặc nhập số phút tùy ý):</p>
+                
+                <!-- Bố cục nút thời gian: 15, 30, 45 hàng trên; 60 phút xuống hàng dưới full width, tăng font to rõ -->
+                <div class="grid grid-cols-3 gap-2.5">
+                    <button onclick="setCookingTime(15)" class="vint-card py-3.5 px-2 text-center font-bold text-base hover:bg-[#f5ede2] transition">15 phút</button>
+                    <button onclick="setCookingTime(30)" class="vint-card py-3.5 px-2 text-center font-bold text-base hover:bg-[#f5ede2] transition">30 phút</button>
+                    <button onclick="setCookingTime(45)" class="vint-card py-3.5 px-2 text-center font-bold text-base hover:bg-[#f5ede2] transition">45 phút</button>
+                    <button onclick="setCookingTime(60)" class="vint-card col-span-3 py-3.5 px-2 text-center font-bold text-base bg-[#f5ede2] hover:bg-[#eadfc9] transition">60 phút</button>
+                </div>
 
-<script>
-    function setCookingTime(minutes) {
-        alert("Đã chọn thời gian nấu: " + minutes + " phút");
-    }
+                <div class="flex gap-2 pt-2">
+                    <input type="number" id="customMinutes" placeholder="Nhập số phút tùy ý..." class="flex-grow vint-card px-3.5 py-2.5 text-sm outline-none font-medium">
+                    <button onclick="startCustomTimer()" class="bg-[#5c4738] text-white font-bold px-5 py-2.5 rounded-xl border-1.5 border-[#4a3b32] text-sm shadow">Bắt Đầu</button>
+                </div>
+            </div>
+        </div>
 
-    function startCustomTimer() {
-        const mins = document.getElementById("customMinutes").value;
-        if(mins) {
-            alert("Đã bắt đầu hẹn giờ: " + mins + " phút");
-        } else {
-            alert("Vui lòng nhập số phút hợp lệ!");
+        <!-- TAB 2: WEATHER (Placeholder) -->
+        <div id="tab-content-weather" class="space-y-6 hidden">
+            <div class="vintage-panel p-5 text-center">
+                <h2 class="font-bold text-[#4a3b32] text-base mb-2">🌦️ Dự Báo Thời Tiết</h2>
+                <p class="text-xs text-[#7a6452]">Thông tin thời tiết sẽ hiển thị tại đây.</p>
+            </div>
+        </div>
+
+        <!-- TAB 4: CALENDAR (Placeholder) -->
+        <div id="tab-content-calendar" class="space-y-6 hidden">
+            <div class="vintage-panel p-5 text-center">
+                <h2 class="font-bold text-[#4a3b32] text-base mb-2">📅 Lịch Biểu Thiết Bị</h2>
+                <p class="text-xs text-[#7a6452]">Lịch hẹn giờ thiết bị sẽ hiển thị tại đây.</p>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="text-center py-4 text-xs font-semibold text-[#7a6452]">
+        Eco-Buddy Home Manager · Vintage Pastel Edition 🌿🤍
+    </footer>
+
+    <script>
+        function switchTab(tabId) {
+            ['tracker', 'weather', 'checklist', 'calendar'].forEach(t => {
+                document.getElementById(`tab-content-${t}`).classList.add('hidden');
+                document.getElementById(`tab-btn-${t}`).classList.remove('active');
+            });
+            document.getElementById(`tab-content-${tabId}`).classList.remove('hidden');
+            document.getElementById(`tab-btn-${tabId}`).classList.add('active');
         }
-    }
-</script>
 
+        function setCookingTime(minutes) {
+            alert("Đã chọn thời gian nấu: " + minutes + " phút");
+        }
+
+        function startCustomTimer() {
+            const mins = document.getElementById("customMinutes").value;
+            if(mins) {
+                alert("Đã bắt đầu hẹn giờ: " + mins + " phút");
+            } else {
+                alert("Vui lòng nhập số phút hợp lệ!");
+            }
+        }
+
+        // Cập nhật đồng hồ thời gian thực
+        setInterval(() => {
+            const now = new Date();
+            document.getElementById('realtime-clock').innerText = now.toLocaleTimeString('vi-VN');
+        }, 1000);
+    </script>
 </body>
 </html>
