@@ -44,18 +44,112 @@
             border-radius: 1rem;
             box-shadow: 2px 2px 0px #5c4738;
         }
-        /* Style cho lịch lò xo đỏ retro */
-        .retro-calendar {
-            background: #fffbf5;
-            border: 2px solid #5c4738;
-            border-radius: 1rem;
-            box-shadow: 3px 3px 0px #5c4738;
-            overflow: hidden;
+
+        /* Thanh điều hướng mới */
+        .nav-pills {
+            width: 360px;
+            max-width: 100%;
+            margin: auto;
+            padding: 7px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5px;
+            background: #f0e6d6;
+            border-radius: 40px;
+            border: 1px solid #e4d8c5;
         }
-        .retro-calendar-header {
-            background: #d9534f;
-            border-bottom: 2px solid #5c4738;
+        .nav-btn {
+            border: 2px solid transparent;
+            border-radius: 30px;
+            padding: 8px 10px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #4a3b32;
+            background: transparent;
+            transition: .2s;
+        }
+        .nav-btn.active {
+            background: #8c7355;
             color: white;
+            border-color: #5c4738;
+            box-shadow: 2px 2px 0 #5c4738;
+        }
+
+        /* Cửa sổ hội thoại Safety Chat */
+        .chat-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: #fcf8f2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+        }
+        .chat-overlay.hidden {
+            display: none;
+        }
+        .chat-window {
+            width: min(560px, 100%);
+            max-height: 95vh;
+            overflow-y: auto;
+            padding: 22px;
+            background: linear-gradient(145deg, #fffdfa, #f7f1e5);
+            border: 2px solid #5c4738;
+            border-radius: 26px;
+            box-shadow: 6px 6px 0 #5c4738;
+        }
+        .chat-bubble {
+            background: #f5ede2;
+            border: 1px solid #d8c7b0;
+            padding: 15px;
+            border-radius: 20px;
+            width: 100%;
+        }
+        .chat-scene {
+            background: #fffaf4;
+            border: 1.5px dashed #b9a487;
+            border-radius: 22px;
+            min-height: 115px;
+        }
+        .chat-mascot {
+            width: 180px;
+            height: 180px;
+            animation: buddy-breathe 2s ease-in-out infinite;
+        }
+        .mascot-idle { animation: buddy-breathe 2s infinite; }
+        .mascot-happy { animation: buddy-jump .55s ease-in-out 2; }
+        .mascot-work { animation: buddy-work .7s ease-in-out infinite; }
+        .mascot-walk { animation: buddy-walk .45s ease-in-out infinite alternate; }
+
+        @keyframes buddy-breathe {
+            0%,100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-6px) scale(1.025); }
+        }
+        @keyframes buddy-jump {
+            0%,100% { transform: translateY(0) rotate(0); }
+            50% { transform: translateY(-20px) rotate(-5deg); }
+        }
+        @keyframes buddy-work {
+            0%,100% { transform: rotate(-4deg); }
+            50% { transform: rotate(4deg); }
+        }
+        @keyframes buddy-walk {
+            from { transform: translateX(-5px) rotate(-3deg); }
+            to { transform: translateX(5px) rotate(3deg); }
+        }
+        .chat-choice {
+            width: 100%;
+            padding: 13px;
+            background: #fffdfa;
+            border: 1.5px solid #8c7355;
+            border-radius: 15px;
+            text-align: left;
+            font-weight: 700;
+            font-size: 13px;
+        }
+        .chat-choice:hover {
+            background: #f0e6d6;
         }
     </style>
 </head>
@@ -63,29 +157,31 @@
 
     <!-- HEADER -->
     <header class="bg-[#fffdfa]/95 backdrop-blur-sm shadow-sm sticky top-0 z-50 border-b-2 border-[#5c4738]">
-        <div class="max-w-xl mx-auto px-4 py-3 flex flex-col sm:flex-row items-center justify-between gap-3">
-            <div class="flex items-center space-x-2.5">
-                <span class="text-2xl">🌿</span>
-                <div>
-                    <h1 class="font-bold text-base text-[#4a3b32] leading-tight">Eco-Buddy Home Manager</h1>
-                    <p class="text-[11px] text-[#7a6452] font-medium">Live Tariff & Weather ⚡ <span id="realtime-clock" class="text-[#5c4738] font-bold"></span></p>
+        <div class="max-w-xl mx-auto px-4 py-3 flex flex-col items-center justify-between gap-3">
+            <div class="flex items-center space-x-2.5 w-full justify-between">
+                <div class="flex items-center space-x-2">
+                    <span class="text-2xl">🌿</span>
+                    <div>
+                        <h1 class="font-bold text-base text-[#4a3b32] leading-tight">Eco-Buddy Home Manager</h1>
+                        <p class="text-[11px] text-[#7a6452] font-medium">Live Tariff & Weather ⚡ <span id="realtime-clock" class="text-[#5c4738] font-bold"></span></p>
+                    </div>
                 </div>
             </div>
             
-            <!-- Tab Switchers -->
-            <div class="flex bg-[#f0e6d6] p-1 rounded-full border-1.5 border-[#5c4738] flex-wrap justify-center">
-                <button onclick="switchTab('tracker')" id="tab-btn-tracker" class="px-3 py-1.5 rounded-full text-xs font-bold transition-all bg-[#8c7355] text-white shadow-inner">
-                    ⚡ Tariff
-                </button>
-                <button onclick="switchTab('calendar')" id="tab-btn-calendar" class="px-3 py-1.5 rounded-full text-xs font-bold transition-all text-[#4a3b32] hover:bg-white/60">
-                    📅 Calendar
-                </button>
-                <button onclick="switchTab('weather')" id="tab-btn-weather" class="px-3 py-1.5 rounded-full text-xs font-bold transition-all text-[#4a3b32] hover:bg-white/60">
-                    🌦️ Weather
-                </button>
-                <button onclick="switchTab('checklist')" id="tab-btn-checklist" class="px-3 py-1.5 rounded-full text-xs font-bold transition-all text-[#4a3b32] hover:bg-white/60">
-                    🍳 Nấu Nướng
-                </button>
+            <!-- TWO-ROW NAVIGATION -->
+            <div class="nav-pills">
+              <button onclick="switchTab('tracker')" id="tab-btn-tracker" class="nav-btn active">
+                ⚡ Tariff
+              </button>
+              <button onclick="switchTab('weather')" id="tab-btn-weather" class="nav-btn">
+                🌦️ Weather
+              </button>
+              <button onclick="switchTab('checklist')" id="tab-btn-checklist" class="nav-btn">
+                🍳 Nấu Nướng
+              </button>
+              <button onclick="switchTab('calendar')" id="tab-btn-calendar" class="nav-btn">
+                📅 Calendar
+              </button>
             </div>
         </div>
     </header>
@@ -99,25 +195,18 @@
                 <div id="mascot-container" class="w-32 h-32 sm:w-36 sm:h-36 mascot-float flex items-center justify-center p-2 bg-[#fffefb] rounded-full border-3 border-[#5c4738] shadow-md relative overflow-hidden">
                     <!-- Bé Mây Xanh ú ú, tay chân mập mạp, tai lá cây -->
                     <svg viewBox="0 0 200 200" class="w-full h-full drop-shadow-sm">
-                        <!-- Tay chân ú ú -->
                         <ellipse cx="60" cy="120" rx="14" ry="10" fill="#fffaf5" stroke="#5c4738" stroke-width="3"/>
                         <ellipse cx="140" cy="120" rx="14" ry="10" fill="#fffaf5" stroke="#5c4738" stroke-width="3"/>
                         <ellipse cx="75" cy="145" rx="12" ry="8" fill="#fffaf5" stroke="#5c4738" stroke-width="3"/>
                         <ellipse cx="125" cy="145" rx="12" ry="8" fill="#fffaf5" stroke="#5c4738" stroke-width="3"/>
-                        <!-- Thân mây mập mạp -->
                         <path d="M50 130 C25 130 15 105 28 85 C35 68 55 58 75 65 C85 45 115 40 132 60 C150 45 178 62 175 85 C190 92 192 118 175 130 Z" fill="#fffaf5" stroke="#5c4738" stroke-width="4"/>
-                        <!-- Lá cây trên đầu -->
                         <path d="M100 42 Q112 20 125 35 Q112 48 100 42" fill="#87a96b" stroke="#5c4738" stroke-width="3"/>
                         <path d="M100 42 Q88 20 75 35 Q88 48 100 42" fill="#87a96b" stroke="#5c4738" stroke-width="3"/>
-                        <!-- Má hồng pastel -->
                         <circle cx="75" cy="98" r="9" fill="#f4b183" opacity="0.7"/>
                         <circle cx="125" cy="98" r="9" fill="#f4b183" opacity="0.7"/>
-                        <!-- Mắt cute -->
                         <circle cx="85" cy="90" r="4.5" fill="#5c4738"/>
                         <circle cx="115" cy="90" r="4.5" fill="#5c4738"/>
-                        <!-- Miệng cười -->
                         <path d="M 94 102 Q 100 108 106 102" fill="none" stroke="#5c4738" stroke-width="3" stroke-linecap="round"/>
-                        <!-- Túi pin nhỏ -->
                         <rect x="85" y="112" width="30" height="20" rx="5" fill="#87a96b" stroke="#5c4738" stroke-width="2.5"/>
                         <text x="94" y="127" font-size="12" fill="#fff">⚡</text>
                     </svg>
@@ -166,32 +255,37 @@
             </div>
         </div>
 
-        <!-- TAB 2: CALENDAR (Lịch lò xo đỏ retro & Đổ rác thứ 3) -->
+        <!-- TAB 2: CALENDAR (Lịch thực tế, thứ Ba tô màu) -->
         <div id="tab-content-calendar" class="hidden space-y-6">
-            <div class="retro-calendar p-4 space-y-3">
-                <div class="retro-calendar-header -mx-4 -mt-4 p-3.5 flex items-center justify-between px-5">
+            <div class="vintage-panel p-5 space-y-4">
+                <div class="flex items-center justify-between border-b-2 border-[#5c4738] pb-2.5">
+                    <h2 class="font-bold text-[#4a3b32] text-base flex items-center gap-2">
+                        <span>📅</span> Lịch Đổ Rác & Việc Nhà
+                    </h2>
                     <div class="flex items-center gap-2">
-                        <span class="text-xl">📅</span>
-                        <h3 class="font-black text-sm tracking-wide">Lịch Việc Nhà & Đổ Rác</h3>
+                        <button onclick="changeCalendarMonth(-1)" class="px-2.5 py-1 bg-[#f0e6d6] rounded-lg border border-[#5c4738] text-xs font-bold">◀</button>
+                        <span id="calendar-month-label" class="text-xs font-extrabold text-[#5c4738] min-w-[100px] text-center">Tháng...</span>
+                        <button onclick="changeCalendarMonth(1)" class="px-2.5 py-1 bg-[#f0e6d6] rounded-lg border border-[#5c4738] text-xs font-bold">▶</button>
                     </div>
-                    <span class="text-[11px] bg-white/20 px-2.5 py-1 rounded-lg font-bold">Tháng 11 / 2026</span>
                 </div>
 
-                <div class="text-xs text-[#4a3b32] space-y-3 pt-2">
-                    <div class="p-3 rounded-xl bg-[#fff5f0] border-1.5 border-[#5c4738] flex items-center justify-between shadow-sm">
-                        <div class="flex items-center gap-3">
-                            <span class="text-2xl">🗑️</span>
-                            <div>
-                                <p class="font-extrabold text-[#9c413b]">Thứ Ba Hàng Tuần</p>
-                                <p class="text-[11px] text-[#7c544d] mt-0.5">Lịch đổ rác định kỳ</p>
-                            </div>
-                        </div>
-                        <span class="text-[10px] bg-[#fbe8e6] text-[#9c413b] font-bold px-2.5 py-1 rounded-lg border border-[#5c4738]">Đã lên lịch</span>
-                    </div>
+                <!-- Tiêu đề thứ -->
+                <div class="grid grid-cols-7 gap-1 text-center text-[11px] font-extrabold text-[#7a6452] mb-2">
+                  <span>T2</span>
+                  <span>T3</span>
+                  <span>T4</span>
+                  <span>T5</span>
+                  <span>T6</span>
+                  <span>T7</span>
+                  <span>CN</span>
+                </div>
 
-                    <div class="p-3 rounded-xl bg-[#f5ede2] border-1.5 border-[#5c4738] text-center border-dashed">
-                        <p class="text-[#7a6452] italic text-[11px]">✨ (Sẽ bổ sung thêm lịch quét nhà, dọn dẹp khi cần nhé!)</p>
-                    </div>
+                <!-- Grid các ngày trong tháng -->
+                <div id="calendar-days" class="grid grid-cols-7 gap-1.5"></div>
+
+                <!-- Dòng nhắc nhở -->
+                <div class="vint-card p-3 bg-[#fff5f0] text-center">
+                    <p id="next-trash-reminder" class="text-xs font-bold text-[#9c413b]">Đang tính toán lịch đổ rác...</p>
                 </div>
             </div>
         </div>
@@ -236,14 +330,13 @@
             </div>
         </div>
 
-        <!-- TAB 4: COOKING CHECKLIST (Từng bước xuất hiện khi tick hoàn thành) -->
+        <!-- TAB 4: COOKING CHECKLIST & TIMER -->
         <div id="tab-content-checklist" class="hidden space-y-6">
             <div class="vintage-panel p-5 space-y-4">
                 <h2 class="font-bold text-[#4a3b32] text-base flex items-center gap-2 border-b-2 border-[#5c4738] pb-2.5">
                     <span>🍳</span> Hẹn Giờ Nấu Nướng & Kiểm Tra An Toàn
                 </h2>
                 
-                <!-- Timer Setup -->
                 <div class="vint-card p-4 space-y-3 bg-white" id="timer-setup-box">
                     <p class="text-xs font-bold text-[#4a3b32]">⏱️ Chọn thời gian nấu (hoặc nhập số phút tùy ý):</p>
                     <div class="flex flex-wrap gap-2">
@@ -263,88 +356,118 @@
                     <p id="countdown-text" class="text-3xl font-black text-[#4a3b32]">00:00</p>
                     <button onclick="stopTimer()" class="px-3 py-1 bg-[#fbe8e6] hover:bg-[#f5d0cd] text-[#5c3232] rounded-lg text-xs font-bold border border-[#5c4738]">Hủy Hẹn Giờ</button>
                 </div>
-
-                <!-- Interactive Step-by-Step Chat Dialog (Trạng thái trống ban đầu, hiện lần lượt từng task) -->
-                <div id="safety-checklist-box" class="hidden vintage-panel p-4 space-y-3 bg-[#fffaf4] border-2 border-[#5c4738]">
-                    <div class="flex items-center justify-between border-b border-[#5c4738]/20 pb-2">
-                        <h4 class="font-extrabold text-[#4a3b32] text-xs sm:text-sm flex items-center gap-1.5">
-                            <span>💬</span> Trò chuyện an toàn cùng Bé Mây Xanh:
-                        </h4>
-                        <span class="text-[10px] bg-[#fbe8e6] text-[#5c3232] px-2 py-0.5 rounded-full font-bold border border-[#5c4738]">Hết giờ nấu!</span>
-                    </div>
-
-                    <!-- Chat Container -->
-                    <div class="space-y-3 text-xs text-[#4a3b32]" id="chat-steps-container">
-                        <!-- Step 1: Bếp -->
-                        <div id="step-1" class="flex flex-col space-y-2">
-                            <div class="flex items-start gap-2">
-                                <span class="text-lg">☁️🌿</span>
-                                <div class="bg-[#f5ede2] p-3 rounded-2xl border-1.5 border-[#5c4738] flex-1 shadow-sm">
-                                    <p class="font-bold">Bé Mây Xanh:</p>
-                                    <p class="mt-0.5">"Hết giờ rồi bạn ơi! Việc đầu tiên: Bạn đã tắt bếp chưa?"</p>
-                                </div>
-                            </div>
-                            <label class="flex items-center gap-2.5 p-2.5 bg-white rounded-xl border border-[#5c4738] cursor-pointer hover:bg-[#f5ede2]/50 shadow-sm ml-8">
-                                <input type="checkbox" onchange="completeStep(1)" class="w-4 h-4 accent-[#8c7355] rounded">
-                                <span class="font-bold">🔥 Đã tắt bếp rồi</span>
-                            </label>
-                        </div>
-
-                        <!-- Step 2: Oven (Ẩn ban đầu) -->
-                        <div id="step-2" class="hidden flex flex-col space-y-2">
-                            <div class="flex items-start gap-2">
-                                <span class="text-lg">☁️✨</span>
-                                <div class="bg-[#f5ede2] p-3 rounded-2xl border-1.5 border-[#5c4738] flex-1 shadow-sm">
-                                    <p class="font-bold">Bé Mây Xanh:</p>
-                                    <p class="mt-0.5">"Giỏi lắm! Tiếp theo: Bạn đã tắt lò nướng (oven) chưa?"</p>
-                                </div>
-                            </div>
-                            <label class="flex items-center gap-2.5 p-2.5 bg-white rounded-xl border border-[#5c4738] cursor-pointer hover:bg-[#f5ede2]/50 shadow-sm ml-8">
-                                <input type="checkbox" onchange="completeStep(2)" class="w-4 h-4 accent-[#8c7355] rounded">
-                                <span class="font-bold">🍞 Đã tắt oven rồi</span>
-                            </label>
-                        </div>
-
-                        <!-- Step 3: Đèn (Ẩn ban đầu) -->
-                        <div id="step-3" class="hidden flex flex-col space-y-2">
-                            <div class="flex items-start gap-2">
-                                <span class="text-lg">☁️💡</span>
-                                <div class="bg-[#f5ede2] p-3 rounded-2xl border-1.5 border-[#5c4738] flex-1 shadow-sm">
-                                    <p class="font-bold">Bé Mây Xanh:</p>
-                                    <p class="mt-0.5">"Gần xong rồi! Bạn đã tắt đèn khu vực bếp chưa?"</p>
-                                </div>
-                            </div>
-                            <label class="flex items-center gap-2.5 p-2.5 bg-white rounded-xl border border-[#5c4738] cursor-pointer hover:bg-[#f5ede2]/50 shadow-sm ml-8">
-                                <input type="checkbox" onchange="completeStep(3)" class="w-4 h-4 accent-[#8c7355] rounded">
-                                <span class="font-bold">💡 Đã tắt đèn bếp rồi</span>
-                            </label>
-                        </div>
-
-                        <!-- Step 4: Lau bếp (Ẩn ban đầu) -->
-                        <div id="step-4" class="hidden flex flex-col space-y-2">
-                            <div class="flex items-start gap-2">
-                                <span class="text-lg">☁️🧽</span>
-                                <div class="bg-[#f5ede2] p-3 rounded-2xl border-1.5 border-[#5c4738] flex-1 shadow-sm">
-                                    <p class="font-bold">Bé Mây Xanh:</p>
-                                    <p class="mt-0.5">"Cuối cùng: Bạn đã lau bếp sạch sẽ chưa?"</p>
-                                </div>
-                            </div>
-                            <label class="flex items-center gap-2.5 p-2.5 bg-white rounded-xl border border-[#5c4738] cursor-pointer hover:bg-[#f5ede2]/50 shadow-sm ml-8">
-                                <input type="checkbox" onchange="completeStep(4)" class="w-4 h-4 accent-[#8c7355] rounded">
-                                <span class="font-bold">✨ Đã lau bếp sạch sẽ rồi</span>
-                            </label>
-                        </div>
-
-                        <!-- Hoàn tất -->
-                        <div id="step-done" class="hidden text-center p-3 bg-[#e2f0d9] rounded-2xl border border-[#5c4738] text-[#4f6e35] font-extrabold">
-                            🎉 Hoàn tất xuất sắc! Bếp nhà mình đã an toàn tuyệt đối 🤍
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
 
     </main>
+
+    <!-- CỬA SỔ HỘI THOẠI BÉ MÂY XANH (SAFETY CHAT OVERLAY) -->
+    <section id="safety-chat-overlay"
+      class="chat-overlay hidden"
+      role="dialog"
+      aria-modal="true">
+
+      <div class="chat-window">
+
+        <div class="flex justify-between items-center border-b-2 border-[#d8c7b0] pb-3">
+          <div>
+            <p class="text-xs font-bold text-[#8c7355]">
+              ECO-BUDDY HOME MANAGER
+            </p>
+            <h2 class="text-lg font-extrabold">
+              Cùng Bé Mây kiểm tra bếp nhé!
+            </h2>
+          </div>
+
+          <button onclick="closeSafetyChat()"
+            class="rounded-full border border-[#8c7355] px-3 py-1 font-bold">
+            ✕
+          </button>
+        </div>
+
+        <div class="flex flex-col items-center py-5 gap-3">
+
+          <div id="chat-mascot" class="chat-mascot mascot-idle">
+            <svg viewBox="0 0 200 200" width="180" height="180">
+              <g class="chat-legs">
+                <ellipse cx="75" cy="159" rx="17" ry="12"
+                  fill="#fffaf2" stroke="#66513f" stroke-width="4"/>
+                <ellipse cx="125" cy="159" rx="17" ry="12"
+                  fill="#fffaf2" stroke="#66513f" stroke-width="4"/>
+              </g>
+
+              <path d="M45 139 C20 139 15 116 27 99
+                C16 76 42 59 60 66
+                C75 39 107 46 119 57
+                C142 42 164 62 155 77
+                C181 84 183 119 160 139Z"
+                fill="#fffaf2" stroke="#66513f"
+                stroke-width="4"/>
+
+              <g class="chat-arms">
+                <path d="M45 110 Q20 120 36 140"
+                  fill="none" stroke="#66513f"
+                  stroke-width="12" stroke-linecap="round"/>
+                <path d="M155 110 Q180 120 164 140"
+                  fill="none" stroke="#66513f"
+                  stroke-width="12" stroke-linecap="round"/>
+              </g>
+
+              <circle cx="70" cy="104" r="10" fill="#efb99c"/>
+              <circle cx="130" cy="104" r="10" fill="#efb99c"/>
+              <circle cx="85" cy="92" r="4.5" fill="#554538"/>
+              <circle cx="115" cy="92" r="4.5" fill="#554538"/>
+              <path d="M95 105 Q100 113 105 105"
+                fill="none" stroke="#554538"
+                stroke-width="3" stroke-linecap="round"/>
+
+              <path d="M85 51 Q55 18 76 37 Q88 43 98 52Z"
+                fill="#91a96e" stroke="#66513f" stroke-width="3"/>
+              <path d="M101 51 Q124 15 132 38 Q124 48 101 51Z"
+                fill="#a9b77c" stroke="#66513f" stroke-width="3"/>
+
+              <path d="M70 121 Q100 140 130 121"
+                fill="#91a17a" stroke="#66513f" stroke-width="3"/>
+
+              <rect x="113" y="126" width="27" height="26"
+                rx="7" fill="#91a96e"
+                stroke="#66513f" stroke-width="3"/>
+              <path d="M128 130 L121 140 H128 L124 148 L136 137 H129Z"
+                fill="#f4cf68"/>
+            </svg>
+          </div>
+
+          <div class="chat-bubble">
+            <p class="font-extrabold text-sm mb-1">
+              Bé Mây Xanh ☁️
+            </p>
+            <p id="chat-question" class="text-sm">
+              Hết giờ rồi! Cùng mình kiểm tra căn bếp nha!
+            </p>
+          </div>
+        </div>
+
+        <div id="chat-scene"
+          class="chat-scene text-center text-5xl py-5 flex items-center justify-center">
+          🔥
+        </div>
+
+        <div class="bg-[#f5ede2] rounded-2xl p-4 mb-4 mt-3">
+          <p id="chat-action-title"
+            class="font-bold text-sm mb-1">Tắt bếp</p>
+          <p id="chat-action-hint"
+            class="text-xs text-[#7a6452]"></p>
+        </div>
+
+        <div id="chat-actions" class="space-y-2"></div>
+
+        <p id="chat-progress"
+          class="text-xs text-[#8c7355] text-center mt-4">
+          Bước 1 / 4
+        </p>
+
+      </div>
+    </section>
 
     <!-- FOOTER -->
     <footer class="text-center py-5 text-xs text-[#7a6452] font-medium border-t-2 border-[#5c4738] bg-[#f7f1e5] mt-4">
@@ -357,6 +480,7 @@
             startRealtimeClock();
             checkTariffStatus();
             fetchWeatherData();
+            renderCalendar();
             setInterval(checkTariffStatus, 30000);
             setInterval(fetchWeatherData, 600000);
         });
@@ -387,23 +511,22 @@
             weatherTab.classList.add('hidden');
             checklistTab.classList.add('hidden');
 
-            btnTracker.className = "px-3 py-1.5 rounded-full text-xs font-bold transition-all text-[#4a3b32] hover:bg-white/60";
-            btnCalendar.className = "px-3 py-1.5 rounded-full text-xs font-bold transition-all text-[#4a3b32] hover:bg-white/60";
-            btnWeather.className = "px-3 py-1.5 rounded-full text-xs font-bold transition-all text-[#4a3b32] hover:bg-white/60";
-            btnChecklist.className = "px-3 py-1.5 rounded-full text-xs font-bold transition-all text-[#4a3b32] hover:bg-white/60";
+            [btnTracker, btnCalendar, btnWeather, btnChecklist]
+              .forEach(btn => btn.classList.remove("active"));
 
-            if (tabName === 'tracker') {
-                trackerTab.classList.remove('hidden');
-                btnTracker.className = "px-3 py-1.5 rounded-full text-xs font-bold transition-all bg-[#8c7355] text-white shadow-inner";
-            } else if (tabName === 'calendar') {
-                calendarTab.classList.remove('hidden');
-                btnCalendar.className = "px-3 py-1.5 rounded-full text-xs font-bold transition-all bg-[#8c7355] text-white shadow-inner";
-            } else if (tabName === 'weather') {
-                weatherTab.classList.remove('hidden');
-                btnWeather.className = "px-3 py-1.5 rounded-full text-xs font-bold transition-all bg-[#8c7355] text-white shadow-inner";
+            if (tabName === "tracker") {
+              trackerTab.classList.remove("hidden");
+              btnTracker.classList.add("active");
+            } else if (tabName === "calendar") {
+              calendarTab.classList.remove("hidden");
+              btnCalendar.classList.add("active");
+              renderCalendar();
+            } else if (tabName === "weather") {
+              weatherTab.classList.remove("hidden");
+              btnWeather.classList.add("active");
             } else {
-                checklistTab.classList.remove('hidden');
-                btnChecklist.className = "px-3 py-1.5 rounded-full text-xs font-bold transition-all bg-[#8c7355] text-white shadow-inner";
+              checklistTab.classList.remove("hidden");
+              btnChecklist.classList.add("active");
             }
         }
 
@@ -428,6 +551,91 @@
             }
         }
 
+        let calendarCursor = new Date();
+
+        function renderCalendar() {
+          const year = calendarCursor.getFullYear();
+          const month = calendarCursor.getMonth();
+
+          const label = document.getElementById("calendar-month-label");
+          const grid = document.getElementById("calendar-days");
+
+          if (!label || !grid) return;
+
+          label.textContent = new Intl.DateTimeFormat("vi-VN", {
+            month: "long",
+            year: "numeric"
+          }).format(calendarCursor);
+
+          grid.innerHTML = "";
+
+          const firstDay = new Date(year, month, 1);
+          const offset = (firstDay.getDay() + 6) % 7;
+          const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+          for (let i = 0; i < offset; i++) {
+            const empty = document.createElement("div");
+            grid.appendChild(empty);
+          }
+
+          const today = new Date();
+
+          for (let day = 1; day <= daysInMonth; day++) {
+            const date = new Date(year, month, day);
+            const isTuesday = date.getDay() === 2;
+            const isToday =
+              date.toDateString() === today.toDateString();
+
+            const cell = document.createElement("div");
+
+            cell.className =
+              "h-10 rounded-xl flex flex-col items-center justify-center text-xs font-bold relative border border-[#5c4738]/20 " +
+              (isTuesday
+                ? "bg-[#d9534f] text-white shadow-sm"
+                : "bg-[#f5ede2] text-[#5c4738]") +
+              (isToday ? " ring-2 ring-[#87a96b] ring-offset-1" : "");
+
+            cell.innerHTML = `
+              <span>${day}</span>
+              ${isTuesday
+                ? '<span class="text-[8px]">🗑️</span>'
+                : ""}
+            `;
+
+            cell.title = isTuesday
+              ? "Thứ Ba - Ngày đổ rác"
+              : isToday ? "Hôm nay" : "";
+
+            grid.appendChild(cell);
+          }
+
+          const next = new Date();
+          next.setHours(0, 0, 0, 0);
+
+          do {
+            next.setDate(next.getDate() + 1);
+          } while (next.getDay() !== 2);
+
+          const reminder =
+            document.getElementById("next-trash-reminder");
+
+          if (reminder) {
+            reminder.textContent =
+              `Lần nhắc đổ rác tiếp theo: Thứ Ba, ${
+                next.toLocaleDateString("vi-VN")
+              }`;
+          }
+        }
+
+        function changeCalendarMonth(delta) {
+          calendarCursor = new Date(
+            calendarCursor.getFullYear(),
+            calendarCursor.getMonth() + delta,
+            1
+          );
+          renderCalendar();
+        }
+
         let countdownInterval = null;
         function setTimerMinutes(mins) {
             document.getElementById('custom-minutes').value = mins;
@@ -440,17 +648,6 @@
                 alert("Vui lòng nhập số phút hợp lệ!");
                 return;
             }
-
-            // Reset checklist về trạng thái ẩn
-            document.getElementById('safety-checklist-box').classList.add('hidden');
-            document.getElementById('step-1').classList.remove('hidden');
-            document.getElementById('step-2').classList.add('hidden');
-            document.getElementById('step-3').classList.add('hidden');
-            document.getElementById('step-4').classList.add('hidden');
-            document.getElementById('step-done').classList.add('hidden');
-
-            // Reset checkbox
-            document.querySelectorAll('#safety-checklist-box input[type="checkbox"]').forEach(cb => cb.checked = false);
 
             clearInterval(countdownInterval);
             let remaining = totalSecs;
@@ -466,9 +663,7 @@
                 if (remaining <= 0) {
                     clearInterval(countdownInterval);
                     displayBox.classList.add('hidden');
-                    // Sổ ra khung chat kiểm tra bước 1
-                    document.getElementById('safety-checklist-box').classList.remove('hidden');
-                    alert("⏰ Đã hết thời gian! Bé Mây Xanh bắt đầu kiểm tra an toàn cùng bạn kìa!");
+                    openSafetyChat();
                 }
                 remaining--;
             }, 1000);
@@ -479,17 +674,154 @@
             document.getElementById('timer-display-box').classList.add('hidden');
         }
 
-        // Logic hiện lần lượt từng task khi tick hoàn thành
-        function completeStep(stepNum) {
-            if (stepNum === 1) {
-                document.getElementById('step-2').classList.remove('hidden');
-            } else if (stepNum === 2) {
-                document.getElementById('step-3').classList.remove('hidden');
-            } else if (stepNum === 3) {
-                document.getElementById('step-4').classList.remove('hidden');
-            } else if (stepNum === 4) {
-                document.getElementById('step-done').classList.remove('hidden');
-            }
+        const safetySteps = [
+          {
+            title: "Tắt bếp",
+            question: "Bạn đã tắt bếp chưa?",
+            hint: "Kiểm tra núm bếp đã về vị trí OFF nhé!",
+            scene: "🔥",
+            action: "buddy-work",
+            yes: "Tuyệt vời! Bé Mây vui quá!",
+            no: "Mình cùng kiểm tra núm bếp nhé!"
+          },
+          {
+            title: "Tắt lò nướng (Oven)",
+            question: "Bạn đã tắt lò nướng chưa?",
+            hint: "Kiểm tra nút nguồn và màn hình của oven nhé.",
+            scene: "🍞",
+            action: "buddy-walk",
+            yes: "Oven đã được tắt. Giỏi lắm!",
+            no: "Bé Mây đợi bạn kiểm tra nha!"
+          },
+          {
+            title: "Tắt đèn",
+            question: "Đèn khu vực bếp đã tắt chưa?",
+            hint: "Nếu không còn sử dụng, hãy tắt đèn nhé!",
+            scene: "💡",
+            action: "buddy-jump",
+            yes: "Căn bếp đã tiết kiệm thêm điện rồi!",
+            no: "Mình đi tắt đèn thôi nào!"
+          },
+          {
+            title: "Lau bếp",
+            question: "Bạn đã lau bếp sạch sẽ chưa?",
+            hint: "Nhớ đợi mặt bếp nguội và an toàn trước khi lau nhé.",
+            scene: "🧽",
+            action: "buddy-work",
+            yes: "Bếp sạch bong! Bé Mây tự hào về bạn!",
+            no: "Mình cùng dọn dẹp nhé!"
+          }
+        ];
+
+        let safetyStepIndex = 0;
+
+        function openSafetyChat() {
+          safetyStepIndex = 0;
+          document.getElementById("safety-chat-overlay")
+            .classList.remove("hidden");
+          document.body.style.overflow = "hidden";
+          renderSafetyStep();
+        }
+
+        function closeSafetyChat() {
+          document.getElementById("safety-chat-overlay")
+            .classList.add("hidden");
+          document.body.style.overflow = "";
+        }
+
+        function renderSafetyStep() {
+          const mascot = document.getElementById("chat-mascot");
+          const question = document.getElementById("chat-question");
+          const scene = document.getElementById("chat-scene");
+          const actions = document.getElementById("chat-actions");
+
+          if (safetyStepIndex >= safetySteps.length) {
+            question.textContent =
+              "Hoàn thành rồi! Cảm ơn bạn đã cùng Bé Mây tiết kiệm điện và giữ căn bếp an toàn nhé! 💚";
+
+            scene.textContent = "🌱✨💚";
+            mascot.className = "chat-mascot mascot-happy";
+
+            document.getElementById("chat-action-title")
+              .textContent = "Hoàn thành kiểm tra!";
+
+            document.getElementById("chat-action-hint")
+              .textContent = "Bé Mây rất tự hào về bạn!";
+
+            actions.innerHTML = `
+              <button class="chat-choice text-center"
+                onclick="closeSafetyChat()">
+                💚 Xong rồi, quay lại ứng dụng
+              </button>
+            `;
+
+            document.getElementById("chat-progress")
+              .textContent = "4 / 4 · Hoàn thành";
+
+            return;
+          }
+
+          const step = safetySteps[safetyStepIndex];
+
+          question.textContent = step.question;
+          scene.textContent = step.scene;
+
+          mascot.className = "chat-mascot " + step.action;
+
+          document.getElementById("chat-action-title")
+            .textContent = step.title;
+
+          document.getElementById("chat-action-hint")
+            .textContent = step.hint;
+
+          document.getElementById("chat-progress")
+            .textContent = `Bước ${safetyStepIndex + 1} / 4`;
+
+          actions.innerHTML = `
+            <button class="chat-choice"
+              onclick="answerSafetyStep(true)">
+              ☑️ Rồi, mình đã làm xong!
+            </button>
+
+            <button class="chat-choice"
+              onclick="answerSafetyStep(false)">
+              ⏳ Chưa, để mình làm ngay
+            </button>
+          `;
+        }
+
+        function answerSafetyStep(done) {
+          const step = safetySteps[safetyStepIndex];
+
+          if (!done) {
+            document.getElementById("chat-question")
+              .textContent = step.no;
+
+            document.getElementById("chat-actions").innerHTML = `
+              <button class="chat-choice"
+                onclick="renderSafetyStep()">
+                💚 Mình đã làm xong, tiếp tục nhé!
+              </button>
+
+              <button class="chat-choice"
+                onclick="closeSafetyChat()">
+                Để mình làm sau
+              </button>
+            `;
+
+            return;
+          }
+
+          document.getElementById("chat-question")
+            .textContent = step.yes;
+
+          const mascot = document.getElementById("chat-mascot");
+          mascot.className = "chat-mascot mascot-happy";
+
+          setTimeout(() => {
+            safetyStepIndex++;
+            renderSafetyStep();
+          }, 1100);
         }
 
         async function fetchWeatherData() {
