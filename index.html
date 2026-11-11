@@ -44,6 +44,19 @@
             border-radius: 1rem;
             box-shadow: 2px 2px 0px #5c4738;
         }
+        /* Style cho lịch retro lò xo */
+        .retro-calendar {
+            background: #fffbf5;
+            border: 2px solid #5c4738;
+            border-radius: 1rem;
+            box-shadow: 3px 3px 0px #5c4738;
+            overflow: hidden;
+        }
+        .retro-calendar-header {
+            background: #d9534f;
+            border-bottom: 2px solid #5c4738;
+            color: white;
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between selection:bg-amber-200">
@@ -59,7 +72,7 @@
                 </div>
             </div>
             
-            <!-- Tab Switchers (Vintage Pastel) -->
+            <!-- Tab Switchers -->
             <div class="flex bg-[#f0e6d6] p-1 rounded-full border-1.5 border-[#5c4738] flex-wrap justify-center">
                 <button onclick="switchTab('tracker')" id="tab-btn-tracker" class="px-3 py-1.5 rounded-full text-xs font-bold transition-all bg-[#8c7355] text-white shadow-inner">
                     ⚡ Tariff
@@ -77,85 +90,110 @@
     <!-- MAIN CONTAINER -->
     <main class="max-w-xl mx-auto px-4 py-6 flex-grow w-full space-y-6">
         
-        <!-- MASCOT & INTRO CARD (Bé Mây Xanh Style) -->
+        <!-- MASCOT & INTRO CARD -->
         <div class="vintage-panel p-5 flex flex-col items-center text-center">
             <div class="relative mb-3">
                 <div id="mascot-container" class="w-32 h-32 sm:w-36 sm:h-36 mascot-float flex items-center justify-center p-2 bg-[#fffefb] rounded-full border-3 border-[#5c4738] shadow-md relative overflow-hidden">
+                    <!-- Bé Mây Xanh ú ú, tay chân mập mạp, tai lá cây -->
                     <svg viewBox="0 0 200 200" class="w-full h-full drop-shadow-sm">
-                        <!-- Thân mây trắng/kem sữa -->
-                        <path d="M50 130 C30 130 20 110 30 90 C35 75 50 65 65 70 C75 50 100 45 115 65 C130 50 160 65 160 85 C175 90 180 115 165 130 Z" fill="#fffaf5" stroke="#5c4738" stroke-width="4"/>
+                        <!-- Tay chân ú ú -->
+                        <ellipse cx="60" cy="120" rx="14" ry="10" fill="#fffaf5" stroke="#5c4738" stroke-width="3"/>
+                        <ellipse cx="140" cy="120" rx="14" ry="10" fill="#fffaf5" stroke="#5c4738" stroke-width="3"/>
+                        <ellipse cx="75" cy="145" rx="12" ry="8" fill="#fffaf5" stroke="#5c4738" stroke-width="3"/>
+                        <ellipse cx="125" cy="145" rx="12" ry="8" fill="#fffaf5" stroke="#5c4738" stroke-width="3"/>
+                        <!-- Thân mây mập mạp -->
+                        <path d="M50 130 C25 130 15 105 28 85 C35 68 55 58 75 65 C85 45 115 40 132 60 C150 45 178 62 175 85 C190 92 192 118 175 130 Z" fill="#fffaf5" stroke="#5c4738" stroke-width="4"/>
                         <!-- Lá cây trên đầu -->
-                        <path d="M100 45 Q110 25 120 40 Q110 50 100 45" fill="#87a96b" stroke="#5c4738" stroke-width="3"/>
-                        <path d="M100 45 Q90 25 80 40 Q90 50 100 45" fill="#87a96b" stroke="#5c4738" stroke-width="3"/>
+                        <path d="M100 42 Q112 20 125 35 Q112 48 100 42" fill="#87a96b" stroke="#5c4738" stroke-width="3"/>
+                        <path d="M100 42 Q88 20 75 35 Q88 48 100 42" fill="#87a96b" stroke="#5c4738" stroke-width="3"/>
                         <!-- Má hồng pastel -->
-                        <circle cx="72" cy="100" r="9" fill="#f4b183" opacity="0.7"/>
-                        <circle cx="128" cy="100" r="9" fill="#f4b183" opacity="0.7"/>
+                        <circle cx="75" cy="98" r="9" fill="#f4b183" opacity="0.7"/>
+                        <circle cx="125" cy="98" r="9" fill="#f4b183" opacity="0.7"/>
                         <!-- Mắt cute -->
-                        <circle cx="82" cy="92" r="4.5" fill="#5c4738"/>
-                        <circle cx="118" cy="92" r="4.5" fill="#5c4738"/>
+                        <circle cx="85" cy="90" r="4.5" fill="#5c4738"/>
+                        <circle cx="115" cy="90" r="4.5" fill="#5c4738"/>
                         <!-- Miệng cười -->
-                        <path d="M 96 104 Q 100 110 104 104" fill="none" stroke="#5c4738" stroke-width="3" stroke-linecap="round"/>
-                        <!-- Đeo túi pin nhỏ -->
-                        <rect x="85" y="115" width="30" height="20" rx="5" fill="#87a96b" stroke="#5c4738" stroke-width="2.5"/>
-                        <text x="94" y="130" font-size="12" fill="#fff">⚡</text>
+                        <path d="M 94 102 Q 100 108 106 102" fill="none" stroke="#5c4738" stroke-width="3" stroke-linecap="round"/>
+                        <!-- Túi pin nhỏ -->
+                        <rect x="85" y="112" width="30" height="20" rx="5" fill="#87a96b" stroke="#5c4738" stroke-width="2.5"/>
+                        <text x="94" y="127" font-size="12" fill="#fff">⚡</text>
                     </svg>
                 </div>
                 <div id="status-badge" class="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-[#87a96b] text-white text-[11px] font-extrabold px-4 py-1 rounded-full shadow border-2 border-[#5c4738] whitespace-nowrap">
                     Normal Hours ☀️
                 </div>
             </div>
-            <h3 class="font-bold text-[#4a3b32] text-base mt-2">Bé Mây Xanh (Cloudy Battery Buddy)</h3>
-            <p class="text-[11px] text-[#7a6452] font-semibold italic mt-0.5">🌿 Có chiếc pin nhỏ trên người, tai là lá cây, luôn mang phích cắm bên mình[cite: 18].</p>
+            <h3 class="font-bold text-[#4a3b32] text-base mt-2">Bé Mây Xanh</h3>
+            <p class="text-[11px] text-[#7a6452] font-semibold italic mt-0.5">🌿 Có chiếc pin nhỏ trên người, tai là lá cây, luôn mang phích cắm bên mình.</p>
             <p id="mascot-speech" class="text-xs text-[#5c4738] font-medium bg-[#f5ede2] p-3 rounded-2xl border-1.5 border-[#5c4738] w-full mt-3 leading-relaxed">
-                "Tiết kiệm điện cùng mình nhé! 🤍"[cite: 18]
+                "Tiết kiệm điện cùng mình nhé! 🤍"
             </p>
         </div>
 
-        <!-- TAB 1: TARIFF & TIPS -->
+        <!-- TAB 1: TARIFF & CALENDAR (Tích hợp Lịch Rác Retro ngay trên web) -->
         <div id="tab-content-tracker" class="space-y-6">
+            <!-- LỊCH RETRO ĐỔ RÁC & CÔNG VIỆC NHÀ -->
+            <div class="retro-calendar p-4 space-y-3">
+                <div class="retro-calendar-header -mx-4 -mt-4 p-3.5 flex items-center justify-between px-5">
+                    <div class="flex items-center gap-2">
+                        <span class="text-xl">📅</span>
+                        <h3 class="font-black text-sm tracking-wide">Lịch Việc Nhà & Đổ Rác</h3>
+                    </div>
+                    <span class="text-[11px] bg-white/20 px-2.5 py-1 rounded-lg font-bold">Tháng 11 / 2026</span>
+                </div>
+
+                <div class="text-xs text-[#4a3b32] space-y-2 pt-1">
+                    <div class="grid grid-cols-2 gap-2">
+                        <!-- Thứ 2 -->
+                        <div class="p-2.5 rounded-xl bg-[#fff5f0] border-1.5 border-[#5c4738] flex items-center justify-between">
+                            <div>
+                                <p class="font-extrabold text-[#9c413b]">🗑️ Thứ Hai</p>
+                                <p class="text-[11px] text-[#7c544d] mt-0.5">Kéo thùng rác ra ngoài</p>
+                            </div>
+                            <span class="text-[10px] bg-[#fbe8e6] text-[#9c413b] font-bold px-2 py-0.5 rounded border border-[#5c4738]">Hàng tuần</span>
+                        </div>
+                        <!-- Thứ 3 -->
+                        <div class="p-2.5 rounded-xl bg-[#f2f7ec] border-1.5 border-[#5c4738] flex items-center justify-between">
+                            <div>
+                                <p class="font-extrabold text-[#4f6e35]">🗑️ Thứ Ba</p>
+                                <p class="text-[11px] text-[#5e7c45] mt-0.5">Kéo thùng rác vào nhà</p>
+                            </div>
+                            <span class="text-[10px] bg-[#e2f0d9] text-[#4f6e35] font-bold px-2 py-0.5 rounded border border-[#5c4738]">Hàng tuần</span>
+                        </div>
+                    </div>
+                    <p class="text-[11px] text-[#8c7355] italic text-center pt-1">✨ (Sẽ bổ sung thêm lịch quét nhà, dọn dẹp khi cần nhé!)</p>
+                </div>
+            </div>
+
+            <!-- BIỂU GIÁ ĐIỆN -->
             <div class="vintage-panel p-5 space-y-4">
                 <h2 class="font-bold text-[#4a3b32] text-base flex items-center gap-2 border-b-2 border-[#5c4738] pb-2.5">
                     <span>⚡</span> Biểu Giá Điện Trong Ngày (SST Saver+)
                 </h2>
                 
                 <div class="space-y-3 text-xs sm:text-sm">
-                    <!-- Giờ bình thường -->
                     <div class="vint-card p-3.5 flex items-start justify-between gap-3 bg-[#f2f7ec]">
                         <div class="flex-1 min-w-0">
                             <p class="font-extrabold text-[#3b4a32]">☀️ Giờ Bình Thường</p>
                             <p class="text-[#5c6a52] text-[11px] mt-0.5">08:00 - 17:00 & 19:00 - 23:00</p>
-                            <p class="text-[#6c7a62] text-[11px] mt-1 italic">Sử dụng thiết bị hợp lý.</p>
                         </div>
                         <span class="font-black text-[#3b4a32] bg-[#d9e8cc] px-2.5 py-1 rounded-xl border border-[#5c4738] whitespace-nowrap">€0.3719/kWh</span>
                     </div>
-                    <!-- Giờ cao điểm -->
                     <div class="p-3.5 rounded-2xl bg-[#fbe8e6] border-2 border-[#5c4738] flex items-start justify-between gap-3 shadow-[2px_2px_0px_#5c4738]">
                         <div class="flex-1 min-w-0">
                             <p class="font-extrabold text-[#5c3232]">🔴 Giờ Cao Điểm</p>
-                            <p class="text-[#7c4d4d] text-[11px] mt-0.5">17:00 - 19:00</p>
-                            <p class="text-[#8c5d5d] text-[11px] mt-1 italic">⚠️ Hạn chế máy giặt, lò nướng.</p>
+                            <p class="text-[#7c4d4d] text-[11px] mt-0.5">17:00 - 19:00 (Hạn chế thiết bị lớn)</p>
                         </div>
                         <span class="font-black text-[#5c3232] bg-[#f5d0cd] px-2.5 py-1 rounded-xl border border-[#5c4738] whitespace-nowrap">€0.3968/kWh</span>
                     </div>
-                    <!-- Giờ đêm -->
                     <div class="vint-card p-3.5 flex items-start justify-between gap-3 bg-[#eaf2f8]">
                         <div class="flex-1 min-w-0">
                             <p class="font-extrabold text-[#32455c]">🟢 Giờ Đêm (Rẻ Nhất)</p>
                             <p class="text-[#4e647d] text-[11px] mt-0.5">23:00 - 08:00 sáng</p>
-                            <p class="text-[#5c728c] text-[11px] mt-1 italic">✨ Tranh thủ giặt sấy giờ này.</p>
                         </div>
                         <span class="font-black text-[#32455c] bg-[#cfe2f3] px-2.5 py-1 rounded-xl border border-[#5c4738] whitespace-nowrap">€0.1954/kWh</span>
                     </div>
                 </div>
-            </div>
-
-            <div class="vintage-panel p-5 space-y-3">
-                <h3 class="font-bold text-[#4a3b32] text-sm">💡 Mẹo Tiết Kiệm Vàng:</h3>
-                <ul class="text-xs space-y-1.5 text-[#6c584c] list-disc list-inside leading-relaxed pl-1">
-                    <li><strong>Nước nóng:</strong> Tắt bình ngay sau khi tắm xong.</li>
-                    <li><strong>Nấu nướng:</strong> Đậy nắp xoong nồi để nấu nhanh hơn.</li>
-                    <li><strong>Thiết bị chờ:</strong> Rút phích cắm khi không dùng.</li>
-                </ul>
             </div>
         </div>
 
@@ -174,7 +212,6 @@
                     </button>
                 </div>
 
-                <!-- Weather Card (Vintage Pastel Blue) -->
                 <div id="weather-card-bg" class="bg-gradient-to-br from-[#8fa8be] to-[#6a849b] text-white p-5 rounded-2xl shadow-[3px_3px_0px_#5c4738] border-2 border-[#5c4738] flex items-center justify-between gap-3">
                     <div class="space-y-1">
                         <p id="weather-condition" class="text-sm font-extrabold">Đang tải thời tiết...</p>
@@ -184,7 +221,7 @@
                     <div id="weather-icon-lg" class="text-6xl drop-shadow-md">☁️</div>
                 </div>
 
-                <!-- Outfit Recommendations -->
+                <!-- Outfit Recommendations (Đã fix icon áo khoác nét, sạch sẽ) -->
                 <div class="bg-[#f5ede2] border-1.5 border-[#5c4738] p-4 rounded-2xl space-y-3 shadow-[2px_2px_0px_#5c4738]">
                     <h4 class="font-bold text-[#4a3b32] text-xs sm:text-sm flex items-center gap-2">
                         <span>👕</span> Gợi ý trang phục khi ra ngoài:
@@ -201,7 +238,7 @@
             </div>
         </div>
 
-        <!-- TAB 3: COOKING CHECKLIST & TIMER (Chỉ sổ ra khi hết giờ đếm ngược) -->
+        <!-- TAB 3: COOKING CHECKLIST (Bong bóng chat tương tác khi hết giờ) -->
         <div id="tab-content-checklist" class="hidden space-y-6">
             <div class="vintage-panel p-5 space-y-4">
                 <h2 class="font-bold text-[#4a3b32] text-base flex items-center gap-2 border-b-2 border-[#5c4738] pb-2.5">
@@ -225,36 +262,48 @@
 
                 <!-- Active Timer Display -->
                 <div id="timer-display-box" class="hidden p-4 rounded-2xl bg-[#f5ede2] border-1.5 border-[#5c4738] text-center space-y-2 shadow-[2px_2px_0px_#5c4738]">
-                    <p class="text-xs font-bold text-[#5c4738]">⏳ Thời gian nấu đang đếm ngược (Đang hầm canh/nấu đồ...):</p>
+                    <p class="text-xs font-bold text-[#5c3232]">⏳ Đang đếm ngược thời gian nấu nướng...</p>
                     <p id="countdown-text" class="text-3xl font-black text-[#4a3b32]">00:00</p>
                     <button onclick="stopTimer()" class="px-3 py-1 bg-[#fbe8e6] hover:bg-[#f5d0cd] text-[#5c3232] rounded-lg text-xs font-bold border border-[#5c4738]">Hủy Hẹn Giờ</button>
                 </div>
 
-                <!-- Safety Checklist Box (Ban đầu bị ẩn, chỉ sổ ra khi hết giờ) -->
-                <div id="safety-checklist-box" class="hidden vintage-panel p-4 space-y-3 bg-[#fffaf4] border-2 border-[#5c4738] animate-bounce">
-                    <div class="flex items-center justify-between">
+                <!-- Safety Checklist Chat Dialog (Sổ ra dạng bong bóng trò chuyện khi hết giờ) -->
+                <div id="safety-checklist-box" class="hidden vintage-panel p-4 space-y-3 bg-[#fffaf4] border-2 border-[#5c4738]">
+                    <div class="flex items-center justify-between border-b border-[#5c4738]/20 pb-2">
                         <h4 class="font-extrabold text-[#4a3b32] text-xs sm:text-sm flex items-center gap-1.5">
-                            <span>🔔</span> Hết giờ! Bé Mây Xanh nhắc bạn kiểm tra:
+                            <span>💬</span> Trò chuyện an toàn cùng Bé Mây Xanh:
                         </h4>
-                        <span class="text-[10px] bg-[#fbe8e6] text-[#5c3232] px-2 py-0.5 rounded-full font-bold border border-[#5c4738]">Cần kiểm tra ngay!</span>
+                        <span class="text-[10px] bg-[#fbe8e6] text-[#5c3232] px-2 py-0.5 rounded-full font-bold border border-[#5c4738]">Hết giờ nấu!</span>
                     </div>
-                    <div class="space-y-2 text-xs text-[#4a3b32] font-medium">
-                        <label class="flex items-center gap-2.5 p-2 bg-white rounded-xl border border-[#5c4738] cursor-pointer hover:bg-[#f5ede2]/50">
-                            <input type="checkbox" class="w-4 h-4 accent-[#8c7355] rounded">
-                            <span>☑️ Đã tắt bếp chưa?</span>
-                        </label>
-                        <label class="flex items-center gap-2.5 p-2 bg-white rounded-xl border border-[#5c4738] cursor-pointer hover:bg-[#f5ede2]/50">
-                            <input type="checkbox" class="w-4 h-4 accent-[#8c7355] rounded">
-                            <span>☑️ Đã tắt oven chưa?</span>
-                        </label>
-                        <label class="flex items-center gap-2.5 p-2 bg-white rounded-xl border border-[#5c4738] cursor-pointer hover:bg-[#f5ede2]/50">
-                            <input type="checkbox" class="w-4 h-4 accent-[#8c7355] rounded">
-                            <span>☑️ Đã tắt đèn chưa?</span>
-                        </label>
-                        <label class="flex items-center gap-2.5 p-2 bg-white rounded-xl border border-[#5c4738] cursor-pointer hover:bg-[#f5ede2]/50">
-                            <input type="checkbox" class="w-4 h-4 accent-[#8c7355] rounded">
-                            <span>☑️ Lau bếp sạch sẽ chưa?</span>
-                        </label>
+
+                    <!-- Chat Bubbles -->
+                    <div class="space-y-3 text-xs text-[#4a3b32]">
+                        <div class="flex items-start gap-2">
+                            <span class="text-lg">☁️🌿</span>
+                            <div class="bg-[#f5ede2] p-3 rounded-2xl border-1.5 border-[#5c4738] flex-1 shadow-sm">
+                                <p class="font-bold">Bé Mây Xanh:</p>
+                                <p class="mt-0.5">"Hết giờ rồi bạn ơi! Cùng mình kiểm tra nhanh mấy việc sau nha:"</p>
+                            </div>
+                        </div>
+
+                        <div class="space-y-2 pl-6">
+                            <label class="flex items-center gap-2.5 p-2.5 bg-white rounded-xl border border-[#5c4738] cursor-pointer hover:bg-[#f5ede2]/50 shadow-sm">
+                                <input type="checkbox" class="w-4 h-4 accent-[#8c7355] rounded">
+                                <span>🔥 Bạn đã tắt bếp chưa?</span>
+                            </label>
+                            <label class="flex items-center gap-2.5 p-2.5 bg-white rounded-xl border border-[#5c4738] cursor-pointer hover:bg-[#f5ede2]/50 shadow-sm">
+                                <input type="checkbox" class="w-4 h-4 accent-[#8c7355] rounded">
+                                <span>🍞 Đã tắt oven (lò nướng) chưa?</span>
+                            </label>
+                            <label class="flex items-center gap-2.5 p-2.5 bg-white rounded-xl border border-[#5c4738] cursor-pointer hover:bg-[#f5ede2]/50 shadow-sm">
+                                <input type="checkbox" class="w-4 h-4 accent-[#8c7355] rounded">
+                                <span>💡 Đã tắt đèn khu vực bếp chưa?</span>
+                            </label>
+                            <label class="flex items-center gap-2.5 p-2.5 bg-white rounded-xl border border-[#5c4738] cursor-pointer hover:bg-[#f5ede2]/50 shadow-sm">
+                                <input type="checkbox" class="w-4 h-4 accent-[#8c7355] rounded">
+                                <span>✨ Đã lau bếp sạch sẽ chưa?</span>
+                            </label>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -325,11 +374,11 @@
             if (hour >= 17 && hour < 19) {
                 badge.className = "absolute -bottom-2 left-1/2 -translate-x-1/2 bg-[#bc6c25] text-white text-[11px] font-extrabold px-4 py-1 rounded-full shadow border-2 border-[#5c4738] whitespace-nowrap animate-pulse";
                 badge.innerText = "🔴 Peak Hours!";
-                speech.innerText = "⚠️ GIỜ CAO ĐIỂM (17h-19h)! Giá điện đang cao, tạm ngưng máy giặt và lò nướng nhé! 🔥";
+                speech.innerText = "⚠️ Giờ cao điểm rồi! Tạm ngưng thiết bị lớn nha!";
             } else if (hour >= 23 || hour < 8) {
                 badge.className = "absolute -bottom-2 left-1/2 -translate-x-1/2 bg-[#87a96b] text-white text-[11px] font-extrabold px-4 py-1 rounded-full shadow border-2 border-[#5c4738] whitespace-nowrap";
                 badge.innerText = "🟢 Night Saver ON";
-                speech.innerText = "🌙 GIỜ ĐÊM RẺ NHẤT! Tranh thủ giặt sấy lúc này để tiết kiệm tiền điện tối đa nha! 🌿";
+                speech.innerText = "🌙 Giờ đêm rẻ nhất, tranh thủ giặt sấy nào!";
             } else {
                 badge.className = "absolute -bottom-2 left-1/2 -translate-x-1/2 bg-[#d4a373] text-white text-[11px] font-extrabold px-4 py-1 rounded-full shadow border-2 border-[#5c4738] whitespace-nowrap";
                 badge.innerText = "Normal Hours ☀️";
@@ -350,7 +399,6 @@
                 return;
             }
 
-            // Ẩn khung checklist khi bắt đầu đếm ngược
             document.getElementById('safety-checklist-box').classList.add('hidden');
 
             clearInterval(countdownInterval);
@@ -367,9 +415,9 @@
                 if (remaining <= 0) {
                     clearInterval(countdownInterval);
                     displayBox.classList.add('hidden');
-                    // Sổ ra khung reminder an toàn khi hết giờ
+                    // Sổ ra khung bong bóng chat kiểm tra an toàn khi hết giờ
                     document.getElementById('safety-checklist-box').classList.remove('hidden');
-                    alert("⏰ Đã hết thời gian! Bé Mây Xanh đã mở bảng kiểm tra an toàn, bạn check ngay nhé!");
+                    alert("⏰ Đã hết thời gian! Bé Mây Xanh đã nhắn tin nhắc nhở bạn kiểm tra bếp núc kìa!");
                 }
                 remaining--;
             }, 1000);
@@ -385,7 +433,6 @@
             const weatherTemp = document.getElementById('weather-temp');
             const weatherWind = document.getElementById('weather-wind');
             const weatherIcon = document.getElementById('weather-icon-lg');
-            const weatherCardBg = document.getElementById('weather-card-bg');
             const outfitText1 = document.getElementById('outfit-text-1');
             const outfitText2 = document.getElementById('outfit-text-2');
             const outfitIcon1 = document.getElementById('outfit-icon-1');
@@ -406,7 +453,7 @@
                     let condition = "Trời quang đãng";
                     let icon = "☀️";
                     let o1 = { icon: "🧥", text: "Áo khoác nhẹ hoặc cardigan" };
-                    let o2 = { icon: "👟", text: "Gi giày sneaker thoải mái dạo phố" };
+                    let o2 = { icon: "👟", text: "Giày sneaker thoải mái dạo phố" };
 
                     if (precip > 0 || (wcode >= 50 && wcode < 68)) {
                         condition = "Trời có mưa nhẹ";
