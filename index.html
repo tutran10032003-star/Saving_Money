@@ -129,62 +129,71 @@
             background: #f0e6d6;
         }
 
-        /* ECO BABY MASCOT STYLES */
-        .eco-baby {
-            width: 220px;
-            height: 185px;
+        /* MASCOT MỚI STYLES */
+        .mayxanh-new {
+            width: 230px;
+            height: 210px;
             margin: auto;
         }
-        .eco-baby svg {
+        .mayxanh-new svg {
             width: 100%;
             height: 100%;
             overflow: visible;
         }
-        .eco-baby .scene,
-        .eco-baby .pose {
+        .mayxanh-new .scene,
+        .mayxanh-new .pose {
             display: none;
         }
-        .eco-baby[data-action="plug"] .plug,
-        .eco-baby[data-action="light"] .light,
-        .eco-baby[data-action="wipe"] .wipe,
-        .eco-baby[data-action="oven"] .oven {
+        .mayxanh-new[data-action="plug"] .plug,
+        .mayxanh-new[data-action="stove"] .stove,
+        .mayxanh-new[data-action="oven"] .oven,
+        .mayxanh-new[data-action="light"] .light {
             display: inline;
         }
-        .eco-baby .body {
+        .may-body {
             transform-box: fill-box;
             transform-origin: center;
-            animation: baby-breathe 2.2s ease-in-out infinite;
+            animation: may-bounce 2.4s ease-in-out infinite;
         }
-        .eco-baby .leaf {
+        .may-leaves {
             transform-box: fill-box;
             transform-origin: bottom center;
-            animation: leaf-sway 2s ease-in-out infinite;
+            animation: may-leaf 2.5s ease-in-out infinite;
         }
-        .eco-baby .action-motion {
+        .may-plug {
             transform-box: fill-box;
-            transform-origin: center;
-            animation: baby-action .8s ease-in-out infinite alternate;
+            transform-origin: bottom center;
+            animation: may-wave 1.8s ease-in-out infinite;
         }
-        .eco-baby .wipe-motion {
-            animation: wipe-motion .7s ease-in-out infinite alternate;
+        .stove-control {
+            animation: touch-switch 1.2s ease-in-out infinite alternate;
+            transform-origin: center;
             transform-box: fill-box;
+        }
+        .oven-control {
+            animation: turn-knob 1.2s ease-in-out infinite alternate;
             transform-origin: center;
+            transform-box: fill-box;
         }
-        @keyframes baby-breathe {
-            0%,100% { transform: translateY(0); }
-            50% { transform: translateY(-3px); }
+        @keyframes may-bounce {
+            0%,100% { transform: translateY(0) rotate(0); }
+            50% { transform: translateY(-4px) rotate(1deg); }
         }
-        @keyframes leaf-sway {
+        @keyframes may-leaf {
             0%,100% { transform: rotate(-3deg); }
             50% { transform: rotate(4deg); }
         }
-        @keyframes baby-action {
-            from { transform: translateY(0); }
-            to { transform: translateY(-2px); }
+        @keyframes may-wave {
+            0%,100% { transform: rotate(-5deg); }
+            50% { transform: rotate(5deg); }
         }
-        @keyframes wipe-motion {
-            from { transform: translateX(-4px) rotate(-3deg); }
-            to { transform: translateX(5px) rotate(3deg); }
+        @keyframes touch-switch {
+            from { transform: translateY(0); }
+            to { transform: translateY(3px); }
+        }
+        @keyframes turn-knob {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(-35deg); }
         }
     </style>
 </head>
@@ -214,104 +223,102 @@
     <!-- MAIN CONTAINER -->
     <main class="max-w-xl mx-auto px-4 py-6 flex-grow w-full space-y-6">
         
-        <!-- MASCOT & INTRO CARD -->
+        <!-- MASCOT MỚI & INTRO CARD -->
         <div class="vintage-panel p-5 flex flex-col items-center text-center">
             <div class="relative mb-2 w-full flex justify-center">
-                <div class="eco-baby" id="ecoBaby" data-action="plug">
-                    <svg viewBox="0 0 240 205" xmlns="http://www.w3.org/2000/svg">
-                        <ellipse cx="112" cy="190" rx="48" ry="6" fill="#E8DDC9"/>
-                        <!-- PLUG SCENE -->
-                        <g class="scene plug">
-                          <rect x="8" y="91" width="37" height="48" rx="7" fill="#F6EBD8" stroke="#806A53" stroke-width="2.5"/>
-                          <rect x="16" y="101" width="21" height="26" rx="5" fill="#E7D9C4" stroke="#806A53" stroke-width="1.5"/>
-                          <circle cx="23" cy="110" r="2" fill="#806A53"/>
-                          <circle cx="30" cy="110" r="2" fill="#806A53"/>
-                          <g class="action-motion">
-                            <path d="M55 119 Q48 115 42 118" fill="none" stroke="#806A53" stroke-width="3" stroke-linecap="round"/>
-                            <rect x="34" y="110" width="22" height="23" rx="7" fill="#B9A78B" stroke="#806A53" stroke-width="2"/>
-                            <rect x="38" y="102" width="5" height="11" rx="2.5" fill="#C5B69D" stroke="#806A53" stroke-width="1.3"/>
-                            <rect x="47" y="102" width="5" height="11" rx="2.5" fill="#C5B69D" stroke="#806A53" stroke-width="1.3"/>
-                            <path d="M42 116 L39 123 L44 123 L42 129 L49 120 L44 120Z" fill="#F5D16A"/>
-                          </g>
+                <div class="mayxanh-new" id="ecoBaby" data-action="plug">
+                    <svg viewBox="0 0 240 220" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Shadow -->
+                        <ellipse cx="117" cy="204" rx="49" ry="7" fill="#E9DFCD"/>
+
+                        <g class="may-body">
+                            <!-- Feet -->
+                            <path d="M83 174 Q73 186 80 196 Q88 202 103 195 L108 180Z" fill="#FFF9EF" stroke="#79634D" stroke-width="3" stroke-linejoin="round"/>
+                            <path d="M120 180 L125 195 Q139 202 148 194 Q151 185 137 174Z" fill="#FFF9EF" stroke="#79634D" stroke-width="3" stroke-linejoin="round"/>
+
+                            <!-- Left arm -->
+                            <path d="M66 132 Q46 137 53 158 Q57 169 68 163" fill="none" stroke="#FFF9EF" stroke-width="17" stroke-linecap="round"/>
+                            <path d="M66 132 Q46 137 53 158 Q57 169 68 163" fill="none" stroke="#79634D" stroke-width="2.8" stroke-linecap="round"/>
+
+                            <!-- Right arm holding plug -->
+                            <path d="M160 129 Q181 119 188 101" fill="none" stroke="#FFF9EF" stroke-width="17" stroke-linecap="round"/>
+                            <path d="M160 129 Q181 119 188 101" fill="none" stroke="#79634D" stroke-width="2.8" stroke-linecap="round"/>
+
+                            <!-- Cloud body -->
+                            <path d="M67 148 C51 143 47 127 55 115 C43 101 52 80 69 75 C69 56 86 46 102 54 C112 39 133 43 141 57 C159 51 175 66 173 83 C192 94 191 115 178 126 C183 143 168 154 153 157 Q112 166 67 148Z" fill="#FFF9EE" stroke="#79634D" stroke-width="3.2" stroke-linejoin="round"/>
+
+                            <!-- Leaves -->
+                            <g class="may-leaves">
+                                <path d="M112 53 Q83 20 83 26 Q101 21 116 48Z" fill="#9BAE81" stroke="#6E805B" stroke-width="2.5"/>
+                                <path d="M116 50 Q129 20 151 25 Q150 43 116 55Z" fill="#B3C294" stroke="#6E805B" stroke-width="2.5"/>
+                            </g>
+
+                            <!-- Face -->
+                            <circle cx="86" cy="105" r="4" fill="#594A3D"/>
+                            <circle cx="145" cy="105" r="4" fill="#594A3D"/>
+                            <ellipse cx="72" cy="121" rx="9" ry="6" fill="#F3BBAE"/>
+                            <ellipse cx="159" cy="121" rx="9" ry="6" fill="#F3BBAE"/>
+                            <path d="M108 118 Q115 127 123 118" fill="none" stroke="#594A3D" stroke-width="2.8" stroke-linecap="round"/>
+
+                            <!-- Scarf -->
+                            <path d="M65 137 Q110 155 167 135 L163 150 Q113 169 70 153Z" fill="#A7B991" stroke="#79634D" stroke-width="2.5"/>
+                            <path d="M144 149 Q165 148 164 165 L151 160 L143 170 L139 152Z" fill="#A7B991" stroke="#79634D" stroke-width="2.5"/>
+
+                            <!-- Battery pouch -->
+                            <rect x="99" y="157" width="29" height="28" rx="7" fill="#D9E1C5" stroke="#79634D" stroke-width="2.5"/>
+                            <rect x="108" y="153" width="11" height="4" rx="1" fill="#79634D"/>
+                            <path d="M115 160 L108 173 H115 L112 181 L122 169 H116 L120 160Z" fill="#E8B94F"/>
+
+                            <!-- Hands -->
+                            <circle cx="55" cy="161" r="7" fill="#FFF9EE" stroke="#79634D" stroke-width="2.5"/>
+                            <circle cx="188" cy="101" r="7" fill="#FFF9EE" stroke="#79634D" stroke-width="2.5"/>
                         </g>
-                        <!-- LIGHT SCENE -->
-                        <g class="scene light">
-                          <path d="M174 10 L174 26" stroke="#806A53" stroke-width="3"/>
-                          <path d="M153 26 Q174 15 195 26 L184 52 L164 52Z" fill="#D7C8A9" stroke="#806A53" stroke-width="2.5"/>
-                          <path d="M168 52 H180" stroke="#806A53" stroke-width="3"/>
-                          <circle cx="174" cy="57" r="6" fill="#F2CF75" stroke="#806A53" stroke-width="1.5"/>
-                          <path d="M174 65 V71 M155 60 L150 64 M193 60 L198 64" stroke="#D5B66E" stroke-width="2"/>
-                          <rect x="187" y="91" width="27" height="37" rx="6" fill="#F5EAD7" stroke="#806A53" stroke-width="2"/>
-                          <rect x="195" y="99" width="11" height="20" rx="3" fill="#D0C1A9" stroke="#806A53" stroke-width="1.5"/>
+
+                        <!-- SCENE: STOVE -->
+                        <g class="scene stove">
+                            <rect x="145" y="119" width="86" height="34" rx="9" fill="#C8B99F" stroke="#806B55" stroke-width="2.5"/>
+                            <rect x="151" y="123" width="74" height="24" rx="6" fill="#E8DDC9" stroke="#806B55" stroke-width="1.5"/>
+                            <circle cx="169" cy="135" r="8" fill="none" stroke="#A98C70" stroke-width="2"/>
+                            <circle cx="169" cy="135" r="4" fill="none" stroke="#A98C70" stroke-width="1.5"/>
+                            <circle cx="205" cy="135" r="8" fill="none" stroke="#A98C70" stroke-width="2"/>
+                            <circle cx="205" cy="135" r="4" fill="none" stroke="#A98C70" stroke-width="1.5"/>
+                            <rect x="174" y="96" width="49" height="19" rx="6" fill="#806B55"/>
+                            <g class="stove-control">
+                                <circle cx="187" cy="105" r="6" fill="#D9E4C8" stroke="#FFF9ED" stroke-width="1.5"/>
+                                <path d="M187 101 V106 M184 103 A4 4 0 1 0 190 103" fill="none" stroke="#617652" stroke-width="1.5" stroke-linecap="round"/>
+                            </g>
+                            <text x="207" y="108" font-size="7" fill="#FFF9ED" text-anchor="middle" font-weight="bold">OFF</text>
                         </g>
-                        <!-- WIPE SCENE -->
-                        <g class="scene wipe">
-                          <rect x="145" y="137" width="88" height="12" rx="4" fill="#BDA88C" stroke="#806A53" stroke-width="2"/>
-                          <path d="M150 149 H228 L221 164 H157Z" fill="#E9D8BD" stroke="#806A53" stroke-width="2"/>
-                          <g class="wipe-motion">
-                            <path d="M168 127 Q183 118 199 127 L195 140 L165 140Z" fill="#A5B58F" stroke="#806A53" stroke-width="2"/>
-                            <path d="M173 131 Q182 126 192 131" fill="none" stroke="#DCE4C9" stroke-width="2"/>
-                          </g>
-                          <path d="M204 120 L211 116 M211 124 L219 121" stroke="#D7B967" stroke-width="2" stroke-linecap="round"/>
-                        </g>
-                        <!-- OVEN SCENE -->
+
+                        <!-- SCENE: OVEN -->
                         <g class="scene oven">
-                          <rect x="155" y="77" width="72" height="92" rx="9" fill="#D9C9AD" stroke="#806A53" stroke-width="2.5"/>
-                          <rect x="164" y="102" width="54" height="57" rx="5" fill="#A7B6A0" stroke="#806A53" stroke-width="2"/>
-                          <rect x="169" y="107" width="44" height="46" rx="3" fill="#F0E4D0"/>
-                          <circle cx="173" cy="88" r="5" fill="#806A53"/>
-                          <circle cx="208" cy="88" r="5" fill="#806A53"/>
-                          <path d="M184 126 Q191 117 199 126" fill="none" stroke="#D9A15D" stroke-width="2"/>
+                            <rect x="157" y="76" width="72" height="94" rx="9" fill="#D7C6AA" stroke="#806B55" stroke-width="2.5"/>
+                            <rect x="164" y="83" width="58" height="22" rx="5" fill="#806B55"/>
+                            <circle cx="178" cy="94" r="7" fill="#E8DCC7" stroke="#FFF9ED" stroke-width="1.5"/>
+                            <circle cx="207" cy="94" r="7" fill="#E8DCC7" stroke="#FFF9ED" stroke-width="1.5"/>
+                            <g class="oven-control">
+                                <path d="M207 94 L207 88" stroke="#617652" stroke-width="2.5" stroke-linecap="round"/>
+                            </g>
+                            <rect x="166" y="113" width="54" height="48" rx="5" fill="#9FAE9C" stroke="#806B55" stroke-width="2"/>
+                            <rect x="172" y="119" width="42" height="36" rx="3" fill="#E9E0D1"/>
+                            <path d="M178 144 Q192 133 207 144" fill="none" stroke="#D7A76D" stroke-width="2"/>
                         </g>
-                        <!-- MASCOT -->
-                        <g class="body">
-                          <path d="M88 162 Q78 173 84 181 Q96 188 106 178 L105 164Z" fill="#FFF8EA" stroke="#806A53" stroke-width="2.5"/>
-                          <path d="M116 164 L116 178 Q126 188 138 181 Q144 173 133 162Z" fill="#FFF8EA" stroke="#806A53" stroke-width="2.5"/>
-                          <path d="M61 127 Q48 123 53 108 Q42 91 58 80 Q59 60 79 59 Q90 43 107 54 Q124 42 140 57 Q159 58 160 79 Q178 94 165 112 Q169 128 151 134 Q106 143 61 127Z" fill="#FFF9ED" stroke="#806A53" stroke-width="3" stroke-linejoin="round"/>
-                          <g class="leaf">
-                            <path d="M108 55 Q81 29 83 22 Q105 22 112 51Z" fill="#92A67A" stroke="#657653" stroke-width="2"/>
-                            <path d="M110 52 Q119 22 143 24 Q146 40 110 55Z" fill="#B0BE91" stroke="#657653" stroke-width="2"/>
-                          </g>
-                          <circle cx="88" cy="91" r="3.5" fill="#594A3D"/>
-                          <circle cx="132" cy="91" r="3.5" fill="#594A3D"/>
-                          <ellipse cx="75" cy="105" rx="7" ry="5" fill="#F4BDB0"/>
-                          <ellipse cx="145" cy="105" rx="7" ry="5" fill="#F4BDB0"/>
-                          <path d="M104 100 Q110 107 116 100" fill="none" stroke="#594A3D" stroke-width="2.2" stroke-linecap="round"/>
-                          <path d="M63 119 Q105 136 157 117 L152 132 Q105 151 68 133Z" fill="#A5B58E" stroke="#806A53" stroke-width="2"/>
-                          <path d="M130 131 Q148 139 142 153 L130 148 L123 155 L121 135Z" fill="#A5B58E" stroke="#806A53" stroke-width="2"/>
-                          <rect x="93" y="137" width="26" height="24" rx="6" fill="#D7E0C2" stroke="#806A53" stroke-width="2"/>
-                          <rect x="101" y="133" width="10" height="4" rx="1" fill="#806A53"/>
-                          <path d="M107 140 L102 150 H107 L105 156 L114 146 H109 L112 140Z" fill="#E8BD55"/>
-                          <!-- Arms: plug -->
-                          <g class="pose plug">
-                            <path d="M65 119 Q49 119 48 127" fill="none" stroke="#FFF9ED" stroke-width="10" stroke-linecap="round"/>
-                            <path d="M65 119 Q49 119 48 127" fill="none" stroke="#806A53" stroke-width="2.5" stroke-linecap="round"/>
-                            <circle cx="48" cy="127" r="6" fill="#FFF9ED" stroke="#806A53" stroke-width="2"/>
-                            <path d="M155 119 Q168 126 161 139" fill="none" stroke="#FFF9ED" stroke-width="10" stroke-linecap="round"/>
-                            <path d="M155 119 Q168 126 161 139" fill="none" stroke="#806A53" stroke-width="2.5" stroke-linecap="round"/>
-                          </g>
-                          <!-- Arms: light -->
-                          <g class="pose light">
-                            <path d="M154 118 Q173 102 183 91" fill="none" stroke="#FFF9ED" stroke-width="11" stroke-linecap="round"/>
-                            <path d="M154 118 Q173 102 183 91" fill="none" stroke="#806A53" stroke-width="2.5"/>
-                            <circle cx="183" cy="91" r="6" fill="#FFF9ED" stroke="#806A53" stroke-width="2"/>
-                            <path d="M66 120 Q51 129 60 140" fill="none" stroke="#FFF9ED" stroke-width="10" stroke-linecap="round"/>
-                            <path d="M66 120 Q51 129 60 140" fill="none" stroke="#806A53" stroke-width="2"/>
-                          </g>
-                          <!-- Arms: wipe -->
-                          <g class="pose wipe">
-                            <path d="M154 119 Q166 129 176 130 M65 119 Q91 135 165 130" fill="none" stroke="#FFF9ED" stroke-width="10" stroke-linecap="round"/>
-                            <path d="M154 119 Q166 129 176 130 M65 119 Q91 135 165 130" fill="none" stroke="#806A53" stroke-width="2.5" stroke-linecap="round"/>
-                            <circle cx="176" cy="130" r="5" fill="#FFF9ED" stroke="#806A53" stroke-width="2"/>
-                          </g>
-                          <!-- Arms: oven -->
-                          <g class="pose oven">
-                            <path d="M154 119 Q167 109 175 101" fill="none" stroke="#FFF9ED" stroke-width="10" stroke-linecap="round"/>
-                            <path d="M154 119 Q167 109 175 101" fill="none" stroke="#806A53" stroke-width="2.5"/>
-                            <circle cx="175" cy="101" r="6" fill="#FFF9ED" stroke="#806A53" stroke-width="2"/>
-                            <path d="M65 120 Q53 130 62 141" fill="none" stroke="#FFF9ED" stroke-width="10"/>
-                            <path d="M65 120 Q53 130 62 141" fill="none" stroke="#806A53" stroke-width="2"/>
-                          </g>
+
+                        <!-- SCENE: PLUG -->
+                        <g class="scene plug">
+                            <path d="M188 101 Q203 91 196 77 Q190 69 201 61" fill="none" stroke="#79634D" stroke-width="3" stroke-linecap="round"/>
+                            <g class="may-plug">
+                                <rect x="183" y="37" width="29" height="34" rx="9" fill="#C7B99F" stroke="#79634D" stroke-width="2.5"/>
+                                <rect x="189" y="27" width="5" height="14" rx="2" fill="#B8A98E" stroke="#79634D" stroke-width="1.5"/>
+                                <rect x="202" y="27" width="5" height="14" rx="2" fill="#B8A98E" stroke="#79634D" stroke-width="1.5"/>
+                                <path d="M199 44 L192 55 H199 L196 63 L207 50 H201 L204 44Z" fill="#EFC85D"/>
+                            </g>
+                        </g>
+
+                        <!-- Sparkles -->
+                        <g fill="#E6C16C">
+                            <path d="M36 78 L39 85 L46 88 L39 91 L36 98 L33 91 L26 88 L33 85Z"/>
+                            <path d="M207 127 L210 133 L216 136 L210 139 L207 145 L204 139 L198 136 L204 133Z"/>
                         </g>
                     </svg>
                 </div>
@@ -326,7 +333,7 @@
             </p>
         </div>
 
-        <!-- TAB 1: TARIFF & TIPS + ECO-TIPS (ĐỦ 4 NOTE) -->
+        <!-- TAB 1: TARIFF & TIPS -->
         <div id="tab-content-tracker" class="space-y-6">
             <div class="vintage-panel p-5 space-y-4">
                 <h2 class="font-bold text-[#4a3b32] text-base flex items-center gap-2 border-b-2 border-[#5c4738] pb-2.5">
@@ -412,7 +419,7 @@
             </div>
         </div>
 
-        <!-- TAB 3: WEATHER & OUTFIT -->
+        <!-- TAB 3: WEATHER & OUTFIT (ĐÃ SẮP XẾP LẠI ĐÚNG VỊ TRÍ KHĂN CHOÀNG & ÁO KHOÁC) -->
         <div id="tab-content-weather" class="hidden space-y-6">
             <div class="vintage-panel p-5 space-y-4">
                 <div class="flex items-center justify-between gap-2 border-b-2 border-[#5c4738] pb-2.5">
@@ -441,33 +448,29 @@
                         <span>👕</span> Gợi ý trang phục khi ra ngoài:
                     </h4>
                     <div class="grid grid-cols-1 gap-2.5">
+                        <!-- MỤC 1: KHĂN CHOÀNG CỔ (MẪU KHĂN XANH CÓ TUA RUA) -->
                         <div class="bg-white p-3 rounded-xl border-1.5 border-[#5c4738] text-xs text-[#4a3b32] flex items-center gap-2.5 shadow-sm">
                             <div class="flex-shrink-0 w-8 h-8 flex items-center justify-center">
                                 <svg viewBox="0 0 100 100" width="32" height="32" xmlns="http://www.w3.org/2000/svg">
-                                  <path d="M31 30 Q22 7 50 7 Q78 7 69 30 L64 39 L36 39Z" fill="#C5D3B5" stroke="#75634F" stroke-width="2.2"/>
-                                  <path d="M37 24 Q50 15 63 24 Q59 34 50 34 Q41 34 37 24Z" fill="#82947A" stroke="#75634F" stroke-width="1.8"/>
-                                  <path d="M34 27 Q37 35 43 36 M66 27 Q63 35 57 36" fill="none" stroke="#F5EBD8" stroke-width="3" stroke-linecap="round"/>
-                                  <path d="M34 30 L23 35 Q13 40 10 54 L7 79 Q7 87 16 88 L84 88 Q93 87 93 79 L90 54 Q87 40 77 35 L66 30 Q50 40 34 30Z" fill="#A9BEA0" stroke="#75634F" stroke-width="2.2" stroke-linejoin="round"/>
-                                  <path d="M23 38 Q14 40 11 54 L5 76 Q4 84 13 87 Q21 89 25 78 L31 51Z" fill="#B7C9AB" stroke="#75634F" stroke-width="2.2"/>
-                                  <path d="M77 38 Q86 40 89 54 L95 76 Q96 84 87 87 Q79 89 75 78 L69 51Z" fill="#B7C9AB" stroke="#75634F" stroke-width="2.2"/>
-                                  <path d="M12 53 Q19 60 27 54 M9 68 Q17 75 24 69 M88 53 Q81 60 73 54 M91 68 Q83 75 76 69" fill="none" stroke="#829B7D" stroke-width="3" stroke-linecap="round"/>
-                                  <path d="M31 46 Q50 53 69 46 M29 62 Q50 69 71 62 M26 78 Q50 84 74 78" fill="none" stroke="#D4DFCB" stroke-width="3" stroke-linecap="round"/>
-                                  <path d="M50 35 L50 88" stroke="#75634F" stroke-width="2"/>
-                                  <circle cx="50" cy="44" r="1.5" fill="#F5EBD8"/>
-                                  <circle cx="50" cy="56" r="1.5" fill="#F5EBD8"/>
-                                  <circle cx="50" cy="68" r="1.5" fill="#F5EBD8"/>
-                                  <path d="M42 32 L42 50 M58 32 L58 50" stroke="#F5EBD8" stroke-width="2" stroke-linecap="round"/>
-                                  <circle cx="42" cy="52" r="3" fill="#F5EBD8"/>
-                                  <circle cx="58" cy="52" r="3" fill="#F5EBD8"/>
-                                  <path d="M29 60 L41 62 L37 75 L26 72Z M71 60 L59 62 L63 75 L74 72Z" fill="#C5D3B5" stroke="#75634F" stroke-width="1.8"/>
-                                  <path d="M7 79 Q15 85 24 80 L22 90 Q14 94 6 87Z M93 79 Q85 85 76 80 L78 90 Q86 94 94 87Z" fill="#C5D3B5" stroke="#75634F" stroke-width="1.8"/>
-                                  <path d="M23 87 Q50 94 77 87 L76 94 Q50 99 24 94Z" fill="#C5D3B5" stroke="#75634F" stroke-width="1.8"/>
+                                    <path d="M22 23 C22 13 38 10 57 14 C76 18 84 31 82 40 C80 49 69 57 53 58 C37 59 23 48 22 37 Z" fill="#84A5C1" stroke="#3A536B" stroke-width="3"/>
+                                    <path d="M50 36 C50 36 62 43 71 59 C80 75 79 83 79 83 L71 85 C71 85 70 74 63 60 C56 46 47 41 47 41 Z" fill="#A4C2D8" stroke="#3A536B" stroke-width="2.5"/>
+                                    <path d="M57 51 L63 56 L56 61 L63 67 L56 73 L63 78" fill="none" stroke="#F4BD94" stroke-width="3" stroke-linecap="round"/>
+                                    <path d="M58 57 C58 57 66 61 71 70" fill="none" stroke="#3A536B" stroke-width="2.5"/>
+                                    <!-- Tua rua khăn -->
+                                    <path d="M68 85 V94 M71 85 V94 M74 85 V94 M77 85 V94" stroke="#3A536B" stroke-width="2.5" stroke-linecap="round"/>
+                                    <path d="M37 66 V75 M40 66 V75 M43 66 V75 M46 66 V75" stroke="#3A536B" stroke-width="2.5" stroke-linecap="round"/>
+                                    <path d="M34 57 C34 57 41 62 46 71" fill="none" stroke="#3A536B" stroke-width="2.5"/>
+                                    <path d="M32 52 L38 57 L31 62 L38 68 L31 74" fill="none" stroke="#F4BD94" stroke-width="3" stroke-linecap="round"/>
+                                    <path d="M27 64 L34 66 L30 74 L25 72 Z" fill="#698FA8" stroke="#3A536B" stroke-width="2"/>
+                                    <path d="M63 83 L71 85 L67 93 L61 90 Z" fill="#698FA8" stroke="#3A536B" stroke-width="2"/>
                                 </svg>
                             </div> 
-                            <span id="outfit-text-1" class="font-medium">Đang cập nhật...</span>
+                            <span id="outfit-text-1" class="font-medium">Khăn choàng cổ và găng tay ấm</span>
                         </div>
+                        <!-- MỤC 2: ÁO KHOÁC MÙA ĐÔNG -->
                         <div class="bg-white p-3 rounded-xl border-1.5 border-[#5c4738] text-xs text-[#4a3b32] flex items-center gap-2.5 shadow-sm">
-                            <span id="outfit-icon-2" class="text-xl">👟</span> <span id="outfit-text-2" class="font-medium">Đang cập nhật...</span>
+                            <div class="flex-shrink-0 w-8 h-8 flex items-center justify-center text-xl">🧥</div> 
+                            <span id="outfit-text-2" class="font-medium">Áo phao hoặc áo khoác mùa đông</span>
                         </div>
                     </div>
                 </div>
@@ -540,102 +543,75 @@
         </div>
 
         <div class="flex flex-col items-center py-3 gap-2">
-          <!-- MASCOT TRONG CHAT -->
-          <div class="eco-baby" id="chatEcoBaby" data-action="oven">
-              <svg viewBox="0 0 240 205" xmlns="http://www.w3.org/2000/svg">
-                  <ellipse cx="112" cy="190" rx="48" ry="6" fill="#E8DDC9"/>
-                  <!-- PLUG SCENE -->
-                  <g class="scene plug">
-                    <rect x="8" y="91" width="37" height="48" rx="7" fill="#F6EBD8" stroke="#806A53" stroke-width="2.5"/>
-                    <rect x="16" y="101" width="21" height="26" rx="5" fill="#E7D9C4" stroke="#806A53" stroke-width="1.5"/>
-                    <circle cx="23" cy="110" r="2" fill="#806A53"/>
-                    <circle cx="30" cy="110" r="2" fill="#806A53"/>
-                    <g class="action-motion">
-                      <path d="M55 119 Q48 115 42 118" fill="none" stroke="#806A53" stroke-width="3" stroke-linecap="round"/>
-                      <rect x="34" y="110" width="22" height="23" rx="7" fill="#B9A78B" stroke="#806A53" stroke-width="2"/>
-                      <rect x="38" y="102" width="5" height="11" rx="2.5" fill="#C5B69D" stroke="#806A53" stroke-width="1.3"/>
-                      <rect x="47" y="102" width="5" height="11" rx="2.5" fill="#C5B69D" stroke="#806A53" stroke-width="1.3"/>
-                      <path d="M42 116 L39 123 L44 123 L42 129 L49 120 L44 120Z" fill="#F5D16A"/>
-                    </g>
+          <!-- MASCOT TRONG CHAT (MAYXANH-NEW) -->
+          <div class="mayxanh-new" id="chatEcoBaby" data-action="oven">
+              <svg viewBox="0 0 240 220" xmlns="http://www.w3.org/2000/svg">
+                  <ellipse cx="117" cy="204" rx="49" ry="7" fill="#E9DFCD"/>
+                  <g class="may-body">
+                      <path d="M83 174 Q73 186 80 196 Q88 202 103 195 L108 180Z" fill="#FFF9EF" stroke="#79634D" stroke-width="3" stroke-linejoin="round"/>
+                      <path d="M120 180 L125 195 Q139 202 148 194 Q151 185 137 174Z" fill="#FFF9EF" stroke="#79634D" stroke-width="3" stroke-linejoin="round"/>
+                      <path d="M66 132 Q46 137 53 158 Q57 169 68 163" fill="none" stroke="#FFF9EF" stroke-width="17" stroke-linecap="round"/>
+                      <path d="M66 132 Q46 137 53 158 Q57 169 68 163" fill="none" stroke="#79634D" stroke-width="2.8" stroke-linecap="round"/>
+                      <path d="M160 129 Q181 119 188 101" fill="none" stroke="#FFF9EF" stroke-width="17" stroke-linecap="round"/>
+                      <path d="M160 129 Q181 119 188 101" fill="none" stroke="#79634D" stroke-width="2.8" stroke-linecap="round"/>
+                      <path d="M67 148 C51 143 47 127 55 115 C43 101 52 80 69 75 C69 56 86 46 102 54 C112 39 133 43 141 57 C159 51 175 66 173 83 C192 94 191 115 178 126 C183 143 168 154 153 157 Q112 166 67 148Z" fill="#FFF9EE" stroke="#79634D" stroke-width="3.2" stroke-linejoin="round"/>
+                      <g class="may-leaves">
+                          <path d="M112 53 Q83 20 83 26 Q101 21 116 48Z" fill="#9BAE81" stroke="#6E805B" stroke-width="2.5"/>
+                          <path d="M116 50 Q129 20 151 25 Q150 43 116 55Z" fill="#B3C294" stroke="#6E805B" stroke-width="2.5"/>
+                      </g>
+                      <circle cx="86" cy="105" r="4" fill="#594A3D"/>
+                      <circle cx="145" cy="105" r="4" fill="#594A3D"/>
+                      <ellipse cx="72" cy="121" rx="9" ry="6" fill="#F3BBAE"/>
+                      <ellipse cx="159" cy="121" rx="9" ry="6" fill="#F3BBAE"/>
+                      <path d="M108 118 Q115 127 123 118" fill="none" stroke="#594A3D" stroke-width="2.8" stroke-linecap="round"/>
+                      <path d="M65 137 Q110 155 167 135 L163 150 Q113 169 70 153Z" fill="#A7B991" stroke="#79634D" stroke-width="2.5"/>
+                      <path d="M144 149 Q165 148 164 165 L151 160 L143 170 L139 152Z" fill="#A7B991" stroke="#79634D" stroke-width="2.5"/>
+                      <rect x="99" y="157" width="29" height="28" rx="7" fill="#D9E1C5" stroke="#79634D" stroke-width="2.5"/>
+                      <rect x="108" y="153" width="11" height="4" rx="1" fill="#79634D"/>
+                      <path d="M115 160 L108 173 H115 L112 181 L122 169 H116 L120 160Z" fill="#E8B94F"/>
+                      <circle cx="55" cy="161" r="7" fill="#FFF9EE" stroke="#79634D" stroke-width="2.5"/>
+                      <circle cx="188" cy="101" r="7" fill="#FFF9EE" stroke="#79634D" stroke-width="2.5"/>
                   </g>
-                  <!-- LIGHT SCENE -->
-                  <g class="scene light">
-                    <path d="M174 10 L174 26" stroke="#806A53" stroke-width="3"/>
-                    <path d="M153 26 Q174 15 195 26 L184 52 L164 52Z" fill="#D7C8A9" stroke="#806A53" stroke-width="2.5"/>
-                    <path d="M168 52 H180" stroke="#806A53" stroke-width="3"/>
-                    <circle cx="174" cy="57" r="6" fill="#F2CF75" stroke="#806A53" stroke-width="1.5"/>
-                    <path d="M174 65 V71 M155 60 L150 64 M193 60 L198 64" stroke="#D5B66E" stroke-width="2"/>
-                    <rect x="187" y="91" width="27" height="37" rx="6" fill="#F5EAD7" stroke="#806A53" stroke-width="2"/>
-                    <rect x="195" y="99" width="11" height="20" rx="3" fill="#D0C1A9" stroke="#806A53" stroke-width="1.5"/>
+
+                  <!-- SCENE: STOVE -->
+                  <g class="scene stove">
+                      <rect x="145" y="119" width="86" height="34" rx="9" fill="#C8B99F" stroke="#806B55" stroke-width="2.5"/>
+                      <rect x="151" y="123" width="74" height="24" rx="6" fill="#E8DDC9" stroke="#806B55" stroke-width="1.5"/>
+                      <circle cx="169" cy="135" r="8" fill="none" stroke="#A98C70" stroke-width="2"/>
+                      <circle cx="169" cy="135" r="4" fill="none" stroke="#A98C70" stroke-width="1.5"/>
+                      <circle cx="205" cy="135" r="8" fill="none" stroke="#A98C70" stroke-width="2"/>
+                      <circle cx="205" cy="135" r="4" fill="none" stroke="#A98C70" stroke-width="1.5"/>
+                      <rect x="174" y="96" width="49" height="19" rx="6" fill="#806B55"/>
+                      <g class="stove-control">
+                          <circle cx="187" cy="105" r="6" fill="#D9E4C8" stroke="#FFF9ED" stroke-width="1.5"/>
+                          <path d="M187 101 V106 M184 103 A4 4 0 1 0 190 103" fill="none" stroke="#617652" stroke-width="1.5" stroke-linecap="round"/>
+                      </g>
+                      <text x="207" y="108" font-size="7" fill="#FFF9ED" text-anchor="middle" font-weight="bold">OFF</text>
                   </g>
-                  <!-- WIPE SCENE -->
-                  <g class="scene wipe">
-                    <rect x="145" y="137" width="88" height="12" rx="4" fill="#BDA88C" stroke="#806A53" stroke-width="2"/>
-                    <path d="M150 149 H228 L221 164 H157Z" fill="#E9D8BD" stroke="#806A53" stroke-width="2"/>
-                    <g class="wipe-motion">
-                      <path d="M168 127 Q183 118 199 127 L195 140 L165 140Z" fill="#A5B58F" stroke="#806A53" stroke-width="2"/>
-                      <path d="M173 131 Q182 126 192 131" fill="none" stroke="#DCE4C9" stroke-width="2"/>
-                    </g>
-                    <path d="M204 120 L211 116 M211 124 L219 121" stroke="#D7B967" stroke-width="2" stroke-linecap="round"/>
-                  </g>
-                  <!-- OVEN SCENE -->
+
+                  <!-- SCENE: OVEN -->
                   <g class="scene oven">
-                    <rect x="155" y="77" width="72" height="92" rx="9" fill="#D9C9AD" stroke="#806A53" stroke-width="2.5"/>
-                    <rect x="164" y="102" width="54" height="57" rx="5" fill="#A7B6A0" stroke="#806A53" stroke-width="2"/>
-                    <rect x="169" y="107" width="44" height="46" rx="3" fill="#F0E4D0"/>
-                    <circle cx="173" cy="88" r="5" fill="#806A53"/>
-                    <circle cx="208" cy="88" r="5" fill="#806A53"/>
-                    <path d="M184 126 Q191 117 199 126" fill="none" stroke="#D9A15D" stroke-width="2"/>
+                      <rect x="157" y="76" width="72" height="94" rx="9" fill="#D7C6AA" stroke="#806B55" stroke-width="2.5"/>
+                      <rect x="164" y="83" width="58" height="22" rx="5" fill="#806B55"/>
+                      <circle cx="178" cy="94" r="7" fill="#E8DCC7" stroke="#FFF9ED" stroke-width="1.5"/>
+                      <circle cx="207" cy="94" r="7" fill="#E8DCC7" stroke="#FFF9ED" stroke-width="1.5"/>
+                      <g class="oven-control">
+                          <path d="M207 94 L207 88" stroke="#617652" stroke-width="2.5" stroke-linecap="round"/>
+                      </g>
+                      <rect x="166" y="113" width="54" height="48" rx="5" fill="#9FAE9C" stroke="#806B55" stroke-width="2"/>
+                      <rect x="172" y="119" width="42" height="36" rx="3" fill="#E9E0D1"/>
+                      <path d="M178 144 Q192 133 207 144" fill="none" stroke="#D7A76D" stroke-width="2"/>
                   </g>
-                  <!-- MASCOT -->
-                  <g class="body">
-                    <path d="M88 162 Q78 173 84 181 Q96 188 106 178 L105 164Z" fill="#FFF8EA" stroke="#806A53" stroke-width="2.5"/>
-                    <path d="M116 164 L116 178 Q126 188 138 181 Q144 173 133 162Z" fill="#FFF8EA" stroke="#806A53" stroke-width="2.5"/>
-                    <path d="M61 127 Q48 123 53 108 Q42 91 58 80 Q59 60 79 59 Q90 43 107 54 Q124 42 140 57 Q159 58 160 79 Q178 94 165 112 Q169 128 151 134 Q106 143 61 127Z" fill="#FFF9ED" stroke="#806A53" stroke-width="3" stroke-linejoin="round"/>
-                    <g class="leaf">
-                      <path d="M108 55 Q81 29 83 22 Q105 22 112 51Z" fill="#92A67A" stroke="#657653" stroke-width="2"/>
-                      <path d="M110 52 Q119 22 143 24 Q146 40 110 55Z" fill="#B0BE91" stroke="#657653" stroke-width="2"/>
-                    </g>
-                    <circle cx="88" cy="91" r="3.5" fill="#594A3D"/>
-                    <circle cx="132" cy="91" r="3.5" fill="#594A3D"/>
-                    <ellipse cx="75" cy="105" rx="7" ry="5" fill="#F4BDB0"/>
-                    <ellipse cx="145" cy="105" rx="7" ry="5" fill="#F4BDB0"/>
-                    <path d="M104 100 Q110 107 116 100" fill="none" stroke="#594A3D" stroke-width="2.2" stroke-linecap="round"/>
-                    <path d="M63 119 Q105 136 157 117 L152 132 Q105 151 68 133Z" fill="#A5B58E" stroke="#806A53" stroke-width="2"/>
-                    <path d="M130 131 Q148 139 142 153 L130 148 L123 155 L121 135Z" fill="#A5B58E" stroke="#806A53" stroke-width="2"/>
-                    <rect x="93" y="137" width="26" height="24" rx="6" fill="#D7E0C2" stroke="#806A53" stroke-width="2"/>
-                    <rect x="101" y="133" width="10" height="4" rx="1" fill="#806A53"/>
-                    <path d="M107 140 L102 150 H107 L105 156 L114 146 H109 L112 140Z" fill="#E8BD55"/>
-                    <!-- Arms: plug -->
-                    <g class="pose plug">
-                      <path d="M65 119 Q49 119 48 127" fill="none" stroke="#FFF9ED" stroke-width="10" stroke-linecap="round"/>
-                      <path d="M65 119 Q49 119 48 127" fill="none" stroke="#806A53" stroke-width="2.5" stroke-linecap="round"/>
-                      <circle cx="48" cy="127" r="6" fill="#FFF9ED" stroke="#806A53" stroke-width="2"/>
-                      <path d="M155 119 Q168 126 161 139" fill="none" stroke="#FFF9ED" stroke-width="10" stroke-linecap="round"/>
-                      <path d="M155 119 Q168 126 161 139" fill="none" stroke="#806A53" stroke-width="2.5" stroke-linecap="round"/>
-                    </g>
-                    <!-- Arms: light -->
-                    <g class="pose light">
-                      <path d="M154 118 Q173 102 183 91" fill="none" stroke="#FFF9ED" stroke-width="11" stroke-linecap="round"/>
-                      <path d="M154 118 Q173 102 183 91" fill="none" stroke="#806A53" stroke-width="2.5"/>
-                      <circle cx="183" cy="91" r="6" fill="#FFF9ED" stroke="#806A53" stroke-width="2"/>
-                      <path d="M66 120 Q51 129 60 140" fill="none" stroke="#FFF9ED" stroke-width="10" stroke-linecap="round"/>
-                      <path d="M66 120 Q51 129 60 140" fill="none" stroke="#806A53" stroke-width="2"/>
-                    </g>
-                    <!-- Arms: wipe -->
-                    <g class="pose wipe">
-                      <path d="M154 119 Q166 129 176 130 M65 119 Q91 135 165 130" fill="none" stroke="#FFF9ED" stroke-width="10" stroke-linecap="round"/>
-                      <path d="M154 119 Q166 129 176 130 M65 119 Q91 135 165 130" fill="none" stroke="#806A53" stroke-width="2.5" stroke-linecap="round"/>
-                      <circle cx="176" cy="130" r="5" fill="#FFF9ED" stroke="#806A53" stroke-width="2"/>
-                    </g>
-                    <!-- Arms: oven -->
-                    <g class="pose oven">
-                      <path d="M154 119 Q167 109 175 101" fill="none" stroke="#FFF9ED" stroke-width="10" stroke-linecap="round"/>
-                      <path d="M154 119 Q167 109 175 101" fill="none" stroke="#806A53" stroke-width="2.5"/>
-                      <circle cx="175" cy="101" r="6" fill="#FFF9ED" stroke="#806A53" stroke-width="2"/>
-                      <path d="M65 120 Q53 130 62 141" fill="none" stroke="#FFF9ED" stroke-width="10"/>
-                      <path d="M65 120 Q53 130 62 141" fill="none" stroke="#806A53" stroke-width="2"/>
-                    </g>
+
+                  <!-- SCENE: PLUG -->
+                  <g class="scene plug">
+                      <path d="M188 101 Q203 91 196 77 Q190 69 201 61" fill="none" stroke="#79634D" stroke-width="3" stroke-linecap="round"/>
+                      <g class="may-plug">
+                          <rect x="183" y="37" width="29" height="34" rx="9" fill="#C7B99F" stroke="#79634D" stroke-width="2.5"/>
+                          <rect x="189" y="27" width="5" height="14" rx="2" fill="#B8A98E" stroke="#79634D" stroke-width="1.5"/>
+                          <rect x="202" y="27" width="5" height="14" rx="2" fill="#B8A98E" stroke="#79634D" stroke-width="1.5"/>
+                          <path d="M199 44 L192 55 H199 L196 63 L207 50 H201 L204 44Z" fill="#EFC85D"/>
+                      </g>
                   </g>
               </svg>
           </div>
@@ -663,7 +639,7 @@
         <div id="chat-actions" class="space-y-2"></div>
 
         <p id="chat-progress" class="text-xs text-[#8c7355] text-center font-bold mt-3">
-          Bước 1 / 4
+          Bước 1 / 3
         </p>
 
       </div>
@@ -866,7 +842,6 @@
                 return;
             }
 
-            // Reset checkbox khi bắt đầu đếm ngược mới
             const checkbox = document.getElementById('kitchen-door-checkbox');
             if (checkbox) checkbox.checked = false;
 
@@ -895,43 +870,34 @@
             document.getElementById('timer-display-box').classList.add('hidden');
         }
 
-        // Danh sách 4 bước chuẩn an toàn khu vực bếp trong popup
+        // Danh sách các bước an toàn khu bếp dùng hoạt cảnh mới (stove & oven)
         const safetySteps = [
           {
-            title: "Tắt bếp",
-            question: "Bạn đã tắt bếp chưa?",
-            hint: "Kiểm tra núm bếp đã về vị trí OFF nhé!",
-            scene: "🔥",
-            action: "oven",
-            yes: "Tuyệt vời! Bé Mây vui quá!",
-            no: "Mình cùng kiểm tra núm bếp nhé!"
+            title: "Tắt bếp điện",
+            question: "Bạn đã chạm nút OFF bếp điện chưa?",
+            hint: "Kiểm tra bảng điều khiển cảm ứng và nút OFF nhé!",
+            scene: "🍳",
+            action: "stove",
+            yes: "Tuyệt vời! Bếp điện đã tắt an toàn.",
+            no: "Mình cùng bấm nút OFF nha!"
           },
           {
             title: "Tắt lò nướng (Oven)",
-            question: "Bạn đã tắt lò nướng chưa?",
-            hint: "Kiểm tra nút nguồn và màn hình của oven nhé.",
+            question: "Bạn đã xoay núm lò nướng về vị trí OFF chưa?",
+            hint: "Kiểm tra núm vặn điều khiển oven nhé.",
             scene: "🎛️",
             action: "oven",
-            yes: "Oven đã được tắt. Giỏi lắm!",
-            no: "Bé Mây đợi bạn kiểm tra nha!"
+            yes: "Núm vặn lò nướng đã được trả về OFF!",
+            no: "Bé Mây đợi bạn xoay núm nha!"
           },
           {
-            title: "Tắt đèn bếp",
-            question: "Đèn khu vực bếp đã tắt chưa?",
-            hint: "Đảm bảo đã tắt hết đèn không dùng nhé!",
-            scene: "💡",
-            action: "light",
-            yes: "Căn nhà đã tiết kiệm thêm điện rồi!",
-            no: "Mình đi tắt đèn thôi nào!"
-          },
-          {
-            title: "Lau bếp",
-            question: "Bạn đã lau sạch mặt bếp chưa?",
-            hint: "Đợi bếp nguội và dùng khăn ẩm lau sạch nhé.",
-            scene: "🧽",
-            action: "wipe",
-            yes: "Bếp sạch bong! Bé Mây tự hào về bạn!",
-            no: "Mình cùng dọn dẹp nhé!"
+            title: "Kiểm tra tổng thể",
+            question: "Mọi thiết bị quanh bếp đã an toàn chưa?",
+            hint: "Đảm bảo rút phích cắm và không còn thiết bị chờ.",
+            scene: "🔌",
+            action: "plug",
+            yes: "Tuyệt đối an toàn! Bé Mây rất tự hào về bạn!",
+            no: "Mình cùng kiểm tra lại nhé!"
           }
         ];
 
@@ -959,7 +925,7 @@
 
           if (safetyStepIndex >= safetySteps.length) {
             question.textContent =
-              "Hoàn thành rồi! Cảm ơn bạn đã cùng Bé Mây kiểm tra căn bếp an toàn nhé! 💚";
+              "Hoàn thành rồi! Cảm ơn bạn đã cùng Bé Mây giữ an toàn cho căn bếp nhé! 💚";
 
             scene.textContent = "🌱✨💚";
             if (chatBaby) chatBaby.dataset.action = "plug";
@@ -978,7 +944,7 @@
             `;
 
             document.getElementById("chat-progress")
-              .textContent = "4 / 4 · Hoàn thành";
+              .textContent = "3 / 3 · Hoàn thành";
 
             return;
           }
@@ -999,7 +965,7 @@
             .textContent = step.hint;
 
           document.getElementById("chat-progress")
-            .textContent = `Bước ${safetyStepIndex + 1} / 4`;
+            .textContent = `Bước ${safetyStepIndex + 1} / 3`;
 
           actions.innerHTML = `
             <button class="chat-choice"
@@ -1050,9 +1016,6 @@
             const weatherTemp = document.getElementById('weather-temp');
             const weatherWind = document.getElementById('weather-wind');
             const weatherIcon = document.getElementById('weather-icon-lg');
-            const outfitText1 = document.getElementById('outfit-text-1');
-            const outfitText2 = document.getElementById('outfit-text-2');
-            const outfitIcon2 = document.getElementById('outfit-icon-2');
 
             try {
                 const lat = 53.3498;
@@ -1068,39 +1031,25 @@
 
                     let condition = "Trời quang đãng";
                     let icon = "☀️";
-                    let o1 = { text: "Áo khoác nhẹ hoặc cardigan" };
-                    let o2 = { icon: "👟", text: "Giày sneaker thoải mái dạo phố" };
 
                     if (precip > 0 || (wcode >= 50 && wcode < 68)) {
                         condition = "Trời có mưa nhẹ";
                         icon = "🌧️";
-                        o1 = { text: "Mang theo ô (dù) và áo mưa" };
-                        o2 = { icon: "👢", text: "Giày chống thấm nước" };
                     } else if (temp < 8) {
                         condition = "Trời rất lạnh";
                         icon = "❄️";
-                        o1 = { text: "Khăn choàng cổ và găng tay ấm" };
-                        o2 = { icon: "🧥", text: "Áo phao hoặc áo khoác mùa đông" };
                     } else if (temp <= 15) {
                         condition = "Trời se lạnh, lộng gió";
                         icon = "⛅";
-                        o1 = { text: "Áo len mỏng hoặc áo khoác ngoài" };
-                        o2 = { icon: "👖", text: "Quần dài và giày kín chân" };
                     } else if (temp > 20) {
                         condition = "Trời ấm áp, dễ chịu";
                         icon = "☀️";
-                        o1 = { text: "Áo thun hoặc áo sơ mi thoáng mát" };
-                        o2 = { icon: "🕶️", text: "Kính mát và dép/giày nhẹ nhàng" };
                     }
 
                     weatherCondition.innerText = condition;
                     weatherTemp.innerText = `${Math.round(temp)}°C`;
                     weatherWind.innerText = `Gió: ${Math.round(wind)} km/h`;
                     weatherIcon.innerText = icon;
-
-                    outfitText1.innerText = o1.text;
-                    outfitIcon2.innerText = o2.icon;
-                    outfitText2.innerText = o2.text;
                 }
             } catch (err) {
                 console.error("Lỗi thời tiết:", err);
