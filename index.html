@@ -23,13 +23,6 @@
             background-color: #fcf8f2; 
             color: #4a3b32;
         }
-        @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-5px) rotate(1deg); }
-        }
-        .mascot-float {
-            animation: float 3s ease-in-out infinite;
-        }
         ::-webkit-scrollbar {
             width: 6px;
         }
@@ -128,17 +121,13 @@
             animation: buddy-breathe 2s ease-in-out infinite;
         }
         .mascot-idle { animation: buddy-breathe 2s infinite; }
-        .mascot-happy { animation: buddy-jump .55s ease-in-out 2; }
+        .mascot-happy { animation: mascot-float .55s ease-in-out 2; }
         .mascot-work { animation: buddy-work .7s ease-in-out infinite; }
         .mascot-walk { animation: buddy-walk .45s ease-in-out infinite alternate; }
 
         @keyframes buddy-breathe {
             0%,100% { transform: translateY(0) scale(1); }
             50% { transform: translateY(-6px) scale(1.025); }
-        }
-        @keyframes buddy-jump {
-            0%,100% { transform: translateY(0) rotate(0); }
-            50% { transform: translateY(-20px) rotate(-5deg); }
         }
         @keyframes buddy-work {
             0%,100% { transform: rotate(-4deg); }
@@ -161,11 +150,74 @@
         .chat-choice:hover {
             background: #f0e6d6;
         }
+
+        /* CSS MASCOT MỚI */
+        .eco-mascot {
+            width: 160px;
+            height: 160px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fffdf8;
+            border-radius: 50%;
+            border: 3px solid #5c4738;
+            box-shadow: 3px 3px 0px #5c4738;
+            overflow: visible;
+        }
+        .eco-character {
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+            animation: mascot-float 3s ease-in-out infinite;
+            transform-origin: center bottom;
+        }
+        .mascot-leaves {
+            transform-origin: 150px 60px;
+            animation: mascot-leaves 3s ease-in-out infinite;
+        }
+        .mascot-arm-right {
+            transform-origin: 235px 165px;
+            animation: mascot-wave 2.8s ease-in-out infinite;
+        }
+        .mascot-arm-left {
+            animation: mascot-hand 3s ease-in-out infinite;
+        }
+        .mascot-sparkle {
+            animation: mascot-twinkle 1.8s ease-in-out infinite;
+        }
+        .mascot-battery {
+            animation: mascot-breathe 3s ease-in-out infinite;
+        }
+        @keyframes mascot-float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+        }
+        @keyframes mascot-leaves {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(5deg); }
+        }
+        @keyframes mascot-wave {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(-7deg); }
+        }
+        @keyframes mascot-hand {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(-3deg); }
+        }
+        @keyframes mascot-twinkle {
+            0%, 100% { opacity: .45; }
+            50% { opacity: 1; }
+        }
+        @keyframes mascot-breathe {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(2px); }
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between selection:bg-amber-200">
 
-    <!-- HEADER: Tab ngang hàng với tiêu đề -->
+    <!-- HEADER -->
     <header class="bg-[#fffdfa]/95 backdrop-blur-sm shadow-sm sticky top-0 z-50 border-b-2 border-[#5c4738]">
         <div class="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between gap-4 flex-wrap">
             <div class="flex items-center space-x-2.5">
@@ -192,29 +244,68 @@
         <!-- MASCOT & INTRO CARD -->
         <div class="vintage-panel p-5 flex flex-col items-center text-center">
             <div class="relative mb-3">
-                <div id="mascot-container" class="w-32 h-32 sm:w-36 sm:h-36 mascot-float flex items-center justify-center p-2 bg-[#fffefb] rounded-full border-3 border-[#5c4738] shadow-md relative overflow-hidden">
-                    <svg viewBox="0 0 200 200" class="w-full h-full drop-shadow-sm">
-                        <ellipse cx="75" cy="159" rx="14" ry="10" fill="#fffaf2" stroke="#5c4738" stroke-width="3.5"/>
-                        <ellipse cx="125" cy="159" rx="14" ry="10" fill="#fffaf2" stroke="#5c4738" stroke-width="3.5"/>
-                        <path d="M45 139 C20 139 15 116 27 99 C16 76 42 59 60 66 C75 39 107 46 119 57 C142 42 164 62 155 77 C181 84 183 119 160 139Z" fill="#fffaf2" stroke="#5c4738" stroke-width="4"/>
-                        <g>
-                            <path d="M150 110 Q175 118 162 135" fill="none" stroke="#5c4738" stroke-width="11" stroke-linecap="round"/>
-                            <path d="M155 125 L173 112 M168 128 L185 115" stroke="#5c4738" stroke-width="4" stroke-linecap="round"/>
-                            <rect x="156" y="117" width="22" height="25" rx="5" fill="#5c4738" stroke="#5c4738" stroke-width="2"/>
-                            <circle cx="167" cy="129" r="3" fill="#f4cf68"/>
-                        </g>
-                        <path d="M50 110 Q28 118 40 135" fill="none" stroke="#5c4738" stroke-width="11" stroke-linecap="round"/>
-                        <circle cx="70" cy="104" r="9" fill="#efb99c" opacity="0.8"/>
-                        <circle cx="130" cy="104" r="9" fill="#efb99c" opacity="0.8"/>
-                        <circle cx="85" cy="92" r="4.5" fill="#5c4738"/>
-                        <circle cx="115" cy="92" r="4.5" fill="#5c4738"/>
-                        <path d="M95 105 Q100 112 105 105" fill="none" stroke="#5c4738" stroke-width="3" stroke-linecap="round"/>
-                        <path d="M85 51 Q55 18 76 37 Q88 43 98 52Z" fill="#91a96e" stroke="#5c4738" stroke-width="3"/>
-                        <path d="M101 51 Q124 15 132 38 Q124 48 101 51Z" fill="#a9b77c" stroke="#5c4738" stroke-width="3"/>
-                        <path d="M70 121 Q100 138 130 121" fill="#91a17a" stroke="#5c4738" stroke-width="3"/>
-                        <rect x="113" y="124" width="26" height="24" rx="6" fill="#91a96e" stroke="#5c4738" stroke-width="3"/>
-                        <path d="M127 128 L121 137 H128 L124 144 L134 135 H128Z" fill="#f4cf68"/>
-                    </svg>
+                <div class="eco-mascot">
+                  <svg class="eco-character" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                      <filter id="softShadow">
+                        <feGaussianBlur stdDeviation="3"/>
+                      </filter>
+                    </defs>
+                    <ellipse cx="150" cy="267" rx="72" ry="9" fill="#b9a27b" opacity=".18"/>
+                    <g class="mascot-legs">
+                      <path d="M112 226 Q102 246 105 255 Q111 264 133 257 L143 237" fill="#fff9ed" stroke="#75604d" stroke-width="5" stroke-linejoin="round"/>
+                      <ellipse cx="119" cy="258" rx="19" ry="10" fill="#fff9ed" stroke="#75604d" stroke-width="4"/>
+                      <path d="M174 234 Q187 244 185 256 Q179 265 158 258 L151 237" fill="#fff9ed" stroke="#75604d" stroke-width="5" stroke-linejoin="round"/>
+                      <ellipse cx="177" cy="258" rx="19" ry="10" fill="#fff9ed" stroke="#75604d" stroke-width="4"/>
+                    </g>
+                    <path d="M78 174 Q60 162 65 143 Q47 127 61 107 Q66 91 86 87 Q89 62 115 65 Q132 43 151 59 Q172 42 190 63 Q219 60 224 87 Q248 95 244 119 Q260 139 240 155 Q246 180 222 190 Q220 219 193 228 Q177 239 150 237 Q123 243 103 229 Q76 221 78 198 Q61 191 78 174 Z" fill="#fff9ed" stroke="#75604d" stroke-width="5" stroke-linejoin="round"/>
+                    <g class="mascot-leaves">
+                      <path d="M145 60 Q105 47 101 24 Q133 17 151 48 Z" fill="#a3a875" stroke="#756b49" stroke-width="4"/>
+                      <path d="M151 49 Q171 13 198 25 Q194 53 158 63 Z" fill="#7d9368" stroke="#756b49" stroke-width="4"/>
+                      <path d="M111 29 Q129 36 145 52" fill="none" stroke="#6e8056" stroke-width="2"/>
+                      <path d="M190 30 Q172 40 158 54" fill="none" stroke="#6e8056" stroke-width="2"/>
+                    </g>
+                    <ellipse cx="105" cy="140" rx="13" ry="10" fill="#f5bca8"/>
+                    <ellipse cx="197" cy="140" rx="13" ry="10" fill="#f5bca8"/>
+                    <ellipse cx="128" cy="128" rx="5" ry="7" fill="#574b40"/>
+                    <ellipse cx="177" cy="128" rx="5" ry="7" fill="#574b40"/>
+                    <path d="M146 143 Q151 151 157 143" fill="none" stroke="#574b40" stroke-width="3.5" stroke-linecap="round"/>
+                    <g>
+                      <path d="M75 164 Q112 178 151 163 Q190 178 230 159 L225 183 Q185 200 150 183 Q112 200 80 183 Z" fill="#8e9973" stroke="#6e7457" stroke-width="4"/>
+                      <path d="M91 170 L104 187 M117 174 L130 191 M157 171 L170 190 M191 169 L205 184" stroke="#c3bd91" stroke-width="3" opacity=".8"/>
+                      <path d="M205 180 Q225 194 214 219 L197 206 L193 190" fill="#9ca17a" stroke="#6e7457" stroke-width="4"/>
+                    </g>
+                    <g class="mascot-arm-left">
+                      <path d="M80 170 Q55 169 49 190 Q43 203 55 209 Q69 215 81 194" fill="#fff9ed" stroke="#75604d" stroke-width="5" stroke-linecap="round"/>
+                      <path d="M53 197 Q45 202 50 211" fill="none" stroke="#75604d" stroke-width="3"/>
+                    </g>
+                    <g class="mascot-arm-right">
+                      <path d="M221 166 Q245 160 249 137" fill="none" stroke="#75604d" stroke-width="15" stroke-linecap="round"/>
+                      <path d="M221 166 Q245 160 249 137" fill="none" stroke="#fff9ed" stroke-width="9" stroke-linecap="round"/>
+                      <g transform="translate(227 67) rotate(13 25 40)">
+                        <rect x="12" y="24" width="42" height="49" rx="12" fill="#b7a78b" stroke="#75604d" stroke-width="4"/>
+                        <rect x="19" y="3" width="7" height="28" rx="3" fill="#75604d"/>
+                        <rect x="41" y="3" width="7" height="28" rx="3" fill="#75604d"/>
+                        <path d="M32 39 L24 52 L32 52 L27 64 L43 47 L34 47 Z" fill="#f6d36d"/>
+                      </g>
+                    </g>
+                    <g class="mascot-battery">
+                      <path d="M95 184 Q122 177 141 185 L143 225 Q119 239 96 223 Z" fill="#a4a981" stroke="#6e7457" stroke-width="4"/>
+                      <rect x="108" y="193" width="28" height="27" rx="6" fill="#e8e3c9" stroke="#72805f" stroke-width="3"/>
+                      <path d="M122 198 L116 208 L122 208 L118 216 L130 204 L124 204 Z" fill="#e7b947"/>
+                    </g>
+                    <g>
+                      <rect x="157" y="193" width="36" height="28" rx="7" fill="#e8e0c7" stroke="#8b8b66" stroke-width="3"/>
+                      <rect x="169" y="189" width="12" height="6" rx="3" fill="#a4a981"/>
+                      <path d="M174 198 L168 208 L176 208 L172 216 L183 204 L177 204 Z" fill="#d7ad4e"/>
+                    </g>
+                    <path d="M69 118 Q60 111 66 104" stroke="#d4b66d" stroke-width="4" fill="none" stroke-linecap="round"/>
+                    <path d="M236 98 Q245 89 251 99" stroke="#d4b66d" stroke-width="4" fill="none" stroke-linecap="round"/>
+                    <g class="mascot-sparkle" fill="#d9b85f">
+                      <path d="M48 76 L52 87 L63 91 L52 95 L48 106 L44 95 L33 91 L44 87 Z"/>
+                      <path d="M263 174 L266 182 L274 185 L266 188 L263 196 L260 188 L252 185 L260 182 Z"/>
+                    </g>
+                  </svg>
                 </div>
                 <div id="status-badge" class="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-[#87a96b] text-white text-[11px] font-extrabold px-4 py-1 rounded-full shadow border-2 border-[#5c4738] whitespace-nowrap">
                     Normal Hours ☀️
@@ -227,7 +318,7 @@
             </p>
         </div>
 
-        <!-- TAB 1: TARIFF & TIPS + ECO-TIPS (Mỗi note đúng 1 dòng) -->
+        <!-- TAB 1: TARIFF & TIPS + ECO-TIPS (Đã cập nhật note theo yêu cầu) -->
         <div id="tab-content-tracker" class="space-y-6">
             <div class="vintage-panel p-5 space-y-4">
                 <h2 class="font-bold text-[#4a3b32] text-base flex items-center gap-2 border-b-2 border-[#5c4738] pb-2.5">
@@ -259,20 +350,20 @@
                 </div>
             </div>
 
-            <!-- ECO-TIPS: Mỗi note gọn gàng đúng 1 dòng -->
+            <!-- ECO-TIPS: Mỗi note đúng 1 dòng, cập nhật tắt đèn phòng/cầu thang & khóa cửa / bếp -->
             <div class="vintage-panel p-5 space-y-3">
                 <h3 class="font-bold text-[#4a3b32] text-sm flex items-center gap-2">
                     <span>💡</span> Nhắc Nhở & Mẹo Xanh Hàng Ngày:
                 </h3>
                 <ul class="text-xs space-y-2 text-[#5c4738] font-medium">
                     <li class="bg-[#fffaf4] px-3 py-2.5 rounded-xl border border-[#5c4738]/30 truncate">
-                        <span>💡</span> <strong>Tắt đèn:</strong> Luôn tắt đèn khi ra khỏi phòng để tiết kiệm điện.
+                        <span>💡</span> <strong>Tắt đèn:</strong> Nhớ tắt đèn phòng & cầu thang khi không sử dụng.
+                    </li>
+                    <li class="bg-[#fffaf4] px-3 py-2.5 rounded-xl border border-[#5c4738]/30 truncate">
+                        <span>🔒</span> <strong>Kiểm tra cửa:</strong> Khóa cửa kỹ chưa và đã đóng cửa nhà bếp nữa.
                     </li>
                     <li class="bg-[#fffaf4] px-3 py-2.5 rounded-xl border border-[#5c4738]/30 truncate">
                         <span>🔌</span> <strong>Rút phích cắm:</strong> Ngắt thiết bị chờ (tivi, lò vi sóng) khi không dùng.
-                    </li>
-                    <li class="bg-[#fffaf4] px-3 py-2.5 rounded-xl border border-[#5c4738]/30 truncate">
-                        <span>🚿</span> <strong>Bình nước nóng:</strong> Tắt ngay bình nóng lạnh sau khi tắm xong.
                     </li>
                 </ul>
             </div>
@@ -350,7 +441,7 @@
             </div>
         </div>
 
-        <!-- TAB 4: COOKING CHECKLIST & TIMER (Đã bỏ nút 1 phút test, giữ các mốc 15, 30, 45, 60 và ô nhập tùy ý) -->
+        <!-- TAB 4: COOKING CHECKLIST & TIMER -->
         <div id="tab-content-checklist" class="hidden space-y-6">
             <div class="vintage-panel p-5 space-y-4">
                 <h2 class="font-bold text-[#4a3b32] text-base flex items-center gap-2 border-b-2 border-[#5c4738] pb-2.5">
