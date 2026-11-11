@@ -44,7 +44,7 @@
             border-radius: 1rem;
             box-shadow: 2px 2px 0px #5c4738;
         }
-        /* Style cho lịch retro lò xo */
+        /* Style cho lịch lò xo đỏ retro */
         .retro-calendar {
             background: #fffbf5;
             border: 2px solid #5c4738;
@@ -76,6 +76,9 @@
             <div class="flex bg-[#f0e6d6] p-1 rounded-full border-1.5 border-[#5c4738] flex-wrap justify-center">
                 <button onclick="switchTab('tracker')" id="tab-btn-tracker" class="px-3 py-1.5 rounded-full text-xs font-bold transition-all bg-[#8c7355] text-white shadow-inner">
                     ⚡ Tariff
+                </button>
+                <button onclick="switchTab('calendar')" id="tab-btn-calendar" class="px-3 py-1.5 rounded-full text-xs font-bold transition-all text-[#4a3b32] hover:bg-white/60">
+                    📅 Calendar
                 </button>
                 <button onclick="switchTab('weather')" id="tab-btn-weather" class="px-3 py-1.5 rounded-full text-xs font-bold transition-all text-[#4a3b32] hover:bg-white/60">
                     🌦️ Weather
@@ -130,42 +133,8 @@
             </p>
         </div>
 
-        <!-- TAB 1: TARIFF & CALENDAR (Tích hợp Lịch Rác Retro ngay trên web) -->
+        <!-- TAB 1: TARIFF & TIPS -->
         <div id="tab-content-tracker" class="space-y-6">
-            <!-- LỊCH RETRO ĐỔ RÁC & CÔNG VIỆC NHÀ -->
-            <div class="retro-calendar p-4 space-y-3">
-                <div class="retro-calendar-header -mx-4 -mt-4 p-3.5 flex items-center justify-between px-5">
-                    <div class="flex items-center gap-2">
-                        <span class="text-xl">📅</span>
-                        <h3 class="font-black text-sm tracking-wide">Lịch Việc Nhà & Đổ Rác</h3>
-                    </div>
-                    <span class="text-[11px] bg-white/20 px-2.5 py-1 rounded-lg font-bold">Tháng 11 / 2026</span>
-                </div>
-
-                <div class="text-xs text-[#4a3b32] space-y-2 pt-1">
-                    <div class="grid grid-cols-2 gap-2">
-                        <!-- Thứ 2 -->
-                        <div class="p-2.5 rounded-xl bg-[#fff5f0] border-1.5 border-[#5c4738] flex items-center justify-between">
-                            <div>
-                                <p class="font-extrabold text-[#9c413b]">🗑️ Thứ Hai</p>
-                                <p class="text-[11px] text-[#7c544d] mt-0.5">Kéo thùng rác ra ngoài</p>
-                            </div>
-                            <span class="text-[10px] bg-[#fbe8e6] text-[#9c413b] font-bold px-2 py-0.5 rounded border border-[#5c4738]">Hàng tuần</span>
-                        </div>
-                        <!-- Thứ 3 -->
-                        <div class="p-2.5 rounded-xl bg-[#f2f7ec] border-1.5 border-[#5c4738] flex items-center justify-between">
-                            <div>
-                                <p class="font-extrabold text-[#4f6e35]">🗑️ Thứ Ba</p>
-                                <p class="text-[11px] text-[#5e7c45] mt-0.5">Kéo thùng rác vào nhà</p>
-                            </div>
-                            <span class="text-[10px] bg-[#e2f0d9] text-[#4f6e35] font-bold px-2 py-0.5 rounded border border-[#5c4738]">Hàng tuần</span>
-                        </div>
-                    </div>
-                    <p class="text-[11px] text-[#8c7355] italic text-center pt-1">✨ (Sẽ bổ sung thêm lịch quét nhà, dọn dẹp khi cần nhé!)</p>
-                </div>
-            </div>
-
-            <!-- BIỂU GIÁ ĐIỆN -->
             <div class="vintage-panel p-5 space-y-4">
                 <h2 class="font-bold text-[#4a3b32] text-base flex items-center gap-2 border-b-2 border-[#5c4738] pb-2.5">
                     <span>⚡</span> Biểu Giá Điện Trong Ngày (SST Saver+)
@@ -197,7 +166,37 @@
             </div>
         </div>
 
-        <!-- TAB 2: WEATHER & OUTFIT -->
+        <!-- TAB 2: CALENDAR (Lịch lò xo đỏ retro & Đổ rác thứ 3) -->
+        <div id="tab-content-calendar" class="hidden space-y-6">
+            <div class="retro-calendar p-4 space-y-3">
+                <div class="retro-calendar-header -mx-4 -mt-4 p-3.5 flex items-center justify-between px-5">
+                    <div class="flex items-center gap-2">
+                        <span class="text-xl">📅</span>
+                        <h3 class="font-black text-sm tracking-wide">Lịch Việc Nhà & Đổ Rác</h3>
+                    </div>
+                    <span class="text-[11px] bg-white/20 px-2.5 py-1 rounded-lg font-bold">Tháng 11 / 2026</span>
+                </div>
+
+                <div class="text-xs text-[#4a3b32] space-y-3 pt-2">
+                    <div class="p-3 rounded-xl bg-[#fff5f0] border-1.5 border-[#5c4738] flex items-center justify-between shadow-sm">
+                        <div class="flex items-center gap-3">
+                            <span class="text-2xl">🗑️</span>
+                            <div>
+                                <p class="font-extrabold text-[#9c413b]">Thứ Ba Hàng Tuần</p>
+                                <p class="text-[11px] text-[#7c544d] mt-0.5">Lịch đổ rác định kỳ</p>
+                            </div>
+                        </div>
+                        <span class="text-[10px] bg-[#fbe8e6] text-[#9c413b] font-bold px-2.5 py-1 rounded-lg border border-[#5c4738]">Đã lên lịch</span>
+                    </div>
+
+                    <div class="p-3 rounded-xl bg-[#f5ede2] border-1.5 border-[#5c4738] text-center border-dashed">
+                        <p class="text-[#7a6452] italic text-[11px]">✨ (Sẽ bổ sung thêm lịch quét nhà, dọn dẹp khi cần nhé!)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 3: WEATHER & OUTFIT -->
         <div id="tab-content-weather" class="hidden space-y-6">
             <div class="vintage-panel p-5 space-y-4">
                 <div class="flex items-center justify-between gap-2 border-b-2 border-[#5c4738] pb-2.5">
@@ -221,7 +220,6 @@
                     <div id="weather-icon-lg" class="text-6xl drop-shadow-md">☁️</div>
                 </div>
 
-                <!-- Outfit Recommendations (Đã fix icon áo khoác nét, sạch sẽ) -->
                 <div class="bg-[#f5ede2] border-1.5 border-[#5c4738] p-4 rounded-2xl space-y-3 shadow-[2px_2px_0px_#5c4738]">
                     <h4 class="font-bold text-[#4a3b32] text-xs sm:text-sm flex items-center gap-2">
                         <span>👕</span> Gợi ý trang phục khi ra ngoài:
@@ -238,7 +236,7 @@
             </div>
         </div>
 
-        <!-- TAB 3: COOKING CHECKLIST (Bong bóng chat tương tác khi hết giờ) -->
+        <!-- TAB 4: COOKING CHECKLIST (Từng bước xuất hiện khi tick hoàn thành) -->
         <div id="tab-content-checklist" class="hidden space-y-6">
             <div class="vintage-panel p-5 space-y-4">
                 <h2 class="font-bold text-[#4a3b32] text-base flex items-center gap-2 border-b-2 border-[#5c4738] pb-2.5">
@@ -246,13 +244,12 @@
                 </h2>
                 
                 <!-- Timer Setup -->
-                <div class="vint-card p-4 space-y-3 bg-white">
+                <div class="vint-card p-4 space-y-3 bg-white" id="timer-setup-box">
                     <p class="text-xs font-bold text-[#4a3b32]">⏱️ Chọn thời gian nấu (hoặc nhập số phút tùy ý):</p>
                     <div class="flex flex-wrap gap-2">
                         <button onclick="setTimerMinutes(1)" class="px-3 py-1.5 bg-[#f5ede2] hover:bg-[#e8dac7] text-[#4a3b32] rounded-xl text-xs font-bold border border-[#5c4738] transition">1 phút (Test)</button>
                         <button onclick="setTimerMinutes(15)" class="px-3 py-1.5 bg-[#f5ede2] hover:bg-[#e8dac7] text-[#4a3b32] rounded-xl text-xs font-bold border border-[#5c4738] transition">15 phút</button>
                         <button onclick="setTimerMinutes(30)" class="px-3 py-1.5 bg-[#f5ede2] hover:bg-[#e8dac7] text-[#4a3b32] rounded-xl text-xs font-bold border border-[#5c4738] transition">30 phút</button>
-                        <button onclick="setTimerMinutes(45)" class="px-3 py-1.5 bg-[#f5ede2] hover:bg-[#e8dac7] text-[#4a3b32] rounded-xl text-xs font-bold border border-[#5c4738] transition">45 phút</button>
                     </div>
                     <div class="flex items-center gap-2 pt-1">
                         <input type="number" id="custom-minutes" placeholder="Nhập số phút..." min="1" max="180" class="flex-1 px-3 py-2 rounded-xl border-1.5 border-[#5c4738] text-xs bg-[#fffaf4]">
@@ -267,7 +264,7 @@
                     <button onclick="stopTimer()" class="px-3 py-1 bg-[#fbe8e6] hover:bg-[#f5d0cd] text-[#5c3232] rounded-lg text-xs font-bold border border-[#5c4738]">Hủy Hẹn Giờ</button>
                 </div>
 
-                <!-- Safety Checklist Chat Dialog (Sổ ra dạng bong bóng trò chuyện khi hết giờ) -->
+                <!-- Interactive Step-by-Step Chat Dialog (Trạng thái trống ban đầu, hiện lần lượt từng task) -->
                 <div id="safety-checklist-box" class="hidden vintage-panel p-4 space-y-3 bg-[#fffaf4] border-2 border-[#5c4738]">
                     <div class="flex items-center justify-between border-b border-[#5c4738]/20 pb-2">
                         <h4 class="font-extrabold text-[#4a3b32] text-xs sm:text-sm flex items-center gap-1.5">
@@ -276,33 +273,71 @@
                         <span class="text-[10px] bg-[#fbe8e6] text-[#5c3232] px-2 py-0.5 rounded-full font-bold border border-[#5c4738]">Hết giờ nấu!</span>
                     </div>
 
-                    <!-- Chat Bubbles -->
-                    <div class="space-y-3 text-xs text-[#4a3b32]">
-                        <div class="flex items-start gap-2">
-                            <span class="text-lg">☁️🌿</span>
-                            <div class="bg-[#f5ede2] p-3 rounded-2xl border-1.5 border-[#5c4738] flex-1 shadow-sm">
-                                <p class="font-bold">Bé Mây Xanh:</p>
-                                <p class="mt-0.5">"Hết giờ rồi bạn ơi! Cùng mình kiểm tra nhanh mấy việc sau nha:"</p>
+                    <!-- Chat Container -->
+                    <div class="space-y-3 text-xs text-[#4a3b32]" id="chat-steps-container">
+                        <!-- Step 1: Bếp -->
+                        <div id="step-1" class="flex flex-col space-y-2">
+                            <div class="flex items-start gap-2">
+                                <span class="text-lg">☁️🌿</span>
+                                <div class="bg-[#f5ede2] p-3 rounded-2xl border-1.5 border-[#5c4738] flex-1 shadow-sm">
+                                    <p class="font-bold">Bé Mây Xanh:</p>
+                                    <p class="mt-0.5">"Hết giờ rồi bạn ơi! Việc đầu tiên: Bạn đã tắt bếp chưa?"</p>
+                                </div>
                             </div>
+                            <label class="flex items-center gap-2.5 p-2.5 bg-white rounded-xl border border-[#5c4738] cursor-pointer hover:bg-[#f5ede2]/50 shadow-sm ml-8">
+                                <input type="checkbox" onchange="completeStep(1)" class="w-4 h-4 accent-[#8c7355] rounded">
+                                <span class="font-bold">🔥 Đã tắt bếp rồi</span>
+                            </label>
                         </div>
 
-                        <div class="space-y-2 pl-6">
-                            <label class="flex items-center gap-2.5 p-2.5 bg-white rounded-xl border border-[#5c4738] cursor-pointer hover:bg-[#f5ede2]/50 shadow-sm">
-                                <input type="checkbox" class="w-4 h-4 accent-[#8c7355] rounded">
-                                <span>🔥 Bạn đã tắt bếp chưa?</span>
+                        <!-- Step 2: Oven (Ẩn ban đầu) -->
+                        <div id="step-2" class="hidden flex flex-col space-y-2">
+                            <div class="flex items-start gap-2">
+                                <span class="text-lg">☁️✨</span>
+                                <div class="bg-[#f5ede2] p-3 rounded-2xl border-1.5 border-[#5c4738] flex-1 shadow-sm">
+                                    <p class="font-bold">Bé Mây Xanh:</p>
+                                    <p class="mt-0.5">"Giỏi lắm! Tiếp theo: Bạn đã tắt lò nướng (oven) chưa?"</p>
+                                </div>
+                            </div>
+                            <label class="flex items-center gap-2.5 p-2.5 bg-white rounded-xl border border-[#5c4738] cursor-pointer hover:bg-[#f5ede2]/50 shadow-sm ml-8">
+                                <input type="checkbox" onchange="completeStep(2)" class="w-4 h-4 accent-[#8c7355] rounded">
+                                <span class="font-bold">🍞 Đã tắt oven rồi</span>
                             </label>
-                            <label class="flex items-center gap-2.5 p-2.5 bg-white rounded-xl border border-[#5c4738] cursor-pointer hover:bg-[#f5ede2]/50 shadow-sm">
-                                <input type="checkbox" class="w-4 h-4 accent-[#8c7355] rounded">
-                                <span>🍞 Đã tắt oven (lò nướng) chưa?</span>
+                        </div>
+
+                        <!-- Step 3: Đèn (Ẩn ban đầu) -->
+                        <div id="step-3" class="hidden flex flex-col space-y-2">
+                            <div class="flex items-start gap-2">
+                                <span class="text-lg">☁️💡</span>
+                                <div class="bg-[#f5ede2] p-3 rounded-2xl border-1.5 border-[#5c4738] flex-1 shadow-sm">
+                                    <p class="font-bold">Bé Mây Xanh:</p>
+                                    <p class="mt-0.5">"Gần xong rồi! Bạn đã tắt đèn khu vực bếp chưa?"</p>
+                                </div>
+                            </div>
+                            <label class="flex items-center gap-2.5 p-2.5 bg-white rounded-xl border border-[#5c4738] cursor-pointer hover:bg-[#f5ede2]/50 shadow-sm ml-8">
+                                <input type="checkbox" onchange="completeStep(3)" class="w-4 h-4 accent-[#8c7355] rounded">
+                                <span class="font-bold">💡 Đã tắt đèn bếp rồi</span>
                             </label>
-                            <label class="flex items-center gap-2.5 p-2.5 bg-white rounded-xl border border-[#5c4738] cursor-pointer hover:bg-[#f5ede2]/50 shadow-sm">
-                                <input type="checkbox" class="w-4 h-4 accent-[#8c7355] rounded">
-                                <span>💡 Đã tắt đèn khu vực bếp chưa?</span>
+                        </div>
+
+                        <!-- Step 4: Lau bếp (Ẩn ban đầu) -->
+                        <div id="step-4" class="hidden flex flex-col space-y-2">
+                            <div class="flex items-start gap-2">
+                                <span class="text-lg">☁️🧽</span>
+                                <div class="bg-[#f5ede2] p-3 rounded-2xl border-1.5 border-[#5c4738] flex-1 shadow-sm">
+                                    <p class="font-bold">Bé Mây Xanh:</p>
+                                    <p class="mt-0.5">"Cuối cùng: Bạn đã lau bếp sạch sẽ chưa?"</p>
+                                </div>
+                            </div>
+                            <label class="flex items-center gap-2.5 p-2.5 bg-white rounded-xl border border-[#5c4738] cursor-pointer hover:bg-[#f5ede2]/50 shadow-sm ml-8">
+                                <input type="checkbox" onchange="completeStep(4)" class="w-4 h-4 accent-[#8c7355] rounded">
+                                <span class="font-bold">✨ Đã lau bếp sạch sẽ rồi</span>
                             </label>
-                            <label class="flex items-center gap-2.5 p-2.5 bg-white rounded-xl border border-[#5c4738] cursor-pointer hover:bg-[#f5ede2]/50 shadow-sm">
-                                <input type="checkbox" class="w-4 h-4 accent-[#8c7355] rounded">
-                                <span>✨ Đã lau bếp sạch sẽ chưa?</span>
-                            </label>
+                        </div>
+
+                        <!-- Hoàn tất -->
+                        <div id="step-done" class="hidden text-center p-3 bg-[#e2f0d9] rounded-2xl border border-[#5c4738] text-[#4f6e35] font-extrabold">
+                            🎉 Hoàn tất xuất sắc! Bếp nhà mình đã an toàn tuyệt đối 🤍
                         </div>
                     </div>
                 </div>
@@ -338,24 +373,31 @@
 
         function switchTab(tabName) {
             const trackerTab = document.getElementById('tab-content-tracker');
+            const calendarTab = document.getElementById('tab-content-calendar');
             const weatherTab = document.getElementById('tab-content-weather');
             const checklistTab = document.getElementById('tab-content-checklist');
 
             const btnTracker = document.getElementById('tab-btn-tracker');
+            const btnCalendar = document.getElementById('tab-btn-calendar');
             const btnWeather = document.getElementById('tab-btn-weather');
             const btnChecklist = document.getElementById('tab-btn-checklist');
 
             trackerTab.classList.add('hidden');
+            calendarTab.classList.add('hidden');
             weatherTab.classList.add('hidden');
             checklistTab.classList.add('hidden');
 
             btnTracker.className = "px-3 py-1.5 rounded-full text-xs font-bold transition-all text-[#4a3b32] hover:bg-white/60";
+            btnCalendar.className = "px-3 py-1.5 rounded-full text-xs font-bold transition-all text-[#4a3b32] hover:bg-white/60";
             btnWeather.className = "px-3 py-1.5 rounded-full text-xs font-bold transition-all text-[#4a3b32] hover:bg-white/60";
             btnChecklist.className = "px-3 py-1.5 rounded-full text-xs font-bold transition-all text-[#4a3b32] hover:bg-white/60";
 
             if (tabName === 'tracker') {
                 trackerTab.classList.remove('hidden');
                 btnTracker.className = "px-3 py-1.5 rounded-full text-xs font-bold transition-all bg-[#8c7355] text-white shadow-inner";
+            } else if (tabName === 'calendar') {
+                calendarTab.classList.remove('hidden');
+                btnCalendar.className = "px-3 py-1.5 rounded-full text-xs font-bold transition-all bg-[#8c7355] text-white shadow-inner";
             } else if (tabName === 'weather') {
                 weatherTab.classList.remove('hidden');
                 btnWeather.className = "px-3 py-1.5 rounded-full text-xs font-bold transition-all bg-[#8c7355] text-white shadow-inner";
@@ -399,7 +441,16 @@
                 return;
             }
 
+            // Reset checklist về trạng thái ẩn
             document.getElementById('safety-checklist-box').classList.add('hidden');
+            document.getElementById('step-1').classList.remove('hidden');
+            document.getElementById('step-2').classList.add('hidden');
+            document.getElementById('step-3').classList.add('hidden');
+            document.getElementById('step-4').classList.add('hidden');
+            document.getElementById('step-done').classList.add('hidden');
+
+            // Reset checkbox
+            document.querySelectorAll('#safety-checklist-box input[type="checkbox"]').forEach(cb => cb.checked = false);
 
             clearInterval(countdownInterval);
             let remaining = totalSecs;
@@ -415,9 +466,9 @@
                 if (remaining <= 0) {
                     clearInterval(countdownInterval);
                     displayBox.classList.add('hidden');
-                    // Sổ ra khung bong bóng chat kiểm tra an toàn khi hết giờ
+                    // Sổ ra khung chat kiểm tra bước 1
                     document.getElementById('safety-checklist-box').classList.remove('hidden');
-                    alert("⏰ Đã hết thời gian! Bé Mây Xanh đã nhắn tin nhắc nhở bạn kiểm tra bếp núc kìa!");
+                    alert("⏰ Đã hết thời gian! Bé Mây Xanh bắt đầu kiểm tra an toàn cùng bạn kìa!");
                 }
                 remaining--;
             }, 1000);
@@ -426,6 +477,19 @@
         function stopTimer() {
             clearInterval(countdownInterval);
             document.getElementById('timer-display-box').classList.add('hidden');
+        }
+
+        // Logic hiện lần lượt từng task khi tick hoàn thành
+        function completeStep(stepNum) {
+            if (stepNum === 1) {
+                document.getElementById('step-2').classList.remove('hidden');
+            } else if (stepNum === 2) {
+                document.getElementById('step-3').classList.remove('hidden');
+            } else if (stepNum === 3) {
+                document.getElementById('step-4').classList.remove('hidden');
+            } else if (stepNum === 4) {
+                document.getElementById('step-done').classList.remove('hidden');
+            }
         }
 
         async function fetchWeatherData() {
