@@ -4,6 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Eco-Buddy Home Manager ⚡☁️</title>
+    
+    <!-- CẤU HÌNH PWA CHO GITHUB PAGES -->
+    <link rel="manifest" href="/Saving_Money/manifest.json">
+    <meta name="theme-color" content="#fcf8f2">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Eco-Buddy">
+    <link rel="apple-touch-icon" href="/Saving_Money/icons/icon-192.png">
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts: Quicksand -->
@@ -45,23 +54,22 @@
             box-shadow: 2px 2px 0px #5c4738;
         }
 
-        /* Thanh điều hướng 1 hàng 4 tab */
+        /* Thanh điều hướng 1 hàng 4 tab ngang hàng gọn gàng */
         .nav-pills {
             width: 100%;
-            max-width: 440px;
-            margin: auto;
-            padding: 6px;
+            max-width: 380px;
+            padding: 5px;
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 4px;
+            gap: 3px;
             background: #f0e6d6;
-            border-radius: 40px;
+            border-radius: 30px;
             border: 1px solid #e4d8c5;
         }
         .nav-btn {
             border: 2px solid transparent;
-            border-radius: 30px;
-            padding: 7px 4px;
+            border-radius: 20px;
+            padding: 6px 2px;
             font-size: 11px;
             font-weight: 700;
             color: #4a3b32;
@@ -157,33 +165,23 @@
 </head>
 <body class="min-h-screen flex flex-col justify-between selection:bg-amber-200">
 
-    <!-- HEADER -->
+    <!-- HEADER: Tab ngang hàng với tiêu đề -->
     <header class="bg-[#fffdfa]/95 backdrop-blur-sm shadow-sm sticky top-0 z-50 border-b-2 border-[#5c4738]">
-        <div class="max-w-xl mx-auto px-4 py-3 flex flex-col items-center justify-between gap-3">
-            <div class="flex items-center space-x-2.5 w-full justify-between">
-                <div class="flex items-center space-x-2">
-                    <span class="text-2xl">🌿</span>
-                    <div>
-                        <h1 class="font-bold text-base text-[#4a3b32] leading-tight">Eco-Buddy Home Manager</h1>
-                        <p class="text-[11px] text-[#7a6452] font-medium">Live Tariff & Weather ⚡ <span id="realtime-clock" class="text-[#5c4738] font-bold"></span></p>
-                    </div>
+        <div class="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between gap-4 flex-wrap">
+            <div class="flex items-center space-x-2.5">
+                <span class="text-2xl">🌿</span>
+                <div>
+                    <h1 class="font-bold text-base text-[#4a3b32] leading-tight">Eco-Buddy Home Manager</h1>
+                    <p class="text-[11px] text-[#7a6452] font-medium">Live Tariff & Weather ⚡ <span id="realtime-clock" class="text-[#5c4738] font-bold"></span></p>
                 </div>
             </div>
             
-            <!-- TWO-ROW NAVIGATION GOM THÀNH 1 HÀNG 4 TAB -->
+            <!-- 4 TAB NGANG HÀNG -->
             <div class="nav-pills">
-              <button onclick="switchTab('tracker')" id="tab-btn-tracker" class="nav-btn active">
-                ⚡ Tariff
-              </button>
-              <button onclick="switchTab('weather')" id="tab-btn-weather" class="nav-btn">
-                🌦️ Weather
-              </button>
-              <button onclick="switchTab('checklist')" id="tab-btn-checklist" class="nav-btn">
-                🍳 Nấu Nướng
-              </button>
-              <button onclick="switchTab('calendar')" id="tab-btn-calendar" class="nav-btn">
-                📅 Calendar
-              </button>
+              <button onclick="switchTab('tracker')" id="tab-btn-tracker" class="nav-btn active">⚡ Tariff</button>
+              <button onclick="switchTab('weather')" id="tab-btn-weather" class="nav-btn">🌦️ Weather</button>
+              <button onclick="switchTab('checklist')" id="tab-btn-checklist" class="nav-btn">🍳 Nấu Nướng</button>
+              <button onclick="switchTab('calendar')" id="tab-btn-calendar" class="nav-btn">📅 Calendar</button>
             </div>
         </div>
     </header>
@@ -196,20 +194,26 @@
             <div class="relative mb-3">
                 <div id="mascot-container" class="w-32 h-32 sm:w-36 sm:h-36 mascot-float flex items-center justify-center p-2 bg-[#fffefb] rounded-full border-3 border-[#5c4738] shadow-md relative overflow-hidden">
                     <svg viewBox="0 0 200 200" class="w-full h-full drop-shadow-sm">
-                        <ellipse cx="60" cy="120" rx="14" ry="10" fill="#fffaf5" stroke="#5c4738" stroke-width="3"/>
-                        <ellipse cx="140" cy="120" rx="14" ry="10" fill="#fffaf5" stroke="#5c4738" stroke-width="3"/>
-                        <ellipse cx="75" cy="145" rx="12" ry="8" fill="#fffaf5" stroke="#5c4738" stroke-width="3"/>
-                        <ellipse cx="125" cy="145" rx="12" ry="8" fill="#fffaf5" stroke="#5c4738" stroke-width="3"/>
-                        <path d="M50 130 C25 130 15 105 28 85 C35 68 55 58 75 65 C85 45 115 40 132 60 C150 45 178 62 175 85 C190 92 192 118 175 130 Z" fill="#fffaf5" stroke="#5c4738" stroke-width="4"/>
-                        <path d="M100 42 Q112 20 125 35 Q112 48 100 42" fill="#87a96b" stroke="#5c4738" stroke-width="3"/>
-                        <path d="M100 42 Q88 20 75 35 Q88 48 100 42" fill="#87a96b" stroke="#5c4738" stroke-width="3"/>
-                        <circle cx="75" cy="98" r="9" fill="#f4b183" opacity="0.7"/>
-                        <circle cx="125" cy="98" r="9" fill="#f4b183" opacity="0.7"/>
-                        <circle cx="85" cy="90" r="4.5" fill="#5c4738"/>
-                        <circle cx="115" cy="90" r="4.5" fill="#5c4738"/>
-                        <path d="M 94 102 Q 100 108 106 102" fill="none" stroke="#5c4738" stroke-width="3" stroke-linecap="round"/>
-                        <rect x="85" y="112" width="30" height="20" rx="5" fill="#87a96b" stroke="#5c4738" stroke-width="2.5"/>
-                        <text x="94" y="127" font-size="12" fill="#fff">⚡</text>
+                        <ellipse cx="75" cy="159" rx="14" ry="10" fill="#fffaf2" stroke="#5c4738" stroke-width="3.5"/>
+                        <ellipse cx="125" cy="159" rx="14" ry="10" fill="#fffaf2" stroke="#5c4738" stroke-width="3.5"/>
+                        <path d="M45 139 C20 139 15 116 27 99 C16 76 42 59 60 66 C75 39 107 46 119 57 C142 42 164 62 155 77 C181 84 183 119 160 139Z" fill="#fffaf2" stroke="#5c4738" stroke-width="4"/>
+                        <g>
+                            <path d="M150 110 Q175 118 162 135" fill="none" stroke="#5c4738" stroke-width="11" stroke-linecap="round"/>
+                            <path d="M155 125 L173 112 M168 128 L185 115" stroke="#5c4738" stroke-width="4" stroke-linecap="round"/>
+                            <rect x="156" y="117" width="22" height="25" rx="5" fill="#5c4738" stroke="#5c4738" stroke-width="2"/>
+                            <circle cx="167" cy="129" r="3" fill="#f4cf68"/>
+                        </g>
+                        <path d="M50 110 Q28 118 40 135" fill="none" stroke="#5c4738" stroke-width="11" stroke-linecap="round"/>
+                        <circle cx="70" cy="104" r="9" fill="#efb99c" opacity="0.8"/>
+                        <circle cx="130" cy="104" r="9" fill="#efb99c" opacity="0.8"/>
+                        <circle cx="85" cy="92" r="4.5" fill="#5c4738"/>
+                        <circle cx="115" cy="92" r="4.5" fill="#5c4738"/>
+                        <path d="M95 105 Q100 112 105 105" fill="none" stroke="#5c4738" stroke-width="3" stroke-linecap="round"/>
+                        <path d="M85 51 Q55 18 76 37 Q88 43 98 52Z" fill="#91a96e" stroke="#5c4738" stroke-width="3"/>
+                        <path d="M101 51 Q124 15 132 38 Q124 48 101 51Z" fill="#a9b77c" stroke="#5c4738" stroke-width="3"/>
+                        <path d="M70 121 Q100 138 130 121" fill="#91a17a" stroke="#5c4738" stroke-width="3"/>
+                        <rect x="113" y="124" width="26" height="24" rx="6" fill="#91a96e" stroke="#5c4738" stroke-width="3"/>
+                        <path d="M127 128 L121 137 H128 L124 144 L134 135 H128Z" fill="#f4cf68"/>
                     </svg>
                 </div>
                 <div id="status-badge" class="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-[#87a96b] text-white text-[11px] font-extrabold px-4 py-1 rounded-full shadow border-2 border-[#5c4738] whitespace-nowrap">
@@ -223,7 +227,7 @@
             </p>
         </div>
 
-        <!-- TAB 1: TARIFF & TIPS + ECO-TIPS REMINDERS -->
+        <!-- TAB 1: TARIFF & TIPS + ECO-TIPS (Mỗi note đúng 1 dòng) -->
         <div id="tab-content-tracker" class="space-y-6">
             <div class="vintage-panel p-5 space-y-4">
                 <h2 class="font-bold text-[#4a3b32] text-base flex items-center gap-2 border-b-2 border-[#5c4738] pb-2.5">
@@ -255,20 +259,20 @@
                 </div>
             </div>
 
-            <!-- PHẦN NHẮC NHỞ MẸO VẶT HÀNG NGÀY (ECO-TIPS) -->
+            <!-- ECO-TIPS: Mỗi note gọn gàng đúng 1 dòng -->
             <div class="vintage-panel p-5 space-y-3">
                 <h3 class="font-bold text-[#4a3b32] text-sm flex items-center gap-2">
                     <span>💡</span> Nhắc Nhở & Mẹo Xanh Hàng Ngày:
                 </h3>
-                <ul class="text-xs space-y-2 text-[#5c4738] font-medium pl-1">
-                    <li class="flex items-start gap-2 bg-[#fffaf4] p-2.5 rounded-xl border border-[#5c4738]/30">
-                        <span>💡</span> <span><strong>Tắt đèn khi ra khỏi phòng:</strong> Hành động nhỏ tiết kiệm điện lớn cho hóa đơn cuối tháng.</span>
+                <ul class="text-xs space-y-2 text-[#5c4738] font-medium">
+                    <li class="bg-[#fffaf4] px-3 py-2.5 rounded-xl border border-[#5c4738]/30 truncate">
+                        <span>💡</span> <strong>Tắt đèn:</strong> Luôn tắt đèn khi ra khỏi phòng để tiết kiệm điện.
                     </li>
-                    <li class="flex items-start gap-2 bg-[#fffaf4] p-2.5 rounded-xl border border-[#5c4738]/30">
-                        <span>🔌</span> <span><strong>Rút phích cắm thiết bị chờ:</strong> Tivi, lò vi sóng khi không sử dụng vẫn ngầm tiêu thụ điện.</span>
+                    <li class="bg-[#fffaf4] px-3 py-2.5 rounded-xl border border-[#5c4738]/30 truncate">
+                        <span>🔌</span> <strong>Rút phích cắm:</strong> Ngắt thiết bị chờ (tivi, lò vi sóng) khi không dùng.
                     </li>
-                    <li class="flex items-start gap-2 bg-[#fffaf4] p-2.5 rounded-xl border border-[#5c4738]/30">
-                        <span>🚿</span> <span><strong>Bình nước nóng:</strong> Tắt ngay sau khi tắm xong để tránh đun lại lãng phí.</span>
+                    <li class="bg-[#fffaf4] px-3 py-2.5 rounded-xl border border-[#5c4738]/30 truncate">
+                        <span>🚿</span> <strong>Bình nước nóng:</strong> Tắt ngay bình nóng lạnh sau khi tắm xong.
                     </li>
                 </ul>
             </div>
@@ -346,7 +350,7 @@
             </div>
         </div>
 
-        <!-- TAB 4: COOKING CHECKLIST & TIMER (Đã bổ sung nút 1 phút test + 15, 30, 45, 60 phút) -->
+        <!-- TAB 4: COOKING CHECKLIST & TIMER (Đã bỏ nút 1 phút test, giữ các mốc 15, 30, 45, 60 và ô nhập tùy ý) -->
         <div id="tab-content-checklist" class="hidden space-y-6">
             <div class="vintage-panel p-5 space-y-4">
                 <h2 class="font-bold text-[#4a3b32] text-base flex items-center gap-2 border-b-2 border-[#5c4738] pb-2.5">
@@ -356,11 +360,10 @@
                 <div class="vint-card p-4 space-y-3 bg-white" id="timer-setup-box">
                     <p class="text-xs font-bold text-[#4a3b32]">⏱️ Chọn thời gian nấu (hoặc nhập số phút tùy ý):</p>
                     <div class="flex flex-wrap gap-2">
-                        <button onclick="setTimerMinutes(1)" class="px-3 py-1.5 bg-[#fbe8e6] hover:bg-[#f5d0cd] text-[#5c3232] rounded-xl text-xs font-bold border border-[#5c4738] transition">1 phút (Test)</button>
-                        <button onclick="setTimerMinutes(15)" class="px-3 py-1.5 bg-[#f5ede2] hover:bg-[#e8dac7] text-[#4a3b32] rounded-xl text-xs font-bold border border-[#5c4738] transition">15 phút</button>
-                        <button onclick="setTimerMinutes(30)" class="px-3 py-1.5 bg-[#f5ede2] hover:bg-[#e8dac7] text-[#4a3b32] rounded-xl text-xs font-bold border border-[#5c4738] transition">30 phút</button>
-                        <button onclick="setTimerMinutes(45)" class="px-3 py-1.5 bg-[#f5ede2] hover:bg-[#e8dac7] text-[#4a3b32] rounded-xl text-xs font-bold border border-[#5c4738] transition">45 phút</button>
-                        <button onclick="setTimerMinutes(60)" class="px-3 py-1.5 bg-[#f5ede2] hover:bg-[#e8dac7] text-[#4a3b32] rounded-xl text-xs font-bold border border-[#5c4738] transition">60 phút</button>
+                        <button onclick="setTimerMinutes(15)" class="px-3.5 py-1.5 bg-[#f5ede2] hover:bg-[#e8dac7] text-[#4a3b32] rounded-xl text-xs font-bold border border-[#5c4738] transition">15 phút</button>
+                        <button onclick="setTimerMinutes(30)" class="px-3.5 py-1.5 bg-[#f5ede2] hover:bg-[#e8dac7] text-[#4a3b32] rounded-xl text-xs font-bold border border-[#5c4738] transition">30 phút</button>
+                        <button onclick="setTimerMinutes(45)" class="px-3.5 py-1.5 bg-[#f5ede2] hover:bg-[#e8dac7] text-[#4a3b32] rounded-xl text-xs font-bold border border-[#5c4738] transition">45 phút</button>
+                        <button onclick="setTimerMinutes(60)" class="px-3.5 py-1.5 bg-[#f5ede2] hover:bg-[#e8dac7] text-[#4a3b32] rounded-xl text-xs font-bold border border-[#5c4738] transition">60 phút</button>
                     </div>
                     <div class="flex items-center gap-2 pt-1">
                         <input type="number" id="custom-minutes" placeholder="Nhập số phút tùy ý..." min="1" max="180" class="flex-1 px-3 py-2 rounded-xl border-1.5 border-[#5c4738] text-xs bg-[#fffaf4]">
@@ -479,6 +482,19 @@
             setInterval(checkTariffStatus, 30000);
             setInterval(fetchWeatherData, 600000);
         });
+
+        // ĐĂNG KÝ SERVICE WORKER CHO PWA
+        if ("serviceWorker" in navigator) {
+          window.addEventListener("load", () => {
+            navigator.serviceWorker.register(
+              "/Saving_Money/sw.js"
+            ).then(() => {
+              console.log("Eco-Buddy PWA ready!");
+            }).catch(error => {
+              console.error("PWA error:", error);
+            });
+          });
+        }
 
         function startRealtimeClock() {
             function updateClock() {
