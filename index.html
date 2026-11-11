@@ -79,32 +79,6 @@
             box-shadow: 2px 2px 0 #5c4738;
         }
 
-        /* KHUNG 1 HÀNG NGANG CHO BIỂU GIÁ VÀ NHẮC NHỞ */
-        .single-row-box {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: #fffaf4;
-            border: 1.5px solid #5c4738;
-            border-radius: 1rem;
-            padding: 10px 14px;
-            overflow-x: auto;
-            white-space: nowrap;
-            box-shadow: 2px 2px 0px #5c4738;
-        }
-        .single-row-item {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: #f5ede2;
-            padding: 6px 12px;
-            border-radius: 10px;
-            border: 1px solid #d8c7b0;
-            font-size: 12px;
-            font-weight: 600;
-            flex-shrink: 0;
-        }
-
         /* Cửa sổ hội thoại Safety Chat */
         .chat-overlay {
             position: fixed;
@@ -156,7 +130,7 @@
             background: #f0e6d6;
         }
 
-        /* MASCOT STYLES CHUẨN MỚI ĐÃ TỐI ƯU TRANSFORM-ORIGIN */
+        /* MASCOT STYLES CHUẨN MỚI */
         .eco-mascot {
             width: 200px;
             height: 200px;
@@ -239,31 +213,26 @@
             transform-origin: 220px 163px;
             animation: stove-check 0.65s ease-in-out infinite alternate;
         }
-
         .eco-character.pose-oven .mascot-arm-right {
             transform-box: view-box;
             transform-origin: 220px 163px;
             animation: oven-check 0.65s ease-in-out infinite alternate;
         }
-
         .eco-character.pose-light .mascot-arm-left {
             transform-box: view-box;
             transform-origin: 83px 175px;
             animation: light-left 0.6s ease-in-out infinite alternate;
         }
-
         .eco-character.pose-light .mascot-arm-right {
             transform-box: view-box;
             transform-origin: 220px 163px;
             animation: light-right 0.6s ease-in-out infinite alternate;
         }
-
         .eco-character.pose-wipe .mascot-arm-left {
             transform-box: view-box;
             transform-origin: 83px 175px;
             animation: wipe-left 0.45s ease-in-out infinite alternate;
         }
-
         .eco-character.pose-wipe .mascot-arm-right {
             transform-box: view-box;
             transform-origin: 220px 163px;
@@ -274,12 +243,10 @@
             from { transform: rotate(0deg); }
             to { transform: rotate(-15deg); }
         }
-
         @keyframes oven-check {
             from { transform: rotate(-5deg); }
             to { transform: rotate(12deg); }
         }
-
         @keyframes light-left {
             from { transform: rotate(0deg); }
             to { transform: rotate(-35deg); }
@@ -288,7 +255,6 @@
             from { transform: rotate(0deg); }
             to { transform: rotate(25deg); }
         }
-
         @keyframes wipe-left {
             from { transform: rotate(-18deg) translateX(-2px); }
             to { transform: rotate(18deg) translateX(5px); }
@@ -297,7 +263,6 @@
             from { transform: rotate(15deg) translateX(2px); }
             to { transform: rotate(-15deg) translateX(-5px); }
         }
-
         @keyframes arm-cheer-left {
             from { transform: rotate(0deg); }
             to { transform: rotate(-18deg); }
@@ -337,159 +302,6 @@
         @keyframes scarf-float {
             0%, 100% { transform: translateY(0) rotate(-2deg); }
             50% { transform: translateY(-3px) rotate(2deg); }
-        }
-
-        /* ==============================
-           MOBILE RESPONSIVE
-        ============================== */
-        * {
-            box-sizing: border-box;
-        }
-
-        html {
-            width: 100%;
-            overflow-x: hidden;
-        }
-
-        body {
-            width: 100%;
-            min-width: 320px;
-            overflow-x: hidden;
-        }
-
-        /* Điện thoại */
-        @media (max-width: 640px) {
-            header > div {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 12px;
-            }
-
-            header > div > div:first-child {
-                justify-content: center;
-            }
-
-            .nav-pills {
-                max-width: none;
-                width: 100%;
-                gap: 2px;
-                padding: 4px;
-            }
-
-            .nav-btn {
-                font-size: 10px;
-                padding: 8px 1px;
-                white-space: nowrap;
-            }
-
-            main {
-                padding-left: 12px !important;
-                padding-right: 12px !important;
-                padding-top: 18px !important;
-            }
-
-            .vintage-panel {
-                padding: 14px !important;
-                border-radius: 19px;
-                box-shadow: 3px 3px 0 #5c4738;
-            }
-
-            .eco-mascot {
-                width: 175px;
-                height: 175px;
-            }
-
-            .single-row-box {
-                gap: 8px;
-                padding: 8px;
-            }
-
-            .single-row-item {
-                font-size: 11px;
-                padding: 7px 9px;
-            }
-
-            /* Safety Chat */
-            .chat-overlay {
-                padding: 8px;
-                align-items: center;
-            }
-
-            .chat-window {
-                width: 100%;
-                max-height: 94dvh;
-                padding: 15px;
-                border-radius: 21px;
-                overflow-y: auto;
-            }
-
-            #chat-mascot {
-                width: 120px !important;
-                height: 120px !important;
-            }
-
-            .chat-bubble {
-                padding: 12px;
-            }
-
-            .chat-scene {
-                min-height: 85px;
-                font-size: 42px;
-            }
-
-            .chat-choice {
-                padding: 13px 11px;
-                font-size: 13px;
-            }
-
-            /* Timer */
-            #countdown-text {
-                font-size: 34px;
-            }
-
-            #timer-display-box {
-                padding: 12px;
-            }
-
-            /* Weather */
-            #weather-temp {
-                font-size: 30px;
-            }
-
-            /* Calendar */
-            #calendar-days {
-                gap: 4px;
-            }
-
-            #calendar-days > div {
-                min-width: 0;
-            }
-
-            footer {
-                padding: 16px 10px;
-                font-size: 10px;
-            }
-        }
-
-        /* Điện thoại màn hình rất nhỏ */
-        @media (max-width: 360px) {
-            .nav-btn {
-                font-size: 9px;
-                padding: 7px 0;
-            }
-
-            .eco-mascot {
-                width: 155px;
-                height: 155px;
-            }
-
-            .chat-window {
-                padding: 12px;
-            }
-
-            .single-row-item {
-                font-size: 10px;
-            }
         }
     </style>
 </head>
@@ -597,48 +409,55 @@
 
         <!-- TAB 1: TARIFF & TIPS -->
         <div id="tab-content-tracker" class="space-y-6">
-            
-            <!-- 1. BIỂU GIÁ ĐIỆN: GOM 1 HÀNG NGANG -->
             <div class="vintage-panel p-5 space-y-4">
                 <h2 class="font-bold text-[#4a3b32] text-base flex items-center gap-2 border-b-2 border-[#5c4738] pb-2.5">
                     <span>⚡</span> Biểu Giá Điện Trong Ngày (SS Saver+)
                 </h2>
                 
-                <div class="single-row-box">
-                    <div class="single-row-item bg-[#f2f7ec]">
-                        <span>☀️ Bình Thường:</span>
-                        <strong class="text-[#3b4a32]">€0.3719/kWh</strong>
+                <div class="space-y-3 text-xs sm:text-sm">
+                    <div class="vint-card p-3.5 flex items-start justify-between gap-3 bg-[#f2f7ec]">
+                        <div class="flex-1 min-w-0">
+                            <p class="font-extrabold text-[#3b4a32]">☀️ Giờ Bình Thường</p>
+                            <p class="text-[#5c6a52] text-[11px] mt-0.5">08:00 - 17:00 & 19:00 - 23:00</p>
+                        </div>
+                        <span class="font-black text-[#3b4a32] bg-[#d9e8cc] px-2.5 py-1 rounded-xl border border-[#5c4738] whitespace-nowrap">€0.3719/kWh</span>
                     </div>
-                    <div class="single-row-item bg-[#fbe8e6]">
-                        <span>🔴 Cao Điểm:</span>
-                        <strong class="text-[#5c3232]">€0.3968/kWh</strong>
+                    <div class="p-3.5 rounded-2xl bg-[#fbe8e6] border-2 border-[#5c4738] flex items-start justify-between gap-3 shadow-[2px_2px_0px_#5c4738]">
+                        <div class="flex-1 min-w-0">
+                            <p class="font-extrabold text-[#5c3232]">🔴 Giờ Cao Điểm</p>
+                            <p class="text-[#7c4d4d] text-[11px] mt-0.5">17:00 - 19:00 (Hạn chế thiết bị lớn)</p>
+                        </div>
+                        <span class="font-black text-[#5c3232] bg-[#f5d0cd] px-2.5 py-1 rounded-xl border border-[#5c4738] whitespace-nowrap">€0.3968/kWh</span>
                     </div>
-                    <div class="single-row-item bg-[#eaf2f8]">
-                        <span>🟢 Giờ Đêm:</span>
-                        <strong class="text-[#32455c]">€0.1954/kWh</strong>
+                    <div class="vint-card p-3.5 flex items-start justify-between gap-3 bg-[#eaf2f8]">
+                        <div class="flex-1 min-w-0">
+                            <p class="font-extrabold text-[#32455c]">🟢 Giờ Đêm (Rẻ Nhất)</p>
+                            <p class="text-[#4e647d] text-[11px] mt-0.5">23:00 - 08:00 sáng</p>
+                        </div>
+                        <span class="font-black text-[#32455c] bg-[#cfe2f3] px-2.5 py-1 rounded-xl border border-[#5c4738] whitespace-nowrap">€0.1954/kWh</span>
                     </div>
                 </div>
             </div>
 
-            <!-- ECO-TIPS: GOM 1 HÀNG NGANG -->
+            <!-- ECO-TIPS TRẢ LẠI DẠNG DANH SÁCH DỌC ĐẦY ĐỦ -->
             <div class="vintage-panel p-5 space-y-3">
-                <h3 class="font-bold text-[#4a3b32] text-sm flex items-center gap-2 border-b-2 border-[#5c4738] pb-2">
+                <h3 class="font-bold text-[#4a3b32] text-sm flex items-center gap-2">
                     <span>💡</span> Nhắc Nhở & Mẹo Xanh Hàng Ngày:
                 </h3>
-                <div class="single-row-box">
-                    <div class="single-row-item bg-white">
-                        <span>💡</span> <strong>Tắt đèn:</strong> Nhớ tắt đèn phòng & cầu thang
-                    </div>
-                    <div class="single-row-item bg-white">
-                        <span>🔒</span> <strong>Kiểm tra cửa:</strong> Khóa cửa kỹ chưa
-                    </div>
-                    <div class="single-row-item bg-white">
-                        <span>🔌</span> <strong>Rút phích cắm:</strong> Ngắt thiết bị chờ
-                    </div>
-                    <div class="single-row-item bg-white">
-                        <span>🚿</span> <strong>Bình nước nóng:</strong> Tắt sau khi tắm
-                    </div>
-                </div>
+                <ul class="text-xs space-y-2 text-[#5c4738] font-medium">
+                    <li class="bg-[#fffaf4] px-3 py-2.5 rounded-xl border border-[#5c4738]/30">
+                        <span>💡</span> <strong>Tắt đèn:</strong> Nhớ tắt đèn phòng & cầu thang khi không sử dụng.
+                    </li>
+                    <li class="bg-[#fffaf4] px-3 py-2.5 rounded-xl border border-[#5c4738]/30">
+                        <span>🔒</span> <strong>Kiểm tra cửa:</strong> Khóa cửa kỹ chưa và đã đóng cửa nhà bếp nữa.
+                    </li>
+                    <li class="bg-[#fffaf4] px-3 py-2.5 rounded-xl border border-[#5c4738]/30">
+                        <span>🔌</span> <strong>Rút phích cắm:</strong> Ngắt thiết bị chờ (tivi, lò vi sóng) khi không dùng.
+                    </li>
+                    <li class="bg-[#fffaf4] px-3 py-2.5 rounded-xl border border-[#5c4738]/30">
+                        <span>🚿</span> <strong>Bình nước nóng:</strong> Tắt ngay bình nóng lạnh sau khi tắm xong.
+                    </li>
+                </ul>
             </div>
         </div>
 
@@ -761,24 +580,24 @@
             </div>
         </div>
 
-        <!-- TAB 4: COOKING CHECKLIST & TIMER (XẾP 2 HÀNG X 2 CỘT CÂN ĐỐI) -->
+        <!-- TAB 4: COOKING CHECKLIST & TIMER (ĐÃ TRẢ VỀ LƯỚI 2 CỘT 4 NÚT ĐẸP ĐẼ) -->
         <div id="tab-content-checklist" class="hidden space-y-6">
             <div class="vintage-panel p-5 space-y-4">
-                <h2 class="font-bold text-[#4a3b32] text-lg flex items-center gap-2 border-b-2 border-[#5c4738] pb-2.5">
+                <h2 class="font-bold text-[#4a3b32] text-base sm:text-lg flex items-center gap-2 border-b-2 border-[#5c4738] pb-2.5">
                     <span>🍳</span> Hẹn Giờ Nấu Nướng & Kiểm Tra An Toàn
                 </h2>
                 
                 <div class="vint-card p-4 space-y-3 bg-white" id="timer-setup-box">
-                    <p class="text-sm font-bold text-[#4a3b32]">⏱️ Chọn thời gian nấu (hoặc nhập số phút tùy ý):</p>
+                    <p class="text-xs sm:text-sm font-bold text-[#4a3b32]">⏱️ Chọn thời gian nấu (hoặc nhập số phút tùy ý):</p>
                     <div class="grid grid-cols-2 gap-3">
-                        <button onclick="setTimerMinutes(15)" class="py-3 px-3 bg-[#f5ede2] hover:bg-[#e8dac7] text-[#4a3b32] rounded-xl text-base font-bold border border-[#5c4738] transition text-center shadow-sm">15 phút</button>
-                        <button onclick="setTimerMinutes(30)" class="py-3 px-3 bg-[#f5ede2] hover:bg-[#e8dac7] text-[#4a3b32] rounded-xl text-base font-bold border border-[#5c4738] transition text-center shadow-sm">30 phút</button>
-                        <button onclick="setTimerMinutes(45)" class="py-3 px-3 bg-[#f5ede2] hover:bg-[#e8dac7] text-[#4a3b32] rounded-xl text-base font-bold border border-[#5c4738] transition text-center shadow-sm">45 phút</button>
-                        <button onclick="setTimerMinutes(60)" class="py-3 px-3 bg-[#f5ede2] hover:bg-[#e8dac7] text-[#4a3b32] rounded-xl text-base font-bold border border-[#5c4738] transition text-center shadow-sm">60 phút</button>
+                        <button onclick="setTimerMinutes(15)" class="py-2.5 px-3 bg-[#f5ede2] hover:bg-[#e8dac7] text-[#4a3b32] rounded-xl text-xs sm:text-sm font-bold border border-[#5c4738] transition text-center shadow-sm">15 phút</button>
+                        <button onclick="setTimerMinutes(30)" class="py-2.5 px-3 bg-[#f5ede2] hover:bg-[#e8dac7] text-[#4a3b32] rounded-xl text-xs sm:text-sm font-bold border border-[#5c4738] transition text-center shadow-sm">30 phút</button>
+                        <button onclick="setTimerMinutes(45)" class="py-2.5 px-3 bg-[#f5ede2] hover:bg-[#e8dac7] text-[#4a3b32] rounded-xl text-xs sm:text-sm font-bold border border-[#5c4738] transition text-center shadow-sm">45 phút</button>
+                        <button onclick="setTimerMinutes(60)" class="py-2.5 px-3 bg-[#f5ede2] hover:bg-[#e8dac7] text-[#4a3b32] rounded-xl text-xs sm:text-sm font-bold border border-[#5c4738] transition text-center shadow-sm">60 phút</button>
                     </div>
                     <div class="flex items-center gap-2 pt-2">
-                        <input type="number" id="custom-minutes" placeholder="Nhập số phút tùy ý..." min="1" max="180" class="flex-1 px-3.5 py-2.5 rounded-xl border-1.5 border-[#5c4738] text-sm bg-[#fffaf4] font-medium outline-none">
-                        <button onclick="startCustomTimer()" class="px-5 py-2.5 bg-[#8c7355] text-white text-sm font-bold rounded-xl border-1.5 border-[#5c4738] shadow-[2px_2px_0px_#5c4738] transition">Bắt Đầu</button>
+                        <input type="number" id="custom-minutes" placeholder="Nhập số phút tùy ý..." min="1" max="180" class="flex-1 px-3.5 py-2.5 rounded-xl border-1.5 border-[#5c4738] text-xs sm:text-sm bg-[#fffaf4] font-medium outline-none">
+                        <button onclick="startCustomTimer()" class="px-4 sm:px-5 py-2.5 bg-[#8c7355] text-white text-xs sm:text-sm font-bold rounded-xl border-1.5 border-[#5c4738] shadow-[2px_2px_0px_#5c4738] transition">Bắt Đầu</button>
                     </div>
                 </div>
 
@@ -1254,6 +1073,12 @@
             const weatherWind = document.getElementById('weather-wind');
             const weatherIcon = document.getElementById('weather-icon-lg');
 
+            async function fetchWeatherData() {
+            const weatherCondition = document.getElementById('weather-condition');
+            const weatherTemp = document.getElementById('weather-temp');
+            const weatherWind = document.getElementById('weather-wind');
+            const weatherIcon = document.getElementById('weather-icon-lg');
+
             try {
                 const lat = 53.3498;
                 const lon = -6.2603;
@@ -1292,6 +1117,7 @@
                 console.error("Lỗi thời tiết:", err);
                 weatherCondition.innerText = "Lỗi tải thời tiết";
             }
+        }
         }
     </script>
 </body>
