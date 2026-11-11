@@ -189,6 +189,68 @@
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(2px); }
         }
+
+        /* ===== MASCOT ACTION ANIMATIONS ===== */
+        /* Vui mừng: hai tay giơ lên */
+        .eco-character.pose-happy .mascot-arm-left {
+            animation: arm-cheer-left 0.6s ease-in-out infinite alternate;
+        }
+        .eco-character.pose-happy .mascot-arm-right {
+            animation: arm-cheer-right 0.6s ease-in-out infinite alternate;
+        }
+        /* Đang kiểm tra: nghiêng người nhẹ */
+        .eco-character.pose-check {
+            animation: mascot-check 1.2s ease-in-out infinite;
+        }
+        /* Chưa hoàn thành: hơi cúi đầu */
+        .eco-character.pose-wait {
+            animation: mascot-wait 1.2s ease-in-out infinite;
+        }
+        /* Hoàn thành: nhún nhảy */
+        .eco-character.pose-dance {
+            animation: mascot-dance 0.55s ease-in-out infinite;
+        }
+
+        @keyframes arm-cheer-left {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(-18deg); }
+        }
+        @keyframes arm-cheer-right {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(15deg); }
+        }
+        @keyframes mascot-check {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-4px) rotate(-3deg); }
+        }
+        @keyframes mascot-wait {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(3px) rotate(2deg); }
+        }
+        @keyframes mascot-dance {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-9px) rotate(-5deg); }
+            75% { transform: translateY(-9px) rotate(5deg); }
+        }
+
+        /* SCARF ICON ANIMATION */
+        .vintage-scarf-icon {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .vintage-scarf-icon svg {
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+            animation: scarf-float 3s ease-in-out infinite;
+        }
+        @keyframes scarf-float {
+            0%, 100% { transform: translateY(0) rotate(-2deg); }
+            50% { transform: translateY(-3px) rotate(2deg); }
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between selection:bg-amber-200">
@@ -217,11 +279,11 @@
     <!-- MAIN CONTAINER -->
     <main class="max-w-xl mx-auto px-4 py-6 flex-grow w-full space-y-6">
         
-        <!-- MASCOT MỚI & INTRO CARD -->
+        <!-- MASCOT & INTRO CARD -->
         <div class="vintage-panel p-5 flex flex-col items-center text-center">
             <div class="relative mb-2 w-full flex justify-center">
                 <div class="eco-mascot">
-                    <svg class="eco-character" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+                    <svg id="main-mascot-svg" class="eco-character" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
                         <defs>
                           <filter id="ecoShadow">
                             <feGaussianBlur stdDeviation="3"/>
@@ -379,7 +441,7 @@
             </div>
         </div>
 
-        <!-- TAB 3: WEATHER & OUTFIT (ĐÃ THAY ÁO KHOÁC ĐEN THÀNH ÁO PHAO HỒNG CUTE) -->
+        <!-- TAB 3: WEATHER & OUTFIT -->
         <div id="tab-content-weather" class="hidden space-y-6">
             <div class="vintage-panel p-5 space-y-4">
                 <div class="flex items-center justify-between gap-2 border-b-2 border-[#5c4738] pb-2.5">
@@ -410,36 +472,58 @@
                     <div class="grid grid-cols-1 gap-2.5">
                         <!-- MỤC 1: KHĂN CHOÀNG CỔ -->
                         <div class="bg-white p-3 rounded-xl border-1.5 border-[#5c4738] text-xs text-[#4a3b32] flex items-center gap-2.5 shadow-sm">
-                            <div class="flex-shrink-0 w-8 h-8 flex items-center justify-center">
-                                <svg viewBox="0 0 100 100" width="32" height="32" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M22 23 C22 13 38 10 57 14 C76 18 84 31 82 40 C80 49 69 57 53 58 C37 59 23 48 22 37 Z" fill="#84A5C1" stroke="#3A536B" stroke-width="3"/>
-                                    <path d="M50 36 C50 36 62 43 71 59 C80 75 79 83 79 83 L71 85 C71 85 70 74 63 60 C56 46 47 41 47 41 Z" fill="#A4C2D8" stroke="#3A536B" stroke-width="2.5"/>
-                                    <path d="M57 51 L63 56 L56 61 L63 67 L56 73 L63 78" fill="none" stroke="#F4BD94" stroke-width="3" stroke-linecap="round"/>
-                                    <path d="M58 57 C58 57 66 61 71 70" fill="none" stroke="#3A536B" stroke-width="2.5"/>
-                                    <path d="M68 85 V94 M71 85 V94 M74 85 V94 M77 85 V94" stroke="#3A536B" stroke-width="2.5" stroke-linecap="round"/>
-                                    <path d="M37 66 V75 M40 66 V75 M43 66 V75 M46 66 V75" stroke="#3A536B" stroke-width="2.5" stroke-linecap="round"/>
-                                    <path d="M34 57 C34 57 41 62 46 71" fill="none" stroke="#3A536B" stroke-width="2.5"/>
-                                    <path d="M32 52 L38 57 L31 62 L38 68 L31 74" fill="none" stroke="#F4BD94" stroke-width="3" stroke-linecap="round"/>
-                                    <path d="M27 64 L34 66 L30 74 L25 72 Z" fill="#698FA8" stroke="#3A536B" stroke-width="2"/>
-                                    <path d="M63 83 L71 85 L67 93 L61 90 Z" fill="#698FA8" stroke="#3A536B" stroke-width="2"/>
-                                </svg>
+                            <div class="flex-shrink-0 w-9 h-9 flex items-center justify-center">
+                                <div class="vintage-scarf-icon" style="width:34px; height:34px;">
+                                    <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+                                        <defs>
+                                            <filter id="scarf-shadow"><feGaussianBlur stdDeviation="2"/></filter>
+                                        </defs>
+                                        <ellipse cx="59" cy="101" rx="35" ry="6" fill="#8ba9a6" opacity=".18" filter="url(#scarf-shadow)"/>
+                                        <path d="M24 29 Q35 17 49 25 Q62 31 76 23 Q91 16 99 29 L91 47 Q77 42 64 51 Q49 59 34 49 Q25 43 24 29 Z" fill="#b9d9d6" stroke="#668e89" stroke-width="3.2" stroke-linejoin="round"/>
+                                        <path d="M31 31 Q45 43 59 37 Q77 29 91 30" fill="none" stroke="#e5f0e9" stroke-width="3" stroke-linecap="round"/>
+                                        <path d="M72 44 Q83 39 94 47 Q102 56 94 70 L82 96 Q78 103 69 99 L60 94 Q55 90 61 80 L72 62 Q77 52 72 44 Z" fill="#a9ceca" stroke="#668e89" stroke-width="3.2" stroke-linejoin="round"/>
+                                        <path d="M78 53 Q86 59 88 67 M72 72 Q78 76 82 78 M67 86 Q73 91 78 91" fill="none" stroke="#e3f0e9" stroke-width="2.5" stroke-linecap="round"/>
+                                        <g fill="#f8f0dc" stroke="#b58f79" stroke-width="1">
+                                            <circle cx="43" cy="34" r="3"/><circle cx="40" cy="30" r="2.5"/><circle cx="46" cy="30" r="2.5"/><circle cx="40" cy="38" r="2.5"/><circle cx="46" cy="38" r="2.5"/>
+                                            <circle cx="80" cy="30" r="2.5"/><circle cx="77" cy="27" r="2"/><circle cx="83" cy="27" r="2"/><circle cx="77" cy="33" r="2"/><circle cx="83" cy="33" r="2"/>
+                                        </g>
+                                        <g fill="#d9b77d">
+                                            <circle cx="43" cy="34" r="1.8"/><circle cx="80" cy="30" r="1.5"/>
+                                        </g>
+                                        <g fill="#819f83">
+                                            <path d="M53 43 Q48 36 55 35 Q60 39 53 43Z"/><path d="M55 43 Q61 36 63 42 Q60 47 55 43Z"/><path d="M86 81 Q80 74 87 72 Q92 76 86 81Z"/>
+                                        </g>
+                                        <path d="M29 42 Q43 55 58 48" fill="none" stroke="#f5eee0" stroke-width="1.5" stroke-dasharray="2 3"/>
+                                    </svg>
+                                </div>
                             </div> 
                             <span id="outfit-text-1" class="font-medium">Khăn choàng cổ và găng tay ấm</span>
                         </div>
-                        <!-- MỤC 2: ÁO PHAO HỒNG CUTE -->
+                        <!-- MỤC 2: ÁO PHAO XÁM/XANH VINTAGE -->
                         <div class="bg-white p-3 rounded-xl border-1.5 border-[#5c4738] text-xs text-[#4a3b32] flex items-center gap-2.5 shadow-sm">
-                            <div class="flex-shrink-0 w-8 h-8 flex items-center justify-center">
-                                <svg viewBox="0 0 100 100" width="32" height="32" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M35 25 Q50 15 65 25 L60 38 L40 38 Z" fill="#F4B8C5" stroke="#754F5B" stroke-width="2.5"/>
-                                    <path d="M38 35 L22 45 L15 75 Q15 85 28 85 L35 85 L35 55 L65 55 L65 85 L72 85 Q85 85 85 75 L78 45 L62 35 Z" fill="#F8C8D2" stroke="#754F5B" stroke-width="2.5" stroke-linejoin="round"/>
-                                    <path d="M35 55 H65 M35 65 H65 M35 75 H65" stroke="#E29CAE" stroke-width="2" stroke-linecap="round"/>
-                                    <path d="M50 38 V85" stroke="#754F5B" stroke-width="2"/>
-                                    <circle cx="50" cy="46" r="2" fill="#754F5B"/>
-                                    <circle cx="50" cy="62" r="2" fill="#754F5B"/>
-                                    <circle cx="50" cy="74" r="2" fill="#754F5B"/>
+                            <div class="flex-shrink-0 w-9 h-9 flex items-center justify-center">
+                                <svg viewBox="0 0 100 100" width="34" height="34" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M31 30 Q22 7 50 7 Q78 7 69 30 L64 39 L36 39Z" fill="#C5D3B5" stroke="#75634F" stroke-width="2.2"/>
+                                    <path d="M37 24 Q50 15 63 24 Q59 34 50 34 Q41 34 37 24Z" fill="#82947A" stroke="#75634F" stroke-width="1.8"/>
+                                    <path d="M34 27 Q37 35 43 36 M66 27 Q63 35 57 36" fill="none" stroke="#F5EBD8" stroke-width="3" stroke-linecap="round"/>
+                                    <path d="M34 30 L23 35 Q13 40 10 54 L7 79 Q7 87 16 88 L84 88 Q93 87 93 79 L90 54 Q87 40 77 35 L66 30 Q50 40 34 30Z" fill="#A9BEA0" stroke="#75634F" stroke-width="2.2" stroke-linejoin="round"/>
+                                    <path d="M23 38 Q14 40 11 54 L5 76 Q4 84 13 87 Q21 89 25 78 L31 51Z" fill="#B7C9AB" stroke="#75634F" stroke-width="2.2"/>
+                                    <path d="M77 38 Q86 40 89 54 L95 76 Q96 84 87 87 Q79 89 75 78 L69 51Z" fill="#B7C9AB" stroke="#75634F" stroke-width="2.2"/>
+                                    <path d="M12 53 Q19 60 27 54 M9 68 Q17 75 24 69 M88 53 Q81 60 73 54 M91 68 Q83 75 76 69" fill="none" stroke="#829B7D" stroke-width="3" stroke-linecap="round"/>
+                                    <path d="M31 46 Q50 53 69 46 M29 62 Q50 69 71 62 M26 78 Q50 84 74 78" fill="none" stroke="#D4DFCB" stroke-width="3" stroke-linecap="round"/>
+                                    <path d="M50 35 L50 88" stroke="#75634F" stroke-width="2"/>
+                                    <circle cx="50" cy="44" r="1.5" fill="#F5EBD8"/>
+                                    <circle cx="50" cy="56" r="1.5" fill="#F5EBD8"/>
+                                    <circle cx="50" cy="68" r="1.5" fill="#F5EBD8"/>
+                                    <path d="M42 32 L42 50 M58 32 L58 50" stroke="#F5EBD8" stroke-width="2" stroke-linecap="round"/>
+                                    <circle cx="42" cy="52" r="3" fill="#F5EBD8"/>
+                                    <circle cx="58" cy="52" r="3" fill="#F5EBD8"/>
+                                    <path d="M29 60 L41 62 L37 75 L26 72Z M71 60 L59 62 L63 75 L74 72Z" fill="#C5D3B5" stroke="#75634F" stroke-width="1.8"/>
+                                    <path d="M7 79 Q15 85 24 80 L22 90 Q14 94 6 87Z M93 79 Q85 85 76 80 L78 90 Q86 94 94 87Z" fill="#C5D3B5" stroke="#75634F" stroke-width="1.8"/>
+                                    <path d="M23 87 Q50 94 77 87 L76 94 Q50 99 24 94Z" fill="#C5D3B5" stroke="#75634F" stroke-width="1.8"/>
                                 </svg>
                             </div> 
-                            <span id="outfit-text-2" class="font-medium">Áo phao hồng cute hoặc áo khoác mùa đông</span>
+                            <span id="outfit-text-2" class="font-medium">Áo phao mùa đông (Xám/Xanh ấm áp)</span>
                         </div>
                     </div>
                 </div>
@@ -487,7 +571,7 @@
 
     </main>
 
-    <!-- CỬA SỔ HỘI THOẠI BÉ MÂY XANH (SAFETY CHAT OVERLAY - ĐỦ 4 BƯỚC) -->
+    <!-- CỬA SỔ HỘI THOẠI BÉ MÂY XANH (SAFETY CHAT OVERLAY - DÙNG CHUNG SVG GỐC) -->
     <section id="safety-chat-overlay"
       class="chat-overlay hidden"
       role="dialog"
@@ -512,37 +596,10 @@
         </div>
 
         <div class="flex flex-col items-center py-3 gap-2">
-          <!-- MASCOT TRONG CHAT -->
-          <div class="eco-mascot" style="width: 140px; height: 140px;">
-              <svg class="eco-character" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
-                  <ellipse cx="150" cy="269" rx="66" ry="8" fill="#b9a27b" opacity=".18"/>
-                  <g class="mascot-legs">
-                    <path d="M116 220 Q105 239 107 252 Q110 261 134 257 L145 229" fill="#fff9ed" stroke="#75604d" stroke-width="5" stroke-linejoin="round"/>
-                    <ellipse cx="121" cy="257" rx="19" ry="10" fill="#fff9ed" stroke="#75604d" stroke-width="4"/>
-                    <path d="M174 222 Q188 239 185 252 Q182 262 159 257 L151 229" fill="#fff9ed" stroke="#75604d" stroke-width="5" stroke-linejoin="round"/>
-                    <ellipse cx="176" cy="257" rx="19" ry="10" fill="#fff9ed" stroke="#75604d" stroke-width="4"/>
-                  </g>
-                  <path d="M83 164 Q65 153 69 134 Q53 119 65 101 Q71 82 91 81 Q96 58 119 62 Q137 43 153 57 Q171 43 189 61 Q215 58 224 82 Q246 89 241 111 Q257 129 240 147 Q249 168 229 184 Q232 207 211 220 Q194 236 170 233 Q150 241 128 233 Q102 237 87 218 Q68 207 77 186 Q64 176 83 164 Z" fill="#fff9ed" stroke="#75604d" stroke-width="5" stroke-linejoin="round"/>
-                  <g class="mascot-leaves">
-                    <path d="M145 57 Q108 45 103 23 Q134 17 151 46 Z" fill="#a3a875" stroke="#756b49" stroke-width="4"/>
-                    <path d="M151 48 Q171 13 198 25 Q194 52 158 62 Z" fill="#7d9368" stroke="#756b49" stroke-width="4"/>
-                  </g>
-                  <ellipse cx="105" cy="137" rx="13" ry="9" fill="#f5bca8"/>
-                  <ellipse cx="197" cy="137" rx="13" ry="9" fill="#f5bca8"/>
-                  <ellipse cx="128" cy="124" rx="5" ry="7" fill="#574b40"/>
-                  <ellipse cx="177" cy="124" rx="5" ry="7" fill="#574b40"/>
-                  <path d="M146 140 Q151 148 157 140" fill="none" stroke="#574b40" stroke-width="3.5" stroke-linecap="round"/>
-                  <g class="mascot-scarf">
-                    <path d="M78 159 Q113 173 151 158 Q190 173 226 154 L223 178 Q186 194 150 178 Q113 195 81 178 Z" fill="#8e9973" stroke="#6e7457" stroke-width="4"/>
-                    <path d="M94 165 L107 183 M119 168 L132 186 M157 165 L170 184 M190 163 L204 179" stroke="#c3bd91" stroke-width="3" opacity=".8"/>
-                    <path d="M204 175 Q224 190 214 217 L197 204 L193 187" fill="#9ca17a" stroke="#6e7457" stroke-width="4"/>
-                  </g>
-                  <g class="mascot-battery">
-                    <path d="M95 181 Q120 174 141 182 L143 224 Q119 238 96 222 Z" fill="#a4a981" stroke="#6e7457" stroke-width="4"/>
-                    <rect x="108" y="192" width="28" height="27" rx="6" fill="#e8e3c9" stroke="#72805f" stroke-width="3"/>
-                    <path d="M122 197 L116 207 L122 207 L118 215 L130 203 L124 203 Z" fill="#e7b947"/>
-                  </g>
-              </svg>
+          <!-- MASCOT TRONG CHAT: DÙNG CHUNG SVG GỐC -->
+          <div id="chat-mascot"
+               class="eco-mascot"
+               style="width: 140px; height: 140px;">
           </div>
 
           <div class="chat-bubble">
@@ -794,7 +851,7 @@
             document.getElementById('timer-display-box').classList.add('hidden');
         }
 
-        // Danh sách 4 bước kiểm tra an toàn căn bếp đầy đủ (Tắt bếp, Tắt lò nướng, Tắt đèn/Rút phích, Lau bếp)
+        // Danh sách 4 bước kiểm tra an toàn căn bếp đầy đủ (Tắt bếp, Tắt lò nướng, Tắt đèn, Lau bếp)
         const safetySteps = [
           {
             title: "Tắt bếp",
@@ -832,12 +889,58 @@
 
         let safetyStepIndex = 0;
 
+        // ===== ECO-BUDDY MASCOT CONTROLLER =====
+        function syncChatMascot() {
+            const original = document.getElementById("main-mascot-svg");
+            const container = document.getElementById("chat-mascot");
+
+            if (!original || !container) return;
+
+            container.innerHTML = original.outerHTML;
+
+            const cloned = container.querySelector("svg");
+
+            if (cloned) {
+                cloned.removeAttribute("id");
+                cloned.classList.remove(
+                    "pose-happy",
+                    "pose-check",
+                    "pose-wait",
+                    "pose-dance"
+                );
+            }
+        }
+
+        function setMascotPose(pose) {
+            const mascots = document.querySelectorAll(".eco-character");
+
+            mascots.forEach(mascot => {
+                mascot.classList.remove(
+                    "pose-happy",
+                    "pose-check",
+                    "pose-wait",
+                    "pose-dance"
+                );
+
+                void mascot.offsetWidth;
+
+                if (pose) {
+                    mascot.classList.add("pose-" + pose);
+                }
+            });
+        }
+
         function openSafetyChat() {
-          safetyStepIndex = 0;
-          document.getElementById("safety-chat-overlay")
-            .classList.remove("hidden");
-          document.body.style.overflow = "hidden";
-          renderSafetyStep();
+            safetyStepIndex = 0;
+
+            syncChatMascot();
+
+            document.getElementById("safety-chat-overlay")
+                .classList.remove("hidden");
+
+            document.body.style.overflow = "hidden";
+
+            renderSafetyStep();
         }
 
         function closeSafetyChat() {
@@ -847,11 +950,15 @@
         }
 
         function renderSafetyStep() {
+          const step = safetySteps[safetyStepIndex];
+          setMascotPose("check");
+
           const question = document.getElementById("chat-question");
           const scene = document.getElementById("chat-scene");
           const actions = document.getElementById("chat-actions");
 
           if (safetyStepIndex >= safetySteps.length) {
+            setMascotPose("dance");
             question.textContent =
               "Hoàn thành rồi! Cảm ơn bạn đã cùng Bé Mây giữ an toàn cho căn bếp nhé! 💚";
 
@@ -875,8 +982,6 @@
 
             return;
           }
-
-          const step = safetySteps[safetyStepIndex];
 
           question.textContent = step.question;
           scene.textContent = step.scene;
@@ -907,6 +1012,7 @@
           const step = safetySteps[safetyStepIndex];
 
           if (!done) {
+            setMascotPose("wait");
             document.getElementById("chat-question")
               .textContent = step.no;
 
@@ -925,6 +1031,7 @@
             return;
           }
 
+          setMascotPose("happy");
           document.getElementById("chat-question")
             .textContent = step.yes;
 
