@@ -45,15 +45,15 @@
             box-shadow: 2px 2px 0px #5c4738;
         }
 
-        /* Thanh điều hướng mới */
+        /* Thanh điều hướng 1 hàng 4 tab */
         .nav-pills {
-            width: 360px;
-            max-width: 100%;
+            width: 100%;
+            max-width: 440px;
             margin: auto;
-            padding: 7px;
+            padding: 6px;
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 5px;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 4px;
             background: #f0e6d6;
             border-radius: 40px;
             border: 1px solid #e4d8c5;
@@ -61,12 +61,14 @@
         .nav-btn {
             border: 2px solid transparent;
             border-radius: 30px;
-            padding: 8px 10px;
-            font-size: 12px;
+            padding: 7px 4px;
+            font-size: 11px;
             font-weight: 700;
             color: #4a3b32;
             background: transparent;
             transition: .2s;
+            text-align: center;
+            white-space: nowrap;
         }
         .nav-btn.active {
             background: #8c7355;
@@ -110,11 +112,11 @@
             background: #fffaf4;
             border: 1.5px dashed #b9a487;
             border-radius: 22px;
-            min-height: 115px;
+            min-height: 100px;
         }
         .chat-mascot {
-            width: 180px;
-            height: 180px;
+            width: 160px;
+            height: 160px;
             animation: buddy-breathe 2s ease-in-out infinite;
         }
         .mascot-idle { animation: buddy-breathe 2s infinite; }
@@ -140,7 +142,7 @@
         }
         .chat-choice {
             width: 100%;
-            padding: 13px;
+            padding: 12px;
             background: #fffdfa;
             border: 1.5px solid #8c7355;
             border-radius: 15px;
@@ -168,7 +170,7 @@
                 </div>
             </div>
             
-            <!-- TWO-ROW NAVIGATION -->
+            <!-- TWO-ROW NAVIGATION GOM THÀNH 1 HÀNG 4 TAB -->
             <div class="nav-pills">
               <button onclick="switchTab('tracker')" id="tab-btn-tracker" class="nav-btn active">
                 ⚡ Tariff
@@ -193,7 +195,6 @@
         <div class="vintage-panel p-5 flex flex-col items-center text-center">
             <div class="relative mb-3">
                 <div id="mascot-container" class="w-32 h-32 sm:w-36 sm:h-36 mascot-float flex items-center justify-center p-2 bg-[#fffefb] rounded-full border-3 border-[#5c4738] shadow-md relative overflow-hidden">
-                    <!-- Bé Mây Xanh ú ú, tay chân mập mạp, tai lá cây -->
                     <svg viewBox="0 0 200 200" class="w-full h-full drop-shadow-sm">
                         <ellipse cx="60" cy="120" rx="14" ry="10" fill="#fffaf5" stroke="#5c4738" stroke-width="3"/>
                         <ellipse cx="140" cy="120" rx="14" ry="10" fill="#fffaf5" stroke="#5c4738" stroke-width="3"/>
@@ -222,7 +223,7 @@
             </p>
         </div>
 
-        <!-- TAB 1: TARIFF & TIPS -->
+        <!-- TAB 1: TARIFF & TIPS + ECO-TIPS REMINDERS -->
         <div id="tab-content-tracker" class="space-y-6">
             <div class="vintage-panel p-5 space-y-4">
                 <h2 class="font-bold text-[#4a3b32] text-base flex items-center gap-2 border-b-2 border-[#5c4738] pb-2.5">
@@ -253,9 +254,27 @@
                     </div>
                 </div>
             </div>
+
+            <!-- PHẦN NHẮC NHỞ MẸO VẶT HÀNG NGÀY (ECO-TIPS) -->
+            <div class="vintage-panel p-5 space-y-3">
+                <h3 class="font-bold text-[#4a3b32] text-sm flex items-center gap-2">
+                    <span>💡</span> Nhắc Nhở & Mẹo Xanh Hàng Ngày:
+                </h3>
+                <ul class="text-xs space-y-2 text-[#5c4738] font-medium pl-1">
+                    <li class="flex items-start gap-2 bg-[#fffaf4] p-2.5 rounded-xl border border-[#5c4738]/30">
+                        <span>💡</span> <span><strong>Tắt đèn khi ra khỏi phòng:</strong> Hành động nhỏ tiết kiệm điện lớn cho hóa đơn cuối tháng.</span>
+                    </li>
+                    <li class="flex items-start gap-2 bg-[#fffaf4] p-2.5 rounded-xl border border-[#5c4738]/30">
+                        <span>🔌</span> <span><strong>Rút phích cắm thiết bị chờ:</strong> Tivi, lò vi sóng khi không sử dụng vẫn ngầm tiêu thụ điện.</span>
+                    </li>
+                    <li class="flex items-start gap-2 bg-[#fffaf4] p-2.5 rounded-xl border border-[#5c4738]/30">
+                        <span>🚿</span> <span><strong>Bình nước nóng:</strong> Tắt ngay sau khi tắm xong để tránh đun lại lãng phí.</span>
+                    </li>
+                </ul>
+            </div>
         </div>
 
-        <!-- TAB 2: CALENDAR (Lịch thực tế, thứ Ba tô màu) -->
+        <!-- TAB 2: CALENDAR -->
         <div id="tab-content-calendar" class="hidden space-y-6">
             <div class="vintage-panel p-5 space-y-4">
                 <div class="flex items-center justify-between border-b-2 border-[#5c4738] pb-2.5">
@@ -269,7 +288,6 @@
                     </div>
                 </div>
 
-                <!-- Tiêu đề thứ -->
                 <div class="grid grid-cols-7 gap-1 text-center text-[11px] font-extrabold text-[#7a6452] mb-2">
                   <span>T2</span>
                   <span>T3</span>
@@ -280,10 +298,8 @@
                   <span>CN</span>
                 </div>
 
-                <!-- Grid các ngày trong tháng -->
                 <div id="calendar-days" class="grid grid-cols-7 gap-1.5"></div>
 
-                <!-- Dòng nhắc nhở -->
                 <div class="vint-card p-3 bg-[#fff5f0] text-center">
                     <p id="next-trash-reminder" class="text-xs font-bold text-[#9c413b]">Đang tính toán lịch đổ rác...</p>
                 </div>
@@ -330,7 +346,7 @@
             </div>
         </div>
 
-        <!-- TAB 4: COOKING CHECKLIST & TIMER -->
+        <!-- TAB 4: COOKING CHECKLIST & TIMER (Đã bổ sung nút 1 phút test + 15, 30, 45, 60 phút) -->
         <div id="tab-content-checklist" class="hidden space-y-6">
             <div class="vintage-panel p-5 space-y-4">
                 <h2 class="font-bold text-[#4a3b32] text-base flex items-center gap-2 border-b-2 border-[#5c4738] pb-2.5">
@@ -340,12 +356,14 @@
                 <div class="vint-card p-4 space-y-3 bg-white" id="timer-setup-box">
                     <p class="text-xs font-bold text-[#4a3b32]">⏱️ Chọn thời gian nấu (hoặc nhập số phút tùy ý):</p>
                     <div class="flex flex-wrap gap-2">
-                        <button onclick="setTimerMinutes(1)" class="px-3 py-1.5 bg-[#f5ede2] hover:bg-[#e8dac7] text-[#4a3b32] rounded-xl text-xs font-bold border border-[#5c4738] transition">1 phút (Test)</button>
+                        <button onclick="setTimerMinutes(1)" class="px-3 py-1.5 bg-[#fbe8e6] hover:bg-[#f5d0cd] text-[#5c3232] rounded-xl text-xs font-bold border border-[#5c4738] transition">1 phút (Test)</button>
                         <button onclick="setTimerMinutes(15)" class="px-3 py-1.5 bg-[#f5ede2] hover:bg-[#e8dac7] text-[#4a3b32] rounded-xl text-xs font-bold border border-[#5c4738] transition">15 phút</button>
                         <button onclick="setTimerMinutes(30)" class="px-3 py-1.5 bg-[#f5ede2] hover:bg-[#e8dac7] text-[#4a3b32] rounded-xl text-xs font-bold border border-[#5c4738] transition">30 phút</button>
+                        <button onclick="setTimerMinutes(45)" class="px-3 py-1.5 bg-[#f5ede2] hover:bg-[#e8dac7] text-[#4a3b32] rounded-xl text-xs font-bold border border-[#5c4738] transition">45 phút</button>
+                        <button onclick="setTimerMinutes(60)" class="px-3 py-1.5 bg-[#f5ede2] hover:bg-[#e8dac7] text-[#4a3b32] rounded-xl text-xs font-bold border border-[#5c4738] transition">60 phút</button>
                     </div>
                     <div class="flex items-center gap-2 pt-1">
-                        <input type="number" id="custom-minutes" placeholder="Nhập số phút..." min="1" max="180" class="flex-1 px-3 py-2 rounded-xl border-1.5 border-[#5c4738] text-xs bg-[#fffaf4]">
+                        <input type="number" id="custom-minutes" placeholder="Nhập số phút tùy ý..." min="1" max="180" class="flex-1 px-3 py-2 rounded-xl border-1.5 border-[#5c4738] text-xs bg-[#fffaf4]">
                         <button onclick="startCustomTimer()" class="px-4 py-2 bg-[#8c7355] text-white text-xs font-bold rounded-xl border-1.5 border-[#5c4738] shadow-[2px_2px_0px_#5c4738] transition">Bắt Đầu</button>
                     </div>
                 </div>
@@ -385,84 +403,61 @@
           </button>
         </div>
 
-        <div class="flex flex-col items-center py-5 gap-3">
+        <div class="flex flex-col items-center py-4 gap-2">
 
           <div id="chat-mascot" class="chat-mascot mascot-idle">
-            <svg viewBox="0 0 200 200" width="180" height="180">
+            <svg viewBox="0 0 200 200" width="160" height="160">
               <g class="chat-legs">
-                <ellipse cx="75" cy="159" rx="17" ry="12"
-                  fill="#fffaf2" stroke="#66513f" stroke-width="4"/>
-                <ellipse cx="125" cy="159" rx="17" ry="12"
-                  fill="#fffaf2" stroke="#66513f" stroke-width="4"/>
+                <ellipse cx="75" cy="159" rx="17" ry="12" fill="#fffaf2" stroke="#66513f" stroke-width="4"/>
+                <ellipse cx="125" cy="159" rx="17" ry="12" fill="#fffaf2" stroke="#66513f" stroke-width="4"/>
               </g>
 
-              <path d="M45 139 C20 139 15 116 27 99
-                C16 76 42 59 60 66
-                C75 39 107 46 119 57
-                C142 42 164 62 155 77
-                C181 84 183 119 160 139Z"
-                fill="#fffaf2" stroke="#66513f"
-                stroke-width="4"/>
+              <path d="M45 139 C20 139 15 116 27 99 C16 76 42 59 60 66 C75 39 107 46 119 57 C142 42 164 62 155 77 C181 84 183 119 160 139Z" fill="#fffaf2" stroke="#66513f" stroke-width="4"/>
 
               <g class="chat-arms">
-                <path d="M45 110 Q20 120 36 140"
-                  fill="none" stroke="#66513f"
-                  stroke-width="12" stroke-linecap="round"/>
-                <path d="M155 110 Q180 120 164 140"
-                  fill="none" stroke="#66513f"
-                  stroke-width="12" stroke-linecap="round"/>
+                <path d="M45 110 Q20 120 36 140" fill="none" stroke="#66513f" stroke-width="12" stroke-linecap="round"/>
+                <path d="M155 110 Q180 120 164 140" fill="none" stroke="#66513f" stroke-width="12" stroke-linecap="round"/>
               </g>
 
               <circle cx="70" cy="104" r="10" fill="#efb99c"/>
               <circle cx="130" cy="104" r="10" fill="#efb99c"/>
               <circle cx="85" cy="92" r="4.5" fill="#554538"/>
               <circle cx="115" cy="92" r="4.5" fill="#554538"/>
-              <path d="M95 105 Q100 113 105 105"
-                fill="none" stroke="#554538"
-                stroke-width="3" stroke-linecap="round"/>
+              <path d="M95 105 Q100 113 105 105" fill="none" stroke="#554538" stroke-width="3" stroke-linecap="round"/>
 
-              <path d="M85 51 Q55 18 76 37 Q88 43 98 52Z"
-                fill="#91a96e" stroke="#66513f" stroke-width="3"/>
-              <path d="M101 51 Q124 15 132 38 Q124 48 101 51Z"
-                fill="#a9b77c" stroke="#66513f" stroke-width="3"/>
+              <path d="M85 51 Q55 18 76 37 Q88 43 98 52Z" fill="#91a96e" stroke="#66513f" stroke-width="3"/>
+              <path d="M101 51 Q124 15 132 38 Q124 48 101 51Z" fill="#a9b77c" stroke="#66513f" stroke-width="3"/>
 
-              <path d="M70 121 Q100 140 130 121"
-                fill="#91a17a" stroke="#66513f" stroke-width="3"/>
+              <path d="M70 121 Q100 140 130 121" fill="#91a17a" stroke="#66513f" stroke-width="3"/>
 
-              <rect x="113" y="126" width="27" height="26"
-                rx="7" fill="#91a96e"
-                stroke="#66513f" stroke-width="3"/>
-              <path d="M128 130 L121 140 H128 L124 148 L136 137 H129Z"
-                fill="#f4cf68"/>
+              <rect x="113" y="126" width="27" height="26" rx="7" fill="#91a96e" stroke="#66513f" stroke-width="3"/>
+              <path d="M128 130 L121 140 H128 L124 148 L136 137 H129Z" fill="#f4cf68"/>
             </svg>
           </div>
 
           <div class="chat-bubble">
-            <p class="font-extrabold text-sm mb-1">
+            <p class="font-extrabold text-sm mb-0.5 text-[#5c4738]">
               Bé Mây Xanh ☁️
             </p>
-            <p id="chat-question" class="text-sm">
+            <p id="chat-question" class="text-sm font-medium text-[#4a3b32]">
               Hết giờ rồi! Cùng mình kiểm tra căn bếp nha!
             </p>
           </div>
         </div>
 
         <div id="chat-scene"
-          class="chat-scene text-center text-5xl py-5 flex items-center justify-center">
+          class="chat-scene text-center text-5xl py-4 flex items-center justify-center shadow-inner">
           🔥
         </div>
 
-        <div class="bg-[#f5ede2] rounded-2xl p-4 mb-4 mt-3">
-          <p id="chat-action-title"
-            class="font-bold text-sm mb-1">Tắt bếp</p>
-          <p id="chat-action-hint"
-            class="text-xs text-[#7a6452]"></p>
+        <div class="bg-[#f5ede2] rounded-2xl p-3.5 mb-3 mt-3 border border-[#d8c7b0]">
+          <p id="chat-action-title" class="font-extrabold text-sm mb-0.5 text-[#5c4738]">Tắt bếp</p>
+          <p id="chat-action-hint" class="text-xs text-[#7a6452] font-medium"></p>
         </div>
 
         <div id="chat-actions" class="space-y-2"></div>
 
-        <p id="chat-progress"
-          class="text-xs text-[#8c7355] text-center mt-4">
+        <p id="chat-progress" class="text-xs text-[#8c7355] text-center font-bold mt-3">
           Bước 1 / 4
         </p>
 
@@ -688,7 +683,7 @@
             title: "Tắt lò nướng (Oven)",
             question: "Bạn đã tắt lò nướng chưa?",
             hint: "Kiểm tra nút nguồn và màn hình của oven nhé.",
-            scene: "🍞",
+            scene: "🎛️",
             action: "buddy-walk",
             yes: "Oven đã được tắt. Giỏi lắm!",
             no: "Bé Mây đợi bạn kiểm tra nha!"
