@@ -1,857 +1,373 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Luas Buddy | Live Tram Arrivals</title>
-<style>
-:root {
-  --green:#2f7655;
-  --dark:#20563e;
-  --mint:#e8f2e5;
-  --cream:#fbfcf7;
-  --ink:#173c30;
-  --muted:#71877b;
-  --line:#dce8da;
-  --white:#fff;
-}
-*{box-sizing:border-box}
-body{
-  margin:0;
-  background:#f7f9f4;
-  color:var(--ink);
-  font-family:Arial,Helvetica,sans-serif;
-}
-button,input{font:inherit}
-button{cursor:pointer}
-.app{
-  min-height:100vh;
-  display:grid;
-  grid-template-columns:235px 1fr;
-}
-.sidebar{
-  background:white;
-  border-right:1px solid var(--line);
-  padding:24px 16px;
-  display:flex;
-  flex-direction:column;
-  gap:25px;
-}
-.brand{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  padding:5px;
-}
-.brand-icon{
-  background:var(--mint);
-  border-radius:14px;
-  padding:10px;
-  font-size:25px;
-}
-.brand strong{font-size:19px}
-.brand small{
-  display:block;
-  color:var(--muted);
-  font-size:11px;
-  margin-top:3px;
-}
-.nav{display:grid;gap:7px}
-.nav button{
-  border:0;
-  background:transparent;
-  color:#60766a;
-  padding:13px;
-  text-align:left;
-  border-radius:13px;
-  font-weight:bold;
-}
-.nav button.active,.nav button:hover{
-  background:var(--mint);
-  color:var(--dark);
-}
-.side-note{
-  margin-top:auto;
-  background:#f5f8ef;
-  border-radius:16px;
-  padding:15px;
-  color:var(--muted);
-  font-size:12px;
-  line-height:1.6;
-}
-main{
-  width:100%;
-  max-width:1300px;
-  margin:auto;
-  padding:30px clamp(16px,4vw,50px) 55px;
-}
-.topbar{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-  margin-bottom:25px;
-}
-.eyebrow{
-  color:var(--green);
-  font-size:12px;
-  font-weight:bold;
-  letter-spacing:1px;
-  text-transform:uppercase;
-}
-h1{
-  font-size:clamp(25px,3vw,34px);
-  margin:7px 0 0;
-}
-.status{
-  background:white;
-  border:1px solid var(--line);
-  border-radius:30px;
-  padding:10px 13px;
-  font-size:12px;
-  white-space:nowrap;
-  color:var(--muted);
-}
-.dot{
-  display:inline-block;
-  width:8px;
-  height:8px;
-  background:#36a56b;
-  border-radius:50%;
-  margin-right:6px;
-}
-.hero{
-  background:linear-gradient(120deg,#eaf4e6,#fdf4e9);
-  border:1px solid #e1ebdc;
-  border-radius:24px;
-  padding:25px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:15px;
-  margin-bottom:22px;
-}
-.hero h2{margin:0 0 9px;font-size:22px}
-.hero p{
-  margin:0;
-  color:var(--muted);
-  line-height:1.6;
-  font-size:14px;
-}
-.mascot{
-  font-size:65px;
-  flex-shrink:0;
-  animation:bob 2.5s ease-in-out infinite;
-}
-@keyframes bob{
-  0%,100%{transform:translateY(0)}
-  50%{transform:translateY(-8px)}
-}
-.panel{
-  background:white;
-  border:1px solid var(--line);
-  border-radius:22px;
-  padding:23px;
-  margin-bottom:20px;
-  box-shadow:0 10px 30px rgba(34,75,53,.06);
-}
-.panel-head{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-  margin-bottom:17px;
-}
-.panel h3{margin:0;font-size:19px}
-.sub{
-  color:var(--muted);
-  font-size:13px;
-  margin:7px 0 0;
-}
-.search-row{
-  display:flex;
-  gap:10px;
-}
-.search-row input{
-  min-width:0;
-  flex:1;
-  border:1px solid var(--line);
-  background:#fcfdf9;
-  padding:15px;
-  border-radius:14px;
-  outline:none;
-}
-.search-row input:focus{
-  border-color:#7cae8e;
-}
-.primary{
-  border:0;
-  border-radius:14px;
-  background:var(--green);
-  color:white;
-  font-weight:bold;
-  padding:14px 20px;
-}
-.primary:hover{background:var(--dark)}
-.secondary{
-  border:1px solid var(--line);
-  background:white;
-  color:var(--dark);
-  padding:10px 13px;
-  border-radius:12px;
-  font-weight:bold;
-}
-.hint{
-  color:var(--muted);
-  font-size:12px;
-  margin-top:11px;
-}
-.page{display:none}
-.page.active{display:block}
-.results{display:grid;gap:15px}
-.direction{
-  border:1px solid var(--line);
-  border-radius:16px;
-  overflow:hidden;
-}
-.direction-head{
-  padding:14px 16px;
-  background:#f4f8f1;
-  display:flex;
-  justify-content:space-between;
-  font-weight:bold;
-}
-.direction-head small{
-  color:var(--muted);
-  font-size:11px;
-}
-.arrival{
-  display:flex;
-  align-items:center;
-  gap:15px;
-  padding:15px;
-  border-top:1px solid #edf2ea;
-}
-.time{
-  min-width:75px;
-  text-align:center;
-  background:#e9f4e9;
-  color:var(--dark);
-  border-radius:13px;
-  padding:10px 7px;
-  font-size:19px;
-  font-weight:bold;
-}
-.time small{
-  display:block;
-  font-size:10px;
-  text-transform:uppercase;
-}
-.destination{font-weight:bold}
-.arrival-meta{
-  color:var(--muted);
-  font-size:12px;
-  margin-top:5px;
-}
-.empty{
-  padding:18px;
-  color:var(--muted);
-  font-size:13px;
-}
-.error{
-  background:#fff1ed;
-  border:1px solid #f4d4c9;
-  color:#a24e39;
-  padding:14px;
-  border-radius:13px;
-  font-size:13px;
-  margin-top:14px;
-  line-height:1.5;
-}
-.loading{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  color:var(--muted);
-  padding:20px;
-}
-.loading span{font-size:27px;animation:bob 1s infinite}
-.grid-two{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:15px;
-}
-.line-card{
-  background:#fbfcf8;
-  border:1px solid var(--line);
-  border-radius:16px;
-  padding:18px;
-}
-.line-card h4{margin:8px 0}
-.line-card p{
-  color:var(--muted);
-  font-size:13px;
-  line-height:1.5;
-  margin:0;
-}
-.line-pill{
-  display:inline-block;
-  border-radius:20px;
-  padding:5px 10px;
-  font-size:11px;
-  font-weight:bold;
-}
-.red{background:#ffe9e5;color:#b64d3c}
-.green{background:#e4f2e6;color:#2e7650}
-.stop-list{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
-  gap:9px;
-}
-.stop-chip{
-  border:1px solid var(--line);
-  background:white;
-  border-radius:12px;
-  padding:12px;
-  text-align:left;
-  color:var(--ink);
-}
-.stop-chip:hover{background:var(--mint)}
-.stop-chip strong{display:block;font-size:13px}
-.stop-chip small{color:var(--muted)}
-footer{
-  color:#9aaa9f;
-  font-size:11px;
-  text-align:center;
-  margin-top:28px;
-}
-.mascot-help{
-  position:fixed;
-  right:15px;
-  bottom:15px;
-  z-index:5;
-  background:white;
-  border:1px solid var(--line);
-  box-shadow:0 10px 30px #0001;
-  border-radius:18px;
-  padding:10px 14px;
-  display:flex;
-  align-items:center;
-  gap:10px;
-  max-width:220px;
-}
-.mascot-help .face{font-size:32px}
-.mascot-help strong{display:block;font-size:12px}
-.mascot-help span:last-child{
-  font-size:11px;
-  color:var(--muted);
-  line-height:1.5;
-}
-@media(max-width:800px){
-  .app{grid-template-columns:1fr}
-  .sidebar{
-    padding:12px;
-    border-right:0;
-    border-bottom:1px solid var(--line);
-    gap:12px;
-  }
-  .brand-icon{padding:7px}
-  .nav{
-    display:flex;
-    overflow-x:auto;
-  }
-  .nav button{
-    white-space:nowrap;
-    padding:10px;
-    font-size:12px;
-  }
-  .side-note{display:none}
-  main{padding:20px 13px 100px}
-  .hero{padding:19px}
-  .mascot{font-size:48px}
-  .panel{padding:17px}
-  .search-row{flex-wrap:wrap}
-  .search-row input{flex-basis:100%}
-  .primary{width:100%}
-  .grid-two{grid-template-columns:1fr}
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eco-Buddy Electricity Tracker & Weather Advisor ⚡☁️</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Quicksand (Font chữ tròn trịa, thân thiện) -->
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Quicksand', sans-serif;
+            /* Màu nền kem ấm áp, vintage */
+            background-color: #fcfbf7; 
+            color: #2d3748;
+        }
+        /* Hiệu ứng lơ lửng nhẹ nhàng cho mascot */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-6px) rotate(1deg); }
+        }
+        .mascot-float {
+            animation: float 3s ease-in-out infinite;
+        }
+        /* Custom Scrollbar cho gọn gàng */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1ede1;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #d1cbb9;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #bdae99;
+        }
+        /* Style cho các panel chính */
+        .vintage-panel { 
+            background: linear-gradient(145deg, #ffffff 0%, #fbf7ed 100%); 
+            border: 1.5px solid #e6dccf; 
+            box-shadow: 0 4px 15px rgba(168,150,120,0.08); 
+            border-radius: 1.5rem;
+        }
+        /* Style cho các thẻ thông tin nhỏ */
+        .vint-card {
+            background: #fffaf0;
+            border: 1px solid #e0d5bc;
+            border-radius: 1rem;
+        }
+    </style>
 </head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-amber-200/50">
 
-<body>
-<div class="app">
-
-<aside class="sidebar">
-  <div class="brand">
-    <div class="brand-icon">🚋</div>
-    <div>
-      <strong>Luas Buddy</strong>
-      <small>Your greener city ride</small>
-    </div>
-  </div>
-
-  <nav class="nav">
-    <button class="active" data-page="home">🏡 Home</button>
-    <button data-page="arrivals">⏱️ Live Arrivals</button>
-    <button data-page="stops">📍 Explore Stops</button>
-    <button data-page="journeys">🌱 Greener Journeys</button>
-  </nav>
-
-  <div class="side-note">
-    💚 A little planning makes every tram journey easier.
-    Check your stop and hop aboard!
-  </div>
-</aside>
-
-<main>
-  <div class="topbar">
-    <div>
-      <div class="eyebrow">Dublin tram companion</div>
-      <h1 id="page-title">A brighter way to travel</h1>
-    </div>
-    <div class="status">
-      <span class="dot" id="status-dot"></span>
-      <span id="connection-status">Connecting</span>
-    </div>
-  </div>
-
-  <section class="page active" id="page-home">
-    <div class="hero">
-      <div>
-        <h2>Ready for your next ride? 🌿</h2>
-        <p>Find your stop, see the next Luas arrivals and make your journey around Dublin smoother.</p>
-      </div>
-      <div class="mascot">🚋</div>
-    </div>
-
-    <div class="panel">
-      <div class="panel-head">
-        <div>
-          <h3>Find your next tram</h3>
-          <p class="sub">Enter a stop code, for example TPT or MYS.</p>
+    <!-- HEADER -->
+    <header class="bg-white/95 backdrop-blur-sm shadow-sm sticky top-0 z-50 border-b border-amber-100">
+        <div class="max-w-5xl mx-auto px-5 py-3 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <!-- Icon tiêu đề -->
+                <span class="text-3xl filter drop-shadow-sm">☁️</span>
+                <div>
+                    <h1 class="font-bold text-base sm:text-lg text-amber-950 leading-tight">Eco-Buddy Home Manager</h1>
+                    <p class="text-[11px] sm:text-xs text-amber-800 font-medium">Live Tariff & Weather ⚡<span id="realtime-clock" class="text-amber-900 font-bold ml-1"></span></p>
+                </div>
+            </div>
+            
+            <!-- Tab Switchers: Giữ nguyên chức năng -->
+            <div class="flex bg-[#f0eade] p-1 rounded-full border border-[#e0d5c1]">
+                <button onclick="switchTab('tracker')" id="tab-btn-tracker" class="px-4 py-1.5 rounded-full text-xs font-bold transition-all bg-amber-600 text-white shadow-inner">
+                    ⚡ Tariff & Tips
+                </button>
+                <button onclick="switchTab('weather')" id="tab-btn-weather" class="px-4 py-1.5 rounded-full text-xs font-bold transition-all text-amber-950 hover:bg-white/60">
+                    🌦️ Weather & Outfit
+                </button>
+            </div>
         </div>
-      </div>
-      <div class="search-row">
-        <input id="home-stop" value="TPT" placeholder="Enter stop code">
-        <button class="primary" id="home-find">Find arrivals →</button>
-      </div>
-      <p class="hint">Not sure of the code? Browse Explore Stops.</p>
-    </div>
+    </header>
 
-    <div class="panel">
-      <h3>Explore the network</h3>
-      <p class="sub">Two lines connect destinations across Dublin.</p>
-      <div class="grid-two" style="margin-top:17px">
-        <div class="line-card">
-          <span class="line-pill red">RED LINE</span>
-          <h4>City &amp; west Dublin</h4>
-          <p>Travel between the city centre, Tallaght and Saggart.</p>
+    <!-- MAIN CONTAINER -->
+    <main class="max-w-5xl mx-auto px-5 py-5 sm:py-7 flex-grow w-full grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
+        
+        <!-- CỘT TRÁI: MASCOT VINTAGE & STATUS -->
+        <div class="md:col-span-1 bg-white p-5 rounded-3xl shadow-sm border border-amber-100 flex flex-col items-center text-center md:sticky md:top-20">
+            <div class="relative mb-3">
+                <!-- MASCOT CONTAINER (Đã thay SVG bằng thẻ <img> chứa hình ảnh Cục Pin Mây) -->
+                <div id="mascot-container" class="w-32 h-32 sm:w-36 sm:h-36 mascot-float flex items-center justify-center p-2 bg-[#fffdf4] rounded-full border-4 border-[#fdf1d7] shadow-xl relative overflow-hidden">
+                    <img src="https://replicate.delivery/xpbh/mYlGzT7i2sWbEaY7n5Uf4q5r8Z1wX0e6P9o3Q2c1I1S4S4SA/out-0.png" alt="Bé Cục Pin Mây Mascot" class="w-full h-full object-contain scale-110 -mt-1">
+                </div>
+                <!-- Status Badge -->
+                <div id="status-badge" class="absolute -bottom-1 left-1/2 -translate-x-1/2 bg-emerald-500 text-white text-[11px] font-extrabold px-4 py-1 rounded-full shadow-md border-2 border-white whitespace-nowrap">
+                    Normal Hours ☀️
+                </div>
+            </div>
+            <h3 class="font-bold text-amber-950 text-lg mt-3">Cloudy Battery Buddy</h3>
+            <p id="mascot-speech" class="text-xs text-amber-900 font-medium bg-[#fdf8ec] p-3.5 rounded-2xl border border-[#f5e6c7] w-full mt-4 shadow-inner leading-relaxed">
+                "Chào bạn! Hãy cùng mình quản lý điện năng và thời tiết thật thông minh nhé!"
+            </p>
         </div>
-        <div class="line-card">
-          <span class="line-pill green">GREEN LINE</span>
-          <h4>North &amp; south Dublin</h4>
-          <p>Connect Broombridge, the city centre and Brides Glen.</p>
+
+        <!-- CỘT PHẢI: NỘI DUNG TABS (Tracker & Weather) -->
+        <div class="md:col-span-2 space-y-6 w-full min-w-0">
+            
+            <!-- TAB 1: TARIFF & TIPS (QUẢN LÝ ĐIỆN) -->
+            <div id="tab-content-tracker" class="space-y-6">
+                <div class="vintage-panel p-6 space-y-4">
+                    <h2 class="font-bold text-amber-950 text-base sm:text-lg flex items-center gap-2.5 border-b border-amber-100 pb-3">
+                        <span class="text-2xl">⚡</span> Biểu Giá Điện Trong Ngày (Electric Ireland SST Saver+)[cite: 2]
+                    </h2>
+                    
+                    <div class="space-y-3 text-xs sm:text-sm">
+                        <!-- Giờ bình thường -->
+                        <div class="vint-card p-4 flex items-start justify-between gap-4">
+                            <div class="flex-1 min-w-0">
+                                <p class="font-extrabold text-amber-950">☀️ Giờ Bình Thường</p>
+                                <p class="text-amber-900 text-[11px] sm:text-xs mt-0.5">08:00 - 17:00 & 19:00 - 23:00</p>
+                                <p class="text-amber-800 text-[11px] mt-1.5 italic">Dùng thiết bị thoải mái nhưng nên hợp lý.</p>
+                            </div>
+                            <span class="font-black text-amber-900 bg-amber-200 px-3 py-1.5 rounded-xl shadow-sm whitespace-nowrap">€0.3719/kWh</span>
+                        </div>
+                        <!-- Giờ cao điểm -->
+                        <div class="p-4 rounded-2xl bg-rose-50 border border-rose-200 flex items-start justify-between gap-4 shadow-inner">
+                            <div class="flex-1 min-w-0">
+                                <p class="font-extrabold text-rose-950">🔴 Giờ Cao Điểm</p>
+                                <p class="text-rose-900 text-[11px] sm:text-xs mt-0.5">17:00 - 19:00</p>
+                                <p class="text-rose-800 text-[11px] mt-1.5 italic">⚠️ ĐẮT NHẤT NGÀY! Hạn chế máy giặt, lò nướng.</p>
+                            </div>
+                            <span class="font-black text-rose-800 bg-rose-200 px-3 py-1.5 rounded-xl shadow-sm whitespace-nowrap">€0.3968/kWh</span>
+                        </div>
+                        <!-- Giờ đêm -->
+                        <div class="vint-card p-4 flex items-start justify-between gap-4 bg-emerald-50 border-emerald-100">
+                            <div class="flex-1 min-w-0">
+                                <p class="font-extrabold text-emerald-950">🟢 Giờ Đêm (Rẻ Nhất)</p>
+                                <p class="text-emerald-900 text-[11px] sm:text-xs mt-0.5">23:00 - 08:00 sáng</p>
+                                <p class="text-emerald-800 text-[11px] mt-1.5 italic">✨ Siêu hời! Tranh thủ giặt sấy vào giờ này.</p>
+                            </div>
+                            <span class="font-black text-emerald-900 bg-emerald-200 px-3 py-1.5 rounded-xl shadow-sm whitespace-nowrap">€0.1954/kWh</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mẹo tiết kiệm -->
+                <div class="vintage-panel p-6 space-y-3">
+                    <h3 class="font-bold text-amber-950 text-sm sm:text-base">💡 Mẹo Tiết Kiệm Vàng Cho Nhà Mình:</h3>
+                    <ul class="text-xs sm:text-sm space-y-2 text-slate-800 list-decimal list-inside pl-1 leading-relaxed">
+                        <li><strong>Nước nóng:</strong> Tắt bình ngay sau khi tắm xong, không giữ nhiệt cả ngày.</li>
+                        <li><strong>Nấu nướng:</strong> Luôn đậy nắp xoong nồi để giữ nhiệt, nấu nhanh hơn.</li>
+                        <li><strong>Thiết bị chờ:</strong> Rút phích cắm lò vi sóng, ấm đun nước khi không dùng.</li>
+                        <li><strong>Đèn:</strong> Tập trung làm việc ở một khu vực để bật ít đèn hơn.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- TAB 2: WEATHER & OUTFIT ADVISOR (THỜI TIẾT & QUẦN ÁO) -->
+            <div id="tab-content-weather" class="hidden space-y-6">
+                <div class="vintage-panel p-6 space-y-5">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-amber-100 pb-3">
+                        <div>
+                            <h3 class="font-bold text-amber-950 text-base sm:text-lg flex items-center gap-2.5">
+                                <span class="text-2xl">🌦️</span> Dự Báo Thời Tiết (Dublin) & Gợi Ý Mặc Đồ
+                            </h3>
+                            <p class="text-xs text-amber-800 mt-1 font-medium">Dữ liệu thực tế để bạn chuẩn bị khi ra ngoài.</p>
+                        </div>
+                        <button onclick="fetchWeatherData()" class="bg-[#f0eade] hover:bg-[#e9dfcd] text-amber-950 text-xs font-bold px-4 py-2.5 rounded-full transition flex items-center gap-1.5 border border-[#e0d5c1]">
+                            🔄 Làm Mới
+                        </button>
+                    </div>
+
+                    <!-- Weather Card Info -->
+                    <div class="bg-gradient-to-br from-amber-500 to-orange-600 text-white p-6 rounded-3xl shadow-lg flex items-center justify-between gap-4 border-4 border-white ring-4 ring-orange-100">
+                        <div class="space-y-1.5">
+                            <p id="weather-condition" class="text-base sm:text-lg font-extrabold drop-shadow">Đang tải thời tiết...</p>
+                            <p id="weather-temp" class="text-4xl sm:text-5xl font-black drop-shadow-lg">--°C</p>
+                            <p id="weather-wind" class="text-[11px] sm:text-xs text-orange-100 font-semibold drop-shadow">Gió: -- km/h</p>
+                        </div>
+                        <div id="weather-icon-lg" class="text-7xl sm:text-8xl drop-shadow-2xl">☁️</div>
+                    </div>
+
+                    <!-- Outfit Recommendations -->
+                    <div class="bg-[#fdf8ec]/70 border border-[#f5e6c7] p-5 rounded-3xl space-y-4 shadow-inner">
+                        <h4 class="font-bold text-amber-950 text-sm sm:text-base flex items-center gap-2.5">
+                            <span class="text-2xl">👕</span> Gợi ý trang phục & đồ dùng khi ra ngoài:
+                        </h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="bg-white p-4 rounded-2xl border border-amber-100 text-xs sm:text-sm text-amber-950 flex items-center gap-3 shadow-sm">
+                                <span id="outfit-icon-1" class="text-2xl sm:text-3xl">🧥</span> <span id="outfit-text-1" class="font-medium leading-snug">Đang cập nhật...</span>
+                            </div>
+                            <div class="bg-white p-4 rounded-2xl border border-amber-100 text-xs sm:text-sm text-amber-950 flex items-center gap-3 shadow-sm">
+                                <span id="outfit-icon-2" class="text-2xl sm:text-3xl">👟</span> <span id="outfit-text-2" class="font-medium leading-snug">Đang cập nhật...</span>
+                            </div>
+                        </div>
+                        <p class="text-[10px] text-amber-800 italic pt-1">*Lưu ý: Chỉ mang tính chất tham khảo chung.</p>
+                    </div>
+                </div>
+            </div>
+
         </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="page" id="page-arrivals">
-    <div class="hero">
-      <div>
-        <h2>Your next tram, at a glance 🚋</h2>
-        <p>Choose a Luas stop to see live forecast information.</p>
-      </div>
-      <div class="mascot">🚋</div>
-    </div>
-
-    <div class="panel">
-      <div class="panel-head">
-        <div>
-          <h3>Choose your stop 📍</h3>
-          <p class="sub">Enter your Luas stop code to check upcoming trams.</p>
-        </div>
-      </div>
-      <div class="search-row">
-        <input id="arrival-stop" value="TPT" placeholder="Enter stop code">
-        <button class="primary" id="arrival-find">Find arrivals →</button>
-      </div>
-      <div id="arrival-error"></div>
-    </div>
-
-    <div id="forecast-output" class="results">
-      <div class="panel">
-        <div class="empty">Choose a stop to see upcoming trams.</div>
-      </div>
-    </div>
-  </section>
-
-  <section class="page" id="page-stops">
-    <div class="hero">
-      <div>
-        <h2>Find your Luas stop 📍</h2>
-        <p>Browse available stops and select one to see its next arrivals.</p>
-      </div>
-      <div class="mascot">🚋</div>
-    </div>
-
-    <div class="panel">
-      <div class="panel-head">
-        <div>
-          <h3>Explore stops</h3>
-          <p class="sub" id="stops-count">Loading stop list…</p>
-        </div>
-        <button class="secondary" id="refresh-stops">Refresh</button>
-      </div>
-      <input id="stop-filter" placeholder="Search stop name or code..."
-        style="width:100%;padding:13px;border:1px solid #dce8da;border-radius:12px;margin-bottom:15px">
-      <div class="stop-list" id="stop-list">Loading stops…</div>
-    </div>
-  </section>
-
-  <section class="page" id="page-journeys">
-    <div class="hero">
-      <div>
-        <h2>Small choices, greener journeys 🌱</h2>
-        <p>Taking public transport can help reduce the need for individual car journeys.</p>
-      </div>
-      <div class="mascot">🚋</div>
-    </div>
-
-    <div class="grid-two">
-      <div class="panel">
-        <h3>🚶 Walk to your stop</h3>
-        <p class="sub">Walking to a nearby stop is a simple way to add movement to your day.</p>
-      </div>
-      <div class="panel">
-        <h3>♻️ Bring a reusable cup</h3>
-        <p class="sub">Carry a reusable bottle and reduce single-use waste.</p>
-      </div>
-      <div class="panel">
-        <h3>⏱️ Check before you go</h3>
-        <p class="sub">Check live arrivals before leaving home.</p>
-      </div>
-      <div class="panel">
-        <h3>💚 Be considerate</h3>
-        <p class="sub">Let passengers off first and keep doors clear.</p>
-      </div>
-    </div>
-  </section>
-
-  <footer>
-    Live forecasts are supplied by Transport Infrastructure Ireland via the class data relay.
-  </footer>
-</main>
-</div>
-
-<div class="mascot-help">
-  <span class="face">🚋</span>
-  <span>
-    <strong>Hi, I'm Lulu!</strong>
-    <span id="lulu-tip">I'll help you find your next tram.</span>
-  </span>
-</div>
-
-<script>
-const API = "https://luas-class.kluxy.app";
-
-const $ = id => document.getElementById(id);
-let allStops = [];
-
-function setStatus(message, ok=true) {
-  $("connection-status").textContent = message;
-  $("status-dot").style.background = ok ? "#36a56b" : "#d98b45";
-}
-
-function setTip(message) {
-  $("lulu-tip").textContent = message;
-}
-
-function escapeHTML(value) {
-  return String(value ?? "").replace(/[&<>"']/g, char => ({
-    "&":"&amp;",
-    "<":"&lt;",
-    ">":"&gt;",
-    '"':"&quot;",
-    "'":"&#39;"
-  })[char]);
-}
-
-function showPage(name) {
-  document.querySelectorAll(".page").forEach(page => {
-    page.classList.toggle("active", page.id === "page-" + name);
-  });
-
-  document.querySelectorAll(".nav button").forEach(button => {
-    button.classList.toggle("active", button.dataset.page === name);
-  });
-
-  const titles = {
-    home:"A brighter way to travel",
-    arrivals:"Live tram arrivals",
-    stops:"Explore Luas stops",
-    journeys:"Greener journeys"
-  };
-
-  const tips = {
-    home:"Where are we going today?",
-    arrivals:"Choose a stop and I'll find your tram!",
-    stops:"Tap a stop to see its arrivals.",
-    journeys:"Every greener trip makes a difference."
-  };
-
-  $("page-title").textContent = titles[name];
-  setTip(tips[name]);
-
-  if (name === "stops" && !allStops.length) {
-    loadStops();
-  }
-
-  window.scrollTo({top:0,behavior:"smooth"});
-}
-
-document.querySelectorAll(".nav button").forEach(button => {
-  button.addEventListener("click", () => showPage(button.dataset.page));
-});
-
-async function fetchJson(path) {
-  const response = await fetch(API + path, {
-    method:"GET",
-    headers:{"Accept":"application/json"}
-  });
-
-  if (!response.ok) {
-    throw new Error("API returned HTTP " + response.status);
-  }
-
-  return await response.json();
-}
-
-function renderForecast(data, code) {
-  const directions = Array.isArray(data.directions)
-    ? data.directions : [];
-
-  const stopName = data.stopName || data.name || code;
-  let html = `
-    <div class="panel">
-      <div class="panel-head">
-        <div>
-          <h3>🚋 ${escapeHTML(stopName)}</h3>
-          <p class="sub">Stop code: ${escapeHTML(code)}</p>
-        </div>
-        <button class="secondary" id="forecast-refresh">Refresh ↻</button>
-      </div>
-  `;
-
-  if (data.message) {
-    html += `<p class="sub">${escapeHTML(data.message)}</p>`;
-  }
-
-  html += `<div class="results">`;
-
-  if (!directions.length) {
-    html += `<div class="empty">No arrival information available right now.</div>`;
-  }
-
-  directions.forEach(direction => {
-    const trams = Array.isArray(direction.trams)
-      ? direction.trams : [];
-
-    html += `
-      <div class="direction">
-        <div class="direction-head">
-          <span>${escapeHTML(direction.name || "Arrivals")}</span>
-          <small>${trams.length} arrivals</small>
-        </div>
-    `;
-
-    if (!trams.length) {
-      html += `<div class="empty">No trams currently listed for this direction.</div>`;
-    }
-
-    trams.forEach(tram => {
-      const due = tram.due ?? "—";
-      const destination = tram.destination || "Destination unavailable";
-
-      html += `
-        <div class="arrival">
-          <div class="time">
-            ${escapeHTML(due)}
-            <small>Minutes</small>
-          </div>
-          <div>
-            <div class="destination">${escapeHTML(destination)}</div>
-            <div class="arrival-meta">Luas service · ${escapeHTML(direction.name)}</div>
-          </div>
-        </div>
-      `;
-    });
-
-    html += `</div>`;
-  });
-
-  html += `</div></div>`;
-
-  $("forecast-output").innerHTML = html;
-
-  $("forecast-refresh").addEventListener("click", () => {
-    loadForecast(code);
-  });
-}
-
-async function loadForecast(rawCode) {
-  const code = (rawCode || "").trim().toUpperCase();
-
-  if (!code) {
-    $("arrival-error").innerHTML =
-      '<div class="error">Please enter a stop code.</div>';
-    return;
-  }
-
-  $("arrival-stop").value = code;
-  $("arrival-error").innerHTML = "";
-
-  $("forecast-output").innerHTML = `
-    <div class="panel">
-      <div class="loading">
-        <span>🚋</span> Lulu is checking the next trams…
-      </div>
-    </div>
-  `;
-
-  setStatus("Loading arrivals");
-  setTip("Checking the forecast for " + code + "…");
-
-  try {
-    const data = await fetchJson(
-      "/forecast?stop=" + encodeURIComponent(code)
-    );
-
-    renderForecast(data, code);
-    setStatus("Live data connected");
-    setTip("Here are the arrivals for " + (data.stopName || code) + ".");
-
-  } catch (error) {
-    console.error("Forecast error:", error);
-
-    $("forecast-output").innerHTML = "";
-    $("arrival-error").innerHTML = `
-      <div class="error">
-        Unable to connect to the live forecast service.
-        Please try again later. Technical detail: ${escapeHTML(error.message)}
-      </div>
-    `;
-
-    setStatus("Connection error", false);
-    setTip("Oops! I couldn't reach the forecast.");
-  }
-}
-
-$("arrival-find").addEventListener("click", () => {
-  loadForecast($("arrival-stop").value);
-});
-
-$("arrival-stop").addEventListener("keydown", event => {
-  if (event.key === "Enter") {
-    loadForecast(event.target.value);
-  }
-});
-
-$("home-find").addEventListener("click", () => {
-  const code = $("home-stop").value;
-  showPage("arrivals");
-  $("arrival-stop").value = code;
-  loadForecast(code);
-});
-
-$("home-stop").addEventListener("keydown", event => {
-  if (event.key === "Enter") {
-    $("home-find").click();
-  }
-});
-
-function extractStops(data) {
-  if (Array.isArray(data)) return data;
-  if (Array.isArray(data.stops)) return data.stops;
-  if (Array.isArray(data.data)) return data.data;
-  return [];
-}
-
-function stopCode(stop) {
-  return stop.id || stop.code || stop.stop || "";
-}
-
-function stopName(stop) {
-  return stop.name || stop.stopName || stopCode(stop);
-}
-
-function renderStops() {
-  const query = $("stop-filter").value.toLowerCase().trim();
-
-  const filtered = allStops.filter(stop => {
-    const text = (
-      stopName(stop) + " " +
-      stopCode(stop) + " " +
-      (stop.line || "")
-    ).toLowerCase();
-
-    return text.includes(query);
-  });
-
-  $("stops-count").textContent =
-    filtered.length + " stops found";
-
-  $("stop-list").innerHTML = filtered.length
-    ? filtered.map(stop => `
-        <button class="stop-chip" data-code="${escapeHTML(stopCode(stop))}">
-          <strong>${escapeHTML(stopName(stop))}</strong>
-          <small>${escapeHTML(stopCode(stop))} ${stop.line ? "· " + escapeHTML(stop.line) : ""}</small>
-        </button>
-      `).join("")
-    : '<div class="empty">No matching stops found.</div>';
-
-  document.querySelectorAll(".stop-chip").forEach(button => {
-    button.addEventListener("click", () => {
-      const code = button.dataset.code;
-      showPage("arrivals");
-      $("arrival-stop").value = code;
-      loadForecast(code);
-    });
-  });
-}
-
-async function loadStops() {
-  $("stop-list").innerHTML =
-    '<div class="loading"><span>🚋</span>Loading stops…</div>';
-
-  try {
-    const data = await fetchJson("/stops");
-    allStops = extractStops(data);
-
-    if (!allStops.length) {
-      throw new Error("No stops were returned by the API.");
-    }
-
-    renderStops();
-    setStatus("Live data connected");
-
-  } catch (error) {
-    console.error("Stops error:", error);
-
-    $("stop-list").innerHTML =
-      '<div class="error">Could not load the stop list: ' +
-      escapeHTML(error.message) + '</div>';
-
-    $("stops-count").textContent = "Stops unavailable";
-    setStatus("Connection error", false);
-  }
-}
-
-$("stop-filter").addEventListener("input", renderStops);
-$("refresh-stops").addEventListener("click", loadStops);
-
-setStatus("Ready");
-</script>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="text-center py-7 text-xs text-amber-800 font-medium border-t border-amber-100 bg-[#fbf7ed]/50 mt-5">
+        Eco-Buddy Home Manager · Vibe Cục Pin Mây Đáng Yêu ☁️✨
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            startRealtimeClock();
+            checkTariffStatus();
+            fetchWeatherData();
+            // Tự động cập nhật trạng thái điện mỗi 30 giây
+            setInterval(checkTariffStatus, 30000);
+            // Tự động cập nhật thời tiết mỗi 10 phút
+            setInterval(fetchWeatherData, 600000);
+        });
+
+        // Đồng hồ thời gian thực
+        function startRealtimeClock() {
+            function updateClock() {
+                const now = new Date();
+                const clockEl = document.getElementById('realtime-clock');
+                if (clockEl) clockEl.innerText = `| 🕒 ${now.toLocaleTimeString()}`;
+            }
+            updateClock();
+            setInterval(updateClock, 1000);
+        }
+
+        // Chuyển Tab
+        function switchTab(tabName) {
+            const trackerTab = document.getElementById('tab-content-tracker');
+            const weatherTab = document.getElementById('tab-content-weather');
+            const btnTracker = document.getElementById('tab-btn-tracker');
+            const btnWeather = document.getElementById('tab-btn-weather');
+
+            trackerTab.classList.add('hidden');
+            weatherTab.classList.add('hidden');
+
+            // Reset style nút
+            btnTracker.className = "px-4 py-1.5 rounded-full text-xs font-bold transition-all text-amber-950 hover:bg-white/60";
+            btnWeather.className = "px-4 py-1.5 rounded-full text-xs font-bold transition-all text-amber-950 hover:bg-white/60";
+
+            if (tabName === 'tracker') {
+                trackerTab.classList.remove('hidden');
+                btnTracker.className = "px-4 py-1.5 rounded-full text-xs font-bold transition-all bg-amber-600 text-white shadow-inner";
+            } else {
+                weatherTab.classList.remove('hidden');
+                btnWeather.className = "px-4 py-1.5 rounded-full text-xs font-bold transition-all bg-amber-600 text-white shadow-inner";
+            }
+        }
+
+        // Logic nhận diện giờ điện cao điểm/thấp điểm
+        function checkTariffStatus() {
+            const now = new Date();
+            const hour = now.getHours();
+            const badge = document.getElementById('status-badge');
+            const speech = document.getElementById('mascot-speech');
+
+            // 17:00 - 19:00: Cao điểm
+            if (hour >= 17 && hour < 19) {
+                badge.className = "absolute -bottom-1 left-1/2 -translate-x-1/2 bg-rose-500 text-white text-[11px] font-extrabold px-4 py-1 rounded-full shadow-md border-2 border-white whitespace-nowrap animate-pulse";
+                badge.innerText = "🔴 Peak Hours!";
+                speech.innerText = "⚠️ GIỜ CAO ĐIỂM (17h-19h)! Giá điện đang rất cao. Bạn hãy tạm ngưng máy giặt, máy sấy để tiết kiệm ví tiền nhé! 🔥";
+            } 
+            // 23:00 - 08:00: Giờ đêm rẻ nhất
+            else if (hour >= 23 || hour < 8) {
+                badge.className = "absolute -bottom-1 left-1/2 -translate-x-1/2 bg-emerald-500 text-white text-[11px] font-extrabold px-4 py-1 rounded-full shadow-md border-2 border-white whitespace-nowrap";
+                badge.innerText = "🟢 Night Saver ON";
+                speech.innerText = "🌙 GIỜ ĐÊM RẺ NHẤT! Đây là thời điểm vàng để bật máy giặt, sấy quần áo hoặc sạc xe điện đó! Tận dụng nha! 🌿";
+            } 
+            // Giờ bình thường
+            else {
+                badge.className = "absolute -bottom-1 left-1/2 -translate-x-1/2 bg-amber-500 text-white text-[11px] font-extrabold px-4 py-1 rounded-full shadow-md border-2 border-white whitespace-nowrap";
+                badge.innerText = "Normal Hours ☀️";
+                speech.innerText = "☕ Khung giờ điện bình thường. Bạn cứ sử dụng thiết bị hợp lý là được nhé! Mình luôn ở đây nhắc nhở bạn! 😊";
+            }
+        }
+
+        // Logic lấy thời tiết thực tế (Open-Meteo API)
+        async function fetchWeatherData() {
+            const weatherCondition = document.getElementById('weather-condition');
+            const weatherTemp = document.getElementById('weather-temp');
+            const weatherWind = document.getElementById('weather-wind');
+            const weatherIcon = document.getElementById('weather-icon-lg');
+            const outfitText1 = document.getElementById('outfit-text-1');
+            const outfitText2 = document.getElementById('outfit-text-2');
+            const outfitIcon1 = document.getElementById('outfit-icon-1');
+            const outfitIcon2 = document.getElementById('outfit-icon-2');
+
+            weatherCondition.innerText = "Đang tải...";
+
+            try {
+                // Tọa độ Dublin, Ireland (Thay đổi nếu cần)
+                const lat = 53.3498;
+                const lon = -6.2603;
+                const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,precipitation,weather_code,wind_speed_10m&timezone=Europe/Dublin`);
+                
+                if (!res.ok) throw new Error("Không thể lấy dữ liệu thời tiết");
+                
+                const data = await res.json();
+                
+                if (data && data.current) {
+                    const temp = data.current.temperature_2m; // Nhiệt độ
+                    const precip = data.current.precipitation; // Lượng mưa
+                    const wind = data.current.wind_speed_10m; // Tốc độ gió
+                    const wcode = data.current.weather_code; // Mã tình trạng thời tiết
+
+                    // Xử lý logic hiển thị (Giữ nguyên như cũ, chỉ đẹp hơn)
+                    let condition = "Trời quang đãng";
+                    let icon = "☀️";
+                    let o1 = { icon: "🧥", text: "Áo khoác nhẹ, áo cardigan" };
+                    let o2 = { icon: "👟", text: "Giày thể thao thoải mái" };
+
+                    // Mưa (WMO code > 50)
+                    if (precip > 0 || (wcode >= 50 && wcode < 68) || (wcode >= 80 && wcode < 85)) {
+                        condition = "Trời có mưa nhẹ";
+                        icon = "🌧️";
+                        o1 = { icon: "☔", text: "Áo mưa hoặc ô (dù) chắc chắn" };
+                        o2 = { icon: "👢", text: "Giày chống thấm nước, ủng đi mưa" };
+                    } 
+                    // Mưa to (WMO code > 68)
+                    else if (wcode >= 68 && wcode <= 77) {
+                        condition = "Trời mưa tuyết / Mưa lớn";
+                        icon = "🌨️";
+                        o1 = { icon: "🧥", text: "Áo khoác ấm dày, mũ len" };
+                        o2 = { icon: "👢", text: "Ủng cao cổ, găng tay giữ nhiệt" };
+                    }
+                    // Lạnh (Dưới 8 độ C)
+                    else if (temp < 8) {
+                        condition = "Trời rất lạnh";
+                        icon = "❄️";
+                        o1 = { icon: "🧤", text: "Găng tay, khăn choàng cổ ấm" };
+                        o2 = { icon: "🧥", text: "Áo phao, áo khoác mùa đông" };
+                    } 
+                    // Se lạnh (8 - 15 độ C)
+                    else if (temp <= 15) {
+                        condition = "Trời se lạnh, lộng gió";
+                        icon = "⛅";
+                        o1 = { icon: "🧶", text: "Áo len mỏng, áo khoác ngoài" };
+                        o2 = { icon: "👖", text: "Quần dài, giày bít mũi" };
+                    } 
+                    // Nóng / Dễ chịu (Trên 15 độ C)
+                    else if (temp > 20) {
+                        condition = "Trời ấm áp, dễ chịu";
+                        icon = "☀️";
+                        o1 = { icon: "👕", text: "Áo thun, váy mỏng, áo sơ mi" };
+                        o2 = { icon: "🕶️", text: "Kính mát, kem chống nắng" };
+                    }
+
+                    // Update DOM
+                    weatherCondition.innerText = condition;
+                    weatherTemp.innerText = `${Math.round(temp)}°C`;
+                    weatherWind.innerText = `Gió: ${Math.round(wind)} km/h`;
+                    weatherIcon.innerText = icon;
+
+                    outfitIcon1.innerText = o1.icon;
+                    outfitText1.innerText = o1.text;
+                    outfitIcon2.innerText = o2.icon;
+                    outfitText2.innerText = o2.text;
+                }
+            } catch (err) {
+                console.error("Lỗi thời tiết:", err);
+                weatherCondition.innerText = "Lỗi tải thời tiết";
+                weatherTemp.innerText = "Oops!";
+                weatherWind.innerText = "--";
+                outfitText1.innerText = "Vui lòng kiểm tra kết nối mạng";
+                outfitText2.innerText = "Hoặc thử lại sau ít phút";
+            }
+        }
+    </script>
 </body>
 </html>
