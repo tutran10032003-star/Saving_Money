@@ -3,19 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Eco-Buddy Electricity Tracker & Weather Advisor ⚡☁️</title>
+    <title>Eco-Buddy Home Manager ⚡☁️</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts: Quicksand (Font chữ tròn trịa, thân thiện) -->
+    <!-- Google Fonts: Quicksand -->
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Quicksand', sans-serif;
-            /* Màu nền kem ấm áp, vintage */
             background-color: #fcfbf7; 
             color: #2d3748;
         }
-        /* Hiệu ứng lơ lửng nhẹ nhàng cho mascot */
         @keyframes float {
             0%, 100% { transform: translateY(0px) rotate(0deg); }
             50% { transform: translateY(-6px) rotate(1deg); }
@@ -23,7 +21,6 @@
         .mascot-float {
             animation: float 3s ease-in-out infinite;
         }
-        /* Custom Scrollbar cho gọn gàng */
         ::-webkit-scrollbar {
             width: 6px;
         }
@@ -35,40 +32,35 @@
             background: #d1cbb9;
             border-radius: 3px;
         }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #bdae99;
-        }
-        /* Style cho các panel chính */
         .vintage-panel { 
             background: linear-gradient(145deg, #ffffff 0%, #fbf7ed 100%); 
-            border: 1.5px solid #e6dccf; 
-            box-shadow: 0 4px 15px rgba(168,150,120,0.08); 
+            border: 2px solid #2d3748; 
+            box-shadow: 4px 4px 0px #2d3748; 
             border-radius: 1.5rem;
         }
-        /* Style cho các thẻ thông tin nhỏ */
         .vint-card {
             background: #fffaf0;
-            border: 1px solid #e0d5bc;
+            border: 1.5px solid #2d3748;
             border-radius: 1rem;
+            box-shadow: 2px 2px 0px #2d3748;
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between selection:bg-amber-200/50">
+<body class="min-h-screen flex flex-col justify-between selection:bg-amber-200">
 
-    <!-- HEADER -->
-    <header class="bg-white/95 backdrop-blur-sm shadow-sm sticky top-0 z-50 border-b border-amber-100">
-        <div class="max-w-5xl mx-auto px-5 py-3 flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-                <!-- Icon tiêu đề -->
-                <span class="text-3xl filter drop-shadow-sm">☁️</span>
+    <!-- HEADER (Dọc căn giữa, gọn gàng trên mọi thiết bị) -->
+    <header class="bg-white/95 backdrop-blur-sm shadow-sm sticky top-0 z-50 border-b-2 border-[#2d3748]">
+        <div class="max-w-xl mx-auto px-4 py-3 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div class="flex items-center space-x-2.5">
+                <span class="text-2xl">☁️</span>
                 <div>
-                    <h1 class="font-bold text-base sm:text-lg text-amber-950 leading-tight">Eco-Buddy Home Manager</h1>
-                    <p class="text-[11px] sm:text-xs text-amber-800 font-medium">Live Tariff & Weather ⚡<span id="realtime-clock" class="text-amber-900 font-bold ml-1"></span></p>
+                    <h1 class="font-bold text-base text-amber-950 leading-tight">Eco-Buddy Home Manager</h1>
+                    <p class="text-[11px] text-amber-800 font-medium">Live Tariff & Weather ⚡ <span id="realtime-clock" class="text-amber-900 font-bold"></span></p>
                 </div>
             </div>
             
-            <!-- Tab Switchers: Giữ nguyên chức năng -->
-            <div class="flex bg-[#f0eade] p-1 rounded-full border border-[#e0d5c1]">
+            <!-- Tab Switchers -->
+            <div class="flex bg-[#f0eade] p-1 rounded-full border-1.5 border-[#2d3748]">
                 <button onclick="switchTab('tracker')" id="tab-btn-tracker" class="px-4 py-1.5 rounded-full text-xs font-bold transition-all bg-amber-600 text-white shadow-inner">
                     ⚡ Tariff & Tips
                 </button>
@@ -78,144 +70,135 @@
             </div>
         </div>
     </header>
-    <!-- MAIN CONTAINER -->
-    <main class="max-w-5xl mx-auto px-5 py-5 sm:py-7 flex-grow w-full grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
+
+    <!-- MAIN CONTAINER (Bố cục dọc 1 cột duy nhất, tối ưu mobile & laptop) -->
+    <main class="max-w-xl mx-auto px-4 py-6 flex-grow w-full space-y-6">
         
-        <!-- CỘT TRÁI: MASCOT VINTAGE & STATUS -->
-        <div class="md:col-span-1 bg-white p-5 rounded-3xl shadow-sm border border-amber-100 flex flex-col items-center text-center md:sticky md:top-20">
+        <!-- MASCOT & STATUS CARD -->
+        <div class="vintage-panel p-5 flex flex-col items-center text-center">
             <div class="relative mb-3">
-                <!-- MASCOT CONTAINER (Đã thay SVG bằng thẻ <img> chứa hình ảnh Cục Pin Mây) -->
-                <div id="mascot-container" class="w-32 h-32 sm:w-36 sm:h-36 mascot-float flex items-center justify-center p-2 bg-[#fffdf4] rounded-full border-4 border-[#fdf1d7] shadow-xl relative overflow-hidden">
-                    <img src="https://replicate.delivery/xpbh/mYlGzT7i2sWbEaY7n5Uf4q5r8Z1wX0e6P9o3Q2c1I1S4S4SA/out-0.png" alt="Bé Cục Pin Mây Mascot" class="w-full h-full object-contain scale-110 -mt-1">
+                <div id="mascot-container" class="w-32 h-32 sm:w-36 sm:h-36 mascot-float flex items-center justify-center p-2 bg-[#fffdf4] rounded-full border-3 border-[#2d3748] shadow-md relative overflow-hidden">
+                    <!-- Ảnh mascot Cục Pin Mây nét căng -->
+                    <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=300&auto=format&fit=crop&q=80" alt="Mascot" class="w-full h-full object-cover rounded-full">
                 </div>
                 <!-- Status Badge -->
-                <div id="status-badge" class="absolute -bottom-1 left-1/2 -translate-x-1/2 bg-emerald-500 text-white text-[11px] font-extrabold px-4 py-1 rounded-full shadow-md border-2 border-white whitespace-nowrap">
+                <div id="status-badge" class="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-emerald-500 text-white text-[11px] font-extrabold px-4 py-1 rounded-full shadow border-2 border-[#2d3748] whitespace-nowrap">
                     Normal Hours ☀️
                 </div>
             </div>
-            <h3 class="font-bold text-amber-950 text-lg mt-3">Cloudy Battery Buddy</h3>
-            <p id="mascot-speech" class="text-xs text-amber-900 font-medium bg-[#fdf8ec] p-3.5 rounded-2xl border border-[#f5e6c7] w-full mt-4 shadow-inner leading-relaxed">
+            <h3 class="font-bold text-amber-950 text-base mt-2">Cloudy Battery Buddy</h3>
+            <p id="mascot-speech" class="text-xs text-amber-900 font-medium bg-[#fdf8ec] p-3 rounded-2xl border-1.5 border-[#2d3748] w-full mt-3 leading-relaxed">
                 "Chào bạn! Hãy cùng mình quản lý điện năng và thời tiết thật thông minh nhé!"
             </p>
         </div>
 
-        <!-- CỘT PHẢI: NỘI DUNG TABS (Tracker & Weather) -->
-        <div class="md:col-span-2 space-y-6 w-full min-w-0">
-            
-            <!-- TAB 1: TARIFF & TIPS (QUẢN LÝ ĐIỆN) -->
-            <div id="tab-content-tracker" class="space-y-6">
-                <div class="vintage-panel p-6 space-y-4">
-                    <h2 class="font-bold text-amber-950 text-base sm:text-lg flex items-center gap-2.5 border-b border-amber-100 pb-3">
-                        <span class="text-2xl">⚡</span> Biểu Giá Điện Trong Ngày (Electric Ireland SST Saver+)[cite: 2]
-                    </h2>
-                    
-                    <div class="space-y-3 text-xs sm:text-sm">
-                        <!-- Giờ bình thường -->
-                        <div class="vint-card p-4 flex items-start justify-between gap-4">
-                            <div class="flex-1 min-w-0">
-                                <p class="font-extrabold text-amber-950">☀️ Giờ Bình Thường</p>
-                                <p class="text-amber-900 text-[11px] sm:text-xs mt-0.5">08:00 - 17:00 & 19:00 - 23:00</p>
-                                <p class="text-amber-800 text-[11px] mt-1.5 italic">Dùng thiết bị thoải mái nhưng nên hợp lý.</p>
-                            </div>
-                            <span class="font-black text-amber-900 bg-amber-200 px-3 py-1.5 rounded-xl shadow-sm whitespace-nowrap">€0.3719/kWh</span>
+        <!-- TAB 1: TARIFF & TIPS -->
+        <div id="tab-content-tracker" class="space-y-6">
+            <div class="vintage-panel p-5 space-y-4">
+                <h2 class="font-bold text-amber-950 text-base flex items-center gap-2 border-b-2 border-[#2d3748] pb-2.5">
+                    <span>⚡</span> Biểu Giá Điện Trong Ngày (SST Saver+)
+                </h2>
+                
+                <div class="space-y-3 text-xs sm:text-sm">
+                    <!-- Giờ bình thường (Viền đen retro) -->
+                    <div class="vint-card p-3.5 flex items-start justify-between gap-3 bg-[#eef7f2]">
+                        <div class="flex-1 min-w-0">
+                            <p class="font-extrabold text-amber-950">☀️ Giờ Bình Thường</p>
+                            <p class="text-amber-900 text-[11px] mt-0.5">08:00 - 17:00 & 19:00 - 23:00</p>
+                            <p class="text-amber-800 text-[11px] mt-1 italic">Sử dụng thiết bị hợp lý.</p>
                         </div>
-                        <!-- Giờ cao điểm -->
-                        <div class="p-4 rounded-2xl bg-rose-50 border border-rose-200 flex items-start justify-between gap-4 shadow-inner">
-                            <div class="flex-1 min-w-0">
-                                <p class="font-extrabold text-rose-950">🔴 Giờ Cao Điểm</p>
-                                <p class="text-rose-900 text-[11px] sm:text-xs mt-0.5">17:00 - 19:00</p>
-                                <p class="text-rose-800 text-[11px] mt-1.5 italic">⚠️ ĐẮT NHẤT NGÀY! Hạn chế máy giặt, lò nướng.</p>
-                            </div>
-                            <span class="font-black text-rose-800 bg-rose-200 px-3 py-1.5 rounded-xl shadow-sm whitespace-nowrap">€0.3968/kWh</span>
-                        </div>
-                        <!-- Giờ đêm -->
-                        <div class="vint-card p-4 flex items-start justify-between gap-4 bg-emerald-50 border-emerald-100">
-                            <div class="flex-1 min-w-0">
-                                <p class="font-extrabold text-emerald-950">🟢 Giờ Đêm (Rẻ Nhất)</p>
-                                <p class="text-emerald-900 text-[11px] sm:text-xs mt-0.5">23:00 - 08:00 sáng</p>
-                                <p class="text-emerald-800 text-[11px] mt-1.5 italic">✨ Siêu hời! Tranh thủ giặt sấy vào giờ này.</p>
-                            </div>
-                            <span class="font-black text-emerald-900 bg-emerald-200 px-3 py-1.5 rounded-xl shadow-sm whitespace-nowrap">€0.1954/kWh</span>
-                        </div>
+                        <span class="font-black text-amber-950 bg-amber-200 px-2.5 py-1 rounded-xl border border-[#2d3748] whitespace-nowrap">€0.3719/kWh</span>
                     </div>
-                </div>
-
-                <!-- Mẹo tiết kiệm -->
-                <div class="vintage-panel p-6 space-y-3">
-                    <h3 class="font-bold text-amber-950 text-sm sm:text-base">💡 Mẹo Tiết Kiệm Vàng Cho Nhà Mình:</h3>
-                    <ul class="text-xs sm:text-sm space-y-2 text-slate-800 list-decimal list-inside pl-1 leading-relaxed">
-                        <li><strong>Nước nóng:</strong> Tắt bình ngay sau khi tắm xong, không giữ nhiệt cả ngày.</li>
-                        <li><strong>Nấu nướng:</strong> Luôn đậy nắp xoong nồi để giữ nhiệt, nấu nhanh hơn.</li>
-                        <li><strong>Thiết bị chờ:</strong> Rút phích cắm lò vi sóng, ấm đun nước khi không dùng.</li>
-                        <li><strong>Đèn:</strong> Tập trung làm việc ở một khu vực để bật ít đèn hơn.</li>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- TAB 2: WEATHER & OUTFIT ADVISOR (THỜI TIẾT & QUẦN ÁO) -->
-            <div id="tab-content-weather" class="hidden space-y-6">
-                <div class="vintage-panel p-6 space-y-5">
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-amber-100 pb-3">
-                        <div>
-                            <h3 class="font-bold text-amber-950 text-base sm:text-lg flex items-center gap-2.5">
-                                <span class="text-2xl">🌦️</span> Dự Báo Thời Tiết (Dublin) & Gợi Ý Mặc Đồ
-                            </h3>
-                            <p class="text-xs text-amber-800 mt-1 font-medium">Dữ liệu thực tế để bạn chuẩn bị khi ra ngoài.</p>
+                    <!-- Giờ cao điểm -->
+                    <div class="p-3.5 rounded-2xl bg-rose-100 border-1.5 border-[#2d3748] flex items-start justify-between gap-3 shadow-[2px_2px_0px_#2d3748]">
+                        <div class="flex-1 min-w-0">
+                            <p class="font-extrabold text-rose-950">🔴 Giờ Cao Điểm</p>
+                            <p class="text-rose-900 text-[11px] mt-0.5">17:00 - 19:00</p>
+                            <p class="text-rose-800 text-[11px] mt-1 italic">⚠️ Hạn chế máy giặt, lò nướng.</p>
                         </div>
-                        <button onclick="fetchWeatherData()" class="bg-[#f0eade] hover:bg-[#e9dfcd] text-amber-950 text-xs font-bold px-4 py-2.5 rounded-full transition flex items-center gap-1.5 border border-[#e0d5c1]">
-                            🔄 Làm Mới
-                        </button>
+                        <span class="font-black text-rose-900 bg-rose-200 px-2.5 py-1 rounded-xl border border-[#2d3748] whitespace-nowrap">€0.3968/kWh</span>
                     </div>
-
-                    <!-- Weather Card Info -->
-                    <div class="bg-gradient-to-br from-amber-500 to-orange-600 text-white p-6 rounded-3xl shadow-lg flex items-center justify-between gap-4 border-4 border-white ring-4 ring-orange-100">
-                        <div class="space-y-1.5">
-                            <p id="weather-condition" class="text-base sm:text-lg font-extrabold drop-shadow">Đang tải thời tiết...</p>
-                            <p id="weather-temp" class="text-4xl sm:text-5xl font-black drop-shadow-lg">--°C</p>
-                            <p id="weather-wind" class="text-[11px] sm:text-xs text-orange-100 font-semibold drop-shadow">Gió: -- km/h</p>
+                    <!-- Giờ đêm -->
+                    <div class="vint-card p-3.5 flex items-start justify-between gap-3 bg-sky-50">
+                        <div class="flex-1 min-w-0">
+                            <p class="font-extrabold text-sky-950">🟢 Giờ Đêm (Rẻ Nhất)</p>
+                            <p class="text-sky-900 text-[11px] mt-0.5">23:00 - 08:00 sáng</p>
+                            <p class="text-sky-800 text-[11px] mt-1 italic">✨ Tranh thủ giặt sấy giờ này.</p>
                         </div>
-                        <div id="weather-icon-lg" class="text-7xl sm:text-8xl drop-shadow-2xl">☁️</div>
-                    </div>
-
-                    <!-- Outfit Recommendations -->
-                    <div class="bg-[#fdf8ec]/70 border border-[#f5e6c7] p-5 rounded-3xl space-y-4 shadow-inner">
-                        <h4 class="font-bold text-amber-950 text-sm sm:text-base flex items-center gap-2.5">
-                            <span class="text-2xl">👕</span> Gợi ý trang phục & đồ dùng khi ra ngoài:
-                        </h4>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div class="bg-white p-4 rounded-2xl border border-amber-100 text-xs sm:text-sm text-amber-950 flex items-center gap-3 shadow-sm">
-                                <span id="outfit-icon-1" class="text-2xl sm:text-3xl">🧥</span> <span id="outfit-text-1" class="font-medium leading-snug">Đang cập nhật...</span>
-                            </div>
-                            <div class="bg-white p-4 rounded-2xl border border-amber-100 text-xs sm:text-sm text-amber-950 flex items-center gap-3 shadow-sm">
-                                <span id="outfit-icon-2" class="text-2xl sm:text-3xl">👟</span> <span id="outfit-text-2" class="font-medium leading-snug">Đang cập nhật...</span>
-                            </div>
-                        </div>
-                        <p class="text-[10px] text-amber-800 italic pt-1">*Lưu ý: Chỉ mang tính chất tham khảo chung.</p>
+                        <span class="font-black text-sky-950 bg-sky-200 px-2.5 py-1 rounded-xl border border-[#2d3748] whitespace-nowrap">€0.1954/kWh</span>
                     </div>
                 </div>
             </div>
 
+            <div class="vintage-panel p-5 space-y-3">
+                <h3 class="font-bold text-amber-950 text-sm">💡 Mẹo Tiết Kiệm Vàng:</h3>
+                <ul class="text-xs space-y-1.5 text-slate-800 list-disc list-inside leading-relaxed pl-1">
+                    <li><strong>Nước nóng:</strong> Tắt bình ngay sau khi tắm xong.</li>
+                    <li><strong>Nấu nướng:</strong> Đậy nắp xoong nồi để nấu nhanh hơn.</li>
+                    <li><strong>Thiết bị chờ:</strong> Rút phích cắm khi không dùng.</li>
+                </ul>
+            </div>
         </div>
+
+        <!-- TAB 2: WEATHER & OUTFIT ADVISOR (Đã tách rời hoàn toàn khỏi tariff) -->
+        <div id="tab-content-weather" class="hidden space-y-6">
+            <div class="vintage-panel p-5 space-y-4">
+                <div class="flex items-center justify-between gap-2 border-b-2 border-[#2d3748] pb-2.5">
+                    <div>
+                        <h3 class="font-bold text-amber-950 text-base flex items-center gap-2">
+                            <span>🌦️</span> Thời Tiết Dublin & Gợi Ý Mặc Đồ
+                        </h3>
+                        <p class="text-xs text-amber-800 mt-0.5">Dữ liệu thực tế cập nhật liên tục.</p>
+                    </div>
+                    <button onclick="fetchWeatherData()" class="bg-[#f0eade] hover:bg-[#e9dfcd] text-amber-950 text-xs font-bold px-3 py-2 rounded-xl border-1.5 border-[#2d3748] shadow-[2px_2px_0px_#2d3748] transition">
+                        🔄 Làm Mới
+                    </button>
+                </div>
+
+                <!-- Weather Card -->
+                <div class="bg-gradient-to-br from-amber-400 to-orange-500 text-white p-5 rounded-2xl shadow-[3px_3px_0px_#2d3748] border-2 border-[#2d3748] flex items-center justify-between gap-3">
+                    <div class="space-y-1">
+                        <p id="weather-condition" class="text-sm font-extrabold">Đang tải thời tiết...</p>
+                        <p id="weather-temp" class="text-3xl font-black">--°C</p>
+                        <p id="weather-wind" class="text-[11px] text-orange-100 font-semibold">Gió: -- km/h</p>
+                    </div>
+                    <div id="weather-icon-lg" class="text-6xl drop-shadow-md">☁️</div>
+                </div>
+
+                <!-- Outfit Recommendations -->
+                <div class="bg-[#fdf8ec] border-1.5 border-[#2d3748] p-4 rounded-2xl space-y-3 shadow-[2px_2px_0px_#2d3748]">
+                    <h4 class="font-bold text-amber-950 text-xs sm:text-sm flex items-center gap-2">
+                        <span>👕</span> Gợi ý trang phục khi ra ngoài:
+                    </h4>
+                    <div class="grid grid-cols-1 gap-2.5">
+                        <div class="bg-white p-3 rounded-xl border-1.5 border-[#2d3748] text-xs text-amber-950 flex items-center gap-2.5 shadow-sm">
+                            <span id="outfit-icon-1" class="text-xl">🧥</span> <span id="outfit-text-1" class="font-medium">Đang cập nhật...</span>
+                        </div>
+                        <div class="bg-white p-3 rounded-xl border-1.5 border-[#2d3748] text-xs text-amber-950 flex items-center gap-2.5 shadow-sm">
+                            <span id="outfit-icon-2" class="text-xl">👟</span> <span id="outfit-text-2" class="font-medium">Đang cập nhật...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </main>
 
     <!-- FOOTER -->
-    <footer class="text-center py-7 text-xs text-amber-800 font-medium border-t border-amber-100 bg-[#fbf7ed]/50 mt-5">
-        Eco-Buddy Home Manager · Vibe Cục Pin Mây Đáng Yêu ☁️✨
+    <footer class="text-center py-5 text-xs text-amber-800 font-medium border-t-2 border-[#2d3748] bg-[#fbf7ed] mt-4">
+        Eco-Buddy Home Manager · Single Column Layout ☁️✨
     </footer>
 
-    <!-- JAVASCRIPT LOGIC -->
+    <!-- JAVASCRIPT -->
     <script>
         window.addEventListener('DOMContentLoaded', () => {
             startRealtimeClock();
             checkTariffStatus();
             fetchWeatherData();
-            // Tự động cập nhật trạng thái điện mỗi 30 giây
             setInterval(checkTariffStatus, 30000);
-            // Tự động cập nhật thời tiết mỗi 10 phút
             setInterval(fetchWeatherData, 600000);
         });
 
-        // Đồng hồ thời gian thực
         function startRealtimeClock() {
             function updateClock() {
                 const now = new Date();
@@ -226,7 +209,6 @@
             setInterval(updateClock, 1000);
         }
 
-        // Chuyển Tab
         function switchTab(tabName) {
             const trackerTab = document.getElementById('tab-content-tracker');
             const weatherTab = document.getElementById('tab-content-weather');
@@ -236,7 +218,6 @@
             trackerTab.classList.add('hidden');
             weatherTab.classList.add('hidden');
 
-            // Reset style nút
             btnTracker.className = "px-4 py-1.5 rounded-full text-xs font-bold transition-all text-amber-950 hover:bg-white/60";
             btnWeather.className = "px-4 py-1.5 rounded-full text-xs font-bold transition-all text-amber-950 hover:bg-white/60";
 
@@ -249,34 +230,27 @@
             }
         }
 
-        // Logic nhận diện giờ điện cao điểm/thấp điểm
         function checkTariffStatus() {
             const now = new Date();
             const hour = now.getHours();
             const badge = document.getElementById('status-badge');
             const speech = document.getElementById('mascot-speech');
 
-            // 17:00 - 19:00: Cao điểm
             if (hour >= 17 && hour < 19) {
-                badge.className = "absolute -bottom-1 left-1/2 -translate-x-1/2 bg-rose-500 text-white text-[11px] font-extrabold px-4 py-1 rounded-full shadow-md border-2 border-white whitespace-nowrap animate-pulse";
+                badge.className = "absolute -bottom-2 left-1/2 -translate-x-1/2 bg-rose-500 text-white text-[11px] font-extrabold px-4 py-1 rounded-full shadow border-2 border-[#2d3748] whitespace-nowrap animate-pulse";
                 badge.innerText = "🔴 Peak Hours!";
-                speech.innerText = "⚠️ GIỜ CAO ĐIỂM (17h-19h)! Giá điện đang rất cao. Bạn hãy tạm ngưng máy giặt, máy sấy để tiết kiệm ví tiền nhé! 🔥";
-            } 
-            // 23:00 - 08:00: Giờ đêm rẻ nhất
-            else if (hour >= 23 || hour < 8) {
-                badge.className = "absolute -bottom-1 left-1/2 -translate-x-1/2 bg-emerald-500 text-white text-[11px] font-extrabold px-4 py-1 rounded-full shadow-md border-2 border-white whitespace-nowrap";
+                speech.innerText = "⚠️ GIỜ CAO ĐIỂM (17h-19h)! Giá điện đang cao, tạm ngưng máy giặt và lò nướng nhé! 🔥";
+            } else if (hour >= 23 || hour < 8) {
+                badge.className = "absolute -bottom-2 left-1/2 -translate-x-1/2 bg-emerald-500 text-white text-[11px] font-extrabold px-4 py-1 rounded-full shadow border-2 border-[#2d3748] whitespace-nowrap";
                 badge.innerText = "🟢 Night Saver ON";
-                speech.innerText = "🌙 GIỜ ĐÊM RẺ NHẤT! Đây là thời điểm vàng để bật máy giặt, sấy quần áo hoặc sạc xe điện đó! Tận dụng nha! 🌿";
-            } 
-            // Giờ bình thường
-            else {
-                badge.className = "absolute -bottom-1 left-1/2 -translate-x-1/2 bg-amber-500 text-white text-[11px] font-extrabold px-4 py-1 rounded-full shadow-md border-2 border-white whitespace-nowrap";
+                speech.innerText = "🌙 GIỜ ĐÊM RẺ NHẤT! Tranh thủ giặt sấy lúc này để tiết kiệm tiền điện tối đa nha! 🌿";
+            } else {
+                badge.className = "absolute -bottom-2 left-1/2 -translate-x-1/2 bg-amber-500 text-white text-[11px] font-extrabold px-4 py-1 rounded-full shadow border-2 border-[#2d3748] whitespace-nowrap";
                 badge.innerText = "Normal Hours ☀️";
-                speech.innerText = "☕ Khung giờ điện bình thường. Bạn cứ sử dụng thiết bị hợp lý là được nhé! Mình luôn ở đây nhắc nhở bạn! 😊";
+                speech.innerText = "☕ Khung giờ giá bình thường. Sử dụng thiết bị hợp lý và giữ tinh thần thoải mái nhé! 😊";
             }
         }
 
-        // Logic lấy thời tiết thực tế (Open-Meteo API)
         async function fetchWeatherData() {
             const weatherCondition = document.getElementById('weather-condition');
             const weatherTemp = document.getElementById('weather-temp');
@@ -287,67 +261,45 @@
             const outfitIcon1 = document.getElementById('outfit-icon-1');
             const outfitIcon2 = document.getElementById('outfit-icon-2');
 
-            weatherCondition.innerText = "Đang tải...";
-
             try {
-                // Tọa độ Dublin, Ireland (Thay đổi nếu cần)
                 const lat = 53.3498;
                 const lon = -6.2603;
                 const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,precipitation,weather_code,wind_speed_10m&timezone=Europe/Dublin`);
-                
-                if (!res.ok) throw new Error("Không thể lấy dữ liệu thời tiết");
-                
                 const data = await res.json();
                 
                 if (data && data.current) {
-                    const temp = data.current.temperature_2m; // Nhiệt độ
-                    const precip = data.current.precipitation; // Lượng mưa
-                    const wind = data.current.wind_speed_10m; // Tốc độ gió
-                    const wcode = data.current.weather_code; // Mã tình trạng thời tiết
+                    const temp = data.current.temperature_2m;
+                    const precip = data.current.precipitation;
+                    const wind = data.current.wind_speed_10m;
+                    const wcode = data.current.weather_code;
 
-                    // Xử lý logic hiển thị (Giữ nguyên như cũ, chỉ đẹp hơn)
                     let condition = "Trời quang đãng";
                     let icon = "☀️";
-                    let o1 = { icon: "🧥", text: "Áo khoác nhẹ, áo cardigan" };
-                    let o2 = { icon: "👟", text: "Giày thể thao thoải mái" };
+                    let o1 = { icon: "🧥", text: "Áo khoác nhẹ hoặc cardigan" };
+                    let o2 = { icon: "👟", text: "Giày sneaker thoải mái dạo phố" };
 
-                    // Mưa (WMO code > 50)
-                    if (precip > 0 || (wcode >= 50 && wcode < 68) || (wcode >= 80 && wcode < 85)) {
+                    if (precip > 0 || (wcode >= 50 && wcode < 68)) {
                         condition = "Trời có mưa nhẹ";
                         icon = "🌧️";
-                        o1 = { icon: "☔", text: "Áo mưa hoặc ô (dù) chắc chắn" };
-                        o2 = { icon: "👢", text: "Giày chống thấm nước, ủng đi mưa" };
-                    } 
-                    // Mưa to (WMO code > 68)
-                    else if (wcode >= 68 && wcode <= 77) {
-                        condition = "Trời mưa tuyết / Mưa lớn";
-                        icon = "🌨️";
-                        o1 = { icon: "🧥", text: "Áo khoác ấm dày, mũ len" };
-                        o2 = { icon: "👢", text: "Ủng cao cổ, găng tay giữ nhiệt" };
-                    }
-                    // Lạnh (Dưới 8 độ C)
-                    else if (temp < 8) {
+                        o1 = { icon: "☔", text: "Mang theo ô (dù) và áo mưa" };
+                        o2 = { icon: "👢", text: "Giày chống thấm nước" };
+                    } else if (temp < 8) {
                         condition = "Trời rất lạnh";
                         icon = "❄️";
-                        o1 = { icon: "🧤", text: "Găng tay, khăn choàng cổ ấm" };
-                        o2 = { icon: "🧥", text: "Áo phao, áo khoác mùa đông" };
-                    } 
-                    // Se lạnh (8 - 15 độ C)
-                    else if (temp <= 15) {
+                        o1 = { icon: "🧣", text: "Khăn choàng cổ và găng tay ấm" };
+                        o2 = { icon: "🧥", text: "Áo phao hoặc áo khoác mùa đông" };
+                    } else if (temp <= 15) {
                         condition = "Trời se lạnh, lộng gió";
                         icon = "⛅";
-                        o1 = { icon: "🧶", text: "Áo len mỏng, áo khoác ngoài" };
-                        o2 = { icon: "👖", text: "Quần dài, giày bít mũi" };
-                    } 
-                    // Nóng / Dễ chịu (Trên 15 độ C)
-                    else if (temp > 20) {
+                        o1 = { icon: "🧶", text: "Áo len mỏng hoặc áo khoác ngoài" };
+                        o2 = { icon: "👖", text: "Quần dài và giày kín chân" };
+                    } else if (temp > 20) {
                         condition = "Trời ấm áp, dễ chịu";
                         icon = "☀️";
-                        o1 = { icon: "👕", text: "Áo thun, váy mỏng, áo sơ mi" };
-                        o2 = { icon: "🕶️", text: "Kính mát, kem chống nắng" };
+                        o1 = { icon: "👕", text: "Áo thun hoặc áo sơ mi thoáng mát" };
+                        o2 = { icon: "🕶️", text: "Kính mát và dép/giày nhẹ nhàng" };
                     }
 
-                    // Update DOM
                     weatherCondition.innerText = condition;
                     weatherTemp.innerText = `${Math.round(temp)}°C`;
                     weatherWind.innerText = `Gió: ${Math.round(wind)} km/h`;
@@ -361,10 +313,6 @@
             } catch (err) {
                 console.error("Lỗi thời tiết:", err);
                 weatherCondition.innerText = "Lỗi tải thời tiết";
-                weatherTemp.innerText = "Oops!";
-                weatherWind.innerText = "--";
-                outfitText1.innerText = "Vui lòng kiểm tra kết nối mạng";
-                outfitText2.innerText = "Hoặc thử lại sau ít phút";
             }
         }
     </script>
