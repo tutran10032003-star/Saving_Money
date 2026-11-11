@@ -198,10 +198,6 @@
         .eco-character.pose-happy .mascot-arm-right {
             animation: arm-cheer-right 0.6s ease-in-out infinite alternate;
         }
-        /* Đang kiểm tra: nghiêng người nhẹ */
-        .eco-character.pose-check {
-            animation: mascot-check 1.2s ease-in-out infinite;
-        }
         /* Chưa hoàn thành: hơi cúi đầu */
         .eco-character.pose-wait {
             animation: mascot-wait 1.2s ease-in-out infinite;
@@ -209,6 +205,60 @@
         /* Hoàn thành: nhún nhảy */
         .eco-character.pose-dance {
             animation: mascot-dance 0.55s ease-in-out infinite;
+        }
+
+        /* ===== ANIMATIONS CHO TỪNG CÔNG VIỆC ===== */
+        /* Tắt bếp */
+        .eco-character.pose-stove .mascot-arm-right {
+            animation: stove-check 0.8s ease-in-out infinite alternate;
+        }
+        .eco-character.pose-stove {
+            animation: mascot-check 1.2s ease-in-out infinite;
+        }
+        @keyframes stove-check {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(-15deg); }
+        }
+
+        /* Tắt lò nướng */
+        .eco-character.pose-oven .mascot-arm-right {
+            animation: oven-check 0.7s ease-in-out infinite alternate;
+        }
+        @keyframes oven-check {
+            from { transform: rotate(-5deg); }
+            to { transform: rotate(12deg); }
+        }
+
+        /* Tắt đèn */
+        .eco-character.pose-light .mascot-arm-left {
+            animation: light-left 0.6s ease-in-out infinite alternate;
+        }
+        .eco-character.pose-light .mascot-arm-right {
+            animation: light-right 0.6s ease-in-out infinite alternate;
+        }
+        @keyframes light-left {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(-35deg); }
+        }
+        @keyframes light-right {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(25deg); }
+        }
+
+        /* Lau bếp */
+        .eco-character.pose-wipe .mascot-arm-left {
+            animation: wipe-left 0.45s ease-in-out infinite alternate;
+        }
+        .eco-character.pose-wipe .mascot-arm-right {
+            animation: wipe-right 0.45s ease-in-out infinite alternate;
+        }
+        @keyframes wipe-left {
+            from { transform: rotate(-18deg) translateX(-2px); }
+            to { transform: rotate(18deg) translateX(5px); }
+        }
+        @keyframes wipe-right {
+            from { transform: rotate(15deg) translateX(2px); }
+            to { transform: rotate(-15deg) translateX(-5px); }
         }
 
         @keyframes arm-cheer-left {
@@ -571,7 +621,7 @@
 
     </main>
 
-    <!-- CỬA SỔ HỘI THOẠI BÉ MÂY XANH (SAFETY CHAT OVERLAY - DÙNG CHUNG SVG GỐC) -->
+    <!-- CỬA SỔ HỘI THOẠI BÉ MÂY XANH (SAFETY CHAT OVERLAY) -->
     <section id="safety-chat-overlay"
       class="chat-overlay hidden"
       role="dialog"
@@ -851,7 +901,7 @@
             document.getElementById('timer-display-box').classList.add('hidden');
         }
 
-        // Danh sách 4 bước kiểm tra an toàn căn bếp đầy đủ (Tắt bếp, Tắt lò nướng, Tắt đèn, Lau bếp)
+        // Danh sách 4 bước kiểm tra an toàn căn bếp đầy đủ
         const safetySteps = [
           {
             title: "Tắt bếp",
@@ -906,28 +956,37 @@
                     "pose-happy",
                     "pose-check",
                     "pose-wait",
-                    "pose-dance"
+                    "pose-dance",
+                    "pose-stove",
+                    "pose-oven",
+                    "pose-light",
+                    "pose-wipe"
                 );
             }
         }
 
         function setMascotPose(pose) {
-            const mascots = document.querySelectorAll(".eco-character");
+            const container = document.getElementById("chat-mascot");
+            const mascot = container?.querySelector(".eco-character");
 
-            mascots.forEach(mascot => {
-                mascot.classList.remove(
-                    "pose-happy",
-                    "pose-check",
-                    "pose-wait",
-                    "pose-dance"
-                );
+            if (!mascot) return;
 
-                void mascot.offsetWidth;
+            mascot.classList.remove(
+                "pose-happy",
+                "pose-check",
+                "pose-wait",
+                "pose-dance",
+                "pose-stove",
+                "pose-oven",
+                "pose-light",
+                "pose-wipe"
+            );
 
-                if (pose) {
-                    mascot.classList.add("pose-" + pose);
-                }
-            });
+            void mascot.offsetWidth;
+
+            if (pose) {
+                mascot.classList.add("pose-" + pose);
+            }
         }
 
         function openSafetyChat() {
@@ -951,7 +1010,7 @@
 
         function renderSafetyStep() {
           const step = safetySteps[safetyStepIndex];
-          setMascotPose("check");
+          const poses = ["stove", "oven", "light", "wipe"];
 
           const question = document.getElementById("chat-question");
           const scene = document.getElementById("chat-scene");
@@ -982,6 +1041,8 @@
 
             return;
           }
+
+          setMascotPose(poses[safetyStepIndex]);
 
           question.textContent = step.question;
           scene.textContent = step.scene;
