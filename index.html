@@ -266,7 +266,7 @@
             #custom-minutes { min-width: 0; width: 100%; }
             .eco-mascot { width: 180px; height: 180px; }
         }
-        @media (max-width:700px) { .header-inner{display:block;padding:10px 12px}.nav-pills{max-width:100%;display:flex;overflow-x:auto;gap:6px;scrollbar-width:none}.nav-pills::-webkit-scrollbar{display:none}.nav-btn{flex:0 0 auto;min-width:max-content;padding:10px 12px;font-size:13px}main{padding-left:12px!important;padding-right:12px!important}.vintage-panel{padding:16px!important;min-width:0}input,select,textarea{max-width:100%;min-width:0}#dashboard-col-chart{max-width:100%;overflow:hidden} } 
+        @media (max-width:700px) { .header-inner{display:block;padding:10px 12px}.nav-pills{max-width:100%;display:flex;overflow-x:auto;gap:6px;scrollbar-width:none}.nav-pills::-webkit-scrollbar{display:none}.nav-btn{flex:0 0 auto;min-width:max-content;padding:10px 12px;font-size:13px}main{padding-left:12px!important;padding-right:12px!important}.vintage-panel{padding:16px!important;min-width:0}input,select,textarea{max-width:100%;min-width:0}#dashboard-col-chart{max-width:100%;overflow:visible} } 
         /* Dashboard sizing and phone layout */
         .dashboard-energy-layout { align-items: stretch; }
         .dashboard-total-bill-card { min-height: 0; }
@@ -294,7 +294,11 @@
             #report-subtab-dashboard .dashboard-bands-scroll { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
             #report-subtab-dashboard .dashboard-bands-scroll table { min-width: 330px; }
             #report-subtab-dashboard #dash-trend-info { max-width: 44%; white-space: normal; text-align: center; line-height: 1.2; }
-            #report-subtab-dashboard #dashboard-col-chart { min-width: 0; }
+            #report-subtab-dashboard #dashboard-col-chart { min-width: 420px; height: 260px; }
+            #report-subtab-dashboard #dashboard-chart-scroll { max-width: 100%; }
+            #report-subtab-dashboard #dashboard-euro-axis,
+            #report-subtab-dashboard #dashboard-kwh-axis { font-size: 10px; }
+            #report-subtab-dashboard #dashboard-x-labels { min-width: 520px; font-size: 11px; }
         }
         @media (max-width: 380px) {
             #report-subtab-dashboard .grid.grid-cols-\[auto_minmax\(0\,1fr\)_auto\] { gap: 4px; }
@@ -672,12 +676,14 @@
                             <p class="text-xs font-bold text-[#5c4738]">📈 Bill (€ - Columns) & kWh Usage (Lines)</p>
                             <span id="dash-trend-info" class="text-[10px] bg-[#f0e6d6] px-2.5 py-0.5 rounded-full font-bold text-[#5c4738]">Auto Average Calculated</span>
                         </div>
-                        <div class="grid grid-cols-[auto_minmax(0,1fr)_auto] gap-2 items-stretch">
+                        <div id="dashboard-chart-scroll" class="w-full overflow-x-auto" style="-webkit-overflow-scrolling:touch">
+                        <div class="grid grid-cols-[42px_minmax(420px,1fr)_46px] gap-2 items-stretch min-w-[520px] sm:min-w-0">
                             <div id="dashboard-euro-axis" class="flex flex-col justify-between text-[9px] font-bold text-[#9b6844] py-2 text-right" aria-hidden="true"></div>
-                            <div id="dashboard-col-chart" class="min-w-0 h-52 relative">
+                            <div id="dashboard-col-chart" class="min-w-0 h-64 relative">
                                 <!-- SVG combo chart: € bars + kWh line -->
                             </div>
-                            <div id="dashboard-kwh-axis" class="flex flex-col justify-between text-[9px] font-bold text-[#64849b] py-2 text-left" aria-hidden="true"></div>
+                            <div id="dashboard-kwh-axis" class="flex flex-col justify-between text-[10px] font-bold text-[#64849b] py-2 text-left" aria-label="Usage axis in kilowatt-hours"></div>
+                        </div>
                         </div>
                         <div id="dashboard-x-labels" class="flex justify-around text-[10px] font-bold text-[#7a6452] px-2"></div>
                         <div class="flex flex-wrap justify-center gap-x-5 gap-y-1 text-[10px] font-bold text-[#5c4738] pt-1">
@@ -1647,7 +1653,9 @@
                 return;
             }
 
-            const W = 760, H = 208, left = 12, right = 12, top = 12, bottom = 20;
+            const isPhoneChart = window.matchMedia && window.matchMedia("(max-width: 700px)").matches;
+            const W = isPhoneChart ? Math.max(420, Math.round(chartContainer.clientWidth || 420)) : 760;
+            const H = isPhoneChart ? 260 : 208, left = 12, right = 12, top = 16, bottom = 24;
             const plotH = H - top - bottom;
             const maxBill = Math.max(1, ...records.map(r => Number(r.bill) || 0)) * 1.12;
             const maxKwh = Math.max(1, ...records.map(r => Number(r.kwh) || 0)) * 1.12;
