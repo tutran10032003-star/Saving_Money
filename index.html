@@ -1397,24 +1397,13 @@
             updateBillBands();return{good:Object.keys(good).length,derived};
         }
         async function runBillOCR(){
-            const files=[billImageFiles.total,billImageFiles.breakdown].filter(Boolean),status=_bbEl("bill-ocr-status"),button=_bbEl("bill-ocr-button");
-            if(!files.length){status.textContent="Chưa có ảnh để đọc";return;}
+            const file=billImageFiles.total,status=_bbEl("bill-ocr-status"),button=_bbEl("bill-ocr-button");
+            if(!file){status.textContent="Chưa có ảnh hoá đơn";return;}
             if(!window.Tesseract){status.textContent="OCR chưa tải được — nhập tay nhé";alert("OCR chưa tải được. M vẫn có thể nhập tay.");return;}
             button.disabled=true;button.textContent="⏳ Đang đọc ảnh...";status.textContent="Đang xử lý ảnh…";let worker=null;
             try{
-                worker=await Tesseract.createWorker("eng");let raw="",totalResult=null,breakdownResult=null;
-                for(let i=0;i<files.length;i++){
-                    const result=await worker.recognize(files[i]),part=result.data.text||"";
-                    raw+="\n--- "+(files[i]===billImageFiles.total?"TOTAL BILL":"ENERGY BREAKDOWN")+" ---\n"+part+"\n";
-                    if(files[i]===billImageFiles.total)totalResult={file:files[i],text:part,words:result.data.words||[]};
-                    if(files[i]===billImageFiles.breakdown)breakdownResult={file:files[i],text:part,words:result.data.words||[]};
-                }
-                window.currentBillDonutSegments=null;
-                if(breakdownResult){
-                    const detected=await detectDonutSegments(breakdownResult.file),host=_bbEl("bill-donut-redrawn");
-                    if(detected.ok){window.currentBillDonutSegments=detected.segments;if(host)renderRebuiltDonut(host,detected.segments,"");}
-                    else if(host)host.innerHTML='<p class="text-[10px] text-[#9b6655] text-center">Chưa nhận diện được vòng donut rõ ràng. Hãy thử ảnh rõ hơn hoặc lưu ảnh gốc.</p>';
-                }
+                worker=await Tesseract.createWorker("eng");
+                const result=await worker.recognize(file),raw=result.data.text||"",words=result.data.words||[];
                 const parsed=parseBillOcrText(raw);
                 if(parsed.amount!==undefined)_bbEl("edit-bill-amount").value=parsed.amount.toFixed(2);
                 if(parsed.kwh!==undefined)_bbEl("edit-bill-kwh").value=parsed.kwh;
@@ -1422,16 +1411,16 @@
                 if(parsed.end)_bbEl("edit-bill-end").value=parsed.end;
                 if(parsed.month)_bbEl("edit-bill-month").value=parsed.month;else if(parsed.start){const d=new Date(parsed.start+"T12:00:00");_bbEl("edit-bill-month").value=d.toLocaleString("en",{month:"long"});if(!parsed.year)_bbEl("edit-bill-year").value=d.getFullYear();}
                 if(parsed.year)_bbEl("edit-bill-year").value=parsed.year;
+                const expectedTotal=parsed.kwh!==undefined?parsed.kwh:Number(_bbEl("edit-bill-kwh")&&_bbEl("edit-bill-kwh").value);
+                const found=await readBillBandsFromImage(worker,file,words,raw,expectedTotal);
+                const bandResult=applyBillBands(found),sum=BILL_BANDS.reduce((n,[key])=>n+(validBillBand(found[key])?found[key].kwh:0),0),kwhInput=_bbEl("edit-bill-kwh");
+                if(bandResult.good===3&&kwhInput&&kwhInput.value==="")kwhInput.value=sum;
+                updateBillBands();
                 let bandMessage="";
-                if(totalResult){
-                    const found=await readBillBandsFromImage(worker,totalResult.file,totalResult.words,totalResult.text),result=applyBillBands(found),sum=BILL_BANDS.reduce((n,[key])=>n+(validBillBand(found[key])?found[key].kwh:0),0),kwhInput=_bbEl("edit-bill-kwh");
-                    if(result.good===3&&kwhInput&&kwhInput.value==="")kwhInput.value=sum;
-                    updateBillBands();
-                    if(result.good===3)bandMessage=" ✓ Đọc được bảng Day/Peak/Night.";
-                    else if(result.derived)bandMessage=" Bảng khung giờ: dòng "+result.derived+" được suy ra từ tổng kWh — kiểm tra lại nhé.";
-                    else if(result.good>0)bandMessage=" Đọc được một phần bảng khung giờ — kiểm tra và nhập nốt.";
-                    else bandMessage=" Chưa đọc được bảng khung giờ. Cần ảnh trang chi tiết bill hoặc nhập tay 3 số kWh nhé.";
-                }
+                if(bandResult.good===3)bandMessage=" ✓ Đọc được bảng Day/Peak/Night.";
+                else if(bandResult.derived)bandMessage=" Một dòng được suy ra từ tổng kWh — kiểm tra lại nhé.";
+                else if(bandResult.good>0)bandMessage=" Đọc được một phần bảng khung giờ — kiểm tra và nhập nốt.";
+                else bandMessage=" Chưa đọc được đủ 3 dòng Day/Peak/Night. M thử ảnh rõ phần Usage Unit hoặc nhập tay nhé.";
                 updateBillPerPerson();
                 const filled=[parsed.start,parsed.end,parsed.amount!==undefined,parsed.kwh!==undefined,parsed.month,parsed.year].filter(Boolean).length;
                 status.textContent=(filled?"Đã tự điền "+filled+" trường.":"Chưa tự điền được trường nào.")+bandMessage;
@@ -1446,10 +1435,9 @@
             if(categories.some(c=>!c.label||(c.percent!==null&&(!Number.isFinite(c.percent)||c.percent<0||c.percent>100)))){alert("Kiểm tra tên nhóm và tỷ lệ (0–100%).");return;}
             const populated=categories.filter(c=>c.percent!==null),sum=populated.reduce((n,c)=>n+c.percent,0);
             if(populated.length&&Math.abs(sum-100)>.11){alert("Nếu đã nhập EST, tổng tỷ lệ cần bằng 100%. Nếu chưa EST được, cứ để trống và lưu ảnh gốc.");return;}
-            let imageData="";if(billImageFiles.breakdown){try{const bitmap=await createImageBitmap(billImageFiles.breakdown),scale=Math.min(1,1200/Math.max(bitmap.width,bitmap.height)),canvas=document.createElement("canvas");canvas.width=Math.round(bitmap.width*scale);canvas.height=Math.round(bitmap.height*scale);canvas.getContext("2d").drawImage(bitmap,0,0,canvas.width,canvas.height);bitmap.close();imageData=canvas.toDataURL("image/jpeg",.9);}catch(e){console.warn("Could not compress original donut image",e);}}
-            const id=month.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")+"-"+year,old=billingRecords.find(x=>x.id===id),bands=readBillBands().filter(b=>b.kwh!==null),record={id,month,year,bill:amount,kwh,startDate:start,endDate:end,categories:populated.length?categories.filter(c=>c.percent!==null):[],donutSegments:billImageFiles.breakdown?(window.currentBillDonutSegments||[]):(old?.donutSegments||[]),bands:bands.length?bands:(old?.bands||[]),breakdownImageDataUrl:imageData||old?.breakdownImageDataUrl||"",savings:"€"+(kwh*.08).toFixed(2)+" cr"};
+            const id=month.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")+"-"+year,old=billingRecords.find(x=>x.id===id),bands=readBillBands().filter(b=>b.kwh!==null),record={id,month,year,bill:amount,kwh,startDate:start,endDate:end,categories:populated.length?categories.filter(c=>c.percent!==null):[],bands:bands.length?bands:(old?.bands||[]),savings:"€"+(kwh*.08).toFixed(2)+" cr"};
             const idx=billingRecords.findIndex(x=>x.id===id);if(idx>=0)billingRecords[idx]={...billingRecords[idx],...record};else billingRecords.push(record);
-            try{saveUserData();}catch(e){alert("Không đủ bộ nhớ để lưu ảnh donut. M thử ảnh nhỏ hơn nhé.");return;}
+            try{saveUserData();}catch(e){alert("Không đủ bộ nhớ để lưu hoá đơn. M thử xoá bớt dữ liệu cũ nhé.");return;}
             renderBillingListing();populateDashboardFilters();updateDashboardView();updateBillPerPerson();document.getElementById("upload-status-text").textContent="✓ Đã lưu hóa đơn và cập nhật Dashboard.";alert("💾 Đã lưu hóa đơn!");
         }
         function renderBillingListing() {
