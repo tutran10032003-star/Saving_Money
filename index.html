@@ -1328,21 +1328,32 @@
             if(!Number.isFinite(columnX))return {};
             const ws=(words||[]).filter(w=>w&&w.bbox&&w.text),out={};
             const defaults={day:.3719,peak:.3968,night:.1954};
+            const clean=t=>String(t).replace(/[OoQ](?=\\d)/g,"0").replace(/[Il|](?=\\d)/g,"1").replace(/[Ss](?=\\d)/g,"5");
             for(const key of ["day","peak","night"]){
                 const label=ws.find(w=>new RegExp("^"+key+"$","i").test(billWordText(w)));
                 if(!label)continue;
-                const rowH=Math.max(7,label.bbox.y1-label.bbox.y0),cy=billWordY(label),tol=Math.max(rowH*1.9,H*.012);
+                const rowH=Math.max(7,label.bbox.y1-label.bbox.y0),cy=billWordY(label),tol=Math.max(rowH*2.4,H*.018);
                 const row=ws.filter(w=>Math.abs(billWordY(w)-cy)<=tol);
-                const numeric=row.filter(w=>{
-                    const t=billWordText(w).replace(/[Oo](?=\d)/g,"0").replace(/[Il|](?=\d)/g,"1");
-                    return /^\d{2,5}$/.test(t)&&Math.abs(billWordX(w)-columnX)<=W*.16;
-                }).sort((a,b)=>Math.abs(billWordX(a)-columnX)-Math.abs(billWordX(b)-columnX));
-                if(!numeric.length)continue;
-                const kwh=Number(numeric[0].text.replace(/[Oo]/g,"0").replace(/[Il|]/g,"1"));
-                if(!Number.isFinite(kwh)||kwh<0)continue;
-                const rateWord=row.find(w=>/^0[.,]\d{4}$/.test(billWordText(w).replace(/[Oo]/g,"0")));
-                const amountWord=row.find(w=>/^\d{1,5}[.,]\d{2}$/.test(billWordText(w).replace(/,/g,".")));
-                const price=rateWord?Number(rateWord.text.replace(",",".").replace(/[Oo]/g,"0")):defaults[key];
+                const corridor=W*.28;
+                const digitWords=row.map(w=>({w,t:clean(billWordText(w)).replace(/[.,]/g,"")})).filter(x=>/^\\d{1,4}$/.test(x.t)&&Math.abs(billWordX(x.w)-columnX)<=corridor);
+                const candidates=digitWords.map(x=>({value:Number(x.t),x:billWordX(x.w),source:x.t}));
+                const ordered=digitWords.slice().sort((a,b)=>a.w.bbox.x0-b.w.bbox.x0);
+                for(let i=0;i<ordered.length;i++){
+                    let text=ordered[i].t,last=ordered[i].w.bbox.x1;
+                    for(let j=i+1;j<ordered.length&&j<i+4;j++){
+                        const next=ordered[j],gap=next.w.bbox.x0-last;
+                        if(gap>Math.max(rowH*.8,10))break;
+                        text+=next.t;last=next.w.bbox.x1;
+                        if(text.length>=2&&text.length<=5)candidates.push({value:Number(text),x:(ordered[i].w.bbox.x0+last)/2,source:text});
+                    }
+                }
+                const best=candidates.filter(c=>Number.isFinite(c.value)&&c.value>=10&&c.value<=99999)
+                    .sort((a,b)=>Math.abs(a.x-columnX)-Math.abs(b.x-columnX))[0];
+                if(!best)continue;
+                const kwh=best.value;
+                const rateWord=row.find(w=>/^0[.,]\\d{4}$/.test(clean(billWordText(w)).replace(/[.,]/g,".")));
+                const amountWord=row.find(w=>/^\\d{1,5}[.,]\\d{2}$/.test(billWordText(w).replace(/,/g,".")));
+                const price=rateWord?Number(clean(rateWord.text).replace(",", ".")):defaults[key];
                 const amount=amountWord?Number(amountWord.text.replace(",", ".")):Math.round(kwh*price*100)/100;
                 if(Number.isFinite(price)&&price>0)out[key]={kwh,price,amount};
             }
@@ -1415,35 +1426,45 @@
             updateBillBands();return{good:Object.keys(good).length,derived};
         }
         async function runBillOCR(){
-            const file=billImageFiles.total,status=_bbEl("bill-ocr-status"),button=_bbEl("bill-ocr-button");
-            if(!file){status.textContent="Chưa có ảnh hoá đơn";return;}
+            const totalFile=billImageFiles.total,tableFile=billImageFiles.breakdown,status=_bbEl("bill-ocr-status"),button=_bbEl("bill-ocr-button");
+            if(!totalFile&&!tableFile){status.textContent="Chưa có ảnh hoá đơn";return;}
             if(!window.Tesseract){status.textContent="OCR chưa tải được — nhập tay nhé";alert("OCR chưa tải được. M vẫn có thể nhập tay.");return;}
-            button.disabled=true;button.textContent="⏳ Đang đọc ảnh...";status.textContent="Đang xử lý ảnh…";let worker=null;
+            button.disabled=true;button.textContent="⏳ Đang đọc 2 ảnh...";status.textContent="Đang xử lý ảnh A và B…";let worker=null;
             try{
                 worker=await Tesseract.createWorker("eng");
-                const result=await worker.recognize(file),raw=result.data.text||"",words=result.data.words||[];
-                const parsed=parseBillOcrText(raw);
-                if(parsed.amount!==undefined)_bbEl("edit-bill-amount").value=parsed.amount.toFixed(2);
-                if(parsed.kwh!==undefined)_bbEl("edit-bill-kwh").value=parsed.kwh;
-                if(parsed.start)_bbEl("edit-bill-start").value=parsed.start;
-                if(parsed.end)_bbEl("edit-bill-end").value=parsed.end;
-                if(parsed.month)_bbEl("edit-bill-month").value=parsed.month;else if(parsed.start){const d=new Date(parsed.start+"T12:00:00");_bbEl("edit-bill-month").value=d.toLocaleString("en",{month:"long"});if(!parsed.year)_bbEl("edit-bill-year").value=d.getFullYear();}
-                if(parsed.year)_bbEl("edit-bill-year").value=parsed.year;
-                const expectedTotal=parsed.kwh!==undefined?parsed.kwh:Number(_bbEl("edit-bill-kwh")&&_bbEl("edit-bill-kwh").value);
-                const found=await readBillBandsFromImage(worker,file,words,raw,expectedTotal);
-                const bandResult=applyBillBands(found),sum=BILL_BANDS.reduce((n,[key])=>n+(validBillBand(found[key])?found[key].kwh:0),0),kwhInput=_bbEl("edit-bill-kwh");
-                if(bandResult.good===3&&kwhInput&&kwhInput.value==="")kwhInput.value=sum;
-                updateBillBands();
+                let parsed={},totalRaw="",tableRaw="",tableWords=[];
+                if(totalFile){
+                    const totalResult=await worker.recognize(totalFile);totalRaw=totalResult.data.text||"";
+                    parsed=parseBillOcrText(totalRaw);
+                    if(parsed.amount!==undefined)_bbEl("edit-bill-amount").value=parsed.amount.toFixed(2);
+                    if(parsed.kwh!==undefined)_bbEl("edit-bill-kwh").value=parsed.kwh;
+                    if(parsed.start)_bbEl("edit-bill-start").value=parsed.start;
+                    if(parsed.end)_bbEl("edit-bill-end").value=parsed.end;
+                    if(parsed.month)_bbEl("edit-bill-month").value=parsed.month;else if(parsed.start){const d=new Date(parsed.start+"T12:00:00");_bbEl("edit-bill-month").value=d.toLocaleString("en",{month:"long"});if(!parsed.year)_bbEl("edit-bill-year").value=d.getFullYear();}
+                    if(parsed.year)_bbEl("edit-bill-year").value=parsed.year;
+                }
+                let bandResult={good:0,derived:null},found={};
+                if(tableFile){
+                    const tableResult=await worker.recognize(tableFile);tableRaw=tableResult.data.text||"";tableWords=tableResult.data.words||[];
+                    const expectedTotal=Number(_bbEl("edit-bill-kwh")&&_bbEl("edit-bill-kwh").value);
+                    found=await readBillBandsFromImage(worker,tableFile,tableWords,tableRaw,expectedTotal);
+                    bandResult=applyBillBands(found);
+                    const sum=BILL_BANDS.reduce((n,[key])=>n+(validBillBand(found[key])?found[key].kwh:0),0),kwhInput=_bbEl("edit-bill-kwh");
+                    if(bandResult.good===3&&kwhInput&&kwhInput.value==="")kwhInput.value=sum;
+                }else{
+                    applyBillBands({});
+                }
+                updateBillBands();updateBillPerPerson();
                 let bandMessage="";
-                if(bandResult.good===3)bandMessage=" ✓ Đọc được bảng Day/Peak/Night.";
+                if(!tableFile)bandMessage=" Chưa có ảnh B để đọc bảng Day/Peak/Night.";
+                else if(bandResult.good===3)bandMessage=" ✓ Đã đọc bảng Day/Peak/Night từ ảnh B.";
                 else if(bandResult.derived)bandMessage=" Một dòng được suy ra từ tổng kWh — kiểm tra lại nhé.";
-                else if(bandResult.good>0)bandMessage=" Đọc được một phần bảng khung giờ — kiểm tra và nhập nốt.";
-                else bandMessage=" Chưa đọc được đủ 3 dòng Day/Peak/Night. M thử ảnh rõ phần Usage Unit hoặc nhập tay nhé.";
-                updateBillPerPerson();
+                else if(bandResult.good>0)bandMessage=" Đọc được một phần bảng ở ảnh B — kiểm tra và nhập nốt.";
+                else bandMessage=" Chưa đọc đủ 3 dòng ở ảnh B. Kiểm tra cột Usage Unit / Meter Number hoặc nhập tay.";
                 const filled=[parsed.start,parsed.end,parsed.amount!==undefined,parsed.kwh!==undefined,parsed.month,parsed.year].filter(Boolean).length;
-                status.textContent=(filled?"Đã tự điền "+filled+" trường.":"Chưa tự điền được trường nào.")+bandMessage;
-            }catch(error){console.error(error);status.textContent="OCR gặp lỗi — vui lòng nhập tay.";}
-            finally{if(worker)await worker.terminate();button.disabled=false;button.textContent="✨ Đọc lại ảnh";}
+                status.textContent=(totalFile?(filled?"Ảnh A: đã tự điền "+filled+" trường.":"Ảnh A: chưa tự điền được trường nào."):"Ảnh A chưa được tải.")+" "+bandMessage;
+            }catch(error){console.error(error);status.textContent="OCR gặp lỗi — vui lòng kiểm tra ảnh và nhập tay.";}
+            finally{if(worker)await worker.terminate();button.disabled=false;button.textContent="✨ Đọc lại 2 ảnh";}
         }
         async function saveEditedBill(){
             const month=document.getElementById("edit-bill-month").value.trim(),year=Number(document.getElementById("edit-bill-year").value),amount=Number(document.getElementById("edit-bill-amount").value),kwh=Number(document.getElementById("edit-bill-kwh").value),start=document.getElementById("edit-bill-start").value,end=document.getElementById("edit-bill-end").value;
