@@ -340,7 +340,7 @@
             <p id="mascot-speech" class="text-xs text-[#5c4738] font-medium bg-[#f5ede2] p-3 rounded-2xl border-1.5 border-[#5c4738] w-full mt-3 leading-relaxed">"Let's save energy together! Complete daily tasks to level me up! 🤍"</p>
         </div>
 
-        <div id="tab-content-weather" class="hidden space-y-6"><section class="vintage-panel p-5 space-y-4"><div class="flex items-center justify-between gap-3"><div><h2 class="font-bold text-lg">🌦️ Dublin Weather</h2><p class="text-sm text-[#7a6452]">Current conditions and wind</p></div><button onclick="loadDublinWeather()" class="rounded-xl px-3 py-2 bg-[#8c7355] text-white font-bold">Refresh</button></div><div id="weather-card" class="rounded-2xl border-2 border-[#d8c7b0] bg-[#edf1ef] p-5 text-center"><div id="weather-icon" class="text-5xl">🌥️</div><p id="weather-temp" class="text-4xl font-black">--°C</p><p id="weather-description" class="font-bold">Loading weather…</p><div class="grid grid-cols-2 gap-3 mt-4"><div class="rounded-xl bg-white/80 p-3"><p class="text-xs">Wind</p><b id="weather-wind">-- km/h</b></div><div class="rounded-xl bg-white/80 p-3"><p class="text-xs">Feels like</p><b id="weather-feels">--°C</b></div></div></div><p id="weather-advice" class="rounded-xl bg-[#f5ede2] p-4 text-sm">Bé Mây is checking Dublin weather…</p><p class="text-xs text-[#7a6452]">Data from Open-Meteo · Free API, no key required.</p></section></div>
+        <div id="tab-content-weather" class="hidden space-y-6"><section class="vintage-panel p-5 space-y-4"><div class="flex items-center justify-between gap-3"><div><h2 class="font-bold text-lg">🌦️ Dublin Weather</h2><p class="text-sm text-[#7a6452]">Current conditions and wind</p></div><button onclick="loadDublinWeather()" class="rounded-xl px-3 py-2 bg-[#8c7355] text-white font-bold">Refresh</button></div><div id="weather-card" class="rounded-2xl border-2 border-[#d8c7b0] bg-[#edf1ef] p-5 text-center"><div id="weather-icon" class="text-5xl">🌥️</div><p id="weather-temp" class="text-4xl font-black">--°C</p><p id="weather-description" class="font-bold">Loading weather…</p><div class="grid grid-cols-2 gap-3 mt-4"><div class="rounded-xl bg-white/80 p-3"><p class="text-xs">Wind</p><b id="weather-wind">-- km/h</b></div><div class="rounded-xl bg-white/80 p-3"><p class="text-xs">Feels like</p><b id="weather-feels">--°C</b></div></div></div><p id="weather-advice" class="rounded-xl bg-[#f5ede2] p-4 text-sm">Bé Mây is checking Dublin weather…</p><section class="rounded-2xl border-2 border-[#d8c7b0] bg-[#fffaf2] p-4 space-y-3"><div><h3 class="font-bold text-lg">👗 What to wear today</h3><p id="outfit-summary" class="text-sm text-[#7a6452]">Outfit ideas based on Dublin’s live weather.</p></div><div id="outfit-suggestions" class="grid gap-3"><article class="rounded-xl bg-white p-3"><b>🧥 Everyday layer</b><p class="text-sm">Checking the weather for outfit ideas…</p></article></div><p class="text-xs text-[#7a6452]">Suggestions are flexible — choose what feels comfortable.</p></section><p class="text-xs text-[#7a6452]">Data from Open-Meteo · Free API, no key required.</p></section></div>
         <!-- TAB 1: TARIFF & 3 ECO TASKS -->
         <div id="tab-content-tracker" class="space-y-6">
             <div class="vintage-panel p-6 space-y-4">
@@ -1525,7 +1525,58 @@
             updateMascotLevel();
             closeSafetyChat();
         }
-        async function loadDublinWeather(){const d=document.getElementById('weather-description');if(!d)return;d.textContent='Loading Dublin weather…';try{const u='https://api.open-meteo.com/v1/forecast?latitude=53.3498&longitude=-6.2603&current=temperature_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m&wind_speed_unit=kmh&timezone=Europe%2FDublin';const r=await fetch(u);if(!r.ok)throw Error();const c=(await r.json()).current,code=c.weather_code;const st=code===0?['☀️','Clear']:([1,2,3].includes(code)?['🌤️','Cloudy']:([45,48].includes(code)?['🌫️','Fog']:([51,53,55,56,57,61,63,65,66,67,80,81,82].includes(code)?['🌧️','Rain']:([71,73,75,77,85,86].includes(code)?['❄️','Snow']:['⛈️','Showers']))));document.getElementById('weather-icon').textContent=st[0];document.getElementById('weather-temp').textContent=Math.round(c.temperature_2m)+'°C';d.textContent=st[1];document.getElementById('weather-wind').textContent=Math.round(c.wind_speed_10m)+' km/h';document.getElementById('weather-feels').textContent=Math.round(c.apparent_temperature)+'°C';document.getElementById('weather-card').style.background=c.temperature_2m<7?'#e8edf3':c.temperature_2m<14?'#edf1ef':c.temperature_2m<21?'#f4f0e5':'#f7eadc';document.getElementById('weather-advice').textContent=c.precipitation>0?'☔ Rain now: air-dry laundry indoors with ventilation.':c.wind_speed_10m>30?'💨 Windy: check for draughts around doors and windows.':c.temperature_2m<10?'🧣 Chilly: close curtains at dusk and heat only rooms in use.':'🌿 Mild: use daylight and switch off unused lights.';}catch(e){d.textContent='Could not load weather. Try again later.';}}
+        async function loadDublinWeather(){
+            const d=document.getElementById('weather-description');if(!d)return;
+            d.textContent='Loading Dublin weather…';
+            try{
+                const u='https://api.open-meteo.com/v1/forecast?latitude=53.3498&longitude=-6.2603&current=temperature_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m&wind_speed_unit=kmh&timezone=Europe%2FDublin';
+                const r=await fetch(u);if(!r.ok)throw Error('Weather request failed');
+                const c=(await r.json()).current,code=c.weather_code,temp=c.temperature_2m,feels=c.apparent_temperature,wind=c.wind_speed_10m;
+                const rain=[51,53,55,56,57,61,63,65,66,67,80,81,82].includes(code)||c.precipitation>0;
+                const snow=[71,73,75,77,85,86].includes(code);
+                const fog=[45,48].includes(code);
+                const storm=[95,96,99].includes(code);
+                const st=code===0?['☀️','Clear']:([1,2,3].includes(code)?['🌤️','Cloudy']:(fog?['🌫️','Fog']:(rain?['🌧️','Rain']:(snow?['❄️','Snow']:(storm?['⛈️','Thunderstorm']:['🌦️','Showers'])))));
+                document.getElementById('weather-icon').textContent=st[0];
+                document.getElementById('weather-temp').textContent=Math.round(temp)+'°C';
+                d.textContent=st[1];
+                document.getElementById('weather-wind').textContent=Math.round(wind)+' km/h';
+                document.getElementById('weather-feels').textContent=Math.round(feels)+'°C';
+                document.getElementById('weather-card').style.background=temp<7?'#e8edf3':temp<14?'#edf1ef':temp<21?'#f4f0e5':'#f7eadc';
+                document.getElementById('weather-advice').textContent=rain?'☔ Rain around: dry clothes indoors with ventilation and keep windows closed against showers.':wind>30?'💨 Quite windy: secure outdoor items and check for draughts.':feels<10?'🧣 Chilly: close curtains at dusk and heat only rooms in use.':'🌿 Mild: make the most of daylight and switch off unused lights.';
+                const outfit=document.getElementById('outfit-suggestions'),summary=document.getElementById('outfit-summary');
+                const ideas=[];
+                if(snow||feels<5){
+                    summary.textContent='Cold conditions — prioritise warm layers and a coat that blocks the wind.';
+                    ideas.push(['🧥 Warm & cosy','Puffer jacket + chunky knit or fleece + jeans/thermal leggings + warm socks and boots.','Beanie or scarf if you want extra warmth.']);
+                    ideas.push(['🥾 Practical layers','Wool jumper + insulated coat + lined trousers + waterproof boots.','Great for a longer walk or commute.']);
+                    if(rain||snow)ideas.push(['🌧️ Wet-weather layer','Water-resistant insulated jacket + warm base layer + waterproof shoes.','Use a hood; an umbrella may be awkward in strong wind.']);
+                }else if(rain){
+                    summary.textContent='Wet weather — stay waterproof; add warmth depending on how cold it feels.';
+                    ideas.push(['🌂 Rain-ready casual','Light raincoat + hoodie or knit + straight-leg trousers + water-resistant trainers.','Compact umbrella for lighter winds.']);
+                    ideas.push(['🧥 Smart rainy-day','Waterproof trench/mac coat + fine jumper + jeans or tailored trousers + ankle boots.','A neat option for town or work.']);
+                    if(wind>25)ideas.push(['💨 Windy & rainy','Hooded waterproof shell + warm mid-layer + sturdy waterproof shoes.','Choose the hood over an umbrella when gusts are strong.']);
+                }else if(feels<12){
+                    summary.textContent='Cool or chilly — a warm outer layer will make going outside more comfortable.';
+                    ideas.push(['🧸 Cosy everyday','Puffer jacket + sweatshirt or knit + jeans + trainers or boots.','A beanie is optional for colder ears.']);
+                    ideas.push(['🧥 Smart layers','Wool coat or trench + cardigan + tailored trousers + ankle boots.','Easy to dress up without getting too warm indoors.']);
+                    ideas.push(['🎒 Casual sporty','Fleece or hoodie + lightweight padded jacket + comfy trousers.','Good for walking around Dublin.']);
+                }else if(feels<19){
+                    summary.textContent='Mild weather — use removable layers so you can adjust indoors and outside.';
+                    ideas.push(['☁️ Relaxed layers','Hoodie or cardigan + denim jacket + jeans + comfortable trainers.','Take off a layer when you warm up.']);
+                    ideas.push(['🧥 Easy smart','Light trench or overshirt + T-shirt or thin knit + trousers + loafers/trainers.','A versatile day-to-day outfit.']);
+                }else{
+                    summary.textContent='Milder weather — choose breathable fabrics and lighter layers.';
+                    ideas.push(['🌿 Light & comfy','Breathable T-shirt or blouse + relaxed trousers or skirt + trainers.','Cotton and linen feel comfortable.']);
+                    ideas.push(['🕶️ Sunny-day casual','Light shirt + shorts or a skirt + comfortable shoes.','Sunglasses if it is bright; bring a light layer for later.']);
+                }
+                if(wind>30&&!rain&&!snow)ideas.push(['💨 Wind-proof option','Close-fitting layers + a light windproof jacket + secure shoes.','Skip loose hats and choose a snug hood.']);
+                outfit.innerHTML=ideas.map(([title,desc,note])=>'<article class="rounded-xl bg-white p-3 border border-[#eadfce]"><b>'+title+'</b><p class="text-sm mt-1">'+desc+'</p><p class="text-xs text-[#8c7355] mt-1">✨ '+note+'</p></article>').join('');
+            }catch(e){
+                d.textContent='Could not load weather. Try again later.';
+                const summary=document.getElementById('outfit-summary');if(summary)summary.textContent='Outfit suggestions will appear when weather data is available.';
+            }
+        }
     </script>
 </body>
 </html>
