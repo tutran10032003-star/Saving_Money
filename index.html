@@ -452,7 +452,7 @@
         </div>
 
         <!-- TAB 3: WEATHER & OUTFIT -->
-        <div id="tab-content-weather" class="hidden space-y-6">
+        <div id="tab-content-weather" data-no-auto-translate="true" class="hidden space-y-6">
             <div class="vintage-panel p-5 space-y-4">
                 <div class="flex items-center justify-between gap-2 border-b-2 border-[#5c4738] pb-2.5">
                     <div>
@@ -1648,7 +1648,7 @@
             const totalBill=recs.reduce((sum,record)=>sum+(Number(record.bill)||0),0);
             const billValue=_bbEl("dashboard-total-bill-value"),billLabel=_bbEl("dashboard-total-bill-label");
             if(billValue)billValue.textContent=recs.length?"€"+totalBill.toFixed(2):"—";
-            if(billLabel)billLabel.textContent="Total Electricity Bill · "+recs.length+" "+(recs.length===1?"month":"months");
+            if(billLabel)billLabel.textContent=localStorage.getItem("eco_buddy_language")==="vi" ? "Tổng tiền điện · "+recs.length+" tháng" : "Total Electricity Bill · "+recs.length+" "+(recs.length===1?"month":"months");
             if(!body)return;
             const totals={day:{kwh:0,eur:0,count:0},peak:{kwh:0,eur:0,count:0},night:{kwh:0,eur:0,count:0}};
             let has=false,completeBills=0;
@@ -2459,6 +2459,7 @@ function applyAppLanguage(){
  const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);
  let node;
  while((node=walker.nextNode())){
+  if(node.parentElement && node.parentElement.closest("[data-no-auto-translate]")) continue;
   const next=translateText(node.nodeValue,target);
   if(next!==node.nodeValue)node.nodeValue=next;
  }
