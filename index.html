@@ -1,6 +1,6 @@
 
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -33,8 +33,6 @@
             min-height: 100vh;
             min-height: 100dvh;
             overflow-x: hidden;
-
-            /* Chừa chỗ cho header cố định */
             padding-top: var(--header-height, 75px);
         }
 
@@ -59,7 +57,7 @@
             box-shadow: 2px 2px 0 #5c4738;
         }
 
-        /* HEADER LUÔN CỐ ĐỊNH TRÊN CÙNG */
+        /* FIXED HEADER */
         header {
             position: fixed !important;
             top: 0 !important;
@@ -67,7 +65,6 @@
             right: 0 !important;
             z-index: 10000 !important;
             width: 100%;
-
             background: rgba(255,253,250,.97);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
@@ -119,7 +116,6 @@
             box-shadow: 2px 2px 0 #5c4738;
         }
 
-        /* Khoảng cách khi cuộn đến nội dung */
         #tab-content-tracker,
         #tab-content-calendar,
         #tab-content-weather,
@@ -507,10 +503,10 @@
                 </div>
             </div>
 
-            <nav class="nav-pills" aria-label="Điều hướng chính">
+            <nav class="nav-pills" aria-label="Main navigation">
                 <button onclick="switchTab('tracker')" id="tab-btn-tracker" class="nav-btn active">⚡ Tariff</button>
                 <button onclick="switchTab('weather')" id="tab-btn-weather" class="nav-btn">🌦️ Weather</button>
-                <button onclick="switchTab('checklist')" id="tab-btn-checklist" class="nav-btn">🍳 Nấu Nướng</button>
+                <button onclick="switchTab('checklist')" id="tab-btn-checklist" class="nav-btn">🍳 Cooking</button>
                 <button onclick="switchTab('calendar')" id="tab-btn-calendar" class="nav-btn">📅 Calendar</button>
             </nav>
         </div>
@@ -568,19 +564,15 @@
                             <path d="M83 165 Q62 161 52 179 Q42 193 51 205 Q62 217 77 198 Q83 190 89 183" fill="#fff9ed" stroke="#75604d" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
                         </g>
 
-                        <!-- RIGHT ARM + CORD + PLUG: SAME MOVING GROUP -->
+                        <!-- RIGHT ARM + CORD + PLUG -->
                         <g class="mascot-arm-right">
                             <path d="M220 163 Q244 158 249 136" fill="none" stroke="#75604d" stroke-width="18" stroke-linecap="round"/>
                             <path d="M220 163 Q244 158 249 136" fill="none" stroke="#fff9ed" stroke-width="12" stroke-linecap="round"/>
-
-                            <!-- Hand -->
                             <ellipse cx="249" cy="136" rx="8" ry="7" fill="#fff9ed" stroke="#75604d" stroke-width="3"/>
 
-                            <!-- Visible cable connected to hand and plug -->
                             <path d="M249 136 Q258 132 263 124 Q270 116 264 108 Q260 103 258 99" fill="none" stroke="#75604d" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
                             <path d="M249 136 Q258 132 263 124 Q270 116 264 108 Q260 103 258 99" fill="none" stroke="#b7a78b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
 
-                            <!-- Plug -->
                             <g transform="translate(227 67) rotate(13 25 40)">
                                 <rect x="12" y="24" width="42" height="49" rx="12" fill="#b7a78b" stroke="#75604d" stroke-width="4"/>
                                 <rect x="19" y="3" width="7" height="28" rx="3" fill="#75604d"/>
@@ -618,22 +610,22 @@
                 </div>
             </div>
 
-            <h3 class="font-bold text-[#4a3b32] text-base mt-2">Bé Mây Xanh</h3>
-            <p class="text-[11px] text-[#7a6452] font-semibold italic mt-0.5">🌿 Có chiếc pin nhỏ trên người, tai là lá cây, luôn đồng hành cùng bạn.</p>
-            <p id="mascot-speech" class="text-xs text-[#5c4738] font-medium bg-[#f5ede2] p-3 rounded-2xl border-1.5 border-[#5c4738] w-full mt-3 leading-relaxed">"Tiết kiệm điện cùng mình nhé! 🤍"</p>
+            <h3 class="font-bold text-[#4a3b32] text-base mt-2">Eco Buddy</h3>
+            <p class="text-[11px] text-[#7a6452] font-semibold italic mt-0.5">🌿 A little battery, leafy ears, and a friendly companion by your side.</p>
+            <p id="mascot-speech" class="text-xs text-[#5c4738] font-medium bg-[#f5ede2] p-3 rounded-2xl border-1.5 border-[#5c4738] w-full mt-3 leading-relaxed">"Let's save energy together! 🤍"</p>
         </div>
 
         <!-- TAB 1: TARIFF -->
         <div id="tab-content-tracker" class="space-y-6">
             <div class="vintage-panel p-5 space-y-4">
                 <h2 class="font-bold text-[#4a3b32] text-base flex items-center gap-2 border-b-2 border-[#5c4738] pb-2.5">
-                    <span>⚡</span> Biểu Giá Điện Trong Ngày (SST Saver+)
+                    <span>⚡</span> Daily Electricity Tariff (SST Saver+)
                 </h2>
 
                 <div class="space-y-3 text-xs sm:text-sm">
                     <div class="vint-card p-3.5 flex items-start justify-between gap-3 bg-[#f2f7ec]">
                         <div class="flex-1 min-w-0">
-                            <p class="font-extrabold text-[#3b4a32]">☀️ Giờ Bình Thường</p>
+                            <p class="font-extrabold text-[#3b4a32]">☀️ Day Rate</p>
                             <p class="text-[#5c6a52] text-[11px] mt-0.5">08:00 - 17:00 & 19:00 - 23:00</p>
                         </div>
                         <span class="font-black text-[#3b4a32] bg-[#d9e8cc] px-2.5 py-1 rounded-xl border border-[#5c4738] whitespace-nowrap">€0.3719/kWh</span>
@@ -641,16 +633,16 @@
 
                     <div class="p-3.5 rounded-2xl bg-[#fbe8e6] border-2 border-[#5c4738] flex items-start justify-between gap-3 shadow-[2px_2px_0px_#5c4738]">
                         <div class="flex-1 min-w-0">
-                            <p class="font-extrabold text-[#5c3232]">🔴 Giờ Cao Điểm</p>
-                            <p class="text-[#7c4d4d] text-[11px] mt-0.5">17:00 - 19:00 (Hạn chế thiết bị lớn)</p>
+                            <p class="font-extrabold text-[#5c3232]">🔴 Peak Rate</p>
+                            <p class="text-[#7c4d4d] text-[11px] mt-0.5">17:00 - 19:00 (Limit the use of high-energy appliances)</p>
                         </div>
                         <span class="font-black text-[#5c3232] bg-[#f5d0cd] px-2.5 py-1 rounded-xl border border-[#5c4738] whitespace-nowrap">€0.3968/kWh</span>
                     </div>
 
                     <div class="vint-card p-3.5 flex items-start justify-between gap-3 bg-[#eaf2f8]">
                         <div class="flex-1 min-w-0">
-                            <p class="font-extrabold text-[#32455c]">🟢 Giờ Đêm (Rẻ Nhất)</p>
-                            <p class="text-[#4e647d] text-[11px] mt-0.5">23:00 - 08:00 sáng</p>
+                            <p class="font-extrabold text-[#32455c]">🟢 Night Rate (Cheapest)</p>
+                            <p class="text-[#4e647d] text-[11px] mt-0.5">23:00 - 08:00</p>
                         </div>
                         <span class="font-black text-[#32455c] bg-[#cfe2f3] px-2.5 py-1 rounded-xl border border-[#5c4738] whitespace-nowrap">€0.1954/kWh</span>
                     </div>
@@ -658,12 +650,12 @@
             </div>
 
             <div class="vintage-panel p-5 space-y-3">
-                <h3 class="font-bold text-[#4a3b32] text-sm flex items-center gap-2"><span>💡</span> Nhắc Nhở & Mẹo Xanh Hàng Ngày:</h3>
+                <h3 class="font-bold text-[#4a3b32] text-sm flex items-center gap-2"><span>💡</span> Daily Reminders & Eco Tips:</h3>
                 <ul class="text-xs space-y-2 text-[#5c4738] font-medium">
-                    <li class="bg-[#fffaf4] px-3 py-2.5 rounded-xl border border-[#5c4738]/30">💡 <strong>Tắt đèn:</strong> Nhớ tắt đèn phòng & cầu thang khi không sử dụng.</li>
-                    <li class="bg-[#fffaf4] px-3 py-2.5 rounded-xl border border-[#5c4738]/30">🔒 <strong>Kiểm tra cửa:</strong> Khóa cửa kỹ chưa và đã đóng cửa nhà bếp nữa.</li>
-                    <li class="bg-[#fffaf4] px-3 py-2.5 rounded-xl border border-[#5c4738]/30">🔌 <strong>Rút phích cắm:</strong> Ngắt thiết bị chờ (tivi, lò vi sóng) khi không dùng.</li>
-                    <li class="bg-[#fffaf4] px-3 py-2.5 rounded-xl border border-[#5c4738]/30">🚿 <strong>Bình nước nóng:</strong> Tắt ngay bình nóng lạnh sau khi tắm xong.</li>
+                    <li class="bg-[#fffaf4] px-3 py-2.5 rounded-xl border border-[#5c4738]/30">💡 <strong>Turn off the lights:</strong> Remember to switch off room and hallway lights when not in use.</li>
+                    <li class="bg-[#fffaf4] px-3 py-2.5 rounded-xl border border-[#5c4738]/30">🔒 <strong>Check the doors:</strong> Make sure the doors are locked and the kitchen door is closed.</li>
+                    <li class="bg-[#fffaf4] px-3 py-2.5 rounded-xl border border-[#5c4738]/30">🔌 <strong>Unplug devices:</strong> Unplug standby appliances (TV, microwave) when not in use.</li>
+                    <li class="bg-[#fffaf4] px-3 py-2.5 rounded-xl border border-[#5c4738]/30">🚿 <strong>Water heater:</strong> Remember to switch off the water heater after showering.</li>
                 </ul>
             </div>
         </div>
@@ -672,22 +664,22 @@
         <div id="tab-content-calendar" class="hidden space-y-6">
             <div class="vintage-panel p-5 space-y-4">
                 <div class="flex items-center justify-between border-b-2 border-[#5c4738] pb-2.5 gap-2">
-                    <h2 class="font-bold text-[#4a3b32] text-base flex items-center gap-2"><span>📅</span> Lịch Đổ Rác & Việc Nhà</h2>
+                    <h2 class="font-bold text-[#4a3b32] text-base flex items-center gap-2"><span>📅</span> Waste Collection & Chores</h2>
                     <div class="flex items-center gap-2 flex-shrink-0">
                         <button onclick="changeCalendarMonth(-1)" class="px-2.5 py-1 bg-[#f0e6d6] rounded-lg border border-[#5c4738] text-xs font-bold">◀</button>
-                        <span id="calendar-month-label" class="text-xs font-extrabold text-[#5c4738] min-w-[100px] text-center">Tháng...</span>
+                        <span id="calendar-month-label" class="text-xs font-extrabold text-[#5c4738] min-w-[100px] text-center">Month...</span>
                         <button onclick="changeCalendarMonth(1)" class="px-2.5 py-1 bg-[#f0e6d6] rounded-lg border border-[#5c4738] text-xs font-bold">▶</button>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-7 gap-1 text-center text-[11px] font-extrabold text-[#7a6452] mb-2">
-                    <span>T2</span><span>T3</span><span>T4</span><span>T5</span><span>T6</span><span>T7</span><span>CN</span>
+                    <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
                 </div>
 
                 <div id="calendar-days" class="grid grid-cols-7 gap-1.5"></div>
 
                 <div class="vint-card p-3 bg-[#fff5f0] text-center">
-                    <p id="next-trash-reminder" class="text-xs font-bold text-[#9c413b]">Đang tính toán lịch đổ rác...</p>
+                    <p id="next-trash-reminder" class="text-xs font-bold text-[#9c413b]">Calculating the next waste collection day...</p>
                 </div>
             </div>
         </div>
@@ -697,23 +689,23 @@
             <div class="vintage-panel p-5 space-y-4">
                 <div class="flex items-center justify-between gap-2 border-b-2 border-[#5c4738] pb-2.5">
                     <div class="min-w-0">
-                        <h3 class="font-bold text-[#4a3b32] text-base flex items-center gap-2"><span>🌦️</span> Thời Tiết Dublin & Gợi Ý Mặc Đồ</h3>
-                        <p class="text-xs text-[#7a6452] mt-0.5">Dữ liệu thực tế cập nhật liên tục.</p>
+                        <h3 class="font-bold text-[#4a3b32] text-base flex items-center gap-2"><span>🌦️</span> Dublin Weather & Outfit Suggestions</h3>
+                        <p class="text-xs text-[#7a6452] mt-0.5">Live weather updates.</p>
                     </div>
-                    <button onclick="fetchWeatherData()" class="flex-shrink-0 bg-[#f0e6d6] hover:bg-[#e4d8c5] text-[#4a3b32] text-xs font-bold px-3 py-2 rounded-xl border-1.5 border-[#5c4738] shadow-[2px_2px_0px_#5c4738] transition">🔄 Làm Mới</button>
+                    <button onclick="fetchWeatherData()" class="flex-shrink-0 bg-[#f0e6d6] hover:bg-[#e4d8c5] text-[#4a3b32] text-xs font-bold px-3 py-2 rounded-xl border-1.5 border-[#5c4738] shadow-[2px_2px_0px_#5c4738] transition">🔄 Refresh</button>
                 </div>
 
                 <div id="weather-card-bg" class="bg-gradient-to-br from-[#8fa8be] to-[#6a849b] text-white p-5 rounded-2xl shadow-[3px_3px_0px_#5c4738] border-2 border-[#5c4738] flex items-center justify-between gap-3">
                     <div class="space-y-1 min-w-0">
-                        <p id="weather-condition" class="text-sm font-extrabold">Đang tải thời tiết...</p>
+                        <p id="weather-condition" class="text-sm font-extrabold">Loading weather...</p>
                         <p id="weather-temp" class="text-3xl font-black">--°C</p>
-                        <p id="weather-wind" class="text-[11px] text-[#e2ecf5] font-semibold">Gió: -- km/h</p>
+                        <p id="weather-wind" class="text-[11px] text-[#e2ecf5] font-semibold">Wind: -- km/h</p>
                     </div>
                     <div id="weather-icon-lg" class="text-6xl drop-shadow-md flex-shrink-0">☁️</div>
                 </div>
 
                 <div class="bg-[#f5ede2] border-1.5 border-[#5c4738] p-4 rounded-2xl space-y-3 shadow-[2px_2px_0px_#5c4738]">
-                    <h4 class="font-bold text-[#4a3b32] text-xs sm:text-sm flex items-center gap-2"><span>👕</span> Gợi ý trang phục khi ra ngoài:</h4>
+                    <h4 class="font-bold text-[#4a3b32] text-xs sm:text-sm flex items-center gap-2"><span>👕</span> What to Wear Outdoors:</h4>
 
                     <div class="grid grid-cols-1 gap-2.5">
                         <div class="bg-white p-3 rounded-xl border-1.5 border-[#5c4738] text-xs text-[#4a3b32] flex items-center gap-2.5 shadow-sm">
@@ -738,7 +730,7 @@
                                     </svg>
                                 </div>
                             </div>
-                            <span id="outfit-text-1" class="font-medium">Khăn choàng cổ và găng tay ấm</span>
+                            <span id="outfit-text-1" class="font-medium">A warm scarf and gloves</span>
                         </div>
 
                         <div class="bg-white p-3 rounded-xl border-1.5 border-[#5c4738] text-xs text-[#4a3b32] flex items-center gap-2.5 shadow-sm">
@@ -761,7 +753,7 @@
                                     <path d="M23 87 Q50 94 77 87 L76 94 Q50 99 24 94Z" fill="#C5D3B5" stroke="#75634F" stroke-width="1.8"/>
                                 </svg>
                             </div>
-                            <span id="outfit-text-2" class="font-medium">Áo phao mùa đông (Xám/Xanh ấm áp)</span>
+                            <span id="outfit-text-2" class="font-medium">A warm winter puffer jacket</span>
                         </div>
                     </div>
                 </div>
@@ -772,37 +764,37 @@
         <div id="tab-content-checklist" class="hidden space-y-6">
             <div class="vintage-panel p-5 space-y-4">
                 <h2 class="font-bold text-[#4a3b32] text-base flex items-center gap-2 border-b-2 border-[#5c4738] pb-2.5">
-                    <span>🍳</span> Hẹn Giờ Nấu Nướng & Kiểm Tra An Toàn
+                    <span>🍳</span> Cooking Timer & Kitchen Safety Checklist
                 </h2>
 
                 <div class="vint-card p-4 space-y-3 bg-white" id="timer-setup-box">
-                    <p class="text-xs font-bold text-[#4a3b32]">⏱️ Chọn thời gian nấu (hoặc nhập số phút tùy ý):</p>
+                    <p class="text-xs font-bold text-[#4a3b32]">⏱️ Choose a cooking time or enter your own:</p>
 
                     <div class="timer-buttons-grid">
-                        <button onclick="setTimerMinutes(15)" class="px-3.5 py-1.5 bg-[#f5ede2] hover:bg-[#e8dac7] text-[#4a3b32] rounded-xl text-xs font-bold border border-[#5c4738] transition">15 phút</button>
-                        <button onclick="setTimerMinutes(30)" class="px-3.5 py-1.5 bg-[#f5ede2] hover:bg-[#e8dac7] text-[#4a3b32] rounded-xl text-xs font-bold border border-[#5c4738] transition">30 phút</button>
-                        <button onclick="setTimerMinutes(45)" class="px-3.5 py-1.5 bg-[#f5ede2] hover:bg-[#e8dac7] text-[#4a3b32] rounded-xl text-xs font-bold border border-[#5c4738] transition">45 phút</button>
-                        <button onclick="setTimerMinutes(60)" class="px-3.5 py-1.5 bg-[#f5ede2] hover:bg-[#e8dac7] text-[#4a3b32] rounded-xl text-xs font-bold border border-[#5c4738] transition">60 phút</button>
+                        <button onclick="setTimerMinutes(15)" class="px-3.5 py-1.5 bg-[#f5ede2] hover:bg-[#e8dac7] text-[#4a3b32] rounded-xl text-xs font-bold border border-[#5c4738] transition">15 min</button>
+                        <button onclick="setTimerMinutes(30)" class="px-3.5 py-1.5 bg-[#f5ede2] hover:bg-[#e8dac7] text-[#4a3b32] rounded-xl text-xs font-bold border border-[#5c4738] transition">30 min</button>
+                        <button onclick="setTimerMinutes(45)" class="px-3.5 py-1.5 bg-[#f5ede2] hover:bg-[#e8dac7] text-[#4a3b32] rounded-xl text-xs font-bold border border-[#5c4738] transition">45 min</button>
+                        <button onclick="setTimerMinutes(60)" class="px-3.5 py-1.5 bg-[#f5ede2] hover:bg-[#e8dac7] text-[#4a3b32] rounded-xl text-xs font-bold border border-[#5c4738] transition">60 min</button>
                     </div>
 
                     <div class="flex items-center gap-2 pt-1">
-                        <input type="number" id="custom-minutes" placeholder="Nhập số phút tùy ý..." min="1" max="180" class="flex-1 px-3 py-2 rounded-xl border-1.5 border-[#5c4738] text-xs bg-[#fffaf4]">
-                        <button onclick="startCustomTimer()" class="px-4 py-2 bg-[#8c7355] text-white text-xs font-bold rounded-xl border-1.5 border-[#5c4738] shadow-[2px_2px_0px_#5c4738] transition whitespace-nowrap">Bắt Đầu</button>
+                        <input type="number" id="custom-minutes" placeholder="Enter custom minutes..." min="1" max="180" class="flex-1 px-3 py-2 rounded-xl border-1.5 border-[#5c4738] text-xs bg-[#fffaf4]">
+                        <button onclick="startCustomTimer()" class="px-4 py-2 bg-[#8c7355] text-white text-xs font-bold rounded-xl border-1.5 border-[#5c4738] shadow-[2px_2px_0px_#5c4738] transition whitespace-nowrap">Start</button>
                     </div>
                 </div>
 
                 <div id="timer-display-box" class="hidden p-4 rounded-2xl bg-[#f5ede2] border-1.5 border-[#5c4738] text-center space-y-3 shadow-[2px_2px_0px_#5c4738]">
                     <div>
-                        <p class="text-xs font-bold text-[#5c3232]">⏳ Đang đếm ngược thời gian nấu nướng...</p>
+                        <p class="text-xs font-bold text-[#5c3232]">⏳ Cooking countdown...</p>
                         <p id="countdown-text" class="text-3xl font-black text-[#4a3b32] mt-1">00:00</p>
                     </div>
 
                     <div class="bg-white p-3 rounded-xl border border-[#5c4738]/40 flex items-center justify-between gap-2 text-xs">
-                        <span class="font-bold text-[#4a3b32] flex items-center gap-1.5">🚪 Bạn đã đóng cửa nhà bếp chưa?</span>
+                        <span class="font-bold text-[#4a3b32] flex items-center gap-1.5">🚪 Have you closed the kitchen door?</span>
                         <input type="checkbox" id="kitchen-door-checkbox" class="w-4 h-4 accent-[#8c7355] cursor-pointer">
                     </div>
 
-                    <button onclick="stopTimer()" class="px-3 py-2 bg-[#fbe8e6] hover:bg-[#f5d0cd] text-[#5c3232] rounded-lg text-xs font-bold border border-[#5c4738]">Hủy Hẹn Giờ</button>
+                    <button onclick="stopTimer()" class="px-3 py-2 bg-[#fbe8e6] hover:bg-[#f5d0cd] text-[#5c3232] rounded-lg text-xs font-bold border border-[#5c4738]">Cancel Timer</button>
                 </div>
             </div>
         </div>
@@ -815,7 +807,7 @@
             <div class="flex justify-between items-center border-b-2 border-[#d8c7b0] pb-3 gap-2">
                 <div>
                     <p class="text-xs font-bold text-[#8c7355]">ECO-BUDDY HOME MANAGER</p>
-                    <h2 class="text-lg font-extrabold">Cùng Bé Mây kiểm tra bếp nhé!</h2>
+                    <h2 class="text-lg font-extrabold">Let's check the kitchen together!</h2>
                 </div>
                 <button onclick="closeSafetyChat()" class="rounded-full border border-[#8c7355] px-3 py-2 font-bold flex-shrink-0">✕</button>
             </div>
@@ -823,20 +815,20 @@
             <div class="flex flex-col items-center py-3 gap-2">
                 <div id="chat-mascot" class="eco-mascot" style="width:140px;height:140px;"></div>
                 <div class="chat-bubble">
-                    <p class="font-extrabold text-sm mb-0.5 text-[#5c4738]">Bé Mây Xanh ☁️</p>
-                    <p id="chat-question" class="text-sm font-medium text-[#4a3b32]">Hết giờ rồi! Cùng mình kiểm tra căn bếp nha!</p>
+                    <p class="font-extrabold text-sm mb-0.5 text-[#5c4738]">Eco Buddy ☁️</p>
+                    <p id="chat-question" class="text-sm font-medium text-[#4a3b32]">Time's up! Let's check the kitchen together!</p>
                 </div>
             </div>
 
             <div id="chat-scene" class="chat-scene text-center text-5xl py-3 flex items-center justify-center shadow-inner">🔥</div>
 
             <div class="bg-[#f5ede2] rounded-2xl p-3.5 mb-3 mt-3 border border-[#d8c7b0]">
-                <p id="chat-action-title" class="font-extrabold text-sm mb-0.5 text-[#5c4738]">Tắt bếp</p>
+                <p id="chat-action-title" class="font-extrabold text-sm mb-0.5 text-[#5c4738]">Turn off the cooker</p>
                 <p id="chat-action-hint" class="text-xs text-[#7a6452] font-medium"></p>
             </div>
 
             <div id="chat-actions" class="space-y-2"></div>
-            <p id="chat-progress" class="text-xs text-[#8c7355] text-center font-bold mt-3">Bước 1 / 4</p>
+            <p id="chat-progress" class="text-xs text-[#8c7355] text-center font-bold mt-3">Step 1 / 5</p>
         </div>
     </section>
 
@@ -847,18 +839,13 @@
 
     <!-- JAVASCRIPT -->
     <script>
-        /* TỰ ĐỘNG ĐO CHIỀU CAO HEADER */
+        /* AUTOMATIC HEADER HEIGHT */
         function updateHeaderHeight() {
             const header = document.querySelector("header");
-
             if (!header) return;
 
             const height = header.offsetHeight;
-
-            document.documentElement.style.setProperty(
-                "--header-height",
-                height + "px"
-            );
+            document.documentElement.style.setProperty("--header-height", height + "px");
         }
 
         window.addEventListener('DOMContentLoaded', () => {
@@ -872,7 +859,6 @@
             setInterval(checkTariffStatus, 30000);
             setInterval(fetchWeatherData, 600000);
 
-            /* Theo dõi chiều cao header khi màn hình thay đổi */
             if ("ResizeObserver" in window) {
                 const header = document.querySelector("header");
 
@@ -886,7 +872,6 @@
             }
         });
 
-        /* Cập nhật lại chiều cao khi xoay màn hình hoặc resize */
         window.addEventListener("resize", updateHeaderHeight);
         window.addEventListener("orientationchange", () => {
             setTimeout(updateHeaderHeight, 150);
@@ -908,6 +893,7 @@
                 const clockEl = document.getElementById('realtime-clock');
                 if (clockEl) clockEl.innerText = `| 🕒 ${now.toLocaleTimeString()}`;
             }
+
             updateClock();
             setInterval(updateClock, 1000);
         }
@@ -949,15 +935,15 @@
             if (hour >= 17 && hour < 19) {
                 badge.className = "absolute -bottom-2 left-1/2 -translate-x-1/2 bg-[#bc6c25] text-white text-[11px] font-extrabold px-4 py-1 rounded-full shadow border-2 border-[#5c4738] whitespace-nowrap animate-pulse";
                 badge.innerText = "🔴 Peak Hours!";
-                speech.innerText = "⚠️ Giờ cao điểm rồi! Tạm ngưng thiết bị lớn nha!";
+                speech.innerText = "⚠️ It's peak time! Try to avoid using high-energy appliances.";
             } else if (hour >= 23 || hour < 8) {
                 badge.className = "absolute -bottom-2 left-1/2 -translate-x-1/2 bg-[#87a96b] text-white text-[11px] font-extrabold px-4 py-1 rounded-full shadow border-2 border-[#5c4738] whitespace-nowrap";
                 badge.innerText = "🟢 Night Saver ON";
-                speech.innerText = "🌙 Giờ đêm rẻ nhất, tranh thủ giặt sấy nào!";
+                speech.innerText = "🌙 It's the cheapest rate period. A great time to do your laundry!";
             } else {
                 badge.className = "absolute -bottom-2 left-1/2 -translate-x-1/2 bg-[#d4a373] text-white text-[11px] font-extrabold px-4 py-1 rounded-full shadow border-2 border-[#5c4738] whitespace-nowrap";
                 badge.innerText = "Normal Hours ☀️";
-                speech.innerText = "Tiết kiệm điện cùng mình nhé! 🤍";
+                speech.innerText = "Let's save energy together! 🤍";
             }
         }
 
@@ -972,7 +958,7 @@
 
             if (!label || !grid) return;
 
-            label.textContent = new Intl.DateTimeFormat("vi-VN", {
+            label.textContent = new Intl.DateTimeFormat("en-IE", {
                 month: "long",
                 year: "numeric"
             }).format(calendarCursor);
@@ -1001,7 +987,7 @@
                     (isToday ? " ring-2 ring-[#87a96b] ring-offset-1" : "");
 
                 cell.innerHTML = `<span>${day}</span>${isTuesday ? '<span class="text-[8px]">🗑️</span>' : ""}`;
-                cell.title = isTuesday ? "Thứ Ba - Ngày đổ rác" : isToday ? "Hôm nay" : "";
+                cell.title = isTuesday ? "Tuesday - Waste collection day" : isToday ? "Today" : "";
                 grid.appendChild(cell);
             }
 
@@ -1014,7 +1000,7 @@
 
             const reminder = document.getElementById("next-trash-reminder");
             if (reminder) {
-                reminder.textContent = `Lần nhắc đổ rác tiếp theo: Thứ Ba, ${next.toLocaleDateString("vi-VN")}`;
+                reminder.textContent = `Next waste collection reminder: Tuesday, ${next.toLocaleDateString("en-IE")}`;
             }
         }
 
@@ -1039,7 +1025,7 @@
             const mins = Number(minsInput);
 
             if (!Number.isInteger(mins) || mins < 1 || mins > 180) {
-                alert("Vui lòng nhập số phút từ 1 đến 180!");
+                alert("Please enter a number of minutes between 1 and 180.");
                 return;
             }
 
@@ -1082,39 +1068,47 @@
             document.getElementById('timer-display-box').classList.add('hidden');
         }
 
-        /* SAFETY CHAT - GIỮ NGUYÊN LUỒNG HỎI ĐÁP */
+        /* SAFETY CHAT - FIVE-STEP CHECKLIST */
         const safetySteps = [
             {
-                title: "Tắt bếp",
-                question: "Bạn đã tắt bếp chưa?",
-                hint: "Kiểm tra núm bếp đã về vị trí OFF nhé!",
+                title: "Turn off the cooker",
+                question: "Have you turned off the cooker?",
+                hint: "Make sure the cooker knobs are turned to the OFF position.",
                 scene: "🔥",
-                yes: "Tuyệt vời! Bé Mây vui quá!",
-                no: "Mình cùng kiểm tra núm bếp nhé!"
+                yes: "Wonderful! Eco Buddy is so happy!",
+                no: "Let's check the cooker knobs together!"
             },
             {
-                title: "Tắt lò nướng (Oven)",
-                question: "Bạn đã tắt lò nướng chưa?",
-                hint: "Kiểm tra nút nguồn và màn hình của oven nhé.",
+                title: "Turn off the cooker hood",
+                question: "Have you turned off the cooker hood?",
+                hint: "Make sure the cooker hood is switched off and the fan has stopped running.",
+                scene: "🌬️",
+                yes: "The cooker hood is off. Great job!",
+                no: "Let's check and switch off the cooker hood!"
+            },
+            {
+                title: "Turn off the oven",
+                question: "Have you turned off the oven?",
+                hint: "Check the power button and display to make sure the oven is off.",
                 scene: "🎛️",
-                yes: "Oven đã được tắt. Giỏi lắm!",
-                no: "Bé Mây đợi bạn kiểm tra nha!"
+                yes: "The oven is off. Well done!",
+                no: "I'll wait while you check the oven!"
             },
             {
-                title: "Tắt đèn bếp",
-                question: "Đèn khu vực bếp đã tắt chưa?",
-                hint: "Đảm bảo đã tắt hết đèn không dùng nhé!",
+                title: "Turn off the kitchen lights",
+                question: "Have you turned off the kitchen lights?",
+                hint: "Make sure all unused kitchen lights are switched off.",
                 scene: "💡",
-                yes: "Căn nhà đã tiết kiệm thêm điện rồi!",
-                no: "Mình đi tắt đèn thôi nào!"
+                yes: "Your home has saved even more energy!",
+                no: "Let's go and turn off the lights!"
             },
             {
-                title: "Lau bếp",
-                question: "Bạn đã lau sạch mặt bếp chưa?",
-                hint: "Đợi bếp nguội và dùng khăn ẩm lau sạch nhé.",
+                title: "Wipe the cooker",
+                question: "Have you cleaned the cooker surface?",
+                hint: "Wait until the cooker has cooled down, then wipe it with a damp cloth.",
                 scene: "🧽",
-                yes: "Bếp sạch bong! Bé Mây tự hào về bạn!",
-                no: "Mình cùng dọn dẹp nhé!"
+                yes: "A sparkling clean cooker! Eco Buddy is proud of you!",
+                no: "Let's clean up the kitchen together!"
             }
         ];
 
@@ -1169,28 +1163,28 @@
             const scene = document.getElementById("chat-scene");
             const actions = document.getElementById("chat-actions");
 
-            /* Kiểm tra hoàn thành trước khi lấy step */
+            /* Check completion before accessing the current step */
             if (safetyStepIndex >= safetySteps.length) {
                 setMascotPose("dance");
 
-                question.textContent = "Hoàn thành rồi! Cảm ơn bạn đã cùng Bé Mây giữ an toàn cho căn bếp nhé! 💚";
+                question.textContent = "All done! Thank you for helping Eco Buddy keep the kitchen safe! 💚";
                 scene.textContent = "🌱✨💚";
 
-                document.getElementById("chat-action-title").textContent = "Hoàn thành kiểm tra!";
-                document.getElementById("chat-action-hint").textContent = "Bé Mây rất tự hào về bạn!";
+                document.getElementById("chat-action-title").textContent = "Safety check completed!";
+                document.getElementById("chat-action-hint").textContent = "Eco Buddy is so proud of you!";
 
                 actions.innerHTML = `
                     <button class="chat-choice text-center" onclick="closeSafetyChat()">
-                        💚 Xong rồi, quay lại ứng dụng
+                        💚 Done! Back to the app
                     </button>
                 `;
 
-                document.getElementById("chat-progress").textContent = "4 / 4 · Hoàn thành";
+                document.getElementById("chat-progress").textContent = "5 / 5 · Completed";
                 return;
             }
 
             const step = safetySteps[safetyStepIndex];
-            const poses = ["stove","oven","light","wipe"];
+            const poses = ["stove", null, "oven", "light", "wipe"];
 
             setMascotPose(poses[safetyStepIndex]);
             question.textContent = step.question;
@@ -1198,14 +1192,14 @@
 
             document.getElementById("chat-action-title").textContent = step.title;
             document.getElementById("chat-action-hint").textContent = step.hint;
-            document.getElementById("chat-progress").textContent = `Bước ${safetyStepIndex + 1} / 4`;
+            document.getElementById("chat-progress").textContent = `Step ${safetyStepIndex + 1} / 5`;
 
             actions.innerHTML = `
                 <button class="chat-choice" onclick="answerSafetyStep(true)">
-                    ☑️ Rồi, mình đã làm xong!
+                    ☑️ Yes, I've done it!
                 </button>
                 <button class="chat-choice" onclick="answerSafetyStep(false)">
-                    ⏳ Chưa, để mình làm ngay
+                    ⏳ Not yet, I'll do it now
                 </button>
             `;
         }
@@ -1220,10 +1214,10 @@
 
                 document.getElementById("chat-actions").innerHTML = `
                     <button class="chat-choice" onclick="answerSafetyStep(true)">
-                        💚 Mình đã làm xong, tiếp tục nhé!
+                        💚 I've done it! Let's continue.
                     </button>
                     <button class="chat-choice" onclick="closeSafetyChat()">
-                        Để mình làm sau
+                        I'll do it later
                     </button>
                 `;
                 return;
@@ -1232,7 +1226,7 @@
             setMascotPose("happy");
             document.getElementById("chat-question").textContent = step.yes;
 
-            /* Tự động chuyển câu sau 1.1 giây */
+            /* Automatically move to the next question after 1.1 seconds */
             setTimeout(() => {
                 safetyStepIndex++;
                 renderSafetyStep();
@@ -1254,7 +1248,7 @@
                     `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,precipitation,weather_code,wind_speed_10m&timezone=Europe/Dublin`
                 );
 
-                if (!res.ok) throw new Error("Không thể tải dữ liệu thời tiết");
+                if (!res.ok) throw new Error("Unable to load weather data.");
 
                 const data = await res.json();
 
@@ -1264,45 +1258,45 @@
                     const wind = data.current.wind_speed_10m;
                     const wcode = data.current.weather_code;
 
-                    let condition = "Trời quang đãng";
+                    let condition = "Clear skies";
                     let icon = "☀️";
 
                     if (precip > 0 || (wcode >= 50 && wcode < 68)) {
-                        condition = "Trời có mưa nhẹ";
+                        condition = "Light rain";
                         icon = "🌧️";
                     } else if (temp < 8) {
-                        condition = "Trời rất lạnh";
+                        condition = "Very cold";
                         icon = "❄️";
                     } else if (temp <= 15) {
-                        condition = "Trời se lạnh, lộng gió";
+                        condition = "Cool and breezy";
                         icon = "⛅";
                     } else if (temp > 20) {
-                        condition = "Trời ấm áp, dễ chịu";
+                        condition = "Warm and pleasant";
                         icon = "☀️";
                     }
 
                     weatherCondition.innerText = condition;
                     weatherTemp.innerText = `${Math.round(temp)}°C`;
-                    weatherWind.innerText = `Gió: ${Math.round(wind)} km/h`;
+                    weatherWind.innerText = `Wind: ${Math.round(wind)} km/h`;
                     weatherIcon.innerText = icon;
 
                     const outfit1 = document.getElementById('outfit-text-1');
                     const outfit2 = document.getElementById('outfit-text-2');
 
                     if (temp < 8) {
-                        outfit1.innerText = "Khăn choàng cổ, găng tay và mũ len";
-                        outfit2.innerText = "Áo phao dày và áo giữ nhiệt";
+                        outfit1.innerText = "A scarf, gloves and a warm hat";
+                        outfit2.innerText = "A thick puffer jacket and thermal layers";
                     } else if (temp <= 15) {
-                        outfit1.innerText = "Khăn choàng cổ và áo khoác nhẹ";
-                        outfit2.innerText = "Áo khoác ấm hoặc cardigan";
+                        outfit1.innerText = "A scarf and a light jacket";
+                        outfit2.innerText = "A warm jacket or cardigan";
                     } else {
-                        outfit1.innerText = "Khăn mỏng hoặc áo dài tay nhẹ";
-                        outfit2.innerText = "Áo khoác mỏng, thoáng mát";
+                        outfit1.innerText = "A light scarf or long-sleeved top";
+                        outfit2.innerText = "A lightweight, breathable jacket";
                     }
                 }
             } catch (err) {
-                console.error("Lỗi thời tiết:", err);
-                weatherCondition.innerText = "Lỗi tải thời tiết";
+                console.error("Weather error:", err);
+                weatherCondition.innerText = "Unable to load weather";
             }
         }
     </script>
