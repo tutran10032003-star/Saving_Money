@@ -550,7 +550,7 @@
                         </div>
                     </div>
                     <div class="rounded-xl bg-[#f5ede2] p-3 space-y-2"><div class="flex justify-between"><b class="text-xs">🔎 Đọc ảnh bằng OCR</b><span id="bill-ocr-status" class="text-[10px]">Đang chờ ảnh</span></div>
-                        <button type="button" id="bill-ocr-button" onclick="runBillOCR()" class="w-full py-2 bg-[#e8dac7] rounded-xl border text-xs font-bold">✨ Đọc thông tin từ ảnh đã tải</button>
+                        <button type="button" id="bill-ocr-button" onclick="runBillOCR()" class="w-full py-2 bg-[#e8dac7] rounded-xl border text-xs font-bold">✨ Đọc 2 ảnh bằng OCR</button>
                     </div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-3 border-t text-xs">
                         <label class="font-bold">Kỳ hoá đơn / tháng<select id="edit-bill-month" class="w-full px-3 py-2 rounded-xl border mt-1 bg-white"><option value="">Chọn tháng / Select month</option><option value="January">Tháng 1 · January</option><option value="February">Tháng 2 · February</option><option value="March">Tháng 3 · March</option><option value="April">Tháng 4 · April</option><option value="May">Tháng 5 · May</option><option value="June">Tháng 6 · June</option><option value="July">Tháng 7 · July</option><option value="August">Tháng 8 · August</option><option value="September">Tháng 9 · September</option><option value="October">Tháng 10 · October</option><option value="November">Tháng 11 · November</option><option value="December">Tháng 12 · December</option></select></label>
@@ -1390,7 +1390,7 @@
             const usageX=findBillColumnX(words,"Usage","Unit"),meterX=findBillColumnX(words,"Meter","Number");
             const usageRows=parseBillBandsFromColumn(words,W,H,usageX),meterRows=parseBillBandsFromColumn(words,W,H,meterX);
             const sumRows=o=>{const v=["day","peak","night"].map(k=>o[k]&&o[k].kwh);return v.every(Number.isFinite)?v.reduce((a,b)=>a+b,0):NaN;};
-            const matches=o=>{const sum=sumRows(o);return Number.isFinite(sum)&&Number.isFinite(target)&&target>0&&Math.abs(sum-target)<=Math.max(2,target*.01);};
+            const matches=o=>{const sum=sumRows(o);if(!Number.isFinite(sum))return false;if(!Number.isFinite(target)||target<=0)return true;return Math.abs(sum-target)<=Math.max(2,target*.01);};
             if(matches(usageRows))candidates.unshift(usageRows);
             if(matches(meterRows))candidates.unshift(meterRows);
             if(scoreBillBands(mergeBillBands(candidates))<3){
@@ -2120,7 +2120,7 @@ const reportTranslations = {
 "Tải 2 ảnh: ảnh A để đọc tổng hoá đơn; ảnh B để đọc bảng chi tiết Day / Peak / Night. Kiểm tra lại số OCR trước khi lưu.":"Upload two images: Image A for the bill total; Image B for the Day / Peak / Night table. Check OCR values before saving.",
 "🧾 Ảnh A · Tổng hoá đơn":"🧾 Image A · Bill Total","📋 Ảnh B · Bảng khung giờ":"📋 Image B · Tariff Table",
 "📸 Chụp / chọn ảnh":"📸 Take Photo / Choose Image","🔎 Đọc ảnh bằng OCR":"🔎 Read Images with OCR",
-"Đang chờ ảnh":"Waiting for images","✨ Đọc thông tin từ ảnh đã tải":"✨ Read Information from Uploaded Images",
+"Đang chờ ảnh":"Waiting for images","✨ Đọc 2 ảnh bằng OCR":"✨ Read Both Images with OCR",
 "Kỳ hoá đơn / tháng":"Billing Period / Month","Năm":"Year","Ngày bắt đầu":"Start Date","Ngày kết thúc":"End Date","Tổng tiền (€)":"Total Bill (€)","Số người trong nhà":"People in Household","Tổng điện năng (kWh)":"Total Energy (kWh)",
 "Nhập theo bill":"Enter bill value","🍩 Phân bổ điện năng theo nhóm":"🍩 Energy Distribution by Category",
 "Rê chuột hoặc bấm vào từng phần của donut để xem điện năng ước tính theo nhóm.":"Hover over or select a donut segment to view the estimated energy use for that category.",
