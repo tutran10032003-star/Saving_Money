@@ -1439,9 +1439,9 @@
                 }
                 window.currentBillDonutSegments=null;
                 if(breakdownResult){
-                    const detected=await detectDonutSegments(breakdownResult.file),preview=_bbEl("bill-breakdown-preview"),host=preview&&preview.parentElement.querySelector(".bill-redrawn-preview");
-                    if(detected.ok){window.currentBillDonutSegments=detected.segments;if(host)renderRebuiltDonut(host,detected.segments,"");}
-                    else if(host)host.innerHTML='<p class="text-[10px] text-[#9b6655] text-center">Chưa nhận diện được vòng donut rõ ràng. Hãy thử ảnh rõ hơn hoặc lưu ảnh gốc.</p>';
+                    const detected=await detectDonutSegments(breakdownResult.file);
+                    if(detected.ok)window.currentBillDonutSegments=detected.segments;
+                    else console.warn("Image B distribution reading:",detected.reason||"not detected");
                 }
                 const parsed=parseBillOcrText(raw);
                 const imageBParsed=breakdownResult?parseBillOcrText(breakdownResult.text):{};
