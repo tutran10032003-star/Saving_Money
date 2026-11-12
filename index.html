@@ -266,7 +266,44 @@
             #custom-minutes { min-width: 0; width: 100%; }
             .eco-mascot { width: 180px; height: 180px; }
         }
-        @media (max-width:700px) { .header-inner{display:block;padding:10px 12px}.nav-pills{max-width:100%;display:flex;overflow-x:auto;gap:6px;scrollbar-width:none}.nav-pills::-webkit-scrollbar{display:none}.nav-btn{flex:0 0 auto;min-width:max-content;padding:10px 12px;font-size:13px}main{padding-left:12px!important;padding-right:12px!important}.vintage-panel{padding:16px!important;min-width:0}input,select,textarea{max-width:100%;min-width:0}#dashboard-col-chart{max-width:100%;overflow:hidden} }
+        @media (max-width:700px) { .header-inner{display:block;padding:10px 12px}.nav-pills{max-width:100%;display:flex;overflow-x:auto;gap:6px;scrollbar-width:none}.nav-pills::-webkit-scrollbar{display:none}.nav-btn{flex:0 0 auto;min-width:max-content;padding:10px 12px;font-size:13px}main{padding-left:12px!important;padding-right:12px!important}.vintage-panel{padding:16px!important;min-width:0}input,select,textarea{max-width:100%;min-width:0}#dashboard-col-chart{max-width:100%;overflow:hidden} } 
+        /* Dashboard sizing and phone layout */
+        .dashboard-energy-layout { align-items: stretch; }
+        .dashboard-total-bill-card { min-height: 0; }
+        .dashboard-bands-scroll { min-width: 0; }
+        @media (max-width: 700px) {
+            #tab-content-reports .grid.grid-cols-3 { gap: 6px; }
+            #tab-content-reports #subtab-btn-upload,
+            #tab-content-reports #subtab-btn-listing,
+            #tab-content-reports #subtab-btn-dashboard {
+                min-width: 0; min-height: 46px; padding: 8px 4px;
+                font-size: 10px; line-height: 1.25; overflow-wrap: anywhere;
+            }
+            #report-subtab-dashboard { gap: 14px; }
+            #report-subtab-dashboard > .grid:first-child { gap: 8px; }
+            #report-subtab-dashboard > .grid:nth-child(2) { gap: 6px; }
+            #report-subtab-dashboard > .grid:nth-child(2) > div { min-width: 0; padding: 9px 7px; }
+            #report-subtab-dashboard > .grid:nth-child(2) > div p:first-child { min-height: 25px; font-size: 9px; line-height: 1.2; }
+            #dash-stat-kwh, #dash-stat-bill, #dash-stat-savings { font-size: 13px; overflow-wrap: anywhere; }
+            #report-subtab-dashboard .vint-card { min-width: 0; }
+            #report-subtab-dashboard .vint-card.p-4 { padding: 10px; }
+            #report-subtab-dashboard .vint-card.p-5 { padding: 12px; }
+            #report-subtab-dashboard .dashboard-energy-layout { grid-template-columns: minmax(0,1fr); }
+            #report-subtab-dashboard .dashboard-total-bill-card { min-height: 104px; padding: 12px; }
+            #dashboard-total-bill-value { font-size: 2rem; margin-top: 6px; }
+            #report-subtab-dashboard .dashboard-bands-scroll { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+            #report-subtab-dashboard .dashboard-bands-scroll table { min-width: 330px; }
+            #report-subtab-dashboard #dash-trend-info { max-width: 44%; white-space: normal; text-align: center; line-height: 1.2; }
+            #report-subtab-dashboard #dashboard-col-chart { min-width: 0; }
+        }
+        @media (max-width: 380px) {
+            #report-subtab-dashboard .grid.grid-cols-\[auto_minmax\(0\,1fr\)_auto\] { gap: 4px; }
+            #report-subtab-dashboard #dashboard-euro-axis,
+            #report-subtab-dashboard #dashboard-kwh-axis { font-size: 8px; }
+            #report-subtab-dashboard > .grid:nth-child(2) > div p:first-child { font-size: 8px; }
+            #dash-stat-kwh, #dash-stat-bill, #dash-stat-savings { font-size: 12px; }
+        }
+
     </style>
 </head>
 
@@ -652,14 +689,14 @@
 
                     <div class="vint-card p-5 bg-[#fffaf4] space-y-4">
                         <p class="text-xs font-bold text-[#5c4738] text-center">🍩 Energy Distribution · biểu đồ gốc & khung giờ</p>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-start">
-                            <div class="rounded-xl border border-[#d8c7b0] bg-white p-5 min-h-64 flex flex-col items-center justify-center text-center">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-stretch dashboard-energy-layout">
+                            <div class="dashboard-total-bill-card rounded-xl border border-[#d8c7b0] bg-white p-3 min-h-0 h-full flex flex-col items-center justify-center text-center">
                                 <p id="dashboard-total-bill-label" class="text-xs font-bold uppercase tracking-wider text-[#7a6452]">Total Electricity Bill</p>
                                 <p id="dashboard-total-bill-value" class="mt-3 text-4xl sm:text-5xl font-extrabold tabular-nums text-[#32455c]">—</p>
                             </div>
-                            <div class="min-w-0 overflow-x-auto">
+                            <div class="min-w-0 overflow-x-auto dashboard-bands-scroll">
                                 <p class="text-[10px] font-extrabold text-[#7a6452] uppercase tracking-wider text-center">Selected Usage: <span id="donut-center-val" class="text-[#32455c] tabular-nums">— kWh</span></p>
-                                <table class="w-full text-[10px] tabular-nums text-right mt-1">
+                                <table class="w-full min-w-[330px] text-[10px] tabular-nums text-right mt-1">
                                     <thead><tr class="text-[#7a6452]"><th class="text-left font-bold">Khung giờ</th><th class="font-bold">kWh</th><th class="font-bold">% kWh</th><th class="font-bold">€</th><th class="font-bold">% tiền</th></tr></thead>
                                     <tbody id="dashboard-bands-body"></tbody>
                                 </table>
