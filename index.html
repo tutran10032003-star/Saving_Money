@@ -1081,8 +1081,18 @@
             host.innerHTML=data.map((c,i)=>'<div class="grid grid-cols-[minmax(0,1fr)_76px] gap-2 items-center rounded-xl border bg-[#fffaf4] p-2"><label class="min-w-0 flex items-center gap-2 text-[10px] font-bold"><span class="w-3 h-3 rounded-full shrink-0" style="background:'+billCategoryColors[i%billCategoryColors.length]+'"></span><input aria-label="Category name" data-category-label="'+(c.key||("category"+i))+'" value="'+String(c.label||"").replace(/&/g,"&amp;").replace(/"/g,"&quot;")+'" class="min-w-0 w-full bg-transparent outline-none"></label><label class="flex items-center gap-1 text-[10px]"><input aria-label="Percentage" data-category-percent="'+(c.key||("category"+i))+'" type="number" min="0" max="100" step="0.1" value="'+(Number(c.percent)||0)+'" oninput="updateBillCategoryTotals()" class="w-full min-w-0 px-1.5 py-1.5 rounded-lg border text-xs"><span>%</span></label></div>').join("");
             updateBillCategoryTotals();
         }
+        function showBillCategorySummary(){
+            const cats=getBillCategoryValues(),totalPercent=cats.reduce((n,c)=>n+c.percent,0),totalKwh=Number(document.getElementById("edit-bill-kwh")?.value),validKwh=Number.isFinite(totalKwh)&&totalKwh>=0&&document.getElementById("edit-bill-kwh").value!=="";
+            const detail=document.getElementById("bill-category-detail"),center=document.getElementById("bill-donut-center-kwh"),label=document.getElementById("bill-donut-center-label");
+            if(detail)detail.innerHTML='<div class="font-extrabold text-[#5c4738]">Tổng phân bổ điện năng</div><div class="mt-1 text-[#7a6452]">'+totalPercent.toFixed(1)+'% phân bổ · <strong class="text-[#5c4738]">'+(validKwh?totalKwh.toFixed(1)+" kWh total":"Nhập tổng kWh để xem ước tính")+'</strong></div>';
+            if(center)center.textContent=validKwh?totalKwh.toFixed(1):"—";
+            if(label)label.textContent="Total usage";
+            document.querySelectorAll("#bill-category-donut circle[data-segment]").forEach(circle=>{circle.style.opacity="1";circle.style.strokeWidth="19";});
+            activeBillCategory=-1;
+        }
         function selectBillCategory(index){
-            const cats=getBillCategoryValues(),cat=cats[index],totalKwh=Number(document.getElementById("edit-bill-kwh")?.value),estimated=Number.isFinite(totalKwh)&&totalKwh>=0?totalKwh*cat.percent/100:null;
+            const cats=getBillCategoryValues(),cat=cats[index];if(!cat)return;
+            const totalKwh=Number(document.getElementById("edit-bill-kwh")?.value),estimated=Number.isFinite(totalKwh)&&totalKwh>=0&&document.getElementById("edit-bill-kwh").value!==""?totalKwh*cat.percent/100:null;
             activeBillCategory=index;
             const detail=document.getElementById("bill-category-detail");
             if(detail)detail.innerHTML='<div class="flex items-center gap-2 font-extrabold text-[#5c4738]"><span class="w-3 h-3 rounded-full" style="background:'+cat.color+'"></span>'+cat.label+'</div><div class="mt-1 text-[#7a6452]">'+cat.percent.toFixed(1)+'% of total · <strong class="text-[#5c4738]">'+(estimated===null?"Enter total kWh":estimated.toFixed(1)+" kWh estimated")+'</strong></div>';
@@ -1096,6 +1106,7 @@
             const cats=getBillCategoryValues(),total=cats.reduce((n,c)=>n+c.percent,0),r=78,circ=2*Math.PI*r;
             let offset=0;
             svg.innerHTML='<circle cx="110" cy="110" r="'+r+'" fill="none" stroke="#eadfD1" stroke-width="19"></circle>';
+            svg.onmouseleave=showBillCategorySummary;
             cats.forEach((cat,i)=>{
                 const length=total>0?circ*cat.percent/100:0;
                 const circle=document.createElementNS("http://www.w3.org/2000/svg","circle");
@@ -1103,7 +1114,7 @@
                 circle.setAttribute("stroke",cat.color);circle.setAttribute("stroke-width","19");circle.setAttribute("stroke-dasharray",length+" "+Math.max(0,circ-length));circle.setAttribute("stroke-dashoffset",String(-offset));circle.setAttribute("transform","rotate(-90 110 110)");circle.setAttribute("stroke-linecap","butt");circle.setAttribute("data-segment",String(i));circle.style.cursor="pointer";circle.style.transition="stroke-width .15s,opacity .15s";
                 circle.addEventListener("mouseenter",()=>selectBillCategory(i));circle.addEventListener("click",()=>selectBillCategory(i));svg.appendChild(circle);offset+=length;
             });
-            if(cats.length)selectBillCategory(Math.min(activeBillCategory,cats.length-1));
+            showBillCategorySummary();
         }
         function updateBillPerPerson(){const amount=Number(document.getElementById("edit-bill-amount")?.value),countInput=document.getElementById("bill-household-size"),count=Math.max(1,Math.min(50,Math.floor(Number(countInput?.value)||1))),note=document.getElementById("bill-per-person-note");if(countInput&&Number(countInput.value)!==count)countInput.value=count;if(note)note.textContent="Ghi chú: chia đều cho "+count+" người · "+(Number.isFinite(amount)&&amount>=0&&document.getElementById("edit-bill-amount").value!==""?"€"+(amount/count).toFixed(2):"€—")+" / người";}
         function updateBillCategoryTotals(){
