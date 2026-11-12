@@ -1952,6 +1952,7 @@
 
         function normalizeBabyCloudText(value) {
             return String(value || "").toLowerCase()
+                .replace(/đ/g, "d")
                 .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
                 .replace(/temparature|temprature|tempereture|temperture|tempature/g, "temperature")
                 .replace(/[^a-z0-9? ]/g, " ").replace(/\s+/g, " ").trim();
