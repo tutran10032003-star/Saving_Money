@@ -1382,7 +1382,25 @@
 
             chartContainer.innerHTML = "";
             xLabels.innerHTML = "";
-            const records = [...(billingRecords || [])];
+            // Always plot bills in calendar order (year, then month), never upload/save order.
+            const monthNumber = (value) => {
+                const raw = String(value || "").trim().toLowerCase();
+                const numeric = raw.match(/(?:^|\\D)(1[0-2]|0?[1-9])(?:\\D|$)/);
+                if (numeric) return Number(numeric[1]);
+                const names = ["january","february","march","april","may","june","july","august","september","october","november","december"];
+                const viNames = ["tháng 1","tháng 2","tháng 3","tháng 4","tháng 5","tháng 6","tháng 7","tháng 8","tháng 9","tháng 10","tháng 11","tháng 12"];
+                let index = names.findIndex(name => raw.includes(name));
+                if (index < 0) index = names.findIndex(name => name.slice(0, 3) === raw || raw.includes(name.slice(0, 3)));
+                if (index < 0) index = viNames.findIndex(name => raw.includes(name));
+                return index + 1;
+            };
+            const records = [...(billingRecords || [])].sort((a, b) => {
+                const yearDiff = (Number(a.year) || 0) - (Number(b.year) || 0);
+                if (yearDiff) return yearDiff;
+                const monthDiff = monthNumber(a.month) - monthNumber(b.month);
+                if (monthDiff) return monthDiff;
+                return String(a.startDate || "").localeCompare(String(b.startDate || ""));
+            });
             if (!records.length) {
                 chartContainer.innerHTML = '<div class="h-full flex items-center justify-center text-[11px] text-[#9a8775]">Save monthly bills to see the trend.</div>';
                 if (euroAxis) euroAxis.innerHTML = "";
