@@ -627,13 +627,30 @@
                             <p class="text-xs font-bold text-[#5c4738]">📈 Bill (€ - Columns) & kWh Usage (Lines)</p>
                             <span id="dash-trend-info" class="text-[10px] bg-[#f0e6d6] px-2.5 py-0.5 rounded-full font-bold text-[#5c4738]">Auto Average Calculated</span>
                         </div>
-                        <div id="dashboard-col-chart" class="flex items-end justify-around h-36 pt-6 px-4 border-b-2 border-[#5c4738] relative">
-                            <!-- Rendered via JS -->
+                        <div class="grid grid-cols-[auto_minmax(0,1fr)_auto] gap-2 items-stretch">
+                            <div id="dashboard-euro-axis" class="flex flex-col justify-between text-[9px] font-bold text-[#9b6844] py-2 text-right" aria-hidden="true"></div>
+                            <div id="dashboard-col-chart" class="min-w-0 h-52 relative">
+                                <!-- SVG combo chart: € bars + kWh line -->
+                            </div>
+                            <div id="dashboard-kwh-axis" class="flex flex-col justify-between text-[9px] font-bold text-[#64849b] py-2 text-left" aria-hidden="true"></div>
                         </div>
-                        <div id="dashboard-x-labels" class="flex justify-around text-[10px] font-bold text-[#7a6452] px-2">
-                            <!-- Rendered via JS -->
+                        <div id="dashboard-x-labels" class="flex justify-around text-[10px] font-bold text-[#7a6452] px-2"></div>
+                        <div class="flex flex-wrap justify-center gap-x-5 gap-y-1 text-[10px] font-bold text-[#5c4738] pt-1">
+                            <span class="inline-flex items-center gap-1.5"><i class="w-3 h-3 rounded-sm bg-[#e8b98f] inline-block"></i> Bill (€)</span>
+                            <span class="inline-flex items-center gap-1.5"><i class="w-5 h-0.5 bg-[#789bb2] inline-block relative"><i class="absolute w-1.5 h-1.5 rounded-full bg-[#789bb2] -top-0.5 left-2"></i></i> Usage (kWh)</span>
                         </div>
                     </div>
+
+            <!-- REMINDERS & TIPS -->
+            <div class="vintage-panel p-6 space-y-3">
+                <h3 class="font-bold text-[#4a3b32] text-sm flex items-center gap-2"><span>💡</span> Daily Reminders & Basic Rules:</h3>
+                <ul class="text-xs space-y-2 text-[#5c4738] font-medium">
+                    <li class="bg-[#fffaf4] px-3 py-2.5 rounded-xl border border-[#5c4738]/30">💡 <strong>Turn off the lights:</strong> Remember to switch off room and hallway lights when not in use.</li>
+                    <li class="bg-[#fffaf4] px-3 py-2.5 rounded-xl border border-[#5c4738]/30">🔒 <strong>Check the doors:</strong> Make sure the doors are locked and the kitchen door is closed.</li>
+                    <li class="bg-[#fffaf4] px-3 py-2.5 rounded-xl border border-[#5c4738]/30">🔌 <strong>Unplug devices:</strong> Unplug standby appliances (TV, microwave) when not in use.</li>
+                    <li class="bg-[#fffaf4] px-3 py-2.5 rounded-xl border border-[#5c4738]/30">🚿 <strong>Water heater:</strong> Remember to switch off the water heater after showering.</li>
+                </ul>
+            </div>
 
                     <div class="vint-card p-5 bg-[#fffaf4] flex flex-col items-center space-y-4">
                         <p class="text-xs font-bold text-[#5c4738]">🍩 Energy Distribution by Category</p>
@@ -647,16 +664,6 @@
 
             </div>
 
-            <!-- REMINDERS & TIPS -->
-            <div class="vintage-panel p-6 space-y-3">
-                <h3 class="font-bold text-[#4a3b32] text-sm flex items-center gap-2"><span>💡</span> Daily Reminders & Basic Rules:</h3>
-                <ul class="text-xs space-y-2 text-[#5c4738] font-medium">
-                    <li class="bg-[#fffaf4] px-3 py-2.5 rounded-xl border border-[#5c4738]/30">💡 <strong>Turn off the lights:</strong> Remember to switch off room and hallway lights when not in use.</li>
-                    <li class="bg-[#fffaf4] px-3 py-2.5 rounded-xl border border-[#5c4738]/30">🔒 <strong>Check the doors:</strong> Make sure the doors are locked and the kitchen door is closed.</li>
-                    <li class="bg-[#fffaf4] px-3 py-2.5 rounded-xl border border-[#5c4738]/30">🔌 <strong>Unplug devices:</strong> Unplug standby appliances (TV, microwave) when not in use.</li>
-                    <li class="bg-[#fffaf4] px-3 py-2.5 rounded-xl border border-[#5c4738]/30">🚿 <strong>Water heater:</strong> Remember to switch off the water heater after showering.</li>
-                </ul>
-            </div>
         </div>
 
         <!-- TAB 3: SMART TIPS & FLASHCARDS -->
@@ -1353,31 +1360,60 @@
             let offset=0;keys.forEach(([key,label],i)=>{const value=totals[key],share=value/total*100,len=circ*share/100;if(len>0){const seg=document.createElementNS("http://www.w3.org/2000/svg","circle");seg.setAttribute("cx","110");seg.setAttribute("cy","110");seg.setAttribute("r","76");seg.setAttribute("fill","none");seg.setAttribute("stroke",billCategoryColors[i]);seg.setAttribute("stroke-width","31");seg.setAttribute("stroke-dasharray",len+" "+(circ-len));seg.setAttribute("stroke-dashoffset",String(-offset));seg.setAttribute("transform","rotate(-90 110 110)");svg.appendChild(seg);}offset+=len;const row=document.createElement("div");row.className="vint-card p-2 bg-white flex items-center gap-2 min-w-0";row.innerHTML='<span class="w-2.5 h-2.5 rounded-full shrink-0" style="background:'+billCategoryColors[i]+'"></span><span class="truncate">'+label+'</span><strong class="ml-auto tabular-nums">'+(value>0?share.toFixed(1)+"%":"—")+'</strong>';legend.appendChild(row);});
             document.getElementById("donut-center-val").textContent=Math.round(total)+" kWh";if(note)note.textContent=aggregateAll?"All months · kWh-weighted category distribution":"Selected bill · estimated from its own uploaded chart";
         }
-        // BIỂU ĐỒ CỘT (€) KẾT HỢP LINE (kWh)
+        // Combo chart: monthly bill as columns (€), energy usage as a line (kWh).
         function renderDashboardColumnLineChart(activeRecords) {
             const chartContainer = document.getElementById('dashboard-col-chart');
             const xLabels = document.getElementById('dashboard-x-labels');
+            const euroAxis = document.getElementById('dashboard-euro-axis');
+            const kwhAxis = document.getElementById('dashboard-kwh-axis');
             if (!chartContainer || !xLabels) return;
 
             chartContainer.innerHTML = "";
             xLabels.innerHTML = "";
+            const records = [...(billingRecords || [])];
+            if (!records.length) {
+                chartContainer.innerHTML = '<div class="h-full flex items-center justify-center text-[11px] text-[#9a8775]">Save monthly bills to see the trend.</div>';
+                if (euroAxis) euroAxis.innerHTML = "";
+                if (kwhAxis) kwhAxis.innerHTML = "";
+                return;
+            }
 
-            const maxBill = Math.max(...billingRecords.map(r => r.bill), 300);
+            const W = 760, H = 208, left = 12, right = 12, top = 12, bottom = 20;
+            const plotH = H - top - bottom;
+            const maxBill = Math.max(1, ...records.map(r => Number(r.bill) || 0)) * 1.12;
+            const maxKwh = Math.max(1, ...records.map(r => Number(r.kwh) || 0)) * 1.12;
+            const step = (W - left - right) / records.length;
+            const barW = Math.min(34, step * 0.48);
+            const selected = new Set((activeRecords || []).map(r => r.id));
+            const points = [];
+            let bars = "";
+            let grid = "";
 
-            billingRecords.forEach(r => {
-                const isSelected = activeRecords.some(ar => ar.id === r.id);
-                const heightPercent = Math.max(25, (r.bill / maxBill) * 110);
+            for (let tick = 0; tick <= 4; tick++) {
+                const y = top + plotH * tick / 4;
+                const euro = maxBill * (1 - tick / 4);
+                const kwh = maxKwh * (1 - tick / 4);
+                grid += '<line x1="' + left + '" y1="' + y.toFixed(1) + '" x2="' + (W-right) + '" y2="' + y.toFixed(1) + '" stroke="#eee5da" stroke-width="1" stroke-dasharray="3 4"/>';
+            }
 
-                chartContainer.innerHTML += `
-                    <div class="flex flex-col items-center gap-1 transition-all ${isSelected ? 'opacity-100 scale-105' : 'opacity-40'}">
-                        <span class="text-[10px] font-bold text-[#5c3232]">€${r.bill.toFixed(0)}</span>
-                        <div class="w-9 bg-gradient-to-t from-[#bc6c25] to-[#f4a261] rounded-t-lg shadow" style="height: ${heightPercent}px;"></div>
-                        <span class="text-[9px] font-bold text-[#32455c] bg-[#cfe2f3] px-1 rounded">${r.kwh}kWh</span>
-                    </div>
-                `;
-
-                xLabels.innerHTML += `<span class="text-center font-bold ${isSelected ? 'text-[#32455c] underline' : 'text-[#7a6452]'}">${r.month.substring(0,3)}</span>`;
+            records.forEach((r, i) => {
+                const cx = left + step * (i + 0.5);
+                const bill = Math.max(0, Number(r.bill) || 0);
+                const kwh = Math.max(0, Number(r.kwh) || 0);
+                const billY = top + plotH * (1 - bill / maxBill);
+                const kwhY = top + plotH * (1 - kwh / maxKwh);
+                const opacity = selected.size && !selected.has(r.id) ? 0.35 : 1;
+                bars += '<rect x="' + (cx-barW/2).toFixed(1) + '" y="' + billY.toFixed(1) + '" width="' + barW.toFixed(1) + '" height="' + Math.max(0,top+plotH-billY).toFixed(1) + '" rx="5" fill="#e8b98f" opacity="' + opacity + '"><title>' + r.month + ': €' + bill.toFixed(2) + '</title></rect>';
+                points.push({x:cx,y:kwhY,kwh,opacity});
+                xLabels.innerHTML += '<span class="text-center flex-1 min-w-0 ' + (opacity < 1 ? 'opacity-40' : '') + '">' + String(r.month || '').substring(0,3) + '</span>';
             });
+
+            const linePoints = points.map(p => p.x.toFixed(1) + ',' + p.y.toFixed(1)).join(' ');
+            const markers = points.map(p => '<circle cx="' + p.x.toFixed(1) + '" cy="' + p.y.toFixed(1) + '" r="4" fill="#789bb2" stroke="#fffaf4" stroke-width="2" opacity="' + p.opacity + '"><title>' + p.kwh.toLocaleString() + ' kWh</title></circle>').join('');
+            chartContainer.innerHTML = '<svg viewBox="0 0 ' + W + ' ' + H + '" class="w-full h-full overflow-visible" role="img" aria-label="Combo chart: monthly electricity bill in euro columns and electricity usage in kWh line">' + grid + bars + '<polyline points="' + linePoints + '" fill="none" stroke="#789bb2" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>' + markers + '</svg>';
+
+            if (euroAxis) euroAxis.innerHTML = [maxBill, maxBill*.75, maxBill*.5, maxBill*.25, 0].map(v => '<span>€' + Math.round(v) + '</span>').join('');
+            if (kwhAxis) kwhAxis.innerHTML = [maxKwh, maxKwh*.75, maxKwh*.5, maxKwh*.25, 0].map(v => '<span>' + Math.round(v) + '</span>').join('');
         }
 
         function initWeeklyContent() {
