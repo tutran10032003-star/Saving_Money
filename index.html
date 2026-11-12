@@ -1073,7 +1073,7 @@
             if (subName === 'dashboard') updateDashboardView();
         }
 
-        const billCategoryDefaults=[["waterHeating","Water Heating",35],["lighting","Lighting",8],["cooking","Cooking",15],["laundry","Laundry",10],["refrigeration","Refrigeration",4],["alwaysOn","Always On",3],["other","Other",25]];
+        const billCategoryDefaults=[["waterHeating","Water Heating",0],["cooking","Cooking",0],["entertainment","Entertainment",0],["laundry","Laundry",0],["refrigeration","Refrigeration",0],["alwaysOn","Always On",0],["lighting","Lighting",0],["other","Other",0]];
         const billCategoryColors=["#A8C7A0","#F2C6A0","#E9A8A8","#B8AEDB","#9BCAD3","#E8D58E","#C9B7A5"];
         let billImageFiles={total:null,breakdown:null},billImageUrls={total:"",breakdown:""},activeBillCategory=0;
         function getBillCategoryValues(){
@@ -1167,14 +1167,97 @@
             const periodAnchor=r.start||r.end;if(periodAnchor){const d=new Date(periodAnchor+"T12:00:00");r.month=d.toLocaleString("en",{month:"long"});r.year=d.getFullYear();}
             return r;
         }
+        async function estimateBillCategoryShares(file,ocrText,words){
+            if(!file)return {ok:false,reason:"missing-image"};
+            const normalized=String(ocrText||"").toLowerCase().replace(/[^a-z]/g,"");
+            const categories=[
+                ["waterHeating",["waterheating","waterheater"]],
+                ["cooking",["cooking"]],
+                ["entertainment",["entertainment"]],
+                ["laundry",["laundry"]],
+                ["refrigeration",["refrigeration"]],
+                ["alwaysOn",["alwayson","alwaysonload"]],
+                ["lighting",["lighting"]],
+                ["other",["other"]]
+            ];
+            const detected=categories.filter(([,aliases])=>aliases.some(alias=>normalized.includes(alias)));
+            if(detected.length!==8)return {ok:false,reason:"keywords",detected:detected.length};
+            let bitmap=null;
+            try{
+                bitmap=await createImageBitmap(file);
+                const canvas=document.createElement("canvas");
+                canvas.width=bitmap.width;canvas.height=bitmap.height;
+                const ctx=canvas.getContext("2d",{willReadFrequently:true});
+                if(!ctx)return {ok:false,reason:"canvas"};
+                ctx.drawImage(bitmap,0,0);
+                const w=canvas.width,h=canvas.height;
+                let cx=w/2,cy=h*(h/w>1.15?0.40:0.5);
+                const centerWords=(words||[]).filter(word=>/usage|kwh/i.test(word.text||"")&&word.bbox);
+                if(centerWords.length){
+                    const points=centerWords.map(word=>({x:(word.bbox.x0+word.bbox.x1)/2,y:(word.bbox.y0+word.bbox.y1)/2}));
+                    cx=points.reduce((n,p)=>n+p.x,0)/points.length;
+                    cy=points.reduce((n,p)=>n+p.y,0)/points.length;
+                }
+                const radius=Math.min(w*0.43,h*(h/w>1.15?0.27:0.43));
+                const ringPixels=[],pixels=ctx.getImageData(0,0,w,h).data;
+                for(let deg=0;deg<360;deg++){
+                    const angle=(deg-90)*Math.PI/180;
+                    let hits=0;
+                    for(let j=0;j<11;j++){
+                        const r=radius*(0.75+j*0.021);
+                        const x=Math.round(cx+Math.cos(angle)*r),y=Math.round(cy+Math.sin(angle)*r);
+                        if(x<0||y<0||x>=w||y>=h)continue;
+                        const offset=(y*w+x)*4,red=pixels[offset],green=pixels[offset+1],blue=pixels[offset+2];
+                        const max=Math.max(red,green,blue),min=Math.min(red,green,blue);
+                        if(max-min>24||max<226)hits++;
+                    }
+                    ringPixels.push(hits>=2);
+                }
+                bitmap.close();bitmap=null;
+                for(let pass=0;pass<2;pass++){
+                    for(let i=0;i<360;i++){
+                        if(ringPixels[i])continue;
+                        let gap=1;
+                        while(gap<=2&&!ringPixels[(i+gap)%360])gap++;
+                        if(gap<=2&&ringPixels[(i+gap)%360]&&ringPixels[(i-1+360)%360]){
+                            for(let j=0;j<gap;j++)ringPixels[(i+j)%360]=true;
+                        }
+                    }
+                }
+                const runs=[];
+                let i=0;
+                while(i<360){
+                    if(!ringPixels[i]){i++;continue;}
+                    const start=i;
+                    while(i<360&&ringPixels[i])i++;
+                    const length=i-start;
+                    if(length>=4)runs.push({start,length});
+                }
+                if(runs.length!==8)return {ok:false,reason:"segments",detected:8,segments:runs.length};
+                const total=runs.reduce((sum,run)=>sum+run.length,0);
+                if(total<100)return {ok:false,reason:"weak-ring"};
+                const shares={};
+                runs.forEach((run,index)=>{shares[categories[index][0]]=run.length/total*100;});
+                return {ok:true,shares,detected:8};
+            }catch(error){
+                if(bitmap)bitmap.close();
+                console.warn("Could not estimate bill donut shares",error);
+                return {ok:false,reason:"image-analysis"};
+            }
+        }
         async function runBillOCR(){
             const files=[billImageFiles.total,billImageFiles.breakdown].filter(Boolean),status=document.getElementById("bill-ocr-status"),button=document.getElementById("bill-ocr-button");
             if(!files.length){status.textContent="Chưa có ảnh để đọc";return;}
             if(!window.Tesseract){status.textContent="OCR chưa tải được — nhập tay nhé";alert("OCR chưa tải được. M vẫn có thể nhập tay.");return;}
             button.disabled=true;button.textContent="⏳ Đang đọc ảnh...";status.textContent="Đang xử lý ảnh…";let worker=null;
             try{
-                worker=await Tesseract.createWorker("eng");let raw="";
-                for(let i=0;i<files.length;i++){const result=await worker.recognize(files[i]);raw+="\n--- "+(i===0?"TOTAL BILL":"ENERGY BREAKDOWN")+" ---\n"+(result.data.text||"")+"\n";}
+                worker=await Tesseract.createWorker("eng");let raw="",breakdownText="",breakdownWords=[];
+                for(let i=0;i<files.length;i++){
+                    const result=await worker.recognize(files[i]);
+                    const textPart=result.data.text||"";
+                    raw+="\n--- "+(i===0?"TOTAL BILL":"ENERGY BREAKDOWN")+" ---\n"+textPart+"\n";
+                    if(files[i]===billImageFiles.breakdown){breakdownText=textPart;breakdownWords=result.data.words||[];}
+                }
                 const p=parseBillOcrText(raw);
                 if(p.amount!==undefined)document.getElementById("edit-bill-amount").value=p.amount.toFixed(2);
                 if(p.kwh!==undefined)document.getElementById("edit-bill-kwh").value=p.kwh;
@@ -1182,9 +1265,16 @@
                 if(p.end)document.getElementById("edit-bill-end").value=p.end;
                 if(p.month)document.getElementById("edit-bill-month").value=p.month;
                 if(p.year)document.getElementById("edit-bill-year").value=p.year;
+                const estimate=await estimateBillCategoryShares(billImageFiles.breakdown,breakdownText,breakdownWords);
+                if(estimate.ok){
+                    document.querySelectorAll("[data-category-percent]").forEach(input=>{
+                        const share=estimate.shares[input.dataset.categoryPercent];
+                        if(Number.isFinite(share))input.value=share.toFixed(1);
+                    });
+                }
                 updateBillCategoryTotals();updateBillPerPerson();
                 const filled=[p.start,p.end,p.amount!==undefined,p.kwh!==undefined,p.month,p.year].filter(Boolean).length;
-                status.textContent=filled?"Đã tự điền "+filled+" trường — m kiểm tra lại trước khi lưu nhé.":"Chưa nhận diện chắc được trường nào; m nhập tay giúp t nhé.";
+                status.textContent=(filled?"Đã tự điền "+filled+" trường. ":"")+(estimate.ok?"✓ Đã nhận diện 8 nhóm và ước tính tỷ lệ theo kích thước múi donut.":"Chưa đo được tỷ lệ donut rõ ràng — m kiểm tra ảnh và chỉnh tỷ lệ thủ công nhé.");
             }catch(err){console.error(err);status.textContent="OCR gặp lỗi — vui lòng nhập tay.";}
             finally{if(worker)await worker.terminate();button.disabled=false;button.textContent="✨ Đọc lại ảnh";}
         }
