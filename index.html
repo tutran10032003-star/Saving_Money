@@ -563,9 +563,8 @@
                     <div class="pt-3 border-t space-y-3">
                         <div><b class="text-xs">🍩 Biểu đồ phân bổ gốc & bảng khung giờ</b><p class="text-[10px] text-[#7a6452] mt-1">Ảnh B hiển thị nguyên bản. Bảng Day / Peak / Night đọc từ hoá đơn trang chi tiết; nếu OCR sai thì sửa tay được.</p></div>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-start">
-                            <div class="rounded-xl border border-[#d8c7b0] bg-white p-2 text-center">
-                                <img id="bill-donut-original" alt="Original energy distribution chart" class="hidden w-full max-h-72 object-contain rounded-lg">
-                                <p id="bill-donut-original-empty" class="text-[10px] text-[#7a6452] py-8">Chưa có ảnh B.</p>
+                            <div class="rounded-xl border border-[#d8c7b0] bg-white p-3 text-center min-h-64 flex flex-col items-center justify-center">
+                                <div id="bill-donut-redrawn" class="w-full flex flex-col items-center justify-center"><p id="bill-donut-original-empty" class="text-[10px] text-[#7a6452] py-8">Donut vẽ lại sẽ hiển thị ở đây sau khi tải ảnh B.</p></div>
                             </div>
                             <div class="min-w-0 overflow-x-auto">
                                 <table class="w-full text-[10px] tabular-nums text-right">
@@ -1152,12 +1151,11 @@
             if(p){p.src=billImageUrls[type];p.classList.remove("hidden");}
             if(type==="breakdown"){
                 window.currentBillDonutSegments=null;
-                const card=p&&p.parentElement;let host=card&&card.querySelector(".bill-redrawn-preview");
-                if(card&&!host){host=document.createElement("div");host.className="bill-redrawn-preview mt-2 rounded-xl border border-[#d8c7b0] bg-white p-2";card.appendChild(host);}
-                if(host){host.innerHTML='<p class="text-[10px] text-[#7a6452] text-center">Đang nhận diện và vẽ lại donut…</p>';
+                const host=_bbEl("bill-donut-redrawn");
+                if(host){host.innerHTML='<p class="text-[10px] text-[#7a6452] text-center py-8">Đang nhận diện donut…</p>';
                     detectDonutSegments(file).then(detected=>{
                         if(detected.ok){window.currentBillDonutSegments=detected.segments;renderRebuiltDonut(host,detected.segments,"");}
-                        else host.innerHTML='<p class="text-[10px] text-[#9b6655] text-center">Chưa nhận diện được vòng donut rõ ràng. Thử ảnh rõ hơn nhé.</p>';
+                        else host.innerHTML='<p class="text-[10px] text-[#9b6655] text-center py-8">Chưa nhận diện được donut rõ ràng. Thử ảnh rõ hơn nhé.</p>';
                     }).catch(error=>console.warn("Donut preview failed",error));
                 }
             }
@@ -1360,16 +1358,20 @@
         }
         function parseBillBands(text){
             const out={};
-            String(text||"").split(/\n/).forEach(line=>{
+            const toNumber=t=>Number(String(t).replace(/,/g,"").replace(/[Oo](?=\\d)/g,"0").replace(/[Il|](?=\\d)/g,"1").replace(",","."));
+            String(text||"").split(/\\n/).forEach(line=>{
                 if(/standing|levy|charge/i.test(line))return;
-                const m=line.match(/\b(day|peak|night)\b/i);if(!m)return;
-                if(!/\d{1,2}\s*[:.]?\s*\d{0,2}\s*[ap]m/i.test(line))return;
-                const key=m[1].toLowerCase();if(out[key])return;
-                const nums=line.replace(/\([^)]*\)?/g," ").match(/\d+(?:[.,]\d+)?/g)||[];
-                const pi=nums.findIndex(t=>/^0[.,]\d{4}$/.test(t));if(pi<1)return;
-                const num=t=>Number(String(t).replace(",","."));
-                const amount=nums.slice(pi+1).filter(t=>/^\d{1,4}[.,]\d{2}$/.test(t)).pop();
-                out[key]={kwh:num(nums[pi-1]),price:num(nums[pi]),amount:amount?num(amount):null};
+                const match=line.match(/\\b(day|peak|night)\\b/i);if(!match)return;
+                const key=match[1].toLowerCase();if(out[key])return;
+                // Strip time ranges before extracting numbers, so 8am/11pm never become kWh.
+                const clean=line.replace(/\\b\\d{1,2}\\s*(?:am|pm)\\b\\s*(?:[-–—to]+\\s*\\d{1,2}\\s*(?:am|pm)\\b)?/gi," ")
+                    .replace(/\\b\\d{1,2}\\s*[:.]\\s*\\d{2}\\b/g," ");
+                const tokens=(clean.match(/[\\dOoIl|]+(?:[.,]\\d+)?/g)||[]).map(t=>t.replace(/[Oo](?=\\d)/g,"0").replace(/[Il|](?=\\d)/g,"1"));
+                const pi=tokens.findIndex(t=>/^0[.,]\\d{4}$/.test(t));if(pi<1)return;
+                const kwhToken=[...tokens.slice(0,pi)].reverse().find(t=>/^\\d{2,5}(?:[.,]\\d{1,2})?$/.test(t));if(!kwhToken)return;
+                const amountToken=tokens.slice(pi+1).find(t=>/^\\d{1,5}[.,]\\d{2}$/.test(t));
+                const kwh=toNumber(kwhToken),price=toNumber(tokens[pi]),amount=amountToken?toNumber(amountToken):null;
+                if(Number.isFinite(kwh)&&Number.isFinite(price))out[key]={kwh,price,amount};
             });
             return out;
         }
@@ -1437,7 +1439,7 @@
                 }
                 window.currentBillDonutSegments=null;
                 if(breakdownResult){
-                    const detected=await detectDonutSegments(breakdownResult.file),preview=_bbEl("bill-breakdown-preview"),host=preview&&preview.parentElement.querySelector(".bill-redrawn-preview");
+                    const detected=await detectDonutSegments(breakdownResult.file),host=_bbEl("bill-donut-redrawn");
                     if(detected.ok){window.currentBillDonutSegments=detected.segments;if(host)renderRebuiltDonut(host,detected.segments,"");}
                     else if(host)host.innerHTML='<p class="text-[10px] text-[#9b6655] text-center">Chưa nhận diện được vòng donut rõ ràng. Hãy thử ảnh rõ hơn hoặc lưu ảnh gốc.</p>';
                 }
