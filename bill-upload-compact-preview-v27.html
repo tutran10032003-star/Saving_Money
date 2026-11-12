@@ -1182,7 +1182,7 @@
                     const colors=Array.from({length:samples},(_,i)=>rgbAt(i,radius));
                     const valid=colors.map(c=>!!c&&c.light<249&&(c.chroma>7||c.light<205));
                     const coverage=valid.filter(Boolean).length/samples;
-                    if(coverage<.30||coverage>.96)continue;
+                    if(coverage<.30)continue;
                     let transitions=0,contrast=0;
                     for(let i=0;i<samples;i++){
                         const j=(i+1)%samples;
@@ -1191,9 +1191,9 @@
                             if(d>30){transitions++;contrast+=d;}
                         }
                     }
-                    const segmentCount=Math.round(transitions/2);
-                    if(segmentCount<2||segmentCount>8||transitions<segmentCount*2-2)continue;
-                    const score=coverage*2+Math.min(contrast/(transitions||1),100)/100-Math.abs(transitions-segmentCount*2)*.15;
+                    const segmentCount=transitions;
+                    if(segmentCount<2||segmentCount>8)continue;
+                    const score=coverage*2+Math.min(contrast/(transitions||1),100)/100;
                     if(!best||score>best.score)best={colors,valid,score,segmentCount};
                 }
                 bitmap.close();bitmap=null;
