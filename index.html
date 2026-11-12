@@ -274,25 +274,29 @@
     <!-- HEADER + 6 TABS (CHỈ GIỮ LẠI ĐỒNG HỒ REALTIME) -->
     <header class="border-b-2 border-[#5c4738]">
         <div class="header-inner">
-            <div class="flex items-center space-x-2.5">
-                <span class="text-2xl">🌿</span>
-                <div>
-                    <h1 class="font-bold text-base text-[#4a3b32] leading-tight">Eco-Buddy Home Manager <span class="text-[10px] bg-[#8c7355] text-white px-2 py-0.5 rounded-full">V2</span></h1>
-                    <p class="text-xs text-[#7a6452] font-semibold mt-0.5">
-                        🕒 <span id="realtime-clock" class="text-[#5c4738] font-bold"></span>
-                    </p>
+            <div class="flex items-center justify-between gap-3 mb-2 sm:mb-0">
+                <div class="flex items-center space-x-2.5">
+                    <span class="text-2xl">🌿</span>
+                    <div><h1 class="font-bold text-base text-[#4a3b32] leading-tight">Eco-Buddy Home Manager <span class="text-[10px] bg-[#B8AEDB] text-white px-2 py-0.5 rounded-full">V2</span></h1><p class="text-xs text-[#7a6452] font-semibold mt-0.5">🕒 <span id="realtime-clock" class="text-[#5c4738] font-bold"></span></p></div>
+                </div>
+                <div class="relative shrink-0">
+                    <button type="button" id="language-toggle" onclick="toggleLanguageMenu()" aria-label="Choose language" aria-expanded="false" class="rounded-full border border-[#d8c7b0] bg-[#f7efe4] hover:bg-[#efe2d1] px-3 py-2 text-sm font-bold text-[#5c4738] shadow-sm">🌍 <span id="language-current">EN</span></button>
+                    <div id="language-menu" class="hidden absolute right-0 top-full mt-2 z-50 min-w-[150px] rounded-xl border-2 border-[#d8c7b0] bg-[#fffaf4] p-2 shadow-lg">
+                        <button type="button" onclick="setAppLanguage('en')" class="w-full rounded-lg px-3 py-2 text-left text-xs font-bold hover:bg-[#f1e6d8]">🇬🇧 English</button>
+                        <button type="button" onclick="setAppLanguage('vi')" class="w-full rounded-lg px-3 py-2 text-left text-xs font-bold hover:bg-[#f1e6d8]">🇻🇳 Tiếng Việt</button>
+                    </div>
                 </div>
             </div>
 
             <!-- 6 TABS (TĂNG FONT CHỮ TO RÕ) -->
             <nav class="nav-pills" aria-label="Main navigation">
-                <button onclick="switchTab('weather')" id="tab-btn-weather" class="nav-btn">🌦️ Weather</button>
-                <button onclick="switchTab('tracker')" id="tab-btn-tracker" class="nav-btn active">⚡ Tariff</button>
-                <button onclick="switchTab('reports')" id="tab-btn-reports" class="nav-btn">📊 Reports</button>
-                <button onclick="switchTab('tips')" id="tab-btn-tips" class="nav-btn">💡 Tips</button>
-                <button onclick="switchTab('chatbot')" id="tab-btn-chatbot" class="nav-btn">☁️ Bé Mây</button>
-                <button onclick="switchTab('checklist')" id="tab-btn-checklist" class="nav-btn">🍳 Cooking</button>
-                <button onclick="switchTab('calendar')" id="tab-btn-calendar" class="nav-btn">📅 Calendar</button>
+                <button onclick="switchTab('weather')" id="tab-btn-weather" class="nav-btn"><span data-lang-en="🌦️ Weather" data-lang-vi="🌦️ Thời tiết">🌦️ Weather</span></button>
+                <button onclick="switchTab('tracker')" id="tab-btn-tracker" class="nav-btn active"><span data-lang-en="⚡ Tariff" data-lang-vi="⚡ Giá điện">⚡ Tariff</span></button>
+                <button onclick="switchTab('reports')" id="tab-btn-reports" class="nav-btn"><span data-lang-en="📊 Reports" data-lang-vi="📊 Báo cáo">📊 Reports</span></button>
+                <button onclick="switchTab('tips')" id="tab-btn-tips" class="nav-btn"><span data-lang-en="💡 Tips" data-lang-vi="💡 Mẹo hay">💡 Tips</span></button>
+                <button onclick="switchTab('chatbot')" id="tab-btn-chatbot" class="nav-btn"><span data-lang-en="☁️ Bé Mây" data-lang-vi="☁️ Bé Mây">☁️ Bé Mây</span></button>
+                <button onclick="switchTab('checklist')" id="tab-btn-checklist" class="nav-btn"><span data-lang-en="🍳 Cooking" data-lang-vi="🍳 Nấu ăn">🍳 Cooking</span></button>
+                <button onclick="switchTab('calendar')" id="tab-btn-calendar" class="nav-btn"><span data-lang-en="📅 Calendar" data-lang-vi="📅 Lịch">📅 Calendar</span></button>
             </nav>
         </div>
     </header>
@@ -307,7 +311,7 @@
                 <span id="mascot-xp-text" class="text-[#7a6452]">0 / 100 XP</span>
             </div>
             <div class="w-full bg-[#f0e6d6] h-2.5 rounded-full border border-[#5c4738] overflow-hidden mb-3">
-                <div id="mascot-xp-bar" class="bg-[#87a96b] h-full w-[0%] transition-all duration-500"></div>
+                <div id="mascot-xp-bar" class="bg-[#A8C7A0] h-full w-[0%] transition-all duration-500"></div>
             </div>
 
             <div class="relative mb-2 w-full flex justify-center">
@@ -350,7 +354,7 @@
                     </svg>
                 </div>
 
-                <div id="status-badge" class="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-[#87a96b] text-white text-[11px] font-extrabold px-4 py-1 rounded-full shadow border-2 border-[#5c4738] whitespace-nowrap">
+                <div id="status-badge" class="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-[#A8C7A0] text-white text-[11px] font-extrabold px-4 py-1 rounded-full shadow border-2 border-[#5c4738] whitespace-nowrap">
                     Normal Hours ☀️
                 </div>
             </div>
@@ -485,7 +489,7 @@
             <div class="vintage-panel p-6 space-y-3">
                 <h3 class="font-bold text-[#4a3b32] text-sm flex items-center justify-between">
                     <span class="flex items-center gap-2"><span>🌱</span> Daily Eco Tasks (1 time/day)</span>
-                    <span id="eco-points-label" class="text-xs bg-[#8c7355] text-white px-2.5 py-1 rounded-xl">0 Points 🌱</span>
+                    <span id="eco-points-label" class="text-xs bg-[#B8AEDB] text-white px-2.5 py-1 rounded-xl">0 Points 🌱</span>
                 </h3>
                 <div class="space-y-2 text-xs" id="tasks-container">
                     <div class="vint-card p-3 flex items-center justify-between gap-2 bg-white" id="task-card-0">
@@ -493,21 +497,21 @@
                             <p class="font-bold text-[#4a3b32]">Turn off lights when leaving rooms (+20 XP)</p>
                             <p class="text-[10px] text-[#7a6452]">Check all rooms in the house.</p>
                         </div>
-                        <button onclick="completeTask(0, 20)" id="task-btn-0" class="px-3 py-1.5 bg-[#87a96b] text-white font-bold rounded-xl border border-[#5c4738] hover:opacity-90 flex-shrink-0">Complete</button>
+                        <button onclick="completeTask(0, 20)" id="task-btn-0" class="px-3 py-1.5 bg-[#A8C7A0] text-white font-bold rounded-xl border border-[#5c4738] hover:opacity-90 flex-shrink-0">Complete</button>
                     </div>
                     <div class="vint-card p-3 flex items-center justify-between gap-2 bg-white" id="task-card-1">
                         <div>
                             <p class="font-bold text-[#4a3b32]">Laundry during Night Saver hours (+30 XP)</p>
                             <p class="text-[10px] text-[#7a6452]">Run washing machine after 23:00.</p>
                         </div>
-                        <button onclick="completeTask(1, 30)" id="task-btn-1" class="px-3.5 py-1.5 bg-[#87a96b] text-white font-bold rounded-xl border border-[#5c4738] hover:opacity-90 flex-shrink-0">Complete</button>
+                        <button onclick="completeTask(1, 30)" id="task-btn-1" class="px-3.5 py-1.5 bg-[#A8C7A0] text-white font-bold rounded-xl border border-[#5c4738] hover:opacity-90 flex-shrink-0">Complete</button>
                     </div>
                     <div class="vint-card p-3 flex items-center justify-between gap-2 bg-white" id="task-card-2">
                         <div>
                             <p class="font-bold text-[#4a3b32]">Put away dry dishes (+20 XP)</p>
                             <p class="text-[10px] text-[#7a6452]">Keep the kitchen tidy and organized.</p>
                         </div>
-                        <button onclick="completeTask(2, 20)" id="task-btn-2" class="px-3.5 py-1.5 bg-[#87a96b] text-white font-bold rounded-xl border border-[#5c4738] hover:opacity-90 flex-shrink-0">Complete</button>
+                        <button onclick="completeTask(2, 20)" id="task-btn-2" class="px-3.5 py-1.5 bg-[#A8C7A0] text-white font-bold rounded-xl border border-[#5c4738] hover:opacity-90 flex-shrink-0">Complete</button>
                     </div>
                 </div>
             </div>
@@ -525,7 +529,7 @@
 
                 <!-- 3 SUB-TABS CHO REPORTS -->
                 <div class="grid grid-cols-3 gap-2 text-xs">
-                    <button onclick="switchReportSubTab('upload')" id="subtab-btn-upload" class="p-2.5 bg-[#8c7355] text-white font-bold rounded-xl border border-[#5c4738]">1. Upload & Edit Bill</button>
+                    <button onclick="switchReportSubTab('upload')" id="subtab-btn-upload" class="p-2.5 bg-[#B8AEDB] text-white font-bold rounded-xl border border-[#5c4738]">1. Upload & Edit Bill</button>
                     <button onclick="switchReportSubTab('listing')" id="subtab-btn-listing" class="p-2.5 bg-[#fffaf4] text-[#4a3b32] font-bold rounded-xl border border-[#5c4738]">2. Billing Listing</button>
                     <button onclick="switchReportSubTab('dashboard')" id="subtab-btn-dashboard" class="p-2.5 bg-[#fffaf4] text-[#4a3b32] font-bold rounded-xl border border-[#5c4738]">3. Dashboard & Avg</button>
                 </div>
@@ -536,11 +540,11 @@
                     <p class="text-[11px] text-[#7a6452]">Tải hai ảnh: tổng hoá đơn và biểu đồ phân bổ. OCR chỉ hỗ trợ đọc thử; hãy kiểm tra số liệu trước khi lưu.</p>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div class="vint-card p-3 bg-[#fffaf4] space-y-2"><b class="text-xs">🧾 Ảnh A · Tổng hoá đơn</b>
-                            <label class="block px-3 py-2 bg-[#8c7355] text-white rounded-xl text-xs text-center cursor-pointer">📸 Chụp / chọn ảnh<input type="file" id="bill-img-file" accept="image/*" capture="environment" class="hidden" onchange="previewUploadedBill(event,'total')"></label>
+                            <label class="block px-3 py-2 bg-[#B8AEDB] text-white rounded-xl text-xs text-center cursor-pointer">📸 Chụp / chọn ảnh<input type="file" id="bill-img-file" accept="image/*" capture="environment" class="hidden" onchange="previewUploadedBill(event,'total')"></label>
                             <img id="bill-preview-img" alt="Bill preview" class="hidden max-h-40 w-full object-contain rounded-xl border">
                         </div>
                         <div class="vint-card p-3 bg-[#fffaf4] space-y-2"><b class="text-xs">🍩 Ảnh B · Phân bổ điện năng</b>
-                            <label class="block px-3 py-2 bg-[#8c7355] text-white rounded-xl text-xs text-center cursor-pointer">📸 Chụp / chọn ảnh<input type="file" id="bill-breakdown-file" accept="image/*" capture="environment" class="hidden" onchange="previewUploadedBill(event,'breakdown')"></label>
+                            <label class="block px-3 py-2 bg-[#B8AEDB] text-white rounded-xl text-xs text-center cursor-pointer">📸 Chụp / chọn ảnh<input type="file" id="bill-breakdown-file" accept="image/*" capture="environment" class="hidden" onchange="previewUploadedBill(event,'breakdown')"></label>
                             <img id="bill-breakdown-preview" alt="Breakdown preview" class="hidden max-h-40 w-full object-contain rounded-xl border">
                         </div>
                     </div>
@@ -569,7 +573,7 @@
                         <p id="bill-category-warning" class="text-[10px] text-[#9c413b]">Hãy kiểm tra tổng tỷ lệ.</p>
                     </div>
                     <p id="upload-status-text" class="text-[11px] font-bold text-[#7a6452]">Chưa lưu hoá đơn.</p>
-                    <button type="button" onclick="saveEditedBill()" class="w-full py-3 bg-[#87a96b] text-white font-bold rounded-xl border text-xs">💾 Lưu hoá đơn & cập nhật Dashboard</button>
+                    <button type="button" onclick="saveEditedBill()" class="w-full py-3 bg-[#A8C7A0] text-white font-bold rounded-xl border text-xs">💾 Lưu hoá đơn & cập nhật Dashboard</button>
                 </div>
 
                 <!-- SUB-TAB 2: LISTING HISTORY (DẠNG KHUNG THẺ NỐI TIẾP NHƯ TARIFF) -->
@@ -636,13 +640,13 @@
                         
                         <div class="relative w-56 h-56 flex items-center justify-center">
                             <svg class="w-full h-full transform -rotate-90" viewBox="0 0 200 200">
-                                <circle cx="100" cy="100" r="70" fill="transparent" stroke="#87a96b" stroke-width="26" stroke-dasharray="439.8" stroke-dashoffset="0"></circle>
-                                <circle cx="100" cy="100" r="70" fill="transparent" stroke="#0096c7" stroke-width="26" stroke-dasharray="439.8" stroke-dashoffset="-154"></circle>
-                                <circle cx="100" cy="100" r="70" fill="transparent" stroke="#6a0dad" stroke-width="26" stroke-dasharray="439.8" stroke-dashoffset="-264"></circle>
-                                <circle cx="100" cy="100" r="70" fill="transparent" stroke="#8c7355" stroke-width="26" stroke-dasharray="439.8" stroke-dashoffset="-330"></circle>
-                                <circle cx="100" cy="100" r="70" fill="transparent" stroke="#38b000" stroke-width="26" stroke-dasharray="439.8" stroke-dashoffset="-374"></circle>
-                                <circle cx="100" cy="100" r="70" fill="transparent" stroke="#48cae4" stroke-width="26" stroke-dasharray="439.8" stroke-dashoffset="-409"></circle>
-                                <circle cx="100" cy="100" r="70" fill="transparent" stroke="#32455c" stroke-width="26" stroke-dasharray="439.8" stroke-dashoffset="-427"></circle>
+                                <circle cx="100" cy="100" r="70" fill="transparent" stroke="#A8C7A0" stroke-width="26" stroke-dasharray="439.8" stroke-dashoffset="0"></circle>
+                                <circle cx="100" cy="100" r="70" fill="transparent" stroke="#C9B7A5" stroke-width="26" stroke-dasharray="439.8" stroke-dashoffset="-154"></circle>
+                                <circle cx="100" cy="100" r="70" fill="transparent" stroke="#E9A8A8" stroke-width="26" stroke-dasharray="439.8" stroke-dashoffset="-264"></circle>
+                                <circle cx="100" cy="100" r="70" fill="transparent" stroke="#B8AEDB" stroke-width="26" stroke-dasharray="439.8" stroke-dashoffset="-330"></circle>
+                                <circle cx="100" cy="100" r="70" fill="transparent" stroke="#F2C6A0" stroke-width="26" stroke-dasharray="439.8" stroke-dashoffset="-374"></circle>
+                                <circle cx="100" cy="100" r="70" fill="transparent" stroke="#9BCAD3" stroke-width="26" stroke-dasharray="439.8" stroke-dashoffset="-409"></circle>
+                                <circle cx="100" cy="100" r="70" fill="transparent" stroke="#E8D58E" stroke-width="26" stroke-dasharray="439.8" stroke-dashoffset="-427"></circle>
                             </svg>
 
                             <div class="absolute flex flex-col items-center justify-center text-center">
@@ -653,13 +657,13 @@
 
                         <!-- CHÚ THÍCH CÁC CATEGORY -->
                         <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 w-full text-[11px] font-bold text-[#4a3b32]">
-                            <div class="vint-card p-2 bg-white flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#0096c7] flex-shrink-0"></span> Other (25%)</div>
-                            <div class="vint-card p-2 bg-white flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#87a96b] flex-shrink-0"></span> Water Heating (35%)</div>
-                            <div class="vint-card p-2 bg-white flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#6a0dad] flex-shrink-0"></span> Cooking (15%)</div>
-                            <div class="vint-card p-2 bg-white flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#8c7355] flex-shrink-0"></span> Laundry (10%)</div>
-                            <div class="vint-card p-2 bg-white flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#38b000] flex-shrink-0"></span> Lighting (8%)</div>
-                            <div class="vint-card p-2 bg-white flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#48cae4] flex-shrink-0"></span> Refrigeration (4%)</div>
-                            <div class="vint-card p-2 bg-white flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#32455c] flex-shrink-0"></span> Always On (3%)</div>
+                            <div class="vint-card p-2 bg-white flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#C9B7A5] flex-shrink-0"></span> Other (25%)</div>
+                            <div class="vint-card p-2 bg-white flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#A8C7A0] flex-shrink-0"></span> Water Heating (35%)</div>
+                            <div class="vint-card p-2 bg-white flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#E9A8A8] flex-shrink-0"></span> Cooking (15%)</div>
+                            <div class="vint-card p-2 bg-white flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#B8AEDB] flex-shrink-0"></span> Laundry (10%)</div>
+                            <div class="vint-card p-2 bg-white flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#F2C6A0] flex-shrink-0"></span> Lighting (8%)</div>
+                            <div class="vint-card p-2 bg-white flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#9BCAD3] flex-shrink-0"></span> Refrigeration (4%)</div>
+                            <div class="vint-card p-2 bg-white flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#E8D58E] flex-shrink-0"></span> Always On (3%)</div>
                         </div>
                     </div>
                 </div>
@@ -685,7 +689,7 @@
                         <h2 class="font-bold text-[#4a3b32] text-base flex items-center gap-2"><span>💡</span> Smart Energy Tips & Weekly Flashcards</h2>
                         <p class="text-[11px] text-[#7a6452] mt-0.5">Curated expert tips (3 rotating flashcards per week from our 40+ database)</p>
                     </div>
-                    <span id="weekly-tip-badge" class="bg-[#8c7355] text-white text-[10px] font-bold px-2.5 py-1 rounded-full">Week 1 / 4</span>
+                    <span id="weekly-tip-badge" class="bg-[#B8AEDB] text-white text-[10px] font-bold px-2.5 py-1 rounded-full">Week 1 / 4</span>
                 </div>
 
                 <div id="weekly-flashcards-container" class="space-y-3"></div>
@@ -697,17 +701,17 @@
             <div class="vintage-panel p-6 space-y-4">
                 <div class="vint-card p-3.5 bg-gradient-to-r from-[#f7f1e5] to-[#f0e6d6] flex items-center justify-between">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-full bg-[#8c7355] text-white flex items-center justify-center font-black text-lg border border-[#5c4738]">☁️</div>
+                        <div class="w-10 h-10 rounded-full bg-[#B8AEDB] text-white flex items-center justify-center font-black text-lg border border-[#5c4738]">☁️</div>
                         <div>
                             <h2 class="font-extrabold text-sm text-[#4a3b32]">Ask Atlantic / Bé Mây Hub</h2>
                             <p class="text-[10px] text-[#7a6452]">Live Weekly Schedule · 10 Eco Questions per Week (40 Total Pool)</p>
                         </div>
                     </div>
-                    <span id="weekly-quiz-counter" class="bg-[#87a96b] text-white text-[10px] font-extrabold px-2.5 py-1 rounded-full border border-[#5c4738]">Week 1: Q 1/10</span>
+                    <span id="weekly-quiz-counter" class="bg-[#A8C7A0] text-white text-[10px] font-extrabold px-2.5 py-1 rounded-full border border-[#5c4738]">Week 1: Q 1/10</span>
                 </div>
 
                 <div class="grid grid-cols-2 gap-2 text-xs">
-                    <button onclick="setChatMode('quiz')" id="mode-btn-quiz" class="p-2.5 bg-[#8c7355] text-white font-bold rounded-xl border border-[#5c4738]">🧠 Weekly Eco Quiz (10 Qs)</button>
+                    <button onclick="setChatMode('quiz')" id="mode-btn-quiz" class="p-2.5 bg-[#B8AEDB] text-white font-bold rounded-xl border border-[#5c4738]">🧠 Weekly Eco Quiz (10 Qs)</button>
                     <button onclick="setChatMode('chat')" id="mode-btn-chat" class="p-2.5 bg-[#fffaf4] text-[#4a3b32] font-bold rounded-xl border border-[#5c4738]">💬 Ask Bé Mây</button>
                 </div>
 
@@ -721,7 +725,7 @@
 
                     <div id="chatbot-input-area" class="hidden flex gap-2 pt-2 border-t border-[#d8c7b0]">
                         <input type="text" id="chat-input-text" placeholder="Type a message to Bé Mây..." class="flex-1 px-3 py-2 rounded-xl border border-[#5c4738] text-xs">
-                        <button onclick="sendUserMessage()" class="px-4 py-2 bg-[#8c7355] text-white font-bold rounded-xl border border-[#5c4738] text-xs">Send</button>
+                        <button onclick="sendUserMessage()" class="px-4 py-2 bg-[#B8AEDB] text-white font-bold rounded-xl border border-[#5c4738] text-xs">Send</button>
                     </div>
 
                     <div id="chatbot-quiz-area" class="space-y-2 pt-2 border-t border-[#d8c7b0]">
@@ -750,7 +754,7 @@
 
                     <div class="flex items-center gap-2 pt-1">
                         <input type="number" id="custom-minutes" placeholder="Enter custom minutes..." min="1" max="180" class="flex-1 px-3 py-2 rounded-xl border-1.5 border-[#5c4738] text-xs bg-[#fffaf4]">
-                        <button onclick="startCustomTimer()" class="px-4 py-2 bg-[#8c7355] text-white text-xs font-bold rounded-xl border-1.5 border-[#5c4738] shadow-[2px_2px_0px_#5c4738] transition whitespace-nowrap">Start</button>
+                        <button onclick="startCustomTimer()" class="px-4 py-2 bg-[#B8AEDB] text-white text-xs font-bold rounded-xl border-1.5 border-[#5c4738] shadow-[2px_2px_0px_#5c4738] transition whitespace-nowrap">Start</button>
                     </div>
                 </div>
 
@@ -794,7 +798,7 @@
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
                         <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#d9534f] inline-block"></span> <span>🗑️ Waste Collection Day (Tuesday)</span></div>
                         <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#bc6c25] inline-block"></span> <span>🏠 Rent Payment Due (1st of Month)</span></div>
-                        <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#6a0dad] inline-block"></span> <span>⚠️ Overlapping (Waste & Rent Due Same Day)</span></div>
+                        <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#E9A8A8] inline-block"></span> <span>⚠️ Overlapping (Waste & Rent Due Same Day)</span></div>
                     </div>
                 </div>
 
@@ -976,6 +980,7 @@
 
         window.addEventListener('DOMContentLoaded', () => {
             updateHeaderHeight();
+            initAppLanguage();
             loadUserData();
             startRealtimeClock();
             checkTariffStatus();
@@ -997,6 +1002,10 @@
             setInterval(fetchWeatherData, 600000);
         });
 
+        const appLanguageText={en:{"tab-btn-weather":"🌦️ Weather","tab-btn-tracker":"⚡ Tariff","tab-btn-reports":"📊 Reports","tab-btn-tips":"💡 Tips","tab-btn-chatbot":"☁️ Bé Mây","tab-btn-checklist":"🍳 Cooking","tab-btn-calendar":"📅 Calendar"},vi:{"tab-btn-weather":"🌦️ Thời tiết","tab-btn-tracker":"⚡ Giá điện","tab-btn-reports":"📊 Báo cáo","tab-btn-tips":"💡 Mẹo hay","tab-btn-chatbot":"☁️ Bé Mây","tab-btn-checklist":"🍳 Nấu ăn","tab-btn-calendar":"📅 Lịch"}};
+        function toggleLanguageMenu(){const menu=document.getElementById("language-menu"),button=document.getElementById("language-toggle");if(!menu)return;menu.classList.toggle("hidden");button?.setAttribute("aria-expanded",String(!menu.classList.contains("hidden")));}
+        function setAppLanguage(language){const lang=language==="vi"?"vi":"en";document.documentElement.lang=lang;localStorage.setItem("eco_buddy_language",lang);document.getElementById("language-current").textContent=lang.toUpperCase();Object.entries(appLanguageText[lang]).forEach(([id,label])=>{const el=document.getElementById(id);if(el)el.textContent=label;});document.getElementById("language-menu")?.classList.add("hidden");document.getElementById("language-toggle")?.setAttribute("aria-expanded","false");}
+        function initAppLanguage(){setAppLanguage(localStorage.getItem("eco_buddy_language")||"en");}
         window.addEventListener("resize", updateHeaderHeight);
         window.addEventListener("orientationchange", () => setTimeout(updateHeaderHeight, 150));
 
@@ -1047,7 +1056,7 @@
                 const btn = document.getElementById(`subtab-btn-${s}`);
                 if (el) el.classList.add('hidden');
                 if (btn) {
-                    btn.classList.remove('bg-[#8c7355]', 'text-white');
+                    btn.classList.remove('bg-[#B8AEDB]', 'text-white');
                     btn.classList.add('bg-[#fffaf4]', 'text-[#4a3b32]');
                 }
             });
@@ -1057,7 +1066,7 @@
             if (targetEl) targetEl.classList.remove('hidden');
             if (targetBtn) {
                 targetBtn.classList.remove('bg-[#fffaf4]', 'text-[#4a3b32]');
-                targetBtn.classList.add('bg-[#8c7355]', 'text-white');
+                targetBtn.classList.add('bg-[#B8AEDB]', 'text-white');
             }
 
             if (subName === 'listing') renderBillingListing();
@@ -1065,7 +1074,7 @@
         }
 
         const billCategoryDefaults=[["waterHeating","Water Heating",35],["lighting","Lighting",8],["cooking","Cooking",15],["laundry","Laundry",10],["refrigeration","Refrigeration",4],["alwaysOn","Always On",3],["other","Other",25]];
-        const billCategoryColors=["#bc6c25","#6b8e9b","#87a96b","#d98b83","#9a82ad","#d5ad55","#8c7355"];
+        const billCategoryColors=["#A8C7A0","#F2C6A0","#E9A8A8","#B8AEDB","#9BCAD3","#E8D58E","#C9B7A5"];
         let billImageFiles={total:null,breakdown:null},billImageUrls={total:"",breakdown:""},activeBillCategory=0;
         function getBillCategoryValues(){
             return [...document.querySelectorAll("[data-category-percent]")].map((x,i)=>({
@@ -1305,7 +1314,7 @@
                         <div class="vint-card p-4 bg-[#f5ede2] border-l-4 border-l-[#8c7355] space-y-2 shadow-sm">
                             <div class="flex items-center justify-between">
                                 <span class="text-xs font-black text-[#5c4738]">${tip.title}</span>
-                                <span class="text-[10px] bg-[#8c7355] text-white px-2 py-0.5 rounded-full font-bold">${tip.tag}</span>
+                                <span class="text-[10px] bg-[#B8AEDB] text-white px-2 py-0.5 rounded-full font-bold">${tip.tag}</span>
                             </div>
                             <p class="text-xs font-bold text-[#4a3b32]">"${tip.text}"</p>
                             <div class="flex justify-end gap-2 pt-1">
@@ -1404,12 +1413,12 @@
                     btn.innerText = "Done ✓";
                     btn.disabled = true;
                     btn.classList.add('bg-gray-400');
-                    btn.classList.remove('bg-[#87a96b]');
+                    btn.classList.remove('bg-[#A8C7A0]');
                 } else {
                     btn.innerText = "Complete";
                     btn.disabled = false;
                     btn.classList.remove('bg-gray-400');
-                    btn.classList.add('bg-[#87a96b]');
+                    btn.classList.add('bg-[#A8C7A0]');
                 }
             }
         }
@@ -1459,12 +1468,12 @@
             const inputArea = document.getElementById('chatbot-input-area');
 
             if (mode === 'quiz') {
-                btnQuiz.className = "p-2.5 bg-[#8c7355] text-white font-bold rounded-xl border border-[#5c4738]";
+                btnQuiz.className = "p-2.5 bg-[#B8AEDB] text-white font-bold rounded-xl border border-[#5c4738]";
                 btnChat.className = "p-2.5 bg-[#fffaf4] text-[#4a3b32] font-bold rounded-xl border border-[#5c4738]";
                 quizArea.classList.remove('hidden');
                 inputArea.classList.add('hidden');
             } else {
-                btnChat.className = "p-2.5 bg-[#8c7355] text-white font-bold rounded-xl border border-[#5c4738]";
+                btnChat.className = "p-2.5 bg-[#B8AEDB] text-white font-bold rounded-xl border border-[#5c4738]";
                 btnQuiz.className = "p-2.5 bg-[#fffaf4] text-[#4a3b32] font-bold rounded-xl border border-[#5c4738]";
                 quizArea.classList.add('hidden');
                 inputArea.classList.remove('hidden');
@@ -1517,7 +1526,7 @@
                 badge.innerText = "🔴 Peak Hours!";
                 if (speech) speech.innerText = "⚠️ It's peak time! Try to avoid using high-energy appliances.";
             } else if (hour >= 23 || hour < 8) {
-                badge.className = "absolute -bottom-2 left-1/2 -translate-x-1/2 bg-[#87a96b] text-white text-[11px] font-extrabold px-4 py-1 rounded-full shadow border-2 border-[#5c4738] whitespace-nowrap";
+                badge.className = "absolute -bottom-2 left-1/2 -translate-x-1/2 bg-[#A8C7A0] text-white text-[11px] font-extrabold px-4 py-1 rounded-full shadow border-2 border-[#5c4738] whitespace-nowrap";
                 badge.innerText = "🟢 Night Saver ON";
                 if (speech) speech.innerText = "🌙 It's the cheapest rate period. A great time to do your laundry!";
             } else {
@@ -1559,7 +1568,7 @@
                 let badgeIcon = "";
 
                 if (isTuesday && isFirstOfMonth) {
-                    bgClass = "bg-[#6a0dad] text-white shadow-sm"; // Trùng ngày: Tím
+                    bgClass = "bg-[#E9A8A8] text-white shadow-sm"; // Trùng ngày: Tím
                     badgeIcon = '<span class="text-[7px]">🗑️🏠</span>';
                 } else if (isTuesday) {
                     bgClass = "bg-[#d9534f] text-white shadow-sm"; // Đổ rác: Đỏ
