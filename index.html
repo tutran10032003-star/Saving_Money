@@ -1300,6 +1300,8 @@
         function billWordY(w){return (Number(w.bbox.y0)+Number(w.bbox.y1))/2;}
         function findBillColumnX(words,first,second){
             const ws=(words||[]).filter(w=>w&&w.bbox&&w.text);
+            const combined=ws.find(w=>new RegExp("^"+first+"[\\s/_-]*"+second+"$","i").test(billWordText(w)));
+            if(combined)return billWordX(combined);
             const a=ws.filter(w=>new RegExp("^"+first+"$","i").test(billWordText(w)));
             const b=ws.filter(w=>new RegExp("^"+second+"$","i").test(billWordText(w)));
             for(const x of a)for(const y of b){
@@ -1363,7 +1365,10 @@
             const W=Math.max(1,...(words||[]).map(w=>w.bbox&&w.bbox.x1||0)),H=Math.max(1,...(words||[]).map(w=>w.bbox&&w.bbox.y1||0));
             const usageX=findBillColumnX(words,"Usage","Unit");
             const usageRows=parseBillBandsFromColumn(words,W,H,usageX);
-            if(Object.keys(usageRows).length)candidates.unshift(usageRows);
+            const usageValues=["day","peak","night"].map(k=>usageRows[k]&&usageRows[k].kwh);
+            const usageSum=usageValues.every(Number.isFinite)?usageValues.reduce((a,b)=>a+b,0):NaN,target=Number(expectedTotal);
+            const usageMatches=!Number.isFinite(target)||target<=0||(Number.isFinite(usageSum)&&Math.abs(usageSum-target)<=Math.max(2,target*.01));
+            if(Object.keys(usageRows).length&&usageMatches)candidates.unshift(usageRows);
             if(scoreBillBands(mergeBillBands(candidates))<3){
                 try{
                     const bmp=await createImageBitmap(file),iw=bmp.width,ih=bmp.height;bmp.close();
@@ -1380,7 +1385,7 @@
                 const meterX=findBillColumnX(words,"Meter","Number");
                 const meterRows=parseBillBandsFromColumn(words,W,H,meterX);
                 const vals=["day","peak","night"].map(k=>meterRows[k]&&meterRows[k].kwh);
-                const sum=vals.every(Number.isFinite)?vals.reduce((a,b)=>a+b,0):NaN,target=Number(expectedTotal);
+                const sum=vals.every(Number.isFinite)?vals.reduce((a,b)=>a+b,0):NaN;
                 if(Number.isFinite(sum)&&Number.isFinite(target)&&target>0&&Math.abs(sum-target)<=Math.max(2,target*.01)){
                     found={...found,...meterRows};
                 }
