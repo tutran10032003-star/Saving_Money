@@ -8,8 +8,8 @@
   "scope": "/Saving_Money/",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#fffaf0",
-  "theme_color": "#d8e8c8",
+  "background_color": "#fcf8f2",
+  "theme_color": "#fcf8f2",
   "icons": [
     {
       "src": "/Saving_Money/icons/icon-192.png",
