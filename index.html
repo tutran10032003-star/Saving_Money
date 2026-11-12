@@ -2002,6 +2002,7 @@
             if (!input || input.dataset.sending === "1") return;
             const userText = input.value.trim();
             if (!userText) return;
+            const lang = detectBabyCloudLanguage(userText);
             const msgs = document.getElementById("chatbot-messages");
             if (!msgs) return;
             input.dataset.sending = "1";
@@ -2010,14 +2011,13 @@
             userBubble.className = "bg-[#eaf2f8] p-3 rounded-2xl border border-[#b9d0e8] text-right";
             const userLabel = document.createElement("p");
             userLabel.className = "font-bold text-[#32455c]";
-            userLabel.textContent = "You";
+            userLabel.textContent = lang === "vi" ? "Bạn" : "You";
             const userMessage = document.createElement("p");
             userMessage.className = "mt-1 text-[#4a3b32]";
             userMessage.textContent = userText;
             userBubble.append(userLabel, userMessage);
             msgs.appendChild(userBubble);
 
-            const lang = detectBabyCloudLanguage(userText);
             const entry = findBabyCloudKnowledge(userText);
             let reply = "";
             try {
@@ -2339,6 +2339,8 @@
 <script>
 (function(){
 const languagePairs = [
+ ["📷 Upload & read electricity bill","📷 Upload & đọc hoá đơn điện"],
+ ["🧾 Image A · Total bill","🧾 Ảnh A · Tổng hoá đơn"],
 ["🍩 Energy Distribution · Original Chart & Time Bands","🍩 Phân Bổ Điện Năng · Biểu Đồ Gốc & Khung Giờ"],
 ["Eco-Buddy Home Manager","Quản lý Nhà Eco-Buddy"],
 ["🌦️ Weather","🌦️ Thời tiết"],["⚡ Tariff","⚡ Giá điện"],["📊 Reports","📊 Báo cáo"],["💡 Tips","💡 Mẹo hay"],["🍳 Cooking","🍳 Nấu ăn"],["📅 Calendar","📅 Lịch"],
