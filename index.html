@@ -532,40 +532,34 @@
 
                 <!-- SUB-TAB 1: UPLOAD & EDIT BILL -->
                 <div id="report-subtab-upload" class="space-y-4 vint-card p-4 bg-white">
-                    <h3 class="font-bold text-xs text-[#5c4738]">📷 Upload Bill Image & Adjust Data</h3>
-                    <div class="flex flex-col sm:flex-row items-center gap-3">
-                        <label class="w-full sm:w-auto px-4 py-2 bg-[#8c7355] text-white font-bold rounded-xl border border-[#5c4738] text-xs cursor-pointer text-center shadow">
-                            <span>Browse & Upload Bill Image</span>
-                            <input type="file" id="bill-img-file" accept="image/*" class="hidden" onchange="previewUploadedBill(event)">
-                        </label>
-                        <span id="upload-status-text" class="text-xs font-bold text-[#7a6452]">No bill uploaded yet.</span>
-                    </div>
-
-                    <div id="bill-preview-container" class="hidden">
-                        <img id="bill-preview-img" src="" alt="Bill preview" class="max-h-40 rounded-xl border border-[#5c4738] object-contain">
-                    </div>
-
-                    <!-- FORM CHỈNH SỬA THÔNG TIN BILL TRƯỚC KHI SAVE -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-[#d8c7b0] text-xs">
-                        <div>
-                            <label class="font-bold text-[#7a6452]">Month / Period Name:</label>
-                            <input type="text" id="edit-bill-month" value="September 2026" class="w-full px-3 py-2 rounded-xl border border-[#5c4738] font-bold mt-1">
+                    <h3 class="font-bold text-sm text-[#5c4738]">📷 Upload & đọc hoá đơn điện</h3>
+                    <p class="text-[11px] text-[#7a6452]">Tải hai ảnh: tổng hoá đơn và biểu đồ phân bổ. OCR chỉ hỗ trợ đọc thử; hãy kiểm tra số liệu trước khi lưu.</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div class="vint-card p-3 bg-[#fffaf4] space-y-2"><b class="text-xs">🧾 Ảnh A · Tổng hoá đơn</b>
+                            <label class="block px-3 py-2 bg-[#8c7355] text-white rounded-xl text-xs text-center cursor-pointer">📸 Chụp / chọn ảnh<input type="file" id="bill-img-file" accept="image/*" capture="environment" class="hidden" onchange="previewUploadedBill(event,'total')"></label>
+                            <img id="bill-preview-img" alt="Bill preview" class="hidden max-h-40 w-full object-contain rounded-xl border"><p id="bill-total-file-status" class="text-[10px]">Chưa chọn ảnh.</p>
                         </div>
-                        <div>
-                            <label class="font-bold text-[#7a6452]">Year:</label>
-                            <input type="number" id="edit-bill-year" value="2026" class="w-full px-3 py-2 rounded-xl border border-[#5c4738] font-bold mt-1">
-                        </div>
-                        <div>
-                            <label class="font-bold text-[#7a6452]">Total Bill Amount (€):</label>
-                            <input type="number" id="edit-bill-amount" value="123.00" step="0.01" class="w-full px-3 py-2 rounded-xl border border-[#5c4738] font-bold mt-1">
-                        </div>
-                        <div>
-                            <label class="font-bold text-[#7a6452]">Total kWh Usage:</label>
-                            <input type="number" id="edit-bill-kwh" value="410" class="w-full px-3 py-2 rounded-xl border border-[#5c4738] font-bold mt-1">
+                        <div class="vint-card p-3 bg-[#fffaf4] space-y-2"><b class="text-xs">🍩 Ảnh B · Phân bổ điện năng</b>
+                            <label class="block px-3 py-2 bg-[#8c7355] text-white rounded-xl text-xs text-center cursor-pointer">📸 Chụp / chọn ảnh<input type="file" id="bill-breakdown-file" accept="image/*" capture="environment" class="hidden" onchange="previewUploadedBill(event,'breakdown')"></label>
+                            <img id="bill-breakdown-preview" alt="Breakdown preview" class="hidden max-h-40 w-full object-contain rounded-xl border"><p id="bill-breakdown-file-status" class="text-[10px]">Chưa chọn ảnh.</p>
                         </div>
                     </div>
-
-                    <button onclick="saveEditedBill()" class="w-full py-2.5 bg-[#87a96b] text-white font-bold rounded-xl border border-[#5c4738] text-xs shadow">💾 Save Bill Data & Update Dashboard</button>
+                    <div class="rounded-xl bg-[#f5ede2] p-3 space-y-2"><div class="flex justify-between"><b class="text-xs">🔎 Đọc ảnh bằng OCR</b><span id="bill-ocr-status" class="text-[10px]">Đang chờ ảnh</span></div>
+                        <button type="button" id="bill-ocr-button" onclick="runBillOCR()" class="w-full py-2 bg-[#e8dac7] rounded-xl border text-xs font-bold">✨ Đọc thông tin từ ảnh đã tải</button><pre id="bill-ocr-text" class="hidden whitespace-pre-wrap text-[10px] max-h-28 overflow-auto bg-white rounded-lg p-2"></pre>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-3 border-t text-xs">
+                        <label class="font-bold">Kỳ hoá đơn / tháng<input id="edit-bill-month" type="text" placeholder="September" class="w-full px-3 py-2 rounded-xl border mt-1"></label>
+                        <label class="font-bold">Năm<input id="edit-bill-year" type="number" placeholder="2026" min="2000" max="2100" class="w-full px-3 py-2 rounded-xl border mt-1"></label>
+                        <label class="font-bold">Ngày bắt đầu<input id="edit-bill-start" type="date" class="w-full px-3 py-2 rounded-xl border mt-1"></label>
+                        <label class="font-bold">Ngày kết thúc<input id="edit-bill-end" type="date" class="w-full px-3 py-2 rounded-xl border mt-1"></label>
+                        <label class="font-bold">Tổng tiền (€)<input id="edit-bill-amount" type="number" min="0" step="0.01" placeholder="Nhập theo bill" class="w-full px-3 py-2 rounded-xl border mt-1"></label>
+                        <label class="font-bold">Tổng điện năng (kWh)<input id="edit-bill-kwh" type="number" min="0" step="0.01" placeholder="Nhập theo bill" class="w-full px-3 py-2 rounded-xl border mt-1"></label>
+                    </div>
+                    <div class="pt-3 border-t space-y-2"><b class="text-xs">🍩 Phân bổ điện năng theo nhóm</b><p class="text-[10px] text-[#7a6452]">Nhập tỷ lệ từ biểu đồ. kWh tự tính là số ước tính từ tổng kWh, không phải số đo riêng.</p><div id="bill-category-editor" class="space-y-2"></div>
+                        <div class="flex justify-between bg-[#f5ede2] p-3 rounded-xl text-xs font-bold"><span>Tổng tỷ lệ</span><span id="bill-category-total">0%</span></div><p id="bill-category-warning" class="text-[10px] text-[#9c413b]">Hãy kiểm tra tổng tỷ lệ.</p>
+                    </div>
+                    <p id="upload-status-text" class="text-[11px] font-bold text-[#7a6452]">Chưa lưu hoá đơn.</p>
+                    <button type="button" onclick="saveEditedBill()" class="w-full py-3 bg-[#87a96b] text-white font-bold rounded-xl border text-xs">💾 Lưu hoá đơn & cập nhật Dashboard</button>
                 </div>
 
                 <!-- SUB-TAB 2: LISTING HISTORY (DẠNG KHUNG THẺ NỐI TIẾP NHƯ TARIFF) -->
@@ -838,6 +832,9 @@
         Eco-Buddy Home Manager V2 · Vintage Pastel Edition 🌿🤍
     </footer>
 
+    <!-- OCR ENGINE -->
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+
     <!-- JAVASCRIPT -->
     <script>
         let currentXP = 0;
@@ -973,6 +970,7 @@
             startRealtimeClock();
             checkTariffStatus();
             renderCalendar();
+            renderBillCategoryEditor();
             renderBillingListing();
             populateDashboardFilters();
             updateDashboardView();
@@ -1056,53 +1054,53 @@
             if (subName === 'dashboard') updateDashboardView();
         }
 
-        function previewUploadedBill(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const previewImg = document.getElementById('bill-preview-img');
-                const previewContainer = document.getElementById('bill-preview-container');
-                const statusText = document.getElementById('upload-status-text');
-
-                previewImg.src = e.target.result;
-                previewContainer.classList.remove('hidden');
-                statusText.innerText = "📸 Bill scanned! You can adjust the details below before saving.";
-
-                statusText.innerText = "📸 Image preview ready. Enter the exact values printed on your bill; no values are guessed.";
-            };
-            reader.readAsDataURL(file);
+        const billCategoryDefaults=[["waterHeating","Water Heating",35],["lighting","Lighting",8],["cooking","Cooking",15],["laundry","Laundry",10],["refrigeration","Refrigeration",4],["alwaysOn","Always On",3],["other","Other",25]];
+        let billImageFiles={total:null,breakdown:null},billImageUrls={total:"",breakdown:""};
+        function renderBillCategoryEditor(items){
+            const host=document.getElementById("bill-category-editor");if(!host)return;
+            const data=items&&items.length?items:billCategoryDefaults.map(x=>({key:x[0],label:x[1],percent:x[2]}));
+            host.innerHTML=data.map((c,i)=>{const key=c.key||("category"+i);return '<div class="grid grid-cols-[minmax(0,1fr)_90px_76px] gap-2 items-center bg-[#fffaf4] border rounded-xl p-2"><input data-category-label="'+key+'" value="'+String(c.label||"").replace(/&/g,"&amp;").replace(/"/g,"&quot;")+'" class="min-w-0 w-full px-2 py-2 rounded-lg border text-[11px] font-bold"><input data-category-percent="'+key+'" type="number" min="0" max="100" step="0.1" value="'+(Number(c.percent)||0)+'" oninput="updateBillCategoryTotals()" class="w-full px-2 py-2 rounded-lg border text-xs"><span data-category-kwh="'+key+'" class="text-[10px] text-right">— kWh</span></div>';}).join("");
+            updateBillCategoryTotals();
         }
-
-        function saveEditedBill() {
-            const monthStr = document.getElementById('edit-bill-month').value.trim();
-            const yearNum = parseInt(document.getElementById('edit-bill-year').value) || 2026;
-            const billAmt = parseFloat(document.getElementById('edit-bill-amount').value) || 0;
-            const kwhAmt = parseInt(document.getElementById('edit-bill-kwh').value) || 0;
-
-            const newRecord = {
-                id: `${monthStr.toLowerCase().replace(/\s+/g, '-')}-${yearNum}`,
-                month: monthStr,
-                year: yearNum,
-                bill: billAmt,
-                kwh: kwhAmt,
-                savings: `€${(kwhAmt * 0.08).toFixed(2)} cr`
-            };
-
-            // Check xem đã tồn tại chưa để update hoặc push mới
-            const existingIdx = billingRecords.findIndex(r => r.id === newRecord.id);
-            if (existingIdx >= 0) {
-                billingRecords[existingIdx] = newRecord;
-            } else {
-                billingRecords.push(newRecord);
-            }
-
-            saveUserData();
-            renderBillingListing();
-            populateDashboardFilters();
-            switchReportSubTab('dashboard');
-            alert("💾 Bill saved successfully! Dashboard & Historical listing updated.");
+        function updateBillCategoryTotals(){
+            const inputs=[...document.querySelectorAll("[data-category-percent]")],total=inputs.reduce((n,x)=>n+(Number(x.value)||0),0),t=document.getElementById("bill-category-total"),w=document.getElementById("bill-category-warning");
+            if(t)t.textContent=total.toFixed(1)+"%";if(w)w.textContent=Math.abs(total-100)<0.11?"✓ Tổng phân bổ bằng 100%.":"Tỷ lệ hiện tại chưa bằng 100%; hãy kiểm tra lại nhé.";
+            const kwh=Number(document.getElementById("edit-bill-kwh")?.value);inputs.forEach(x=>{const out=document.querySelector('[data-category-kwh="'+x.dataset.categoryPercent+'"]');if(out)out.textContent=Number.isFinite(kwh)&&kwh>=0?(kwh*(Number(x.value)||0)/100).toFixed(1)+" kWh":"— kWh";});
+        }
+        document.addEventListener("input",e=>{if(e.target&&e.target.id==="edit-bill-kwh")updateBillCategoryTotals();});
+        function previewUploadedBill(event,type){
+            type=type||"total";const file=event.target.files&&event.target.files[0];if(!file)return;if(!file.type.startsWith("image/")){alert("Please choose an image.");return;}
+            billImageFiles[type]=file;if(billImageUrls[type])URL.revokeObjectURL(billImageUrls[type]);billImageUrls[type]=URL.createObjectURL(file);
+            const p=document.getElementById(type==="total"?"bill-preview-img":"bill-breakdown-preview"),s=document.getElementById(type==="total"?"bill-total-file-status":"bill-breakdown-file-status");
+            if(p){p.src=billImageUrls[type];p.classList.remove("hidden");}if(s)s.textContent="✓ "+file.name;
+            document.getElementById("upload-status-text").textContent="Ảnh đã sẵn sàng. Bấm đọc OCR hoặc nhập tay rồi lưu.";document.getElementById("bill-ocr-status").textContent="Có ảnh mới — cần đọc lại";
+        }
+        function parseBillOcrText(text){
+            const r={},a=text.match(/(?:total\s*(?:amount|due|bill)?|amount\s*due|€)\s*[:：]?\s*€?\s*(\d{1,5}[,.]\d{2})/i),k=text.match(/(?:total\s*)?(\d{1,6}(?:[,.]\d{1,2})?)\s*kwh\b/i),ds=[...text.matchAll(/\b(\d{1,2})[\/.-](\d{1,2})[\/.-](20\d{2})\b/g)];
+            if(a)r.amount=Number(a[1].replace(",","."));if(k)r.kwh=Number(k[1].replace(",","."));
+            if(ds.length>=2){const iso=x=>x[3]+"-"+x[2].padStart(2,"0")+"-"+x[1].padStart(2,"0");r.start=iso(ds[0]);r.end=iso(ds[1]);}return r;
+        }
+        async function runBillOCR(){
+            const files=[billImageFiles.total,billImageFiles.breakdown].filter(Boolean),status=document.getElementById("bill-ocr-status"),button=document.getElementById("bill-ocr-button"),box=document.getElementById("bill-ocr-text");
+            if(!files.length){status.textContent="Chưa có ảnh để đọc";return;}if(!window.Tesseract){status.textContent="OCR chưa tải được — nhập tay nhé";alert("OCR chưa tải được. M vẫn có thể nhập tay.");return;}
+            button.disabled=true;button.textContent="⏳ Đang đọc ảnh...";status.textContent="Đang xử lý ảnh…";let worker=null;
+            try{worker=await Tesseract.createWorker("eng");let raw="";for(const file of files){const result=await worker.recognize(file);raw+=(result.data.text||"")+"\n";}
+                box.textContent=raw.trim()||"OCR không nhận diện được chữ rõ ràng.";box.classList.remove("hidden");const p=parseBillOcrText(raw);
+                if(p.amount!==undefined)document.getElementById("edit-bill-amount").value=p.amount.toFixed(2);if(p.kwh!==undefined)document.getElementById("edit-bill-kwh").value=p.kwh;
+                if(p.start)document.getElementById("edit-bill-start").value=p.start;if(p.end)document.getElementById("edit-bill-end").value=p.end;
+                if(p.start){const d=new Date(p.start+"T12:00:00");document.getElementById("edit-bill-month").value=d.toLocaleString("en",{month:"long"});document.getElementById("edit-bill-year").value=d.getFullYear();}
+                updateBillCategoryTotals();status.textContent=Object.keys(p).length?"Đã điền một số ô — hãy đối chiếu với hoá đơn.":"Không đọc chắc số liệu — vui lòng nhập tay.";
+            }catch(err){console.error(err);status.textContent="OCR gặp lỗi — vui lòng nhập tay.";}finally{if(worker)await worker.terminate();button.disabled=false;button.textContent="✨ Đọc lại ảnh";}
+        }
+        function saveEditedBill(){
+            const month=document.getElementById("edit-bill-month").value.trim(),year=Number(document.getElementById("edit-bill-year").value),amount=Number(document.getElementById("edit-bill-amount").value),kwh=Number(document.getElementById("edit-bill-kwh").value),start=document.getElementById("edit-bill-start").value,end=document.getElementById("edit-bill-end").value;
+            if(!month||!Number.isInteger(year)||year<2000||year>2100||document.getElementById("edit-bill-amount").value===""||!Number.isFinite(amount)||amount<0||document.getElementById("edit-bill-kwh").value===""||!Number.isFinite(kwh)||kwh<0){alert("Nhập tháng, năm, tổng tiền và tổng kWh hợp lệ trước khi lưu nhé.");return;}
+            if(start&&end&&start>end){alert("Ngày bắt đầu không thể sau ngày kết thúc.");return;}
+            const categories=[...document.querySelectorAll("[data-category-percent]")].map(x=>({key:x.dataset.categoryPercent,label:(document.querySelector('[data-category-label="'+x.dataset.categoryPercent+'"]')||{}).value||"",percent:Number(x.value)||0}));
+            if(categories.some(c=>!c.label||c.percent<0||c.percent>100)){alert("Kiểm tra tên nhóm và tỷ lệ (0–100%).");return;}
+            const id=month.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")+"-"+year,record={id,month,year,bill:amount,kwh,startDate:start,endDate:end,categories,savings:"€"+(kwh*0.08).toFixed(2)+" cr"};
+            const idx=billingRecords.findIndex(x=>x.id===id);if(idx>=0)billingRecords[idx]={...billingRecords[idx],...record};else billingRecords.push(record);
+            saveUserData();renderBillingListing();populateDashboardFilters();updateDashboardView();document.getElementById("upload-status-text").textContent="✓ Đã lưu hoá đơn và cập nhật Billing Listing + Dashboard.";alert("💾 Đã lưu hoá đơn!");
         }
 
         function renderBillingListing() {
