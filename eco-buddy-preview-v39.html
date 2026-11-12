@@ -1182,13 +1182,13 @@
             }
             const moneyMatches=[...text.matchAll(/(?:€\s*|EUR\s*)(\d{1,5}(?:[,.]\d{2})?)/gi),...text.matchAll(/(?:total\s*(?:amount|due|bill)|amount\s*due)\s*[:：]?\s*€?\s*(\d{1,5}(?:[,.]\d{2})?)/gi)];
             if(moneyMatches.length){const vals=moneyMatches.map(m=>Number(m[1].replace(",","."))).filter(Number.isFinite);if(vals.length)r.amount=vals[vals.length-1];}
-            const kwhMatch=text.match(/(?:total\\s*(?:consumption|usage|electricity|energy)?\\s*[:：]?\\s*)(\\d{1,6}(?:[,.]\\d{1,2})?)\\s*k\\s*w\\s*h\\b|(\\d{1,6}(?:[,.]\\d{1,2})?)\\s*k\\s*w\\s*h\\b/i);
+            const kwhMatch=text.match(/(?:total\s*(?:consumption|usage|electricity|energy)?\s*[:：]?\s*)(\d{1,6}(?:[,.]\d{1,2})?)\s*k\s*w\s*h\b|(\d{1,6}(?:[,.]\d{1,2})?)\s*k\s*w\s*h\b/i);
             if(kwhMatch)r.kwh=Number((kwhMatch[1]||kwhMatch[2]).replace(",","."));
             if(r.kwh===undefined){
-                const usageLines=String(text||"").split(/\\r?\\n/).filter(line=>/(total|usage|consumption|electricity|energy used)/i.test(line)&&!/(meter|account|serial|rate|price|charge|standing)/i.test(line));
+                const usageLines=String(text||"").split(/\r?\n/).filter(line=>/(total|usage|consumption|electricity|energy used)/i.test(line)&&!/(meter|account|serial|rate|price|charge|standing)/i.test(line));
                 for(const line of usageLines){
-                    const cleaned=line.replace(/\\b\\d{1,2}[\\/.-]\\d{1,2}[\\/.-]\\d{2,4}\\b/g," ").replace(/[€$£]\\s*\\d[\\d,.]*/g," ");
-                    const nums=[...cleaned.matchAll(/\\b(\\d{2,6}(?:[,.]\\d{1,2})?)\\b/g)].map(m=>Number(m[1].replace(",","."))).filter(n=>Number.isFinite(n)&&n>=10&&n<=100000);
+                    const cleaned=line.replace(/\b\d{1,2}[\/.-]\d{1,2}[\/.-]\d{2,4}\b/g," ").replace(/[€$£]\s*\d[\d,.]*/g," ");
+                    const nums=[...cleaned.matchAll(/\b(\d{2,6}(?:[,.]\d{1,2})?)\b/g)].map(m=>Number(m[1].replace(",","."))).filter(n=>Number.isFinite(n)&&n>=10&&n<=100000);
                     if(nums.length){r.kwh=nums[nums.length-1];break;}
                 }
             }
@@ -1458,7 +1458,7 @@
                 const kwhInput=_bbEl("edit-bill-kwh");
                 if(parsed.kwh!==undefined&&Number.isFinite(Number(parsed.kwh))&&Number(parsed.kwh)>0)kwhInput.value=parsed.kwh;
                 const ocrText=_bbEl("bill-ocr-text"),ocrKwh=_bbEl("bill-ocr-kwh-result");
-                if(ocrText){ocrText.textContent=[totalRaw?"--- IMAGE A · TOTAL BILL ---\\n"+totalRaw:"",tableRaw?"--- IMAGE B · DAY / PEAK / NIGHT ---\\n"+tableRaw:""].filter(Boolean).join("\\n\\n")||"OCR không nhận diện được chữ.";ocrText.classList.remove("hidden");}
+                if(ocrText){ocrText.textContent=[totalRaw?"--- IMAGE A · TOTAL BILL ---\n"+totalRaw:"",tableRaw?"--- IMAGE B · DAY / PEAK / NIGHT ---\n"+tableRaw:""].filter(Boolean).join("\n\n")||"OCR không nhận diện được chữ.";ocrText.classList.remove("hidden");}
                 if(ocrKwh)ocrKwh.textContent="Total energy detected: "+(kwhInput&&kwhInput.value&&Number(kwhInput.value)>0?Number(kwhInput.value).toLocaleString()+" kWh":"— kWh");
                 updateBillBands();updateBillPerPerson();
                 let bandMessage="";
