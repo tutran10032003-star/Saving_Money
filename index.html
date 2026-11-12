@@ -1512,10 +1512,9 @@
             renderDashboardEnergyDonut(filtered, monthVal === "all");
         }
         function renderDashboardEnergyDonut(records, aggregateAll) {
-            const host=_bbEl("dashboard-donut-redraw"),body=_bbEl("dashboard-bands-body"),note=_bbEl("dashboard-donut-note");
+            const body=_bbEl("dashboard-bands-body"),note=_bbEl("dashboard-donut-note");
             if(!body)return;
-            const recs=records||[],one=recs.length===1?recs[0]:null;
-            if(host){if(one&&Array.isArray(one.donutSegments)&&one.donutSegments.length)renderRebuiltDonut(host,one.donutSegments,Number(one.kwh||0).toFixed(0)+" kWh");else host.innerHTML='<p class="text-[10px] text-[#7a6452] py-8 text-center">'+(aggregateAll||recs.length>1?"Chọn một tháng để xem donut đã vẽ lại.":"Tháng này chưa có dữ liệu donut được nhận diện.")+'</p>';}
+            const recs=records||[];
             const totals={day:{kwh:0,eur:0},peak:{kwh:0,eur:0},night:{kwh:0,eur:0}};let has=false;
             recs.forEach(record=>(Array.isArray(record.bands)?record.bands:[]).forEach(band=>{if(!band||!totals[band.key]||!Number.isFinite(Number(band.kwh))||Number(band.kwh)<0)return;const kwh=Number(band.kwh),eur=Number.isFinite(Number(band.eur))?Number(band.eur):kwh*Number(band.price||0);totals[band.key].kwh+=kwh;totals[band.key].eur+=eur;has=true;}));
             if(!has){body.innerHTML='<tr><td colspan="5" class="py-3 text-center text-[#7a6452]">Chưa có bảng khung giờ cho lựa chọn này.</td></tr>';if(note)note.textContent="Lưu hoá đơn có bảng Day / Peak / Night để xem ở đây.";return;}
