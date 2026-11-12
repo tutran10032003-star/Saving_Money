@@ -628,7 +628,7 @@
                         </div>
                     </div>
                     <p id="upload-status-text" class="text-[11px] font-bold text-[#7a6452]">Chưa lưu hoá đơn.</p>
-                    <button type="button" id="save-bill-button" onclick="saveEditedBill()" disabled class="w-full py-3 bg-[#A8C7A0] text-white font-bold rounded-xl border text-xs opacity-50 cursor-not-allowed">💾 Lưu hoá đơn & cập nhật Dashboard</button>
+                    <button type="button" id="save-bill-button" onclick="saveEditedBill()" class="w-full py-3 bg-[#A8C7A0] text-white font-bold rounded-xl border text-xs">💾 Lưu hoá đơn & cập nhật Dashboard</button>
                 </div>
 
                 <!-- SUB-TAB 2: LISTING HISTORY (DẠNG KHUNG THẺ NỐI TIẾP NHƯ TARIFF) -->
@@ -1395,8 +1395,8 @@
                 set("bb-pe-"+r.key,r.eur!==null&&te>0?(r.eur/te*100).toFixed(1)+"%":"–");
             });
             const t1=_bbEl("bb-total-kwh"),t2=_bbEl("bb-total-eur"),warning=_bbEl("bb-warning"),totalInput=_bbEl("edit-bill-kwh");
-            const saveButton=_bbEl("save-bill-button"),bandsComplete=rows.every(r=>r.kwh!==null&&Number.isFinite(r.kwh)&&r.kwh>=0);
-            if(saveButton){saveButton.disabled=!bandsComplete;saveButton.classList.toggle("opacity-50",!bandsComplete);saveButton.classList.toggle("cursor-not-allowed",!bandsComplete);}
+            const saveButton=_bbEl("save-bill-button");
+            if(saveButton){saveButton.disabled=false;saveButton.classList.remove("opacity-50","cursor-not-allowed");}
             if(t1)t1.textContent=tk>0?tk.toFixed(0):"–";
             if(t2)t2.textContent=te>0?"€"+te.toFixed(2):"–";
             if(warning){const total=totalInput&&totalInput.value!==""?Number(totalInput.value):null;warning.textContent=tk>0&&total!==null&&Math.abs(tk-total)>1?"Tổng 3 khung giờ ("+tk.toFixed(0)+" kWh) khác tổng kWh đã nhập ("+total+" kWh) — hãy kiểm tra lại.":"";}
@@ -1521,7 +1521,15 @@
         async function saveEditedBill(){
             const month=document.getElementById("edit-bill-month").value.trim(),year=Number(document.getElementById("edit-bill-year").value),amount=Number(document.getElementById("edit-bill-amount").value),kwh=Number(document.getElementById("edit-bill-kwh").value),start=document.getElementById("edit-bill-start").value,end=document.getElementById("edit-bill-end").value;
             const bandRows=readBillBands();
-            if(bandRows.some(r=>r.kwh===null||!Number.isFinite(r.kwh)||r.kwh<0)){alert("Điền đủ kWh cho cả 3 khung giờ Day, Peak và Night trước khi lưu nhé.");return;}
+            const suppliedBands=bandRows.filter(r=>r.kwh!==null&&Number.isFinite(r.kwh)&&r.kwh>=0);
+            const bandsComplete=suppliedBands.length===3;
+            if(!bandsComplete){
+                const isVi=localStorage.getItem("eco_buddy_language")==="vi";
+                const message=isVi
+                    ? "Hóa đơn đang thiếu dữ liệu Day / Peak / Night. M vẫn có thể lưu hóa đơn, nhưng các khung giờ chưa có số liệu sẽ được để trống trên Dashboard (không tự tính thành 0).\n\nM có chắc muốn lưu không?"
+                    : "This bill is missing some Day / Peak / Night data. You can still save it, but unavailable time bands will remain blank in the Dashboard (they will not be treated as zero).\n\nAre you sure you want to save?";
+                if(!confirm(message))return;
+            }
             if(!month||!Number.isInteger(year)||year<2000||year>2100||document.getElementById("edit-bill-amount").value===""||!Number.isFinite(amount)||amount<0||document.getElementById("edit-bill-kwh").value===""||!Number.isFinite(kwh)||kwh<0){alert("Nhập tháng, năm, tổng tiền và tổng kWh hợp lệ trước khi lưu nhé.");return;}
             if(start&&end&&start>end){alert("Ngày bắt đầu không thể sau ngày kết thúc.");return;}
             const categories=[...document.querySelectorAll("[data-category-percent]")].map(x=>({key:x.dataset.categoryPercent,label:(document.querySelector('[data-category-label="'+x.dataset.categoryPercent+'"]')||{}).value||"",percent:x.value===""?null:Number(x.value)}));
@@ -1544,7 +1552,9 @@
                     return;
                 }
             }
-            const bands=readBillBands().filter(b=>b.kwh!==null),record={id,month,year,bill:amount,kwh,startDate:start,endDate:end,categories:populated.length?categories.filter(c=>c.percent!==null):[],donutSegments:billImageFiles.breakdown?(window.currentBillDonutSegments||[]):(old?.donutSegments||[]),bands:bands.length?bands:(old?.bands||[]),breakdownImageDataUrl:imageData||old?.breakdownImageDataUrl||"",savings:"€"+(kwh*.08).toFixed(2)+" cr"};
+            const newBands=readBillBands().filter(b=>b.kwh!==null);
+            const mergedBands=BILL_BANDS.map(([key])=>newBands.find(b=>b.key===key)||((old?.bands||[]).find(b=>b.key===key))||null).filter(Boolean);
+            const record={id,month,year,bill:amount,kwh,startDate:start,endDate:end,categories:populated.length?categories.filter(c=>c.percent!==null):[],donutSegments:billImageFiles.breakdown?(window.currentBillDonutSegments||[]):(old?.donutSegments||[]),bands:mergedBands,breakdownImageDataUrl:imageData||old?.breakdownImageDataUrl||"",savings:"€"+(kwh*.08).toFixed(2)+" cr"};
             const idx=billingRecords.findIndex(x=>x.id===old?.id);if(idx>=0)billingRecords[idx]={...billingRecords[idx],...record};else billingRecords.push(record);
             try{saveUserData();}catch(e){alert("Không đủ bộ nhớ để lưu ảnh donut. M thử ảnh nhỏ hơn nhé.");return;}
             renderBillingListing();populateDashboardFilters();updateDashboardView();updateBillPerPerson();document.getElementById("upload-status-text").textContent="✓ Đã lưu hóa đơn và cập nhật Dashboard.";alert("💾 Đã lưu hóa đơn!");
@@ -1628,14 +1638,28 @@
             if(billValue)billValue.textContent=recs.length?"€"+totalBill.toFixed(2):"—";
             if(billLabel)billLabel.textContent="Total Electricity Bill · "+recs.length+" "+(recs.length===1?"month":"months");
             if(!body)return;
-            const totals={day:{kwh:0,eur:0},peak:{kwh:0,eur:0},night:{kwh:0,eur:0}};let has=false;
-            recs.forEach(record=>(Array.isArray(record.bands)?record.bands:[]).forEach(band=>{if(!band||!totals[band.key]||!Number.isFinite(Number(band.kwh))||Number(band.kwh)<0)return;const kwh=Number(band.kwh),eur=Number.isFinite(Number(band.eur))?Number(band.eur):kwh*Number(band.price||0);totals[band.key].kwh+=kwh;totals[band.key].eur+=eur;has=true;}));
-            if(!has){body.innerHTML='<tr><td colspan="5" class="py-3 text-center text-[#7a6452]">Chưa có bảng khung giờ cho lựa chọn này.</td></tr>';if(note)note.textContent="Lưu hoá đơn có bảng Day / Peak / Night để xem ở đây.";return;}
+            const totals={day:{kwh:0,eur:0,count:0},peak:{kwh:0,eur:0,count:0},night:{kwh:0,eur:0,count:0}};
+            let has=false,completeBills=0,billsWithAny=0;
+            recs.forEach(record=>{
+                const bands=Array.isArray(record.bands)?record.bands:[];
+                const present=new Set();
+                bands.forEach(band=>{
+                    if(!band||!totals[band.key]||band.kwh===null||band.kwh===undefined||!Number.isFinite(Number(band.kwh))||Number(band.kwh)<0)return;
+                    const kwh=Number(band.kwh),eur=Number.isFinite(Number(band.eur))?Number(band.eur):kwh*Number(band.price||0);
+                    totals[band.key].kwh+=kwh;totals[band.key].eur+=eur;totals[band.key].count++;present.add(band.key);has=true;
+                });
+                if(present.size) billsWithAny++;
+                if(["day","peak","night"].every(key=>present.has(key))) completeBills++;
+            });
+            if(!has){body.innerHTML='<tr><td colspan="5" class="py-3 text-center text-[#7a6452]">Chưa có bảng khung giờ cho lựa chọn này.</td></tr>';if(note)note.textContent="Chưa có dữ liệu Day / Peak / Night cho lựa chọn này.";return;}
             const totalKwh=Object.values(totals).reduce((n,v)=>n+v.kwh,0),totalEur=Object.values(totals).reduce((n,v)=>n+v.eur,0);
-            const row=(label,hint,value)=>'<tr class="border-t border-[#e3d6c6]"><td class="py-1.5 text-left font-bold">'+label+' <span class="font-normal text-[#7a6452]">'+hint+'</span></td><td>'+value.kwh.toFixed(0)+'</td><td>'+(totalKwh>0?(value.kwh/totalKwh*100).toFixed(1)+"%":"–")+'</td><td>€'+value.eur.toFixed(2)+'</td><td>'+(totalEur>0?(value.eur/totalEur*100).toFixed(1)+"%":"–")+'</td></tr>';
-            body.innerHTML=BILL_BANDS.map(([key,label,hint])=>row(label,hint,totals[key])).join('')+'<tr class="border-t-2 border-[#5c4738] font-extrabold"><td class="py-1.5 text-left">Total</td><td>'+totalKwh.toFixed(0)+'</td><td>100%</td><td>€'+totalEur.toFixed(2)+'</td><td>100%</td></tr>';
+            const row=(label,hint,value)=>'<tr class="border-t border-[#e3d6c6]"><td class="py-1.5 text-left font-bold">'+label+' <span class="font-normal text-[#7a6452]">'+hint+'</span></td><td>'+(value.count?value.kwh.toFixed(0):"—")+'</td><td>'+(value.count&&totalKwh>0?(value.kwh/totalKwh*100).toFixed(1)+"%":"—")+'</td><td>'+(value.count?"€"+value.eur.toFixed(2):"—")+'</td><td>'+(value.count&&totalEur>0?(value.eur/totalEur*100).toFixed(1)+"%":"—")+'</td></tr>';
+            body.innerHTML=BILL_BANDS.map(([key,label,hint])=>row(label,hint,totals[key])).join('')+'<tr class="border-t-2 border-[#5c4738] font-extrabold"><td class="py-1.5 text-left">Observed total</td><td>'+totalKwh.toFixed(0)+'</td><td>100%</td><td>€'+totalEur.toFixed(2)+'</td><td>100%</td></tr>';
             const center=_bbEl("donut-center-val");if(center)center.textContent=Math.round(totalKwh)+" kWh";
-            if(note)note.textContent=aggregateAll||recs.length>1?"Nhiều tháng · cộng dồn kWh và € theo từng khung giờ":"Tháng đã chọn · bảng đọc từ hoá đơn";
+            if(note){
+                const coverage=completeBills===recs.length?"Complete data · "+completeBills+"/"+recs.length+" bills": "Partial data · complete breakdowns "+completeBills+"/"+recs.length+" bills";
+                note.textContent=(aggregateAll||recs.length>1?"Combined time-of-use totals":"Selected bill · time-of-use data")+" · "+coverage;
+            }
         }
         // Combo chart: monthly bill as columns (€), energy usage as a line (kWh).
         function renderDashboardColumnLineChart(activeRecords) {
