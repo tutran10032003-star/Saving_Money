@@ -81,7 +81,7 @@
             gap: 12px;
         }
 
-        /* 6 TABS NGANG HÀNG GỌN GÀNG */
+        /* 6 TABS NAVIGATION */
         .nav-pills {
             width: 100%;
             max-width: 480px;
@@ -275,8 +275,8 @@
     <!-- MAIN -->
     <main class="max-w-xl mx-auto px-4 py-6 flex-grow w-full space-y-6">
 
-        <!-- MASCOT CARD & LEVEL-UP -->
-        <div class="vintage-panel p-5 flex flex-col items-center text-center">
+        <!-- MASCOT CARD & LEVEL-UP (CHỈ HIỂN THỊ Ở TAB TARIFF ĐỂ KHÔNG CHIẾM KHÔNG GIAN CÁC TAB KHÁC) -->
+        <div id="mascot-global-card" class="vintage-panel p-5 flex flex-col items-center text-center">
             <div class="w-full flex justify-between items-center px-2 mb-2 text-xs font-extrabold text-[#5c4738]">
                 <span id="mascot-level-badge" class="bg-[#f0e6d6] px-3 py-1 rounded-full border border-[#5c4738]">🌱 Level 1: Sprout</span>
                 <span id="mascot-xp-text" class="text-[#7a6452]">0 / 100 XP</span>
@@ -289,11 +289,18 @@
                 <div class="eco-mascot">
                     <svg id="main-mascot-svg" class="eco-character level-1" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
                         <ellipse cx="150" cy="269" rx="66" ry="8" fill="#b9a27b" opacity=".18"/>
-                        <path d="M116 220 Q105 239 107 252 Q110 261 134 257 L145 229" fill="#fff9ed" stroke="#75604d" stroke-width="5" stroke-linejoin="round"/>
-                        <ellipse cx="121" cy="257" rx="19" ry="10" fill="#fff9ed" stroke="#75604d" stroke-width="4"/>
-                        <path d="M174 222 Q188 239 185 252 Q182 262 159 257 L151 229" fill="#fff9ed" stroke="#75604d" stroke-width="5" stroke-linejoin="round"/>
-                        <ellipse cx="176" cy="257" rx="19" ry="10" fill="#fff9ed" stroke="#75604d" stroke-width="4"/>
+                        <!-- CHÂN PHÍCH CẮM ĐIỆN ĐÃ ĐƯỢC BỔ SUNG ĐẦY ĐỦ -->
+                        <path d="M116 210 Q105 228 107 245 Q110 255 134 250 L145 220" fill="#fff9ed" stroke="#75604d" stroke-width="5" stroke-linejoin="round"/>
+                        <rect x="110" y="244" width="22" height="12" rx="4" fill="#8c7355" stroke="#75604d" stroke-width="4"/>
+                        <line x1="116" y1="256" x2="116" y2="265" stroke="#75604d" stroke-width="4" stroke-linecap="round"/>
+                        <line x1="126" y1="256" x2="126" y2="265" stroke="#75604d" stroke-width="4" stroke-linecap="round"/>
 
+                        <path d="M174 212 Q188 228 185 245 Q182 255 159 250 L151 220" fill="#fff9ed" stroke="#75604d" stroke-width="5" stroke-linejoin="round"/>
+                        <rect x="156" y="244" width="22" height="12" rx="4" fill="#8c7355" stroke="#75604d" stroke-width="4"/>
+                        <line x1="162" y1="256" x2="162" y2="265" stroke="#75604d" stroke-width="4" stroke-linecap="round"/>
+                        <line x1="172" y1="256" x2="172" y2="265" stroke="#75604d" stroke-width="4" stroke-linecap="round"/>
+
+                        <!-- THÂN BÉ MÂY -->
                         <path class="mascot-body-fill" d="M83 164 Q65 153 69 134 Q53 119 65 101 Q71 82 91 81 Q96 58 119 62 Q137 43 153 57 Q171 43 189 61 Q215 58 224 82 Q246 89 241 111 Q257 129 240 147 Q249 168 229 184 Q232 207 211 220 Q194 236 170 233 Q150 241 128 233 Q102 237 87 218 Q68 207 77 186 Q64 176 83 164 Z" stroke="#75604d" stroke-width="5" stroke-linejoin="round"/>
 
                         <g>
@@ -452,7 +459,7 @@
                 </div>
             </div>
 
-            <!-- REMINDERS & TIPS GIỮ LẠI ĐẦY ĐỦ Ở DƯỚI REPORT -->
+            <!-- REMINDERS & TIPS -->
             <div class="vintage-panel p-5 space-y-3">
                 <h3 class="font-bold text-[#4a3b32] text-sm flex items-center gap-2"><span>💡</span> Daily Reminders & Basic Rules:</h3>
                 <ul class="text-xs space-y-2 text-[#5c4738] font-medium">
@@ -464,7 +471,7 @@
             </div>
         </div>
 
-        <!-- TAB 3: SMART TIPS & FLASHCARDS (MỚI - TAB RIÊNG BIỆT DỊU MẮT) -->
+        <!-- TAB 3: SMART TIPS & FLASHCARDS -->
         <div id="tab-content-tips" class="hidden space-y-6">
             <div class="vintage-panel p-5 space-y-4">
                 <h2 class="font-bold text-[#4a3b32] text-base flex items-center gap-2 border-b-2 border-[#5c4738] pb-2.5">
@@ -473,7 +480,6 @@
                 <p class="text-xs text-[#7a6452]">Explore curated flashcards and expert tips to reduce your monthly electricity bill:</p>
 
                 <div class="space-y-3">
-                    <!-- Flashcard 1 -->
                     <div class="vint-card p-4 bg-[#f5ede2] border-l-4 border-l-[#8c7355] space-y-2 shadow-sm">
                         <div class="flex items-center justify-between">
                             <span class="text-xs font-black text-[#5c4738]">🚿 Shower & Water Heating</span>
@@ -485,7 +491,6 @@
                         </div>
                     </div>
 
-                    <!-- Flashcard 2 -->
                     <div class="vint-card p-4 bg-[#f2f7ec] border-l-4 border-l-[#87a96b] space-y-2 shadow-sm">
                         <div class="flex items-center justify-between">
                             <span class="text-xs font-black text-[#3b4a32]">🌙 Night Saver Shifting</span>
@@ -494,7 +499,6 @@
                         <p class="text-xs font-bold text-[#3b4a32]">"Run your washing machine and dishwasher strictly after 23:00 to take advantage of the cheap Night Rate (€0.1954/kWh)."</p>
                     </div>
 
-                    <!-- Flashcard 3 -->
                     <div class="vint-card p-4 bg-[#eaf2f8] border-l-4 border-l-[#32455c] space-y-2 shadow-sm">
                         <div class="flex items-center justify-between">
                             <span class="text-xs font-black text-[#32455c]">🔌 Phantom Load & Standby</span>
@@ -523,7 +527,7 @@
                 </div>
 
                 <div class="vint-card p-4 bg-white space-y-3">
-                    <div id="chatbot-messages" class="space-y-2.5 max-h-72 overflow-y-auto pr-1 text-xs">
+                    <div id="chatbot-messages" class="space-y-2.5 max-h-96 overflow-y-auto pr-1 text-xs">
                         <div class="bg-[#f5ede2] p-3 rounded-2xl border border-[#d8c7b0]">
                             <p class="font-bold text-[#5c4738]">Bé Mây ☁️</p>
                             <p class="mt-1 text-[#4a3b32]">Ahoy, traveller! Ready to test your energy saving knowledge with our 20-question eco quiz or ask me anything?</p>
@@ -755,6 +759,15 @@
             if (targetEl) targetEl.classList.remove('hidden');
             if (targetBtn) targetBtn.classList.add('active');
 
+            const mascotGlobalCard = document.getElementById('mascot-global-card');
+            if (mascotGlobalCard) {
+                if (tabName === 'tracker') {
+                    mascotGlobalCard.classList.remove('hidden');
+                } else {
+                    mascotGlobalCard.classList.add('hidden');
+                }
+            }
+
             if (tabName === 'calendar') renderCalendar();
             if (tabName === 'reports') updateReportChart();
         }
@@ -854,7 +867,6 @@
             }
         }
 
-        /* CHATBOT & 20 QUIZ QUESTIONS */
         let chatMode = 'quiz';
         function setChatMode(mode) {
             chatMode = mode;
