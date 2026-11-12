@@ -1943,39 +1943,74 @@
             }
         }
 
-        function sendUserMessage() {
+        function escapeChatHtml(value) {
+            return String(value).replace(/[&<>"']/g, char => ({
+                "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+            }[char]));
+        }
+
+        async function sendUserMessage() {
             const input = document.getElementById('chat-input-text');
             const text = input.value.trim();
             if (!text) return;
 
             const msgs = document.getElementById('chatbot-messages');
+            const safeText = escapeChatHtml(text);
             msgs.innerHTML += `
                 <div class="bg-[#eaf2f8] p-3 rounded-2xl border border-[#b9d0e8] text-right">
                     <p class="font-bold text-[#32455c]">You</p>
-                    <p class="mt-1 text-[#4a3b32]">${text}</p>
+                    <p class="mt-1 text-[#4a3b32]">${safeText}</p>
                 </div>
             `;
             input.value = "";
 
-            setTimeout(() => {
-                let reply = "That's wonderful! Let's save energy together to protect our environment! 🌿";
-                const lower = text.toLowerCase();
-                if (lower.includes('hi') || lower.includes('hello')) {
-                    reply = "Hello! I'm Bé Mây, your friendly eco assistant. How can I help you today? ☁️";
-                } else if (lower.includes('save') || lower.includes('bill')) {
-                    reply = "To save on your electricity bill, remember to run your laundry during Night Saver hours (after 23:00) and turn off standby appliances! ⚡";
-                } else if (lower.includes('weather')) {
-                    reply = "Dublin weather can be chilly! Make sure to check the Weather tab before heading out. 🌦️";
-                }
+            const lang = localStorage.getItem("eco_buddy_language") === "vi" ? "vi" : "en";
+            const normalized = text.toLowerCase()
+                .normalize("NFD").replace(/[\\u0300-\\u036f]/g, "")
+                .replace(/temparature|temprature|tempereture|temperture|tempature/g, "temperature")
+                .replace(/[^a-z0-9? ]/g, " ").replace(/\\s+/g, " ").trim();
+            const hasAny = (words) => words.some(word => normalized.includes(word));
+            let reply = "";
 
-                msgs.innerHTML += `
-                    <div class="bg-[#f5ede2] p-3 rounded-2xl border border-[#d8c7b0]">
-                        <p class="font-bold text-[#5c4738]">Bé Mây ☁️</p>
-                        <p class="mt-1 text-[#4a3b32]">${reply}</p>
-                    </div>
-                `;
-                msgs.scrollTop = msgs.scrollHeight;
-            }, 600);
+            if (hasAny(["hello", "hi ", "hey", "xin chao", "chao"])) {
+                reply = lang === "vi"
+                    ? "Chào bạn! Tớ là Bé Mây ☁️ Bạn muốn hỏi về thời tiết, tiết kiệm điện hay mẹo sinh hoạt hôm nay?"
+                    : "Hello! I'm Baby Cloud ☁️ Would you like help with today's weather, saving energy, or everyday eco tips?";
+            } else if (hasAny(["what is temperature", "what does temperature mean", "define temperature", "temperature meaning", "temperature la gi", "nhiet do la gi"])) {
+                reply = lang === "vi"
+                    ? "Temperature (nhiệt độ) cho biết một vật hoặc không khí nóng hay lạnh đến mức nào. Nhiệt độ thường được đo bằng độ Celsius (°C) hoặc Fahrenheit (°F)."
+                    : "Temperature tells us how hot or cold something is. It is commonly measured in degrees Celsius (°C) or Fahrenheit (°F).";
+            } else if (hasAny(["weather", "temperature", " temp ", "forecast", "rain", "raining", "wind", "cold outside", "hot outside", "thoi tiet", "nhiet do", "troi mua"])) {
+                let weather = window.latestWeather;
+                if (!weather || Date.now() - weather.updatedAt > 10 * 60 * 1000) {
+                    weather = await fetchWeatherData();
+                }
+                if (weather) {
+                    reply = lang === "vi"
+                        ? `Thời tiết hiện tại ở ${weather.location}: ${weather.temp}°C, ${weather.conditionVi.toLowerCase()}, gió khoảng ${weather.wind} km/h ${weather.icon}. Dữ liệu vừa được cập nhật. ☁️`
+                        : `The current temperature in ${weather.location} is ${weather.temp}°C. It is ${weather.condition.toLowerCase()}, with wind around ${weather.wind} km/h ${weather.icon}. This is the latest available reading. ☁️`;
+                } else {
+                    reply = lang === "vi"
+                        ? "Tớ chưa lấy được dữ liệu thời tiết lúc này. Bạn thử mở tab Thời tiết hoặc bấm Làm mới nhé."
+                        : "I can't retrieve the live weather right now. Please open the Weather tab and try Refresh.";
+                }
+            } else if (hasAny(["save", "saving", "bill", "electricity", "energy", "power", "electric", "hoa don", "tiet kiem dien", "dien nang"])) {
+                reply = lang === "vi"
+                    ? "Để giảm hóa đơn điện, bạn có thể chạy máy giặt trong khung giờ Night Saver (sau 23:00), tắt thiết bị ở chế độ chờ và hạn chế dùng thiết bị công suất lớn vào giờ cao điểm. ⚡"
+                    : "To reduce your electricity bill, run the washing machine during Night Saver hours (after 23:00), switch off standby devices, and avoid using high-power appliances during peak hours. ⚡";
+            } else {
+                reply = lang === "vi"
+                    ? "Tớ chưa chắc mình hiểu câu hỏi. Bạn có thể hỏi tớ về nhiệt độ, thời tiết Dublin, hóa đơn điện hoặc cách tiết kiệm năng lượng nhé. ☁️"
+                    : "I'm not quite sure I understood that. You can ask me about temperature, Dublin weather, electricity bills, or ways to save energy. ☁️";
+            }
+
+            msgs.innerHTML += `
+                <div class="bg-[#f5ede2] p-3 rounded-2xl border border-[#d8c7b0]">
+                    <p class="font-bold text-[#5c4738]">Bé Mây ☁️</p>
+                    <p class="mt-1 text-[#4a3b32]">${escapeChatHtml(reply)}</p>
+                </div>
+            `;
+            msgs.scrollTop = msgs.scrollHeight;
         }
 
         function checkTariffStatus() {
@@ -2200,39 +2235,58 @@
                 const lat = 53.3498;
                 const lon = -6.2603;
                 const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,precipitation,weather_code,wind_speed_10m&timezone=Europe/Dublin`);
+                if (!res.ok) throw new Error("Weather service unavailable");
                 const data = await res.json();
-                
+
                 if (data && data.current) {
                     const temp = data.current.temperature_2m;
                     const precip = data.current.precipitation;
                     const wind = data.current.wind_speed_10m;
                     const wcode = data.current.weather_code;
 
-                    let condition = "Trời quang đãng";
+                    let condition = "Clear";
+                    let conditionVi = "Trời quang đãng";
                     let icon = "☀️";
 
                     if (precip > 0 || (wcode >= 50 && wcode < 68)) {
-                        condition = "Trời có mưa nhẹ";
+                        condition = "Light rain";
+                        conditionVi = "Trời có mưa nhẹ";
                         icon = "🌧️";
                     } else if (temp < 8) {
-                        condition = "Trời rất lạnh";
+                        condition = "Very cold";
+                        conditionVi = "Trời rất lạnh";
                         icon = "❄️";
                     } else if (temp <= 15) {
-                        condition = "Trời se lạnh, lộng gió";
+                        condition = "Cool and breezy";
+                        conditionVi = "Trời se lạnh, lộng gió";
                         icon = "⛅";
                     } else if (temp > 20) {
-                        condition = "Trời ấm áp, dễ chịu";
+                        condition = "Warm and pleasant";
+                        conditionVi = "Trời ấm áp, dễ chịu";
                         icon = "☀️";
                     }
 
-                    weatherCondition.innerText = condition;
-                    weatherTemp.innerText = `${Math.round(temp)}°C`;
-                    weatherWind.innerText = `Gió: ${Math.round(wind)} km/h`;
-                    weatherIcon.innerText = icon;
+                    window.latestWeather = {
+                        temp: Math.round(temp),
+                        wind: Math.round(wind),
+                        condition,
+                        conditionVi,
+                        icon,
+                        location: "Dublin",
+                        updatedAt: Date.now()
+                    };
+
+                    if (weatherCondition) weatherCondition.innerText = conditionVi;
+                    if (weatherTemp) weatherTemp.innerText = `${Math.round(temp)}°C`;
+                    if (weatherWind) weatherWind.innerText = `Gió: ${Math.round(wind)} km/h`;
+                    if (weatherIcon) weatherIcon.innerText = icon;
+                    return window.latestWeather;
                 }
+                return null;
             } catch (err) {
                 console.error("Lỗi thời tiết:", err);
-                weatherCondition.innerText = "Lỗi tải thời tiết";
+                if (weatherCondition) weatherCondition.innerText = "Lỗi tải thời tiết";
+                return null;
             }
         }
     </script>
