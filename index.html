@@ -641,6 +641,13 @@
                         </div>
                     </div>
 
+
+                    <div class="vint-card p-5 bg-[#fffaf4] flex flex-col items-center space-y-4">
+                        <p class="text-xs font-bold text-[#5c4738]">🍩 Energy Distribution by Category</p>
+                        <div class="relative w-56 h-56 flex items-center justify-center"><svg id="dashboard-energy-donut" class="w-full h-full" viewBox="0 0 220 220" role="img" aria-label="Energy distribution by category"></svg><img id="dashboard-original-donut" class="hidden w-full h-full object-contain rounded-full" alt="Original monthly energy distribution chart"><div class="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none"><span class="text-[10px] font-extrabold text-[#7a6452] uppercase tracking-wider">Selected Usage</span><span id="donut-center-val" class="text-base font-black tabular-nums text-[#32455c]">— kWh</span></div></div>
+                        <div id="dashboard-category-legend" class="grid grid-cols-2 sm:grid-cols-4 gap-2 w-full text-[10px] font-bold text-[#4a3b32]"></div><p id="dashboard-donut-note" class="text-[10px] text-[#7a6452] text-center">Save a bill to show its estimated distribution or original chart.</p>
+                    </div>
+
             <!-- REMINDERS & TIPS -->
             <div class="vintage-panel p-6 space-y-3">
                 <h3 class="font-bold text-[#4a3b32] text-sm flex items-center gap-2"><span>💡</span> Daily Reminders & Basic Rules:</h3>
@@ -651,12 +658,6 @@
                     <li class="bg-[#fffaf4] px-3 py-2.5 rounded-xl border border-[#5c4738]/30">🚿 <strong>Water heater:</strong> Remember to switch off the water heater after showering.</li>
                 </ul>
             </div>
-
-                    <div class="vint-card p-5 bg-[#fffaf4] flex flex-col items-center space-y-4">
-                        <p class="text-xs font-bold text-[#5c4738]">🍩 Energy Distribution by Category</p>
-                        <div class="relative w-56 h-56 flex items-center justify-center"><svg id="dashboard-energy-donut" class="w-full h-full" viewBox="0 0 220 220" role="img" aria-label="Energy distribution by category"></svg><img id="dashboard-original-donut" class="hidden w-full h-full object-contain rounded-full" alt="Original monthly energy distribution chart"><div class="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none"><span class="text-[10px] font-extrabold text-[#7a6452] uppercase tracking-wider">Selected Usage</span><span id="donut-center-val" class="text-base font-black tabular-nums text-[#32455c]">— kWh</span></div></div>
-                        <div id="dashboard-category-legend" class="grid grid-cols-2 sm:grid-cols-4 gap-2 w-full text-[10px] font-bold text-[#4a3b32]"></div><p id="dashboard-donut-note" class="text-[10px] text-[#7a6452] text-center">Save a bill to show its estimated distribution or original chart.</p>
-                    </div>
                     </div>
                     </div>
                     <!-- REMINDERS & TIPS: DASHBOARD ONLY -->
