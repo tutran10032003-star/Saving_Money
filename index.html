@@ -627,11 +627,11 @@
                     <p class="text-[11px] text-[#7a6452]">Upload two images: the bill summary and the energy breakdown chart. OCR provides a draft only; check all values before saving.</p>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div class="vint-card p-3 bg-[#fffaf4] space-y-2"><b class="text-xs">🧾 Ảnh A · Tổng hoá đơn</b>
-                            <label class="block px-3 py-2 bg-[#8C735F] text-white rounded-xl text-xs text-center cursor-pointer">📸 Chụp / chọn ảnh<input type="file" id="bill-img-file" accept="image/*" capture="environment" class="hidden" onchange="previewUploadedBill(event,'total')"></label>
+                            <label class="block px-3 py-2 bg-[#8C735F] text-white rounded-xl text-xs text-center cursor-pointer">📸 Chụp / chọn ảnh<input type="file" id="bill-img-file" accept="image/*"  class="hidden" onchange="previewUploadedBill(event,'total')"></label>
                             <img id="bill-preview-img" alt="Bill preview" class="hidden max-h-40 w-full object-contain rounded-xl border">
                         </div>
                         <div class="vint-card p-3 bg-[#fffaf4] space-y-2"><b class="text-xs">🍩 Ảnh B · Phân bổ điện năng</b>
-                            <label class="block px-3 py-2 bg-[#8C735F] text-white rounded-xl text-xs text-center cursor-pointer">📸 Chụp / chọn ảnh<input type="file" id="bill-breakdown-file" accept="image/*" capture="environment" class="hidden" onchange="previewUploadedBill(event,'breakdown')"></label>
+                            <label class="block px-3 py-2 bg-[#8C735F] text-white rounded-xl text-xs text-center cursor-pointer">📸 Chụp / chọn ảnh<input type="file" id="bill-breakdown-file" accept="image/*"  class="hidden" onchange="previewUploadedBill(event,'breakdown')"></label>
                             <img id="bill-breakdown-preview" alt="Breakdown preview" class="hidden max-h-40 w-full object-contain rounded-xl border">
                         </div>
                     </div>
@@ -2364,6 +2364,7 @@ const languagePairs = [
 ["Live weather data, updated regularly.","Dữ liệu thực tế cập nhật liên tục."],
 ["🔄 Refresh","🔄 Làm Mới"],
 ["Winter puffer jacket (warm grey/blue)","Áo phao mùa đông (Xám/Xanh ấm áp)"],
+["Clear","Trời quang đãng"],["Light rain","Trời có mưa nhẹ"],["Very cold","Trời rất lạnh"],["Cool and breezy","Trời se lạnh, lộng gió"],["Warm and pleasant","Trời ấm áp, dễ chịu"],["Cloudy","Trời nhiều mây"],["Partly cloudy","Trời có mây rải rác"],["Overcast","Trời âm u"],["Lỗi tải thời tiết","Weather unavailable"],
 ["Bill not saved yet.","Chưa lưu hoá đơn."],
 ["Baby Cloud","Bé Mây"],["Live weather data, updated regularly.","Dữ liệu thời tiết được cập nhật liên tục."],["🔄 Refresh","🔄 Làm mới"],["Đang tải thời tiết...","Đang tải thời tiết..."],["Wind:","Gió:"],["Outfit suggestions for going out:","Gợi ý trang phục khi ra ngoài:"],["Warm scarf and gloves","Khăn choàng cổ và găng tay ấm"],["Winter puffer jacket (warm grey/blue)","Áo phao mùa đông (xám/xanh ấm áp)"],
 ["Daily Electricity Tariff (SST Saver+)","Giá điện hôm nay (SST Saver+)"],["☀️ Day Rate","☀️ Giá giờ ngày"],["🔴 Peak Rate","🔴 Giá giờ cao điểm"],["🟢 Night Rate (Cheapest)","🟢 Giá giờ đêm (rẻ nhất)"],["Limit high-energy appliances","Hạn chế sử dụng thiết bị tiêu thụ nhiều điện"],["Daily Eco Tasks (1 time/day)","Nhiệm vụ xanh mỗi ngày (1 lần/ngày)"],["Points","Điểm"],["Turn off lights when leaving rooms (+20 XP)","Tắt đèn khi rời khỏi phòng (+20 XP)"],["Check all rooms in the house.","Kiểm tra tất cả các phòng trong nhà."],["Complete","Hoàn thành"],["Laundry during Night Saver hours (+30 XP)","Giặt đồ trong giờ điện đêm (+30 XP)"],["Run washing machine after 23:00.","Chạy máy giặt sau 23:00."],["Put away dry dishes (+20 XP)","Cất bát đĩa đã khô (+20 XP)"],["Keep the kitchen tidy and organized.","Giữ nhà bếp gọn gàng, ngăn nắp."],
