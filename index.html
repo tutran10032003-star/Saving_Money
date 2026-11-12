@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-    <title>Eco-Buddy Home Manager V2 ⚡☁️</title>
+    <title>Eco-Buddy Home Manager ⚡☁️</title>
 
     <!-- PWA CONFIGURATION -->
     <link rel="manifest" href="/Saving_Money/manifest.json">
@@ -277,10 +277,10 @@
             <div class="flex items-center justify-between gap-3 mb-2 sm:mb-0">
                 <div class="flex items-center space-x-2.5">
                     <span class="text-2xl">🌿</span>
-                    <div><h1 class="font-bold text-sm sm:text-base text-[#4a3b32] leading-tight whitespace-nowrap">Eco-Buddy Home Manager <span class="text-[10px] bg-[#B8AEDB] text-white px-2 py-0.5 rounded-full">V2</span></h1><p class="text-xs text-[#7a6452] font-semibold mt-0.5">🕒 <span id="realtime-clock" class="text-[#5c4738] font-bold"></span></p></div>
+                    <div><h1 class="font-bold text-xs sm:text-base text-[#4a3b32] leading-tight tracking-tight whitespace-nowrap">Eco-Buddy Home Manager</h1><p class="text-xs text-[#7a6452] font-semibold mt-0.5">🕒 <span id="realtime-clock" class="text-[#5c4738] font-bold"></span></p></div>
                 </div>
                 <div class="relative shrink-0">
-                    <button type="button" id="language-toggle" onclick="toggleLanguageMenu()" aria-label="Choose language" aria-expanded="false" class="rounded-full border border-[#d8c7b0] bg-[#f7efe4] hover:bg-[#efe2d1] px-3 py-2 text-sm font-bold text-[#5c4738] shadow-sm">🌍 <span id="language-current">EN</span></button>
+                    <button type="button" id="language-toggle" onclick="toggleLanguageMenu()" aria-label="Choose language" aria-expanded="false" class="rounded-full border border-[#d8c7b0] bg-[#f7efe4] hover:bg-[#efe2d1] px-2.5 py-2 text-lg font-bold text-[#5c4738] shadow-sm" title="Choose language" aria-label="Choose language">🌍</button>
                     <div id="language-menu" class="hidden absolute right-0 top-full mt-2 z-50 min-w-[150px] rounded-xl border-2 border-[#d8c7b0] bg-[#fffaf4] p-2 shadow-lg">
                         <button type="button" onclick="setAppLanguage('en')" class="w-full rounded-lg px-3 py-2 text-left text-xs font-bold hover:bg-[#f1e6d8]">🇬🇧 English</button>
                         <button type="button" onclick="setAppLanguage('vi')" class="w-full rounded-lg px-3 py-2 text-left text-xs font-bold hover:bg-[#f1e6d8]">🇻🇳 Tiếng Việt</button>
@@ -1004,7 +1004,7 @@
 
         const appLanguageText={en:{"tab-btn-weather":"🌦️ Weather","tab-btn-tracker":"⚡ Tariff","tab-btn-reports":"📊 Reports","tab-btn-tips":"💡 Tips","tab-btn-chatbot":"☁️ Bé Mây","tab-btn-checklist":"🍳 Cooking","tab-btn-calendar":"📅 Calendar"},vi:{"tab-btn-weather":"🌦️ Thời tiết","tab-btn-tracker":"⚡ Giá điện","tab-btn-reports":"📊 Báo cáo","tab-btn-tips":"💡 Mẹo hay","tab-btn-chatbot":"☁️ Bé Mây","tab-btn-checklist":"🍳 Nấu ăn","tab-btn-calendar":"📅 Lịch"}};
         function toggleLanguageMenu(){const menu=document.getElementById("language-menu"),button=document.getElementById("language-toggle");if(!menu)return;menu.classList.toggle("hidden");button?.setAttribute("aria-expanded",String(!menu.classList.contains("hidden")));}
-        function setAppLanguage(language){const lang=language==="vi"?"vi":"en";document.documentElement.lang=lang;localStorage.setItem("eco_buddy_language",lang);document.getElementById("language-current").textContent=lang.toUpperCase();Object.entries(appLanguageText[lang]).forEach(([id,label])=>{const el=document.getElementById(id);if(el)el.textContent=label;});document.getElementById("language-menu")?.classList.add("hidden");document.getElementById("language-toggle")?.setAttribute("aria-expanded","false");}
+        function setAppLanguage(language){const lang=language==="vi"?"vi":"en";document.documentElement.lang=lang;localStorage.setItem("eco_buddy_language",lang);const languageCurrent=document.getElementById("language-current");if(languageCurrent)languageCurrent.textContent=lang.toUpperCase();Object.entries(appLanguageText[lang]).forEach(([id,label])=>{const el=document.getElementById(id);if(el)el.textContent=label;});document.getElementById("language-menu")?.classList.add("hidden");document.getElementById("language-toggle")?.setAttribute("aria-expanded","false");}
         function initAppLanguage(){setAppLanguage(localStorage.getItem("eco_buddy_language")||"en");}
         window.addEventListener("resize", updateHeaderHeight);
         window.addEventListener("orientationchange", () => setTimeout(updateHeaderHeight, 150));
@@ -1181,7 +1181,7 @@
                 ["other",["other"]]
             ];
             const detected=categories.filter(([,aliases])=>aliases.some(alias=>normalized.includes(alias)));
-            if(detected.length!==8)return {ok:false,reason:"keywords",detected:detected.length};
+            if(detected.length<4)return {ok:false,reason:"not-enough-labels",detected:detected.length};
             let bitmap=null;
             try{
                 bitmap=await createImageBitmap(file);
@@ -1190,55 +1190,49 @@
                 const ctx=canvas.getContext("2d",{willReadFrequently:true});
                 if(!ctx)return {ok:false,reason:"canvas"};
                 ctx.drawImage(bitmap,0,0);
-                const w=canvas.width,h=canvas.height;
-                let cx=w/2,cy=h*(h/w>1.15?0.40:0.5);
+                const w=canvas.width,h=canvas.height,pixels=ctx.getImageData(0,0,w,h).data;
+                let cx=w/2,cy=h*(h/w>1.15?0.397:0.5);
                 const centerWords=(words||[]).filter(word=>/usage|kwh/i.test(word.text||"")&&word.bbox);
                 if(centerWords.length){
                     const points=centerWords.map(word=>({x:(word.bbox.x0+word.bbox.x1)/2,y:(word.bbox.y0+word.bbox.y1)/2}));
                     cx=points.reduce((n,p)=>n+p.x,0)/points.length;
                     cy=points.reduce((n,p)=>n+p.y,0)/points.length;
                 }
-                const radius=Math.min(w*0.43,h*(h/w>1.15?0.27:0.43));
-                const ringPixels=[],pixels=ctx.getImageData(0,0,w,h).data;
+                const radius=Math.min(w*0.43,h*(h/w>1.15?0.24:0.43));
+                const occupied=[];
                 for(let deg=0;deg<360;deg++){
                     const angle=(deg-90)*Math.PI/180;
                     let hits=0;
-                    for(let j=0;j<11;j++){
-                        const r=radius*(0.75+j*0.021);
+                    for(let j=0;j<15;j++){
+                        const r=radius*(0.75+j*0.014);
                         const x=Math.round(cx+Math.cos(angle)*r),y=Math.round(cy+Math.sin(angle)*r);
                         if(x<0||y<0||x>=w||y>=h)continue;
-                        const offset=(y*w+x)*4,red=pixels[offset],green=pixels[offset+1],blue=pixels[offset+2];
-                        const max=Math.max(red,green,blue),min=Math.min(red,green,blue);
-                        if(max-min>24||max<226)hits++;
+                        const k=(y*w+x)*4,red=pixels[k],green=pixels[k+1],blue=pixels[k+2];
+                        if(Math.max(red,green,blue)-Math.min(red,green,blue)>24||Math.max(red,green,blue)<226)hits++;
                     }
-                    ringPixels.push(hits>=2);
+                    occupied.push(hits>=7);
                 }
                 bitmap.close();bitmap=null;
-                for(let pass=0;pass<2;pass++){
-                    for(let i=0;i<360;i++){
-                        if(ringPixels[i])continue;
-                        let gap=1;
-                        while(gap<=2&&!ringPixels[(i+gap)%360])gap++;
-                        if(gap<=2&&ringPixels[(i+gap)%360]&&ringPixels[(i-1+360)%360]){
-                            for(let j=0;j<gap;j++)ringPixels[(i+j)%360]=true;
-                        }
-                    }
+                const runs=[];let a=0;
+                while(a<360){
+                    if(!occupied[a]){a++;continue;}
+                    const begin=a;
+                    while(a<360&&occupied[a])a++;
+                    if(a-begin>=2)runs.push({start:begin,length:a-begin});
                 }
-                const runs=[];
-                let i=0;
-                while(i<360){
-                    if(!ringPixels[i]){i++;continue;}
-                    const start=i;
-                    while(i<360&&ringPixels[i])i++;
-                    const length=i-start;
-                    if(length>=4)runs.push({start,length});
-                }
-                if(runs.length!==8)return {ok:false,reason:"segments",detected:8,segments:runs.length};
-                const total=runs.reduce((sum,run)=>sum+run.length,0);
-                if(total<100)return {ok:false,reason:"weak-ring"};
+                if(runs.length<8)return {ok:false,reason:"segments",segments:runs.length,detected:detected.length};
+                const orderedRuns=runs.slice(0,7);
+                const finalLength=runs.slice(7).reduce((sum,run)=>sum+run.length,0);
+                orderedRuns.push({start:runs[7].start,length:finalLength});
+                if(orderedRuns.length!==8)return {ok:false,reason:"segment-count"};
+                const total=orderedRuns.reduce((sum,run)=>sum+run.length,0);
+                if(total<90)return {ok:false,reason:"weak-ring"};
+                const raw=orderedRuns.map(run=>run.length/total*100);
+                const rounded=raw.map(value=>Math.round(value*10)/10);
+                rounded[0]=Math.round((rounded[0]+100-rounded.reduce((sum,value)=>sum+value,0))*10)/10;
                 const shares={};
-                runs.forEach((run,index)=>{shares[categories[index][0]]=run.length/total*100;});
-                return {ok:true,shares,detected:8};
+                categories.forEach(([key],index)=>{shares[key]=rounded[index];});
+                return {ok:true,shares,detected:detected.length,segments:runs.length};
             }catch(error){
                 if(bitmap)bitmap.close();
                 console.warn("Could not estimate bill donut shares",error);
@@ -1271,10 +1265,14 @@
                         const share=estimate.shares[input.dataset.categoryPercent];
                         if(Number.isFinite(share))input.value=share.toFixed(1);
                     });
+                    updateBillCategoryTotals();
+                }else{
+                    status.textContent="Đã đọc thông tin hoá đơn, nhưng chưa đo được donut. M thử ảnh rõ và chụp trọn vòng donut nhé.";
                 }
                 updateBillCategoryTotals();updateBillPerPerson();
                 const filled=[p.start,p.end,p.amount!==undefined,p.kwh!==undefined,p.month,p.year].filter(Boolean).length;
-                status.textContent=(filled?"Đã tự điền "+filled+" trường. ":"")+(estimate.ok?"✓ Đã nhận diện 8 nhóm và ước tính tỷ lệ theo kích thước múi donut.":"Chưa đo được tỷ lệ donut rõ ràng — m kiểm tra ảnh và chỉnh tỷ lệ thủ công nhé.");
+                if(estimate.ok)status.textContent=(filled?"Đã tự điền "+filled+" trường. ":"")+"✓ Ước tính 8 nhóm theo kích thước múi donut (OCR nhận "+estimate.detected+"/8 keyword).";
+                else status.textContent=(filled?"Đã tự điền "+filled+" trường. ":"")+status.textContent;
             }catch(err){console.error(err);status.textContent="OCR gặp lỗi — vui lòng nhập tay.";}
             finally{if(worker)await worker.terminate();button.disabled=false;button.textContent="✨ Đọc lại ảnh";}
         }
