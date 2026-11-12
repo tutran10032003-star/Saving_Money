@@ -1976,6 +1976,22 @@
             const entries = window.BABY_CLOUD_KNOWLEDGE || [];
             const query = normalizeBabyCloudText(userText);
             if (!query) return null;
+
+            // Short Vietnamese/English temperature questions mean "current temperature".
+            // Keep explicit definition questions in the educational knowledge entry.
+            const isTemperatureDefinition = /^(what is|what does|define) temperature(?: mean)?$/.test(query)
+                || /^(nhiet do la gi|nhiet do nghia la gi)$/.test(query);
+            if (!isTemperatureDefinition) {
+                const asksCurrentTemperature =
+                    /^(nhiet do|nhiet do nhiu|nhiet do nhieu|nhiet do bao nhieu|bao nhieu do|bay gio nhiet do|hien tai nhiet do)( vay| the| nhi| v)?$/.test(query)
+                    || /^(temperature|current temperature|temperature now|temperature today|how many degrees)( now| today)?$/.test(query)
+                    || /\b(nhiet do|bao nhieu do)\b/.test(query)
+                    || /\b(current temperature|temperature now|temperature today)\b/.test(query);
+                if (asksCurrentTemperature) {
+                    return entries.find(entry => entry.intent === "weather_now") || null;
+                }
+            }
+
             let best = null, bestScore = 0;
             const tokens = new Set(query.split(" ").filter(word => word.length > 1));
             for (const entry of entries) {
