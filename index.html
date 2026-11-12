@@ -983,20 +983,26 @@
             const savedPoints = localStorage.getItem("eco_buddy_points");
             const savedDate = localStorage.getItem("eco_buddy_date");
             const savedTasks = localStorage.getItem("eco_buddy_tasks");
-            const savedBills = localStorage.getItem("eco_buddy_bills");
+            const billingResetKey = "eco_buddy_billing_clean_start_v1";
+            const hasCompletedBillingReset = localStorage.getItem(billingResetKey) === "1";
 
-            if (savedBills) {
-                try {
-                    const parsedBills = JSON.parse(savedBills);
-                    if (Array.isArray(parsedBills)) {
-                        // Remove only the three legacy demo bills; keep every user-uploaded bill.
-                        const demoBillIds = new Set(["september-2026", "october-2026", "november-2026"]);
-                        billingRecords = parsedBills.filter(bill => bill && !demoBillIds.has(bill.id));
-                        if (billingRecords.length !== parsedBills.length) {
-                            localStorage.setItem("eco_buddy_bills", JSON.stringify(billingRecords));
-                        }
+            // One-time clean start: remove all bills saved before this update.
+            // Bills added by the user after this reset will continue to be saved normally.
+            if (!hasCompletedBillingReset) {
+                billingRecords = [];
+                localStorage.removeItem("eco_buddy_bills");
+                localStorage.setItem(billingResetKey, "1");
+            } else {
+                const savedBills = localStorage.getItem("eco_buddy_bills");
+                if (savedBills) {
+                    try {
+                        const parsedBills = JSON.parse(savedBills);
+                        billingRecords = Array.isArray(parsedBills) ? parsedBills : [];
+                    } catch(e) {
+                        billingRecords = [];
+                        localStorage.removeItem("eco_buddy_bills");
                     }
-                } catch(e) {
+                } else {
                     billingRecords = [];
                 }
             }
