@@ -231,6 +231,26 @@
             50% { transform: translateY(-6px); }
         }
 
+        .vintage-scarf-icon {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .vintage-scarf-icon svg {
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+            animation: scarf-float 3s ease-in-out infinite;
+        }
+        @keyframes scarf-float {
+            0%, 100% { transform: translateY(0) rotate(-2deg); }
+            50% { transform: translateY(-3px) rotate(2deg); }
+        }
+
+        /* RESPONSIVE CHO ĐIỆN THOẠI: 4 NÚT THỜI GIAN THÀNH 2 HÀNG X 2 CỘT */
+        
         @media (max-width: 640px) {
             .header-inner {
                 flex-direction: column;
@@ -340,7 +360,93 @@
             <p id="mascot-speech" class="text-xs text-[#5c4738] font-medium bg-[#f5ede2] p-3 rounded-2xl border-1.5 border-[#5c4738] w-full mt-3 leading-relaxed">"Let's save energy together! Complete daily tasks to level me up! 🤍"</p>
         </div>
 
-        <div id="tab-content-weather" class="hidden space-y-6"><section class="vintage-panel p-5 space-y-4"><div class="flex items-center justify-between gap-3"><div><h2 class="font-bold text-lg">🌦️ Dublin Weather</h2><p class="text-sm text-[#7a6452]">Current conditions and wind</p></div><button onclick="loadDublinWeather()" class="rounded-xl px-3 py-2 bg-[#8c7355] text-white font-bold">Refresh</button></div><div id="weather-card" class="rounded-2xl border-2 border-[#d8c7b0] bg-[#edf1ef] p-5 text-center"><div id="weather-icon" class="text-5xl">🌥️</div><p id="weather-temp" class="text-4xl font-black">--°C</p><p id="weather-description" class="font-bold">Loading weather…</p><div class="grid grid-cols-2 gap-3 mt-4"><div class="rounded-xl bg-white/80 p-3"><p class="text-xs">Wind</p><b id="weather-wind">-- km/h</b></div><div class="rounded-xl bg-white/80 p-3"><p class="text-xs">Feels like</p><b id="weather-feels">--°C</b></div></div></div><p id="weather-advice" class="rounded-xl bg-[#f5ede2] p-4 text-sm">Bé Mây is checking Dublin weather…</p><section class="rounded-2xl border-2 border-[#d8c7b0] bg-[#fffaf2] p-4 space-y-3"><div><h3 class="font-bold text-lg">👗 What to wear today</h3><p id="outfit-summary" class="text-sm text-[#7a6452]">Outfit ideas based on Dublin’s live weather.</p></div><div id="outfit-suggestions" class="space-y-2"><div class="flex gap-2 overflow-x-auto pb-1" id="outfit-choice-tabs"><span class="text-xs text-[#8c7355]">Preparing outfit ideas…</span></div><div id="outfit-look" class="rounded-xl bg-white/90 border border-[#eadfce] p-3"><div class="grid grid-cols-4 gap-2 text-center"><div>🧥<p class="text-[11px]">Coat</p></div><div>👕<p class="text-[11px]">Top</p></div><div>👖<p class="text-[11px]">Bottom</p></div><div>👟<p class="text-[11px]">Shoes</p></div></div></div></div><p class="text-xs text-[#7a6452]">Suggestions are flexible — choose what feels comfortable.</p></section><p class="text-xs text-[#7a6452]">Data from Open-Meteo · Free API, no key required.</p></section></div>
+        <!-- TAB 3: WEATHER & OUTFIT -->
+        <div id="tab-content-weather" class="hidden space-y-6">
+            <div class="vintage-panel p-5 space-y-4">
+                <div class="flex items-center justify-between gap-2 border-b-2 border-[#5c4738] pb-2.5">
+                    <div>
+                        <h3 class="font-bold text-[#4a3b32] text-base flex items-center gap-2">
+                            <span>🌦️</span> Thời Tiết Dublin & Gợi Ý Mặc Đồ
+                        </h3>
+                        <p class="text-xs text-[#7a6452] mt-0.5">Dữ liệu thực tế cập nhật liên tục.</p>
+                    </div>
+                    <button onclick="fetchWeatherData()" class="bg-[#f0e6d6] hover:bg-[#e4d8c5] text-[#4a3b32] text-xs font-bold px-3 py-2 rounded-xl border-1.5 border-[#5c4738] shadow-[2px_2px_0px_#5c4738] transition">
+                        🔄 Làm Mới
+                    </button>
+                </div>
+
+                <div id="weather-card-bg" class="bg-gradient-to-br from-[#8fa8be] to-[#6a849b] text-white p-5 rounded-2xl shadow-[3px_3px_0px_#5c4738] border-2 border-[#5c4738] flex items-center justify-between gap-3">
+                    <div class="space-y-1">
+                        <p id="weather-condition" class="text-sm font-extrabold">Đang tải thời tiết...</p>
+                        <p id="weather-temp" class="text-3xl font-black">--°C</p>
+                        <p id="weather-wind" class="text-[11px] text-[#e2ecf5] font-semibold">Gió: -- km/h</p>
+                    </div>
+                    <div id="weather-icon-lg" class="text-6xl drop-shadow-md">☁️</div>
+                </div>
+
+                <div class="bg-[#f5ede2] border-1.5 border-[#5c4738] p-4 rounded-2xl space-y-3 shadow-[2px_2px_0px_#5c4738]">
+                    <h4 class="font-bold text-[#4a3b32] text-xs sm:text-sm flex items-center gap-2">
+                        <span>👕</span> Gợi ý trang phục khi ra ngoài:
+                    </h4>
+                    <div class="grid grid-cols-1 gap-2.5">
+                        <div class="bg-white p-3 rounded-xl border-1.5 border-[#5c4738] text-xs text-[#4a3b32] flex items-center gap-2.5 shadow-sm">
+                            <div class="flex-shrink-0 w-9 h-9 flex items-center justify-center">
+                                <div class="vintage-scarf-icon" style="width:34px; height:34px;">
+                                    <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+                                        <defs>
+                                            <filter id="scarf-shadow"><feGaussianBlur stdDeviation="2"/></filter>
+                                        </defs>
+                                        <ellipse cx="59" cy="101" rx="35" ry="6" fill="#8ba9a6" opacity=".18" filter="url(#scarf-shadow)"/>
+                                        <path d="M24 29 Q35 17 49 25 Q62 31 76 23 Q91 16 99 29 L91 47 Q77 42 64 51 Q49 59 34 49 Q25 43 24 29 Z" fill="#b9d9d6" stroke="#668e89" stroke-width="3.2" stroke-linejoin="round"/>
+                                        <path d="M31 31 Q45 43 59 37 Q77 29 91 30" fill="none" stroke="#e5f0e9" stroke-width="3" stroke-linecap="round"/>
+                                        <path d="M72 44 Q83 39 94 47 Q102 56 94 70 L82 96 Q78 103 69 99 L60 94 Q55 90 61 80 L72 62 Q77 52 72 44 Z" fill="#a9ceca" stroke="#668e89" stroke-width="3.2" stroke-linejoin="round"/>
+                                        <path d="M78 53 Q86 59 88 67 M72 72 Q78 76 82 78 M67 86 Q73 91 78 91" fill="none" stroke="#e3f0e9" stroke-width="2.5" stroke-linecap="round"/>
+                                        <g fill="#f8f0dc" stroke="#b58f79" stroke-width="1">
+                                            <circle cx="43" cy="34" r="3"/><circle cx="40" cy="30" r="2.5"/><circle cx="46" cy="30" r="2.5"/><circle cx="40" cy="38" r="2.5"/><circle cx="46" cy="38" r="2.5"/>
+                                            <circle cx="80" cy="30" r="2.5"/><circle cx="77" cy="27" r="2"/><circle cx="83" cy="27" r="2"/><circle cx="77" cy="33" r="2"/><circle cx="83" cy="33" r="2"/>
+                                        </g>
+                                        <g fill="#d9b77d">
+                                            <circle cx="43" cy="34" r="1.8"/><circle cx="80" cy="30" r="1.5"/>
+                                        </g>
+                                        <g fill="#819f83">
+                                            <path d="M53 43 Q48 36 55 35 Q60 39 53 43Z"/><path d="M55 43 Q61 36 63 42 Q60 47 55 43Z"/><path d="M86 81 Q80 74 87 72 Q92 76 86 81Z"/>
+                                        </g>
+                                        <path d="M29 42 Q43 55 58 48" fill="none" stroke="#f5eee0" stroke-width="1.5" stroke-dasharray="2 3"/>
+                                    </svg>
+                                </div>
+                            </div> 
+                            <span id="outfit-text-1" class="font-medium">Khăn choàng cổ và găng tay ấm</span>
+                        </div>
+                        <div class="bg-white p-3 rounded-xl border-1.5 border-[#5c4738] text-xs text-[#4a3b32] flex items-center gap-2.5 shadow-sm">
+                            <div class="flex-shrink-0 w-9 h-9 flex items-center justify-center">
+                                <svg viewBox="0 0 100 100" width="34" height="34" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M31 30 Q22 7 50 7 Q78 7 69 30 L64 39 L36 39Z" fill="#C5D3B5" stroke="#75634F" stroke-width="2.2"/>
+                                    <path d="M37 24 Q50 15 63 24 Q59 34 50 34 Q41 34 37 24Z" fill="#82947A" stroke="#75634F" stroke-width="1.8"/>
+                                    <path d="M34 27 Q37 35 43 36 M66 27 Q63 35 57 36" fill="none" stroke="#F5EBD8" stroke-width="3" stroke-linecap="round"/>
+                                    <path d="M34 30 L23 35 Q13 40 10 54 L7 79 Q7 87 16 88 L84 88 Q93 87 93 79 L90 54 Q87 40 77 35 L66 30 Q50 40 34 30Z" fill="#A9BEA0" stroke="#75634F" stroke-width="2.2" stroke-linejoin="round"/>
+                                    <path d="M23 38 Q14 40 11 54 L5 76 Q4 84 13 87 Q21 89 25 78 L31 51Z" fill="#B7C9AB" stroke="#75634F" stroke-width="2.2"/>
+                                    <path d="M77 38 Q86 40 89 54 L95 76 Q96 84 87 87 Q79 89 75 78 L69 51Z" fill="#B7C9AB" stroke="#75634F" stroke-width="2.2"/>
+                                    <path d="M12 53 Q19 60 27 54 M9 68 Q17 75 24 69 M88 53 Q81 60 73 54 M91 68 Q83 75 76 69" fill="none" stroke="#829B7D" stroke-width="3" stroke-linecap="round"/>
+                                    <path d="M31 46 Q50 53 69 46 M29 62 Q50 69 71 62 M26 78 Q50 84 74 78" fill="none" stroke="#D4DFCB" stroke-width="3" stroke-linecap="round"/>
+                                    <path d="M50 35 L50 88" stroke="#75634F" stroke-width="2"/>
+                                    <circle cx="50" cy="44" r="1.5" fill="#F5EBD8"/>
+                                    <circle cx="50" cy="56" r="1.5" fill="#F5EBD8"/>
+                                    <circle cx="50" cy="68" r="1.5" fill="#F5EBD8"/>
+                                    <path d="M42 32 L42 50 M58 32 L58 50" stroke="#F5EBD8" stroke-width="2" stroke-linecap="round"/>
+                                    <circle cx="42" cy="52" r="3" fill="#F5EBD8"/>
+                                    <circle cx="58" cy="52" r="3" fill="#F5EBD8"/>
+                                    <path d="M29 60 L41 62 L37 75 L26 72Z M71 60 L59 62 L63 75 L74 72Z" fill="#C5D3B5" stroke="#75634F" stroke-width="1.8"/>
+                                    <path d="M7 79 Q15 85 24 80 L22 90 Q14 94 6 87Z M93 79 Q85 85 76 80 L78 90 Q86 94 94 87Z" fill="#C5D3B5" stroke="#75634F" stroke-width="1.8"/>
+                                    <path d="M23 87 Q50 94 77 87 L76 94 Q50 99 24 94Z" fill="#C5D3B5" stroke="#75634F" stroke-width="1.8"/>
+                                </svg>
+                            </div> 
+                            <span id="outfit-text-2" class="font-medium">Áo phao mùa đông (Xám/Xanh ấm áp)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
         <!-- TAB 1: TARIFF & 3 ECO TASKS -->
         <div id="tab-content-tracker" class="space-y-6">
             <div class="vintage-panel p-6 space-y-4">
@@ -879,6 +985,8 @@
                     headerObserver.observe(header);
                 }
             }
+            fetchWeatherData();
+            setInterval(fetchWeatherData, 600000);
         });
 
         window.addEventListener("resize", updateHeaderHeight);
@@ -917,7 +1025,7 @@
                 }
             }
 
-            if (tabName === 'weather') loadDublinWeather();
+            if (tabName === 'weather') fetchWeatherData();
             if (tabName === 'calendar') renderCalendar();
             if (tabName === 'reports') {
                 renderBillingListing();
@@ -1525,80 +1633,49 @@
             updateMascotLevel();
             closeSafetyChat();
         }
-        async function loadDublinWeather(){
-            const d=document.getElementById('weather-description');if(!d)return;
-            d.textContent='Loading Dublin weather…';
-            try{
-                const u='https://api.open-meteo.com/v1/forecast?latitude=53.3498&longitude=-6.2603&current=temperature_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m&wind_speed_unit=kmh&timezone=Europe%2FDublin';
-                const r=await fetch(u);if(!r.ok)throw Error('Weather request failed');
-                const c=(await r.json()).current,code=c.weather_code,temp=c.temperature_2m,feels=c.apparent_temperature,wind=c.wind_speed_10m;
-                const rain=[51,53,55,56,57,61,63,65,66,67,80,81,82].includes(code)||c.precipitation>0;
-                const snow=[71,73,75,77,85,86].includes(code);
-                const fog=[45,48].includes(code);
-                const storm=[95,96,99].includes(code);
-                const st=code===0?['☀️','Clear']:([1,2,3].includes(code)?['🌤️','Cloudy']:(fog?['🌫️','Fog']:(rain?['🌧️','Rain']:(snow?['❄️','Snow']:(storm?['⛈️','Thunderstorm']:['🌦️','Showers'])))));
-                document.getElementById('weather-icon').textContent=st[0];
-                document.getElementById('weather-temp').textContent=Math.round(temp)+'°C';
-                d.textContent=st[1];
-                document.getElementById('weather-wind').textContent=Math.round(wind)+' km/h';
-                document.getElementById('weather-feels').textContent=Math.round(feels)+'°C';
-                document.getElementById('weather-card').style.background=temp<7?'#e8edf3':temp<14?'#edf1ef':temp<21?'#f4f0e5':'#f7eadc';
-                document.getElementById('weather-advice').textContent=rain?'☔ Rain around: dry clothes indoors with ventilation and keep windows closed against showers.':wind>30?'💨 Quite windy: secure outdoor items and check for draughts.':feels<10?'🧣 Chilly: close curtains at dusk and heat only rooms in use.':'🌿 Mild: make the most of daylight and switch off unused lights.';
-                const outfit=document.getElementById('outfit-suggestions'),summary=document.getElementById('outfit-summary');
-                const ideas=[];
-                if(snow||feels<5){
-                    summary.textContent='Cold outside — choose warm layers and shoes that keep your feet dry.';
-                    ideas.push({title:'Cosy casual',items:[['🧥','Puffer'],['🧣','Scarf'],['🧶','Sweater'],['👖','Jeans'],['🥾','Boots']],note:'Add a beanie or scarf if you feel cold.'});
-                    ideas.push({title:'Warm & smart',items:[['🧥','Wool coat'],['🧥','Jumper'],['👖','Trousers'],['👢','Ankle boots']],note:'A polished look with warm layers.'});
-                    if(rain||snow)ideas.push({title:'Wet & cold',items:[['🌧️','Rain shell'],['🧥','Fleece'],['👖','Lined pants'],['🥾','Waterproof boots']],note:'A hood is handy; avoid an umbrella in strong wind.'});
-                }else if(rain){
-                    summary.textContent='Rainy Dublin day — waterproof outerwear first; pick an umbrella when wind is light.';
-                    ideas.push({title:'Rainy casual',items:[['🌧️','Raincoat'],['👕','Hoodie'],['👖','Trousers'],['👟','Waterproof shoes']],note:wind>25?'Windy: use the hood instead of an umbrella.':'A compact umbrella is a handy extra.'});
-                    ideas.push({title:'Rainy smart',items:[['🧥','Waterproof mac'],['🧶','Fine knit'],['👖','Jeans'],['👢','Ankle boots']],note:'Good for town, work or going out.'});
-                    if(feels<12)ideas.push({title:'Extra warm',items:[['🧥','Padded raincoat'],['🧶','Warm jumper'],['👖','Thick trousers'],['🥾','Waterproof boots']],note:'Layer a thermal top underneath if needed.'});
-                }else if(feels<12){
-                    summary.textContent='Chilly but dry — mix a warm coat with comfortable layers.';
-                    ideas.push({title:'Everyday cosy',items:[['🧥','Puffer'],['🧶','Sweater'],['👖','Jeans'],['👟','Trainers']],note:'Easy everyday outfit; add a beanie if needed.'});
-                    ideas.push({title:'Smart layers',items:[['🧥','Wool coat'],['👚','Cardigan'],['👖','Trousers'],['👢','Ankle boots']],note:'A little dressier while still warm.'});
-                    ideas.push({title:'Sporty',items:[['🧥','Light puffer'],['🧥','Hoodie'],['👖','Joggers'],['👟','Trainers']],note:'Comfortable for walking and errands.'});
-                }else if(feels<19){
-                    summary.textContent='Mild weather — choose light layers you can take off indoors.';
-                    ideas.push({title:'Relaxed',items:[['🧥','Denim jacket'],['👕','T-shirt'],['👖','Jeans'],['👟','Trainers']],note:'Simple and easy to layer.'});
-                    ideas.push({title:'Smart casual',items:[['🧥','Light trench'],['👚','Fine knit'],['👖','Trousers'],['👞','Loafers']],note:'A neat outfit for a day out.'});
-                }else{
-                    summary.textContent='Milder weather — breathable fabrics and lighter layers work best.';
-                    ideas.push({title:'Light & comfy',items:[['🧥','Light shirt'],['👕','T-shirt'],['👖','Linen pants'],['👟','Trainers']],note:'Choose cotton or linen for comfort.'});
-                    ideas.push({title:'Sunny casual',items:[['🕶️','Sunglasses'],['👚','Blouse'],['🩳','Shorts'],['👡','Sandals']],note:'Bring a light layer for later in the day.'});
+        async function fetchWeatherData() {
+            const weatherCondition = document.getElementById('weather-condition');
+            const weatherTemp = document.getElementById('weather-temp');
+            const weatherWind = document.getElementById('weather-wind');
+            const weatherIcon = document.getElementById('weather-icon-lg');
+
+            try {
+                const lat = 53.3498;
+                const lon = -6.2603;
+                const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,precipitation,weather_code,wind_speed_10m&timezone=Europe/Dublin`);
+                const data = await res.json();
+                
+                if (data && data.current) {
+                    const temp = data.current.temperature_2m;
+                    const precip = data.current.precipitation;
+                    const wind = data.current.wind_speed_10m;
+                    const wcode = data.current.weather_code;
+
+                    let condition = "Trời quang đãng";
+                    let icon = "☀️";
+
+                    if (precip > 0 || (wcode >= 50 && wcode < 68)) {
+                        condition = "Trời có mưa nhẹ";
+                        icon = "🌧️";
+                    } else if (temp < 8) {
+                        condition = "Trời rất lạnh";
+                        icon = "❄️";
+                    } else if (temp <= 15) {
+                        condition = "Trời se lạnh, lộng gió";
+                        icon = "⛅";
+                    } else if (temp > 20) {
+                        condition = "Trời ấm áp, dễ chịu";
+                        icon = "☀️";
+                    }
+
+                    weatherCondition.innerText = condition;
+                    weatherTemp.innerText = `${Math.round(temp)}°C`;
+                    weatherWind.innerText = `Gió: ${Math.round(wind)} km/h`;
+                    weatherIcon.innerText = icon;
                 }
-                if(wind>30&&!rain&&!snow)ideas.push({title:'Windy day',items:[['🌬️','Windbreaker'],['👕','Fitted top'],['👖','Secure fit'],['👟','Closed shoes']],note:'Choose a snug hood and avoid loose hats.'});
-                const outfitArt=(label)=>{
-                    const t=label.toLowerCase(),stroke='#70594a';let art='';
-                    if(/scarf|shawl|choàng/.test(t)) return '<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" class="w-14 h-14 mx-auto"><ellipse cx="59" cy="101" rx="35" ry="6" fill="#8ba9a6" opacity=".18"/><path d="M24 29 Q35 17 49 25 Q62 31 76 23 Q91 16 99 29 L91 47 Q77 42 64 51 Q49 59 34 49 Q25 43 24 29 Z" fill="#b9d9d6" stroke="#668e89" stroke-width="3.2" stroke-linejoin="round"/><path d="M31 31 Q45 43 59 37 Q77 29 91 30" fill="none" stroke="#e5f0e9" stroke-width="3" stroke-linecap="round"/><path d="M72 44 Q83 39 94 47 Q102 56 94 70 L82 96 Q78 103 69 99 L60 94 Q55 90 61 80 L72 62 Q77 52 72 44 Z" fill="#a9ceca" stroke="#668e89" stroke-width="3.2" stroke-linejoin="round"/><path d="M78 53 Q86 59 88 67 M72 72 Q78 76 82 78 M67 86 Q73 91 78 91" fill="none" stroke="#e3f0e9" stroke-width="2.5" stroke-linecap="round"/><g fill="#f8f0dc" stroke="#b58f79" stroke-width="1"><circle cx="43" cy="34" r="3"/><circle cx="40" cy="30" r="2.5"/><circle cx="46" cy="30" r="2.5"/><circle cx="40" cy="38" r="2.5"/><circle cx="46" cy="38" r="2.5"/><circle cx="80" cy="30" r="2.5"/><circle cx="77" cy="27" r="2"/><circle cx="83" cy="27" r="2"/><circle cx="77" cy="33" r="2"/><circle cx="83" cy="33" r="2"/></g><g fill="#d9b77d"><circle cx="43" cy="34" r="1.8"/><circle cx="80" cy="30" r="1.5"/></g><g fill="#819f83"><path d="M53 43 Q48 36 55 35 Q60 39 53 43Z"/><path d="M55 43 Q61 36 63 42 Q60 47 55 43Z"/><path d="M86 81 Q80 74 87 72 Q92 76 86 81Z"/></g><path d="M29 42 Q43 55 58 48" fill="none" stroke="#f5eee0" stroke-width="1.5" stroke-dasharray="2 3"/></svg>';
-                    if(/puffer|down jacket|winter jacket/.test(t)) return '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" class="w-14 h-14 mx-auto"><path d="M31 30 Q22 7 50 7 Q78 7 69 30 L64 39 L36 39Z" fill="#C5D3B5" stroke="#75634F" stroke-width="2.2"/><path d="M37 24 Q50 15 63 24 Q59 34 50 34 Q41 34 37 24Z" fill="#82947A" stroke="#75634F" stroke-width="1.8"/><path d="M34 27 Q37 35 43 36 M66 27 Q63 35 57 36" fill="none" stroke="#F5EBD8" stroke-width="3" stroke-linecap="round"/><path d="M34 30 L23 35 Q13 40 10 54 L7 79 Q7 87 16 88 L84 88 Q93 87 93 79 L90 54 Q87 40 77 35 L66 30 Q50 40 34 30Z" fill="#A9BEA0" stroke="#75634F" stroke-width="2.2" stroke-linejoin="round"/><path d="M23 38 Q14 40 11 54 L5 76 Q4 84 13 87 Q21 89 25 78 L31 51Z" fill="#B7C9AB" stroke="#75634F" stroke-width="2.2"/><path d="M77 38 Q86 40 89 54 L95 76 Q96 84 87 87 Q79 89 75 78 L69 51Z" fill="#B7C9AB" stroke="#75634F" stroke-width="2.2"/><path d="M12 53 Q19 60 27 54 M9 68 Q17 75 24 69 M88 53 Q81 60 73 54 M91 68 Q83 75 76 69" fill="none" stroke="#829B7D" stroke-width="3" stroke-linecap="round"/><path d="M31 46 Q50 53 69 46 M29 62 Q50 69 71 62 M26 78 Q50 84 74 78" fill="none" stroke="#D4DFCB" stroke-width="3" stroke-linecap="round"/><path d="M50 35 L50 88" stroke="#75634F" stroke-width="2"/><circle cx="50" cy="44" r="1.5" fill="#F5EBD8"/><circle cx="50" cy="56" r="1.5" fill="#F5EBD8"/><circle cx="50" cy="68" r="1.5" fill="#F5EBD8"/><path d="M42 32 L42 50 M58 32 L58 50" stroke="#F5EBD8" stroke-width="2" stroke-linecap="round"/><circle cx="42" cy="52" r="3" fill="#F5EBD8"/><circle cx="58" cy="52" r="3" fill="#F5EBD8"/><path d="M29 60 L41 62 L37 75 L26 72Z M71 60 L59 62 L63 75 L74 72Z" fill="#C5D3B5" stroke="#75634F" stroke-width="1.8"/><path d="M7 79 Q15 85 24 80 L22 90 Q14 94 6 87Z M93 79 Q85 85 76 80 L78 90 Q86 94 94 87Z" fill="#C5D3B5" stroke="#75634F" stroke-width="1.8"/><path d="M23 87 Q50 94 77 87 L76 94 Q50 99 24 94Z" fill="#C5D3B5" stroke="#75634F" stroke-width="1.8"/></svg>';
-                    if(/puffer|parka|coat|raincoat|windbreaker|jacket|mac/.test(t)) art='<path d="M35 17q15 13 30 0l17 10 12 27-15 8-8-13v38H29V49l-8 13-15-8 12-27z" fill="#e9958e" stroke="'+stroke+'" stroke-width="2.8" stroke-linejoin="round"/><path d="M36 18q14 13 28 0l-4 13H40z" fill="#f7d9c9" stroke="'+stroke+'" stroke-width="2"/><path d="M50 31v55M29 42h42M29 55h42M29 68h42" stroke="#c96f6c" stroke-width="2.5"/><path d="M17 35l-8 17 10 5m64-22 8 17-10 5" fill="none" stroke="#f6c0ad" stroke-width="4"/><circle cx="55" cy="43" r="1.8" fill="'+stroke+'"/><circle cx="55" cy="58" r="1.8" fill="'+stroke+'"/><circle cx="55" cy="73" r="1.8" fill="'+stroke+'"/>';
-                    else if(/boot|ankle boot/.test(t)) art='<g stroke="'+stroke+'" stroke-width="2.8" stroke-linejoin="round"><path d="M12 58q15 1 24-19l12 7q7 16 23 19 13 2 15 14v8H13q-5-13-1-29z" fill="#f2eee3"/><path d="M12 72q25 8 74 0v10H13z" fill="#d6c8b5"/><path d="M34 47q10 12 25 17" fill="none" stroke="#b7c7d2" stroke-width="5" stroke-linecap="round"/><path d="M40 51l13 9m-18-2 13 9m-5-23 14 10" fill="none" stroke="#8ca9c0" stroke-width="2.5" stroke-linecap="round"/><path d="M23 59l11-2m-7 9 12-2" fill="none" stroke="#d98f7d" stroke-width="3" stroke-linecap="round"/><path d="M13 82q30 5 74 0" fill="none" stroke="#fffaf2" stroke-width="2.5" stroke-linecap="round"/></g>';
-                    else if(/sweater|jumper|knit|cardigan|fleece|ao len/.test(t)) art='<path d="M34 13q16 12 32 0l17 10 13 27-17 10-9-13v39H30V47l-9 13L4 50l12-27z" fill="#e83d2d" stroke="'+stroke+'" stroke-width="2.8" stroke-linejoin="round"/><path d="M35 14q15 13 30 0l-5 10H40z" fill="#d83227" stroke="'+stroke+'" stroke-width="2"/><path d="M40 18q10 7 20 0M37 23q13 8 26 0" fill="none" stroke="#a92b24" stroke-width="2"/><path d="M30 48v38M70 48v38" stroke="#c52e25" stroke-width="2"/><path d="M30 79h40v8H30zM5 49l-2 9 16 8 5-9M95 49l2 9-16 8-5-9" fill="#d93629" stroke="'+stroke+'" stroke-width="2"/><path d="M30 83v7m5-7v7m5-7v7m5-7v7m5-7v7m5-7v7m5-7v7m5-7v7m5-7v7m5-7v7" stroke="#a92b24" stroke-width="1.4"/>';
-                    else if(/jean|pant|trouser|short|jogger|bottom|linen|quan/.test(t)) art='<path d="M23 10h54l-3 78q-10 5-20 0l-4-43-5 43q-10 5-20 0z" fill="#83b6e5" stroke="'+stroke+'" stroke-width="2.8" stroke-linejoin="round"/><path d="M23 10h54v13H23z" fill="#659bd0" stroke="#426fa8" stroke-width="2"/><path d="M50 23l-1 22M29 24l4 17m38-17-4 17" fill="none" stroke="#477db8" stroke-width="2"/><path d="M32 28q7 6 14 0m7 0q7 6 14 0" fill="none" stroke="#477db8" stroke-width="1.8"/><path d="M27 62q8-8 18-1l-2 10q-9 5-17-1zM55 61q9-8 18-1l-2 10q-9 5-17-1z" fill="#d8e7f3" stroke="#477db8" stroke-width="1.8"/><path d="M28 65l5 4 4-5 5 5m16-5 5 5 5-5 5 5" fill="none" stroke="#477db8" stroke-width="1.5"/><path d="M25 12h13m26 0h11" stroke="#dceafa" stroke-width="2.5" stroke-linecap="round"/><path d="M27 80q8 4 17 0l1 8q-10 4-19 0zM53 80q9 4 18 0l1 8q-10 4-19 0z" fill="#a8c9e8" stroke="#477db8" stroke-width="1.8"/>';
-                    else if(/shoe|boot|trainer|sneaker|loafer|sandal/.test(t)) art='<path d="M18 57q13 0 21-17l10 5q8 17 23 18 11 1 11 13v7H17q-5-13 1-26z" fill="#d8e3c5" stroke="'+stroke+'" stroke-width="2.5" stroke-linejoin="round"/><path d="M18 72h63M38 48l18 15m-23-7 20 13m-9-25 17 14" fill="none" stroke="'+stroke+'" stroke-width="2.5" stroke-linecap="round"/><path d="M25 79h50" stroke="#fffaf2" stroke-width="3"/>';
-                    else if(/scarf|hood|hat/.test(t)) art='<path d="M25 23q24-15 49 0l-8 13q-18-9-34 0z" fill="#9bbbd8" stroke="'+stroke+'" stroke-width="2.5"/><path d="M34 31q-2 20-9 48l12 4q13-34 14-50M55 33q6 17 15 45l11-5q-8-34-16-45" fill="#8fb2d2" stroke="'+stroke+'" stroke-width="2.5" stroke-linejoin="round"/><path d="M25 68l13 5m30-4 12-6" stroke="#f4c2a8" stroke-width="4"/>';
-                    else if(/glass|sunglass/.test(t)) art='<path d="M13 35q20-9 36 0 16-9 38 0l-4 28q-3 10-17 8-12-2-15-22-4 20-17 22Q19 73 17 63z" fill="#a9c8d9" stroke="'+stroke+'" stroke-width="2.5" stroke-linejoin="round"/><path d="M48 39h5" stroke="'+stroke+'" stroke-width="3"/>';
-                    else if(/tee|t-shirt|shirt|blouse|top/.test(t)) art='<path d="M34 14l-18 9-10 21 17 9 6-10v43h42V43l6 10 17-9-10-21-18-9q-7 11-16 11T34 14z" fill="#e8a04e" stroke="'+stroke+'" stroke-width="2.5" stroke-linejoin="round"/><path d="M29 45h42M29 58h42" stroke="#a95b35" stroke-width="3"/>';
-                    else if(/cardigan|knit|sweater|jumper|fleece/.test(t)) art='<path d="M34 13l-18 10-10 22 17 9 6-10v42h42V44l6 10 17-9-10-22-18-10q-7 11-16 11T34 13z" fill="#a8d0d1" stroke="'+stroke+'" stroke-width="2.5" stroke-linejoin="round"/><path d="M29 49h42M29 63h42M50 26v60" stroke="#f2b49e" stroke-width="3"/>';
-                    else art='<path d="M34 12l-18 10-10 24 17 9 6-11v43h42V44l6 11 17-9-10-24-18-10q-7 12-16 12T34 12z" fill="#e99a91" stroke="'+stroke+'" stroke-width="2.5" stroke-linejoin="round"/><path d="M34 14q16 12 32 0M28 60h44" stroke="#f7d9c9" stroke-width="3"/><path d="M38 54v23m24-23v23" stroke="'+stroke+'" stroke-width="1.5"/>';
-                    return '<svg viewBox="0 0 100 100" role="img" aria-label="'+label.replace(/&/g,'&amp;').replace(/"/g,'&quot;')+'" class="w-14 h-14 mx-auto" fill="none">'+art+'</svg>';
-                };
-                const tabs=document.getElementById('outfit-choice-tabs'),look=document.getElementById('outfit-look');
-                const showLook=(index)=>{
-                    const item=ideas[index];
-                    look.innerHTML='<h4 class="font-bold text-sm mb-3">'+item.title+'</h4><div class="grid grid-cols-5 gap-1 text-center">'+item.items.map(([icon,label])=>'<div class="rounded-lg bg-[#f8f3eb] py-2 px-1 min-w-0">'+outfitArt(label)+'<p class="text-[10px] mt-1 leading-tight">'+label+'</p></div>').join('')+'</div><p class="text-xs text-[#8c7355] mt-3">✨ '+item.note+'</p>';
-                    tabs.querySelectorAll('button').forEach((button,i)=>{button.className='shrink-0 rounded-full border px-3 py-1.5 text-xs font-bold '+(i===index?'bg-[#8c7355] text-white border-[#5c4738]':'bg-white text-[#5c4738] border-[#d8c7b0]');});
-                };
-                tabs.innerHTML=ideas.map((item,i)=>'<button type="button" data-outfit="'+i+'" class="shrink-0 rounded-full border px-3 py-1.5 text-xs font-bold">'+item.title+'</button>').join('');
-                tabs.querySelectorAll('button').forEach((button)=>button.addEventListener('click',()=>showLook(Number(button.dataset.outfit))));
-                showLook(0);
-            }catch(e){
-                d.textContent='Could not load weather. Try again later.';
-                const summary=document.getElementById('outfit-summary');if(summary)summary.textContent='Outfit suggestions will appear when weather data is available.';
+            } catch (err) {
+                console.error("Lỗi thời tiết:", err);
+                weatherCondition.innerText = "Lỗi tải thời tiết";
             }
         }
     </script>
