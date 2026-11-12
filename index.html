@@ -653,9 +653,9 @@
                     <div class="vint-card p-5 bg-[#fffaf4] space-y-4">
                         <p class="text-xs font-bold text-[#5c4738] text-center">🍩 Energy Distribution · biểu đồ gốc & khung giờ</p>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-start">
-                            <div class="rounded-xl border border-[#d8c7b0] bg-white p-2 text-center">
-                                <div id="dashboard-donut-redraw" class="w-full min-h-64 flex items-center justify-center" aria-label="Redrawn monthly energy donut chart"><p class="text-[10px] text-[#7a6452] py-8">Chọn một tháng để xem biểu đồ donut.</p></div>
-                                <p id="dashboard-original-empty" class="text-[10px] text-[#7a6452] py-8">Chọn một tháng để xem biểu đồ gốc.</p>
+                            <div class="rounded-xl border border-[#d8c7b0] bg-white p-5 min-h-64 flex flex-col items-center justify-center text-center">
+                                <p id="dashboard-total-bill-label" class="text-xs font-bold uppercase tracking-wider text-[#7a6452]">Total Electricity Bill</p>
+                                <p id="dashboard-total-bill-value" class="mt-3 text-4xl sm:text-5xl font-extrabold tabular-nums text-[#32455c]">—</p>
                             </div>
                             <div class="min-w-0 overflow-x-auto">
                                 <p class="text-[10px] font-extrabold text-[#7a6452] uppercase tracking-wider text-center">Selected Usage: <span id="donut-center-val" class="text-[#32455c] tabular-nums">— kWh</span></p>
@@ -1558,10 +1558,13 @@
             renderDashboardEnergyDonut(filtered, monthVal === "all");
         }
         function renderDashboardEnergyDonut(records, aggregateAll) {
-            const host=_bbEl("dashboard-donut-redraw"),body=_bbEl("dashboard-bands-body"),note=_bbEl("dashboard-donut-note");
+            const body=_bbEl("dashboard-bands-body"),note=_bbEl("dashboard-donut-note");
+            const recs=records||[];
+            const totalBill=recs.reduce((sum,record)=>sum+(Number(record.bill)||0),0);
+            const billValue=_bbEl("dashboard-total-bill-value"),billLabel=_bbEl("dashboard-total-bill-label");
+            if(billValue)billValue.textContent=recs.length?"€"+totalBill.toFixed(2):"—";
+            if(billLabel)billLabel.textContent="Total Electricity Bill · "+recs.length+" "+(recs.length===1?"month":"months");
             if(!body)return;
-            const recs=records||[],one=recs.length===1?recs[0]:null;
-            if(host){if(one&&Array.isArray(one.donutSegments)&&one.donutSegments.length)renderRebuiltDonut(host,one.donutSegments,Number(one.kwh||0).toFixed(0)+" kWh");else host.innerHTML='<p class="text-[10px] text-[#7a6452] py-8 text-center">'+(aggregateAll||recs.length>1?"Chọn một tháng để xem donut đã vẽ lại.":"Tháng này chưa có dữ liệu donut được nhận diện.")+'</p>';}
             const totals={day:{kwh:0,eur:0},peak:{kwh:0,eur:0},night:{kwh:0,eur:0}};let has=false;
             recs.forEach(record=>(Array.isArray(record.bands)?record.bands:[]).forEach(band=>{if(!band||!totals[band.key]||!Number.isFinite(Number(band.kwh))||Number(band.kwh)<0)return;const kwh=Number(band.kwh),eur=Number.isFinite(Number(band.eur))?Number(band.eur):kwh*Number(band.price||0);totals[band.key].kwh+=kwh;totals[band.key].eur+=eur;has=true;}));
             if(!has){body.innerHTML='<tr><td colspan="5" class="py-3 text-center text-[#7a6452]">Chưa có bảng khung giờ cho lựa chọn này.</td></tr>';if(note)note.textContent="Lưu hoá đơn có bảng Day / Peak / Night để xem ở đây.";return;}
@@ -1611,8 +1614,14 @@
             const plotH = H - top - bottom;
             const maxBill = Math.max(1, ...records.map(r => Number(r.bill) || 0)) * 1.12;
             const maxKwh = Math.max(1, ...records.map(r => Number(r.kwh) || 0)) * 1.12;
-            const step = (W - left - right) / records.length;
-            const barW = Math.min(34, step * 0.48);
+            const availableWidth = W - left - right;
+            const step = Math.min(84, availableWidth / records.length);
+            const groupWidth = step * records.length;
+            const groupLeft = (W - groupWidth) / 2;
+            const barW = Math.min(34, step * 0.55);
+            xLabels.style.width = Math.min(availableWidth, Math.max(120, groupWidth)) + "px";
+            xLabels.style.marginLeft = "auto";
+            xLabels.style.marginRight = "auto";
             const selected = new Set((activeRecords || []).map(r => r.id));
             const points = [];
             let bars = "";
@@ -1626,7 +1635,7 @@
             }
 
             records.forEach((r, i) => {
-                const cx = left + step * (i + 0.5);
+                const cx = groupLeft + step * (i + 0.5);
                 const bill = Math.max(0, Number(r.bill) || 0);
                 const kwh = Math.max(0, Number(r.kwh) || 0);
                 const billY = top + plotH * (1 - bill / maxBill);
