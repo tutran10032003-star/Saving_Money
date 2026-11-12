@@ -886,13 +886,13 @@
 
                 <div id="calendar-days" class="grid grid-cols-7 gap-1.5"></div>
 
-                <!-- CHÚ THÍCH MÀU SẮC LỊCH -->
+                <!-- CALENDAR LEGEND -->
                 <div class="vint-card p-3 bg-white space-y-1.5 text-xs">
-                    <p class="font-bold text-[#5c4738]">🗓️ Schedule Notes</p><div class="grid grid-cols-1 sm:grid-cols-2 gap-2"><div class="flex items-center gap-2 min-w-0"><span class="w-3 h-3 rounded-full bg-[#d9534f] inline-block shrink-0"></span><span>♻️ Waste Collection · Every Tuesday</span></div><div class="flex items-center gap-2 min-w-0"><span class="w-3 h-3 rounded-full bg-[#bc6c25] inline-block shrink-0"></span><span>🏡 Rent Payment · 1st of each month</span></div></div><p class="text-[10px] text-[#8c7355]">✦ marks a day when both are due.</p>
-                </div>
-
-                <div class="vint-card p-3 bg-[#fff5f0] text-center">
-                    <p id="next-trash-reminder" class="text-xs font-bold text-[#9c413b]">Next schedule reminder...</p>
+                    <p class="font-bold text-[#5c4738]">🗓️ Schedule Notes</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        <div class="flex items-center gap-2 min-w-0"><span class="w-3 h-3 rounded-full bg-[#d9534f] inline-block shrink-0"></span><span>♻️ Waste Collection · Every Tuesday</span></div>
+                        <div class="flex items-center gap-2 min-w-0"><span class="w-3 h-3 rounded-full bg-[#bc6c25] inline-block shrink-0"></span><span>🏡 Rent Payment · 1st of each month</span></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -2128,8 +2128,8 @@
                 let badgeIcon = "";
 
                 if (isTuesday && isFirstOfMonth) {
-                    bgClass = "bg-[#E9A8A8] text-white shadow-sm"; // Trùng ngày: Tím
-                    badgeIcon = '<span class="text-[8px] leading-none">✦</span>';
+                    bgClass = "bg-[#E6F0C9] text-[#4a3b32] shadow-sm"; // Both schedules: cheerful celebration marker
+                    badgeIcon = '<span class="text-[11px] leading-none" aria-label="Both schedules due">🎉</span>';
                 } else if (isTuesday) {
                     bgClass = "bg-[#d9534f] text-white shadow-sm"; // Đổ rác: Đỏ
                     badgeIcon = '<span class="text-[8px] leading-none">♻️</span>';
@@ -2143,10 +2143,7 @@
                 grid.appendChild(cell);
             }
 
-            const reminder = document.getElementById("next-trash-reminder");
-            if (reminder) {
-                reminder.innerHTML = `🗓️ <strong>Home & Waste:</strong> Rent is due on the 1st (⌂); waste collection is every Tuesday (♻️).`;
-            }
+
         }
 
         function changeCalendarMonth(delta) {
