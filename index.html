@@ -539,14 +539,10 @@
                 <div id="report-subtab-upload" class="space-y-4 vint-card p-4 bg-white">
                     <h3 class="font-bold text-sm text-[#5c4738]">📷 Upload & đọc hoá đơn điện</h3>
                     <p class="text-[11px] text-[#7a6452]">Tải hai ảnh: tổng hoá đơn và biểu đồ phân bổ. OCR chỉ hỗ trợ đọc thử; hãy kiểm tra số liệu trước khi lưu.</p>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <div class="vint-card p-3 bg-[#fffaf4] space-y-2"><b class="text-xs">🧾 Ảnh A · Tổng hoá đơn</b>
+                    <div class="grid grid-cols-1 gap-3">
+                        <div class="vint-card p-3 bg-[#fffaf4] space-y-2"><b class="text-xs">🧾 Ảnh hoá đơn</b>
                             <label class="block px-3 py-2 bg-[#8C735F] text-white rounded-xl text-xs text-center cursor-pointer">📸 Chụp / chọn ảnh<input type="file" id="bill-img-file" accept="image/*" capture="environment" class="hidden" onchange="previewUploadedBill(event,'total')"></label>
                             <img id="bill-preview-img" alt="Bill preview" class="hidden max-h-40 w-full object-contain rounded-xl border">
-                        </div>
-                        <div class="vint-card p-3 bg-[#fffaf4] space-y-2"><b class="text-xs">🍩 Ảnh B · Phân bổ điện năng</b>
-                            <label class="block px-3 py-2 bg-[#8C735F] text-white rounded-xl text-xs text-center cursor-pointer">📸 Chụp / chọn ảnh<input type="file" id="bill-breakdown-file" accept="image/*" capture="environment" class="hidden" onchange="previewUploadedBill(event,'breakdown')"></label>
-                            <img id="bill-breakdown-preview" alt="Breakdown preview" class="hidden max-h-40 w-full object-contain rounded-xl border">
                         </div>
                     </div>
                     <div class="rounded-xl bg-[#f5ede2] p-3 space-y-2"><div class="flex justify-between"><b class="text-xs">🔎 Đọc ảnh bằng OCR</b><span id="bill-ocr-status" class="text-[10px]">Đang chờ ảnh</span></div>
@@ -561,11 +557,8 @@
                         <label class="font-bold">Tổng điện năng (kWh)<input id="edit-bill-kwh" type="number" min="0" step="0.01" placeholder="Nhập theo bill" class="w-full px-3 py-2 rounded-xl border mt-1"></label>
                     </div>
                     <div class="pt-3 border-t space-y-3">
-                        <div><b class="text-xs">🍩 Energy Breakdown · Donut vẽ lại & bảng khung giờ</b><p class="text-[10px] text-[#7a6452] mt-1">Donut được dựng lại từ ảnh B mỗi tháng. Bảng Day / Peak / Night đọc từ hoá đơn trang chi tiết; nếu OCR sai thì sửa tay được.</p></div>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-start">
-                            <div class="rounded-xl border border-[#d8c7b0] bg-white p-3 text-center min-h-64 flex flex-col items-center justify-center">
-                                <div id="bill-donut-redrawn" class="w-full flex flex-col items-center justify-center"><p id="bill-donut-original-empty" class="text-[10px] text-[#7a6452] py-8">Donut vẽ lại sẽ hiển thị ở đây sau khi tải ảnh B.</p></div>
-                            </div>
+                        <div><b class="text-xs">Energy Breakdown · Day / Peak / Night</b><p class="text-[10px] text-[#7a6452] mt-1">Bảng Day / Peak / Night được đọc từ hoá đơn; nếu OCR sai thì m có thể sửa tay.</p></div>
+                        <div class="grid grid-cols-1 gap-4 items-start">
                             <div class="min-w-0 overflow-x-auto">
                                 <table class="w-full text-[10px] tabular-nums text-right">
                                     <thead><tr class="text-[#7a6452]"><th class="text-left font-bold">Khung giờ</th><th class="font-bold">kWh</th><th class="font-bold">€/kWh</th><th class="font-bold">€</th><th class="font-bold">% kWh</th><th class="font-bold">% tiền</th></tr></thead>
@@ -650,12 +643,8 @@
 
 
                     <div class="vint-card p-5 bg-[#fffaf4] space-y-4">
-                        <p class="text-xs font-bold text-[#5c4738] text-center">🍩 Energy Distribution · biểu đồ gốc & khung giờ</p>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-start">
-                            <div class="rounded-xl border border-[#d8c7b0] bg-white p-2 text-center">
-                                <div id="dashboard-donut-redraw" class="w-full min-h-64 flex items-center justify-center" aria-label="Redrawn monthly energy donut chart"><p class="text-[10px] text-[#7a6452] py-8">Chọn một tháng để xem biểu đồ donut.</p></div>
-                                <p id="dashboard-original-empty" class="text-[10px] text-[#7a6452] py-8">Chọn một tháng để xem biểu đồ gốc.</p>
-                            </div>
+                        <p class="text-xs font-bold text-[#5c4738] text-center">Energy Breakdown · Day / Peak / Night</p>
+                        <div class="grid grid-cols-1 gap-4 items-start">
                             <div class="min-w-0 overflow-x-auto">
                                 <p class="text-[10px] font-extrabold text-[#7a6452] uppercase tracking-wider text-center">Selected Usage: <span id="donut-center-val" class="text-[#32455c] tabular-nums">— kWh</span></p>
                                 <table class="w-full text-[10px] tabular-nums text-right mt-1">
