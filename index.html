@@ -897,6 +897,7 @@
 
     <!-- OCR ENGINE -->
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+    <script src="./quiz-data.js"></script>
 
     <!-- JAVASCRIPT -->
     <script>
@@ -905,51 +906,8 @@
         let completedTasks = [false, false, false];
 
         // KHO 40 CÂU HỎI QUIZ (GIỚI HẠN 1 TUẦN 10 CÂU)
-        const ecoQuizPool = [
-            { q: "Which appliance consumes the most standby power in a typical home?", options: ["A. Microwave / TV", "B. LED Light bulb"], correct: 0, explain: "Correct! Microwaves and TVs draw continuous standby power." },
-            { q: "What is the cheapest time period for electricity under SST Saver+?", options: ["A. 17:00 - 19:00 (Peak)", "B. 23:00 - 08:00 (Night Saver)"], correct: 1, explain: "Correct! Night rate is €0.1954/kWh, much cheaper than day/peak rates." },
-            { q: "Which activity uses the most energy in household water heating?", options: ["A. Taking long showers", "B. Washing hands with cold water"], correct: 0, explain: "Correct! Heating water for long showers consumes massive energy." },
-            { q: "When is the worst time to run your washing machine or dishwasher?", options: ["A. Peak Hours (17:00 - 19:00)", "B. Night Saver Hours (after 23:00)"], correct: 0, explain: "Correct! Peak hours have the highest rate (€0.3968/kWh)." },
-            { q: "How much XP do you get when completing the Kitchen Safety Checklist?", options: ["A. +10 XP", "B. +30 XP"], correct: 1, explain: "Correct! You earn +30 XP for completing all 5 kitchen safety steps!" },
-            { q: "What color badge does Bé Mây show during Night Saver hours?", options: ["A. 🟢 Green Badge", "B. 🔴 Red Badge"], correct: 0, explain: "Correct! Green badge indicates Night Saver rate is active." },
-            { q: "Is it good practice to leave phone chargers plugged into the wall 24/7?", options: ["A. Yes, it uses zero power", "B. No, they draw a small idle current"], correct: 1, explain: "Correct! Unplugging idle chargers saves standby energy." },
-            { q: "What day of the week is waste collection scheduled in the calendar?", options: ["A. Tuesday", "B. Saturday"], correct: 0, explain: "Correct! Tuesdays are marked as waste collection days." },
-            { q: "What level does Bé Mây reach after passing 100 XP?", options: ["A. Level 1: Sprout", "B. Level 2: Green Sprout"], correct: 1, explain: "Correct! Reaching 100 XP upgrades Bé Mây to Level 2." },
-            { q: "Why should you cover pots with lids when cooking?", options: ["A. Food cooks faster and saves energy", "B. It makes the kitchen colder"], correct: 0, explain: "Correct! Lids trap heat so water boils faster with less energy." },
-            // Tuần 2
-            { q: "How much does Night Saver electricity cost approximately per kWh?", options: ["A. €0.1954/kWh", "B. €0.5000/kWh"], correct: 0, explain: "Correct! Night Saver is €0.1954/kWh." },
-            { q: "What is the peak hours rate window?", options: ["A. 17:00 - 19:00", "B. 12:00 - 14:00"], correct: 0, explain: "Correct! Peak hours are strictly between 17:00 and 19:00." },
-            { q: "Does LED lighting use significantly less energy than incandescent bulbs?", options: ["A. Yes, up to 80-90% less", "B. No, they use the same"], correct: 0, explain: "Correct! LEDs are highly energy efficient." },
-            { q: "What should you check right after cooking?", options: ["A. Cooker, hood, oven and lights", "B. The weather forecast"], correct: 0, explain: "Correct! Kitchen safety checklist includes cooker, hood, oven, lights and wipe." },
-            { q: "How many daily eco tasks are available in the app?", options: ["A. 3 tasks", "B. 10 tasks"], correct: 0, explain: "Correct! There are 3 daily eco tasks." },
-            { q: "What is the main mascot of this app called?", options: ["A. Bé Mây (Eco Buddy)", "B. Robo Spark"], correct: 0, explain: "Correct! Bé Mây is your friendly companion." },
-            { q: "Is keeping your refrigerator door open too long energy-efficient?", options: ["A. No, it lets cold air escape", "B. Yes, it cools the kitchen"], correct: 0, explain: "Correct! Keeping fridge doors closed saves compressor energy." },
-            { q: "Where is the electricity tariff benchmarked in this app?", options: ["A. Dublin, Ireland (SST Saver+)", "B. Tokyo, Japan"], correct: 0, explain: "Correct! Configured for Dublin, Ireland." },
-            { q: "Can you store your XP and Eco Points across page reloads?", options: ["A. Yes, via localStorage", "B. No, it resets every time"], correct: 0, explain: "Correct! localStorage safely keeps your score." },
-            { q: "What is the reward for completing the 5-step Kitchen Safety check?", options: ["A. +30 XP", "B. +5 XP"], correct: 0, explain: "Correct! You get +30 XP." },
-            // Tuần 3
-            { q: "Which room in a typical apartment consumes the most lighting energy if left on?", options: ["A. Living room & Kitchen", "B. Balcony"], correct: 0, explain: "Correct! Living room and kitchen have multiple active fixtures." },
-            { q: "What is phantom load?", options: ["A. Energy consumed by appliances in standby mode", "B. Power outage"], correct: 0, explain: "Correct! Standby power is phantom load." },
-            { q: "Does washing clothes at 30°C save more energy than 60°C?", options: ["A. Yes, significantly less water heating required", "B. No, identical energy"], correct: 0, explain: "Correct! Lower temperature saves most of the washing machine's energy." },
-            { q: "How can you optimize refrigerator temperature?", options: ["A. Keep it at 3-5°C and freezer at -18°C", "B. Max cooling 24/7"], correct: 0, explain: "Correct! Recommended temperatures prevent overworking the compressor." },
-            { q: "Is natural ventilation better than running AC during mild weather?", options: ["A. Yes, saves 100% cooling energy", "B. No"], correct: 0, explain: "Correct! Natural ventilation is eco-friendly." },
-            { q: "What is the benefit of full loads in dishwashers?", options: ["A. Maximizes water and energy efficiency per dish", "B. None"], correct: 0, explain: "Correct! Running full loads prevents wasting cycles." },
-            { q: "Why unplug hair dryers or straighteners after use?", options: ["A. Safety and standby elimination", "B. To keep them cold"], correct: 0, explain: "Correct! Heat appliances draw power and pose fire risks." },
-            { q: "How often should waste collection be checked in the app calendar?", options: ["A. Every Tuesday", "B. Once a year"], correct: 0, explain: "Correct! Tuesdays are collection days." },
-            { q: "What happens when you reach 250 XP?", options: ["A. Unlock Level 3: Eco Master 🌿", "B. Reset score"], correct: 0, explain: "Correct! Level 3 is Eco Master." },
-            { q: "How many flashcard tips are displayed per week in the Tips tab?", options: ["A. 3 curated tips", "B. 50 tips"], correct: 0, explain: "Correct! Exactly 3 rotating tips per week." },
-            // Tuần 4
-            { q: "What is the best way to defrost frozen food?", options: ["A. Move it to the fridge in advance", "B. Use boiling water"], correct: 0, explain: "Correct! Fridge defrosting uses zero electricity." },
-            { q: "Does closing doors to unused rooms help heating/cooling efficiency?", options: ["A. Yes, zones the conditioned air", "B. No effect"], correct: 0, explain: "Correct! Zoning rooms saves HVAC energy." },
-            { q: "What is the main goal of Eco-Buddy Home Manager V2?", options: ["A. Track tariffs, habits, and save household energy", "B. Play arcade games"], correct: 0, explain: "Correct! Designed for home energy management." },
-            { q: "Are LED bulbs recyclable?", options: ["A. Yes, at specialized e-waste recycling points", "B. No, throw in regular trash"], correct: 0, explain: "Correct! E-waste recycling handles LEDs." },
-            { q: "What is the purpose of the 5-step kitchen safety check?", options: ["A. Prevent fire hazards and save electricity after cooking", "B. Clean windows"], correct: 0, explain: "Correct! Safety first." },
-            { q: "How many Eco Points do you get for rating a tip?", options: ["A. +10 Eco Points", "B. 0 points"], correct: 0, explain: "Correct! +10 Points." },
-            { q: "Can you customize the cooking timer?", options: ["A. Yes, select presets or enter custom minutes", "B. No"], correct: 0, explain: "Correct! Fully customizable." },
-            { q: "Is daylight harvesting (using natural sunlight) effective?", options: ["A. Yes, reduces artificial lighting needs", "B. No"], correct: 0, explain: "Correct! Natural light is free and clean." },
-            { q: "What color is the Night Saver badge in the app?", options: ["A. Green 🟢", "B. Red 🔴"], correct: 0, explain: "Correct! Green." },
-            { q: "How do you level up Bé Mây?", options: ["A. Complete daily tasks, quizzes and safety checks", "B. Do nothing"], correct: 0, explain: "Correct! Earn XP to level up." }
-        ];
+        const ecoQuizPool = window.ecoQuizPool || [];
+
 
         const weeklyTipsPool = [
             [
@@ -1773,6 +1731,10 @@
             loadWeeklyQuizQuestion();
         }
 
+        function getQuizLanguage() {
+            return localStorage.getItem('eco_buddy_language') === 'vi' ? 'vi' : 'en';
+        }
+
         function loadWeeklyQuizQuestion() {
             const startIdx = (currentWeek - 1) * 10;
             const endIdx = startIdx + 10;
@@ -1780,16 +1742,17 @@
 
             const relativeIndex = (currentQuizIndex - startIdx) % 10;
             const item = weekQuestions[relativeIndex];
+            const lang = getQuizLanguage();
 
             const qEl = document.getElementById('quiz-question');
             const optsEl = document.getElementById('quiz-options');
             const counterEl = document.getElementById('weekly-quiz-counter');
-            if (!qEl || !optsEl) return;
+            if (!qEl || !optsEl || !item) return;
 
-            if (counterEl) counterEl.innerText = `Week ${currentWeek}: Q ${relativeIndex + 1}/10`;
-            qEl.innerText = `Question ${relativeIndex + 1}/10: ${item.q}`;
+            if (counterEl) counterEl.innerText = (lang === 'vi' ? `Tuần ${currentWeek}: Câu ${relativeIndex + 1}/10` : `Week ${currentWeek}: Q ${relativeIndex + 1}/10`);
+            qEl.innerText = (lang === 'vi' ? `Câu hỏi ${relativeIndex + 1}/10: ` : `Question ${relativeIndex + 1}/10: `) + item.q[lang];
             optsEl.innerHTML = "";
-            item.options.forEach((optText, idx) => {
+            item.options[lang].forEach((optText, idx) => {
                 const btn = document.createElement('button');
                 btn.className = "chat-choice text-xs py-2";
                 btn.innerText = optText;
@@ -1801,12 +1764,14 @@
         function answerQuiz(optionIndex, weekQuestions, startIdx) {
             const relativeIndex = (currentQuizIndex - startIdx) % 10;
             const item = weekQuestions[relativeIndex];
+            const lang = getQuizLanguage();
             const msgs = document.getElementById('chatbot-messages');
+            const selectedOption = item.options[lang][optionIndex];
 
             msgs.innerHTML += `
                 <div class="bg-[#eaf2f8] p-3 rounded-2xl border border-[#b9d0e8] text-right">
-                    <p class="font-bold text-[#32455c]">You</p>
-                    <p class="mt-1 text-[#4a3b32]">${item.options[optionIndex]}</p>
+                    <p class="font-bold text-[#32455c]">${lang === 'vi' ? 'Bạn' : 'You'}</p>
+                    <p class="mt-1 text-[#4a3b32]">${selectedOption}</p>
                 </div>
             `;
 
@@ -1814,7 +1779,7 @@
                 msgs.innerHTML += `
                     <div class="bg-[#f5ede2] p-3 rounded-2xl border border-[#d8c7b0]">
                         <p class="font-bold text-[#5c4738]">Bé Mây ☁️</p>
-                        <p class="mt-1 text-[#4a3b32]">${item.explain} You earned +15 XP! 💚</p>
+                        <p class="mt-1 text-[#4a3b32]">${item.explain[lang]} ${lang === 'vi' ? 'Bạn nhận được +15 XP!' : 'You earned +15 XP!'} 💚</p>
                     </div>
                 `;
                 currentXP += 15;
@@ -1824,7 +1789,7 @@
                 msgs.innerHTML += `
                     <div class="bg-[#f5ede2] p-3 rounded-2xl border border-[#d8c7b0]">
                         <p class="font-bold text-[#5c4738]">Bé Mây ☁️</p>
-                        <p class="mt-1 text-[#4a3b32]">Not quite right! Review this week's tips to learn more.</p>
+                        <p class="mt-1 text-[#4a3b32]">${lang === 'vi' ? 'Chưa chính xác! Hãy xem lại các mẹo của tuần này để tìm hiểu thêm nhé.' : "Not quite right! Review this week's tips to learn more."}</p>
                     </div>
                 `;
             }
@@ -1832,7 +1797,7 @@
 
             currentQuizIndex++;
             if (currentQuizIndex >= startIdx + 10) {
-                currentQuizIndex = startIdx; 
+                currentQuizIndex = startIdx;
             }
             setTimeout(loadWeeklyQuizQuestion, 1500);
         }
