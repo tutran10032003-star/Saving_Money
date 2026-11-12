@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -17,13 +18,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
 
     <style>
-        * {
-            box-sizing: border-box;
-        }
+        * { box-sizing: border-box; }
 
         html {
             -webkit-text-size-adjust: 100%;
             overflow-x: hidden;
+            scroll-behavior: smooth;
         }
 
         body {
@@ -35,33 +35,17 @@
             overflow-x: hidden;
         }
 
-        button, input {
-            font-family: inherit;
-            touch-action: manipulation;
-        }
+        button, input { font-family: inherit; touch-action: manipulation; }
+        button { cursor: pointer; }
 
-        button {
-            cursor: pointer;
-        }
-
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: #f4ecdf;
-            border-radius: 3px;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #d8c7b0;
-            border-radius: 3px;
-        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #f4ecdf; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb { background: #d8c7b0; border-radius: 3px; }
 
         .vintage-panel {
             background: linear-gradient(145deg, #fffdfa 0%, #f7f1e5 100%);
             border: 2px solid #5c4738;
-            box-shadow: 4px 4px 0px #5c4738;
+            box-shadow: 4px 4px 0 #5c4738;
             border-radius: 1.5rem;
         }
 
@@ -69,13 +53,36 @@
             background: #fffaf4;
             border: 1.5px solid #5c4738;
             border-radius: 1rem;
-            box-shadow: 2px 2px 0px #5c4738;
+            box-shadow: 2px 2px 0 #5c4738;
         }
 
-        /* NAVIGATION */
+        /* HEADER + THANH ĐIỀU HƯỚNG LUÔN GHIM TRÊN ĐẦU */
+        header {
+            position: sticky !important;
+            position: -webkit-sticky !important;
+            top: 0 !important;
+            z-index: 1000 !important;
+            width: 100%;
+            background: rgba(255,253,250,.97);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 3px 10px rgba(92,71,56,.10);
+        }
+
+        .header-inner {
+            width: 100%;
+            max-width: 768px;
+            margin: 0 auto;
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
         .nav-pills {
             width: 100%;
-            max-width: 380px;
+            max-width: 390px;
             padding: 5px;
             display: grid;
             grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -83,13 +90,14 @@
             background: #f0e6d6;
             border-radius: 30px;
             border: 1px solid #e4d8c5;
+            flex-shrink: 0;
         }
 
         .nav-btn {
             min-width: 0;
             border: 2px solid transparent;
             border-radius: 20px;
-            padding: 7px 2px;
+            padding: 8px 2px;
             font-size: 11px;
             font-weight: 700;
             color: #4a3b32;
@@ -104,6 +112,14 @@
             color: white;
             border-color: #5c4738;
             box-shadow: 2px 2px 0 #5c4738;
+        }
+
+        /* Giữ nội dung không bị che khi nhảy đến tab */
+        #tab-content-tracker,
+        #tab-content-calendar,
+        #tab-content-weather,
+        #tab-content-checklist {
+            scroll-margin-top: 110px;
         }
 
         /* TIMER */
@@ -123,7 +139,7 @@
             position: fixed;
             inset: 0;
             z-index: 9999;
-            background: rgba(252, 248, 242, .97);
+            background: rgba(252,248,242,.97);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -132,9 +148,7 @@
             padding-bottom: max(16px, env(safe-area-inset-bottom));
         }
 
-        .chat-overlay.hidden {
-            display: none;
-        }
+        .chat-overlay.hidden { display: none; }
 
         .chat-window {
             width: min(560px, 100%);
@@ -142,7 +156,7 @@
             overflow-y: auto;
             overscroll-behavior: contain;
             padding: 22px;
-            background: linear-gradient(145deg, #fffdfa, #f7f1e5);
+            background: linear-gradient(145deg,#fffdfa,#f7f1e5);
             border: 2px solid #5c4738;
             border-radius: 26px;
             box-shadow: 6px 6px 0 #5c4738;
@@ -177,13 +191,8 @@
             transition: background .2s, transform .15s;
         }
 
-        .chat-choice:hover {
-            background: #f0e6d6;
-        }
-
-        .chat-choice:active {
-            transform: scale(.98);
-        }
+        .chat-choice:hover { background: #f0e6d6; }
+        .chat-choice:active { transform: scale(.98); }
 
         /* MASCOT */
         .eco-mascot {
@@ -211,10 +220,6 @@
             animation: mascot-leaves 3s ease-in-out infinite;
         }
 
-        /*
-          CÁNH TAY + DÂY + PHÍCH CẮM:
-          Cả cụm chuyển động cùng nhau để không bị tách rời.
-        */
         .mascot-arm-right {
             transform-box: view-box;
             transform-origin: 220px 163px;
@@ -229,9 +234,7 @@
             will-change: transform;
         }
 
-        .mascot-sparkle {
-            animation: mascot-twinkle 1.8s ease-in-out infinite;
-        }
+        .mascot-sparkle { animation: mascot-twinkle 1.8s ease-in-out infinite; }
 
         .mascot-battery {
             animation: mascot-breathe 3s ease-in-out infinite;
@@ -239,36 +242,35 @@
         }
 
         @keyframes mascot-float {
-            0%, 100% { transform: translateY(0); }
+            0%,100% { transform: translateY(0); }
             50% { transform: translateY(-6px); }
         }
 
         @keyframes mascot-leaves {
-            0%, 100% { transform: rotate(0); }
+            0%,100% { transform: rotate(0); }
             50% { transform: rotate(5deg); }
         }
 
         @keyframes mascot-wave {
-            0%, 100% { transform: rotate(0); }
+            0%,100% { transform: rotate(0); }
             50% { transform: rotate(-7deg); }
         }
 
         @keyframes mascot-hand {
-            0%, 100% { transform: rotate(0); }
+            0%,100% { transform: rotate(0); }
             50% { transform: rotate(-3deg); }
         }
 
         @keyframes mascot-twinkle {
-            0%, 100% { opacity: .45; }
+            0%,100% { opacity: .45; }
             50% { opacity: 1; }
         }
 
         @keyframes mascot-breathe {
-            0%, 100% { transform: translateY(0); }
+            0%,100% { transform: translateY(0); }
             50% { transform: translateY(2px); }
         }
 
-        /* MASCOT POSES */
         .eco-character.pose-happy .mascot-arm-left {
             animation: arm-cheer-left .6s ease-in-out infinite alternate;
         }
@@ -277,29 +279,20 @@
             animation: arm-cheer-right .6s ease-in-out infinite alternate;
         }
 
-        .eco-character.pose-wait {
-            animation: mascot-wait 1.2s ease-in-out infinite;
-        }
+        .eco-character.pose-wait { animation: mascot-wait 1.2s ease-in-out infinite; }
+        .eco-character.pose-dance { animation: mascot-dance .55s ease-in-out infinite; }
 
-        .eco-character.pose-dance {
-            animation: mascot-dance .55s ease-in-out infinite;
-        }
-
-        /* STOVE */
         .eco-character.pose-stove .mascot-arm-right {
             animation: stove-check .65s ease-in-out infinite alternate;
         }
 
-        .eco-character.pose-stove {
-            animation: mascot-check 1.2s ease-in-out infinite;
-        }
+        .eco-character.pose-stove { animation: mascot-check 1.2s ease-in-out infinite; }
 
         @keyframes stove-check {
-            from { transform: rotate(0deg); }
+            from { transform: rotate(0); }
             to { transform: rotate(-22deg); }
         }
 
-        /* OVEN */
         .eco-character.pose-oven .mascot-arm-right {
             animation: oven-check .65s ease-in-out infinite alternate;
         }
@@ -309,7 +302,6 @@
             to { transform: rotate(18deg); }
         }
 
-        /* LIGHT */
         .eco-character.pose-light .mascot-arm-left {
             animation: light-left .6s ease-in-out infinite alternate;
         }
@@ -319,16 +311,15 @@
         }
 
         @keyframes light-left {
-            from { transform: rotate(0deg); }
+            from { transform: rotate(0); }
             to { transform: rotate(-38deg); }
         }
 
         @keyframes light-right {
-            from { transform: rotate(0deg); }
+            from { transform: rotate(0); }
             to { transform: rotate(30deg); }
         }
 
-        /* WIPE */
         .eco-character.pose-wipe .mascot-arm-left {
             animation: wipe-left .45s ease-in-out infinite alternate;
         }
@@ -348,27 +339,27 @@
         }
 
         @keyframes arm-cheer-left {
-            from { transform: rotate(0deg); }
+            from { transform: rotate(0); }
             to { transform: rotate(-18deg); }
         }
 
         @keyframes arm-cheer-right {
-            from { transform: rotate(0deg); }
+            from { transform: rotate(0); }
             to { transform: rotate(15deg); }
         }
 
         @keyframes mascot-check {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
+            0%,100% { transform: translateY(0) rotate(0); }
             50% { transform: translateY(-4px) rotate(-3deg); }
         }
 
         @keyframes mascot-wait {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
+            0%,100% { transform: translateY(0) rotate(0); }
             50% { transform: translateY(3px) rotate(2deg); }
         }
 
         @keyframes mascot-dance {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
+            0%,100% { transform: translateY(0) rotate(0); }
             25% { transform: translateY(-9px) rotate(-5deg); }
             75% { transform: translateY(-9px) rotate(5deg); }
         }
@@ -390,16 +381,17 @@
         }
 
         @keyframes scarf-float {
-            0%, 100% { transform: translateY(0) rotate(-2deg); }
+            0%,100% { transform: translateY(0) rotate(-2deg); }
             50% { transform: translateY(-3px) rotate(2deg); }
         }
 
         /* MOBILE */
         @media (max-width: 640px) {
-            header > div {
+            .header-inner {
                 flex-direction: column;
                 align-items: stretch;
-                gap: 12px;
+                gap: 9px;
+                padding: 9px 12px;
             }
 
             .nav-pills {
@@ -420,7 +412,7 @@
 
             .timer-buttons-grid {
                 display: grid;
-                grid-template-columns: repeat(2, minmax(0, 1fr));
+                grid-template-columns: repeat(2,minmax(0,1fr));
             }
 
             #custom-minutes {
@@ -431,8 +423,8 @@
             .chat-overlay {
                 align-items: center;
                 padding: 10px;
-                padding-top: max(10px, env(safe-area-inset-top));
-                padding-bottom: max(10px, env(safe-area-inset-bottom));
+                padding-top: max(10px,env(safe-area-inset-top));
+                padding-bottom: max(10px,env(safe-area-inset-bottom));
             }
 
             .chat-window {
@@ -441,9 +433,7 @@
                 border-radius: 22px;
             }
 
-            .chat-scene {
-                min-height: 80px;
-            }
+            .chat-scene { min-height: 80px; }
 
             .eco-mascot {
                 width: 180px;
@@ -467,34 +457,19 @@
                 height: 160px;
             }
 
-            .nav-btn {
-                font-size: 9px;
-            }
+            .nav-btn { font-size: 9px; }
 
-            .vintage-panel {
-                padding: 14px !important;
-            }
-
-            .chat-window {
-                padding: 13px;
-            }
-
-            .chat-bubble {
-                padding: 11px;
-            }
+            .vintage-panel { padding: 14px !important; }
+            .chat-window { padding: 13px; }
+            .chat-bubble { padding: 11px; }
 
             .chat-choice {
                 font-size: 12px;
                 padding: 11px;
             }
 
-            #calendar-days {
-                gap: 3px;
-            }
-
-            #calendar-days > div {
-                height: 36px;
-            }
+            #calendar-days { gap: 3px; }
+            #calendar-days > div { height: 36px; }
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -513,9 +488,9 @@
 
 <body class="min-h-screen flex flex-col justify-between selection:bg-amber-200">
 
-    <!-- HEADER -->
-    <header class="bg-[#fffdfa]/95 backdrop-blur-sm shadow-sm sticky top-0 z-50 border-b-2 border-[#5c4738]">
-        <div class="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between gap-4 flex-wrap">
+    <!-- HEADER + STICKY NAVIGATION -->
+    <header class="border-b-2 border-[#5c4738]">
+        <div class="header-inner">
             <div class="flex items-center space-x-2.5">
                 <span class="text-2xl">🌿</span>
                 <div>
@@ -527,12 +502,12 @@
                 </div>
             </div>
 
-            <div class="nav-pills">
+            <nav class="nav-pills" aria-label="Điều hướng chính">
                 <button onclick="switchTab('tracker')" id="tab-btn-tracker" class="nav-btn active">⚡ Tariff</button>
                 <button onclick="switchTab('weather')" id="tab-btn-weather" class="nav-btn">🌦️ Weather</button>
                 <button onclick="switchTab('checklist')" id="tab-btn-checklist" class="nav-btn">🍳 Nấu Nướng</button>
                 <button onclick="switchTab('calendar')" id="tab-btn-calendar" class="nav-btn">📅 Calendar</button>
-            </div>
+            </nav>
         </div>
     </header>
 
@@ -544,41 +519,29 @@
             <div class="relative mb-2 w-full flex justify-center">
                 <div class="eco-mascot">
                     <svg id="main-mascot-svg" class="eco-character" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
-
                         <defs>
-                            <filter id="ecoShadow">
-                                <feGaussianBlur stdDeviation="3"/>
-                            </filter>
+                            <filter id="ecoShadow"><feGaussianBlur stdDeviation="3"/></filter>
                         </defs>
 
                         <ellipse cx="150" cy="269" rx="66" ry="8" fill="#b9a27b" opacity=".18"/>
 
                         <!-- LEGS -->
                         <g class="mascot-legs">
-                            <path d="M116 220 Q105 239 107 252 Q110 261 134 257 L145 229"
-                                fill="#fff9ed" stroke="#75604d" stroke-width="5" stroke-linejoin="round"/>
-                            <ellipse cx="121" cy="257" rx="19" ry="10"
-                                fill="#fff9ed" stroke="#75604d" stroke-width="4"/>
-                            <path d="M174 222 Q188 239 185 252 Q182 262 159 257 L151 229"
-                                fill="#fff9ed" stroke="#75604d" stroke-width="5" stroke-linejoin="round"/>
-                            <ellipse cx="176" cy="257" rx="19" ry="10"
-                                fill="#fff9ed" stroke="#75604d" stroke-width="4"/>
+                            <path d="M116 220 Q105 239 107 252 Q110 261 134 257 L145 229" fill="#fff9ed" stroke="#75604d" stroke-width="5" stroke-linejoin="round"/>
+                            <ellipse cx="121" cy="257" rx="19" ry="10" fill="#fff9ed" stroke="#75604d" stroke-width="4"/>
+                            <path d="M174 222 Q188 239 185 252 Q182 262 159 257 L151 229" fill="#fff9ed" stroke="#75604d" stroke-width="5" stroke-linejoin="round"/>
+                            <ellipse cx="176" cy="257" rx="19" ry="10" fill="#fff9ed" stroke="#75604d" stroke-width="4"/>
                         </g>
 
                         <!-- BODY -->
-                        <path d="M83 164 Q65 153 69 134 Q53 119 65 101 Q71 82 91 81 Q96 58 119 62 Q137 43 153 57 Q171 43 189 61 Q215 58 224 82 Q246 89 241 111 Q257 129 240 147 Q249 168 229 184 Q232 207 211 220 Q194 236 170 233 Q150 241 128 233 Q102 237 87 218 Q68 207 77 186 Q64 176 83 164 Z"
-                            fill="#fff9ed" stroke="#75604d" stroke-width="5" stroke-linejoin="round"/>
+                        <path d="M83 164 Q65 153 69 134 Q53 119 65 101 Q71 82 91 81 Q96 58 119 62 Q137 43 153 57 Q171 43 189 61 Q215 58 224 82 Q246 89 241 111 Q257 129 240 147 Q249 168 229 184 Q232 207 211 220 Q194 236 170 233 Q150 241 128 233 Q102 237 87 218 Q68 207 77 186 Q64 176 83 164 Z" fill="#fff9ed" stroke="#75604d" stroke-width="5" stroke-linejoin="round"/>
 
                         <!-- LEAVES -->
                         <g class="mascot-leaves">
-                            <path d="M145 57 Q108 45 103 23 Q134 17 151 46 Z"
-                                fill="#a3a875" stroke="#756b49" stroke-width="4"/>
-                            <path d="M151 48 Q171 13 198 25 Q194 52 158 62 Z"
-                                fill="#7d9368" stroke="#756b49" stroke-width="4"/>
-                            <path d="M111 29 Q130 37 145 51"
-                                fill="none" stroke="#6e8056" stroke-width="2"/>
-                            <path d="M190 30 Q172 41 158 54"
-                                fill="none" stroke="#6e8056" stroke-width="2"/>
+                            <path d="M145 57 Q108 45 103 23 Q134 17 151 46 Z" fill="#a3a875" stroke="#756b49" stroke-width="4"/>
+                            <path d="M151 48 Q171 13 198 25 Q194 52 158 62 Z" fill="#7d9368" stroke="#756b49" stroke-width="4"/>
+                            <path d="M111 29 Q130 37 145 51" fill="none" stroke="#6e8056" stroke-width="2"/>
+                            <path d="M190 30 Q172 41 158 54" fill="none" stroke="#6e8056" stroke-width="2"/>
                         </g>
 
                         <!-- FACE -->
@@ -586,100 +549,57 @@
                         <ellipse cx="197" cy="137" rx="13" ry="9" fill="#f5bca8"/>
                         <ellipse cx="128" cy="124" rx="5" ry="7" fill="#574b40"/>
                         <ellipse cx="177" cy="124" rx="5" ry="7" fill="#574b40"/>
-                        <path d="M146 140 Q151 148 157 140"
-                            fill="none" stroke="#574b40" stroke-width="3.5" stroke-linecap="round"/>
+                        <path d="M146 140 Q151 148 157 140" fill="none" stroke="#574b40" stroke-width="3.5" stroke-linecap="round"/>
 
                         <!-- SCARF -->
                         <g class="mascot-scarf">
-                            <path d="M78 159 Q113 173 151 158 Q190 173 226 154 L223 178 Q186 194 150 178 Q113 195 81 178 Z"
-                                fill="#8e9973" stroke="#6e7457" stroke-width="4"/>
-                            <path d="M94 165 L107 183 M119 168 L132 186 M157 165 L170 184 M190 163 L204 179"
-                                stroke="#c3bd91" stroke-width="3" opacity=".8"/>
-                            <path d="M204 175 Q224 190 214 217 L197 204 L193 187"
-                                fill="#9ca17a" stroke="#6e7457" stroke-width="4"/>
+                            <path d="M78 159 Q113 173 151 158 Q190 173 226 154 L223 178 Q186 194 150 178 Q113 195 81 178 Z" fill="#8e9973" stroke="#6e7457" stroke-width="4"/>
+                            <path d="M94 165 L107 183 M119 168 L132 186 M157 165 L170 184 M190 163 L204 179" stroke="#c3bd91" stroke-width="3" opacity=".8"/>
+                            <path d="M204 175 Q224 190 214 217 L197 204 L193 187" fill="#9ca17a" stroke="#6e7457" stroke-width="4"/>
                         </g>
 
                         <!-- LEFT ARM -->
                         <g class="mascot-arm-left">
-                            <path d="M83 165 Q62 161 52 179 Q42 193 51 205 Q62 217 77 198 Q83 190 89 183"
-                                fill="#fff9ed" stroke="#75604d" stroke-width="5"
-                                stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M83 165 Q62 161 52 179 Q42 193 51 205 Q62 217 77 198 Q83 190 89 183" fill="#fff9ed" stroke="#75604d" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
                         </g>
 
-                        <!-- RIGHT ARM + CORD + PLUG: ONE CONNECTED GROUP -->
+                        <!-- RIGHT ARM + CORD + PLUG: SAME MOVING GROUP -->
                         <g class="mascot-arm-right">
+                            <path d="M220 163 Q244 158 249 136" fill="none" stroke="#75604d" stroke-width="18" stroke-linecap="round"/>
+                            <path d="M220 163 Q244 158 249 136" fill="none" stroke="#fff9ed" stroke-width="12" stroke-linecap="round"/>
 
-                            <!-- Cánh tay -->
-                            <path d="M220 163 Q244 158 249 136"
-                                fill="none" stroke="#75604d" stroke-width="18" stroke-linecap="round"/>
+                            <!-- Hand -->
+                            <ellipse cx="249" cy="136" rx="8" ry="7" fill="#fff9ed" stroke="#75604d" stroke-width="3"/>
 
-                            <path d="M220 163 Q244 158 249 136"
-                                fill="none" stroke="#fff9ed" stroke-width="12" stroke-linecap="round"/>
+                            <!-- Visible cable connected to hand and plug -->
+                            <path d="M249 136 Q258 132 263 124 Q270 116 264 108 Q260 103 258 99" fill="none" stroke="#75604d" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M249 136 Q258 132 263 124 Q270 116 264 108 Q260 103 258 99" fill="none" stroke="#b7a78b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
 
-                            <!-- Bàn tay nắm dây -->
-                            <ellipse cx="249" cy="136" rx="8" ry="7"
-                                fill="#fff9ed" stroke="#75604d" stroke-width="3"/>
-
-                            <!-- DÂY ĐIỆN NỐI TỪ TAY ĐẾN PHÍCH CẮM -->
-                            <path d="M249 136
-                                     Q258 132 263 124
-                                     Q270 116 264 108
-                                     Q260 103 258 99"
-                                fill="none"
-                                stroke="#75604d"
-                                stroke-width="5"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"/>
-
-                            <path d="M249 136
-                                     Q258 132 263 124
-                                     Q270 116 264 108
-                                     Q260 103 258 99"
-                                fill="none"
-                                stroke="#b7a78b"
-                                stroke-width="2.5"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"/>
-
-                            <!-- PHÍCH CẮM: GẮN LIỀN VỚI DÂY -->
+                            <!-- Plug -->
                             <g transform="translate(227 67) rotate(13 25 40)">
-                                <rect x="12" y="24" width="42" height="49" rx="12"
-                                    fill="#b7a78b" stroke="#75604d" stroke-width="4"/>
-
-                                <rect x="19" y="3" width="7" height="28" rx="3"
-                                    fill="#75604d"/>
-                                <rect x="41" y="3" width="7" height="28" rx="3"
-                                    fill="#75604d"/>
-
-                                <path d="M32 39 L24 52 L32 52 L27 64 L43 47 L34 47 Z"
-                                    fill="#f6d36d"/>
+                                <rect x="12" y="24" width="42" height="49" rx="12" fill="#b7a78b" stroke="#75604d" stroke-width="4"/>
+                                <rect x="19" y="3" width="7" height="28" rx="3" fill="#75604d"/>
+                                <rect x="41" y="3" width="7" height="28" rx="3" fill="#75604d"/>
+                                <path d="M32 39 L24 52 L32 52 L27 64 L43 47 L34 47 Z" fill="#f6d36d"/>
                             </g>
                         </g>
 
                         <!-- BATTERY -->
                         <g class="mascot-battery">
-                            <path d="M95 181 Q120 174 141 182 L143 224 Q119 238 96 222 Z"
-                                fill="#a4a981" stroke="#6e7457" stroke-width="4"/>
-                            <rect x="108" y="192" width="28" height="27" rx="6"
-                                fill="#e8e3c9" stroke="#72805f" stroke-width="3"/>
-                            <path d="M122 197 L116 207 L122 207 L118 215 L130 203 L124 203 Z"
-                                fill="#e7b947"/>
+                            <path d="M95 181 Q120 174 141 182 L143 224 Q119 238 96 222 Z" fill="#a4a981" stroke="#6e7457" stroke-width="4"/>
+                            <rect x="108" y="192" width="28" height="27" rx="6" fill="#e8e3c9" stroke="#72805f" stroke-width="3"/>
+                            <path d="M122 197 L116 207 L122 207 L118 215 L130 203 L124 203 Z" fill="#e7b947"/>
                         </g>
 
                         <g>
-                            <rect x="157" y="191" width="36" height="29" rx="7"
-                                fill="#e8e0c7" stroke="#8b8b66" stroke-width="3"/>
-                            <rect x="169" y="187" width="12" height="6" rx="3"
-                                fill="#a4a981"/>
-                            <path d="M174 197 L168 207 L176 207 L172 215 L183 203 L177 203 Z"
-                                fill="#d7ad4e"/>
+                            <rect x="157" y="191" width="36" height="29" rx="7" fill="#e8e0c7" stroke="#8b8b66" stroke-width="3"/>
+                            <rect x="169" y="187" width="12" height="6" rx="3" fill="#a4a981"/>
+                            <path d="M174 197 L168 207 L176 207 L172 215 L183 203 L177 203 Z" fill="#d7ad4e"/>
                         </g>
 
                         <!-- DECORATIONS -->
-                        <path d="M69 116 Q60 109 66 102"
-                            stroke="#d4b66d" stroke-width="4" fill="none" stroke-linecap="round"/>
-                        <path d="M236 98 Q245 89 251 99"
-                            stroke="#d4b66d" stroke-width="4" fill="none" stroke-linecap="round"/>
+                        <path d="M69 116 Q60 109 66 102" stroke="#d4b66d" stroke-width="4" fill="none" stroke-linecap="round"/>
+                        <path d="M236 98 Q245 89 251 99" stroke="#d4b66d" stroke-width="4" fill="none" stroke-linecap="round"/>
 
                         <g class="mascot-sparkle" fill="#d9b85f">
                             <path d="M48 76 L52 87 L63 91 L52 95 L48 106 L44 95 L33 91 L44 87 Z"/>
@@ -688,22 +608,14 @@
                     </svg>
                 </div>
 
-                <div id="status-badge"
-                    class="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-[#87a96b] text-white text-[11px] font-extrabold px-4 py-1 rounded-full shadow border-2 border-[#5c4738] whitespace-nowrap">
+                <div id="status-badge" class="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-[#87a96b] text-white text-[11px] font-extrabold px-4 py-1 rounded-full shadow border-2 border-[#5c4738] whitespace-nowrap">
                     Normal Hours ☀️
                 </div>
             </div>
 
             <h3 class="font-bold text-[#4a3b32] text-base mt-2">Bé Mây Xanh</h3>
-
-            <p class="text-[11px] text-[#7a6452] font-semibold italic mt-0.5">
-                🌿 Có chiếc pin nhỏ trên người, tai là lá cây, luôn đồng hành cùng bạn.
-            </p>
-
-            <p id="mascot-speech"
-                class="text-xs text-[#5c4738] font-medium bg-[#f5ede2] p-3 rounded-2xl border-1.5 border-[#5c4738] w-full mt-3 leading-relaxed">
-                "Tiết kiệm điện cùng mình nhé! 🤍"
-            </p>
+            <p class="text-[11px] text-[#7a6452] font-semibold italic mt-0.5">🌿 Có chiếc pin nhỏ trên người, tai là lá cây, luôn đồng hành cùng bạn.</p>
+            <p id="mascot-speech" class="text-xs text-[#5c4738] font-medium bg-[#f5ede2] p-3 rounded-2xl border-1.5 border-[#5c4738] w-full mt-3 leading-relaxed">"Tiết kiệm điện cùng mình nhé! 🤍"</p>
         </div>
 
         <!-- TAB 1: TARIFF -->
@@ -741,23 +653,12 @@
             </div>
 
             <div class="vintage-panel p-5 space-y-3">
-                <h3 class="font-bold text-[#4a3b32] text-sm flex items-center gap-2">
-                    <span>💡</span> Nhắc Nhở & Mẹo Xanh Hàng Ngày:
-                </h3>
-
+                <h3 class="font-bold text-[#4a3b32] text-sm flex items-center gap-2"><span>💡</span> Nhắc Nhở & Mẹo Xanh Hàng Ngày:</h3>
                 <ul class="text-xs space-y-2 text-[#5c4738] font-medium">
-                    <li class="bg-[#fffaf4] px-3 py-2.5 rounded-xl border border-[#5c4738]/30">
-                        💡 <strong>Tắt đèn:</strong> Nhớ tắt đèn phòng & cầu thang khi không sử dụng.
-                    </li>
-                    <li class="bg-[#fffaf4] px-3 py-2.5 rounded-xl border border-[#5c4738]/30">
-                        🔒 <strong>Kiểm tra cửa:</strong> Khóa cửa kỹ chưa và đã đóng cửa nhà bếp nữa.
-                    </li>
-                    <li class="bg-[#fffaf4] px-3 py-2.5 rounded-xl border border-[#5c4738]/30">
-                        🔌 <strong>Rút phích cắm:</strong> Ngắt thiết bị chờ (tivi, lò vi sóng) khi không dùng.
-                    </li>
-                    <li class="bg-[#fffaf4] px-3 py-2.5 rounded-xl border border-[#5c4738]/30">
-                        🚿 <strong>Bình nước nóng:</strong> Tắt ngay bình nóng lạnh sau khi tắm xong.
-                    </li>
+                    <li class="bg-[#fffaf4] px-3 py-2.5 rounded-xl border border-[#5c4738]/30">💡 <strong>Tắt đèn:</strong> Nhớ tắt đèn phòng & cầu thang khi không sử dụng.</li>
+                    <li class="bg-[#fffaf4] px-3 py-2.5 rounded-xl border border-[#5c4738]/30">🔒 <strong>Kiểm tra cửa:</strong> Khóa cửa kỹ chưa và đã đóng cửa nhà bếp nữa.</li>
+                    <li class="bg-[#fffaf4] px-3 py-2.5 rounded-xl border border-[#5c4738]/30">🔌 <strong>Rút phích cắm:</strong> Ngắt thiết bị chờ (tivi, lò vi sóng) khi không dùng.</li>
+                    <li class="bg-[#fffaf4] px-3 py-2.5 rounded-xl border border-[#5c4738]/30">🚿 <strong>Bình nước nóng:</strong> Tắt ngay bình nóng lạnh sau khi tắm xong.</li>
                 </ul>
             </div>
         </div>
@@ -766,36 +667,22 @@
         <div id="tab-content-calendar" class="hidden space-y-6">
             <div class="vintage-panel p-5 space-y-4">
                 <div class="flex items-center justify-between border-b-2 border-[#5c4738] pb-2.5 gap-2">
-                    <h2 class="font-bold text-[#4a3b32] text-base flex items-center gap-2">
-                        <span>📅</span> Lịch Đổ Rác & Việc Nhà
-                    </h2>
-
+                    <h2 class="font-bold text-[#4a3b32] text-base flex items-center gap-2"><span>📅</span> Lịch Đổ Rác & Việc Nhà</h2>
                     <div class="flex items-center gap-2 flex-shrink-0">
-                        <button onclick="changeCalendarMonth(-1)"
-                            class="px-2.5 py-1 bg-[#f0e6d6] rounded-lg border border-[#5c4738] text-xs font-bold">◀</button>
-                        <span id="calendar-month-label"
-                            class="text-xs font-extrabold text-[#5c4738] min-w-[100px] text-center">Tháng...</span>
-                        <button onclick="changeCalendarMonth(1)"
-                            class="px-2.5 py-1 bg-[#f0e6d6] rounded-lg border border-[#5c4738] text-xs font-bold">▶</button>
+                        <button onclick="changeCalendarMonth(-1)" class="px-2.5 py-1 bg-[#f0e6d6] rounded-lg border border-[#5c4738] text-xs font-bold">◀</button>
+                        <span id="calendar-month-label" class="text-xs font-extrabold text-[#5c4738] min-w-[100px] text-center">Tháng...</span>
+                        <button onclick="changeCalendarMonth(1)" class="px-2.5 py-1 bg-[#f0e6d6] rounded-lg border border-[#5c4738] text-xs font-bold">▶</button>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-7 gap-1 text-center text-[11px] font-extrabold text-[#7a6452] mb-2">
-                    <span>T2</span>
-                    <span>T3</span>
-                    <span>T4</span>
-                    <span>T5</span>
-                    <span>T6</span>
-                    <span>T7</span>
-                    <span>CN</span>
+                    <span>T2</span><span>T3</span><span>T4</span><span>T5</span><span>T6</span><span>T7</span><span>CN</span>
                 </div>
 
                 <div id="calendar-days" class="grid grid-cols-7 gap-1.5"></div>
 
                 <div class="vint-card p-3 bg-[#fff5f0] text-center">
-                    <p id="next-trash-reminder" class="text-xs font-bold text-[#9c413b]">
-                        Đang tính toán lịch đổ rác...
-                    </p>
+                    <p id="next-trash-reminder" class="text-xs font-bold text-[#9c413b]">Đang tính toán lịch đổ rác...</p>
                 </div>
             </div>
         </div>
@@ -805,20 +692,13 @@
             <div class="vintage-panel p-5 space-y-4">
                 <div class="flex items-center justify-between gap-2 border-b-2 border-[#5c4738] pb-2.5">
                     <div class="min-w-0">
-                        <h3 class="font-bold text-[#4a3b32] text-base flex items-center gap-2">
-                            <span>🌦️</span> Thời Tiết Dublin & Gợi Ý Mặc Đồ
-                        </h3>
+                        <h3 class="font-bold text-[#4a3b32] text-base flex items-center gap-2"><span>🌦️</span> Thời Tiết Dublin & Gợi Ý Mặc Đồ</h3>
                         <p class="text-xs text-[#7a6452] mt-0.5">Dữ liệu thực tế cập nhật liên tục.</p>
                     </div>
-
-                    <button onclick="fetchWeatherData()"
-                        class="flex-shrink-0 bg-[#f0e6d6] hover:bg-[#e4d8c5] text-[#4a3b32] text-xs font-bold px-3 py-2 rounded-xl border-1.5 border-[#5c4738] shadow-[2px_2px_0px_#5c4738] transition">
-                        🔄 Làm Mới
-                    </button>
+                    <button onclick="fetchWeatherData()" class="flex-shrink-0 bg-[#f0e6d6] hover:bg-[#e4d8c5] text-[#4a3b32] text-xs font-bold px-3 py-2 rounded-xl border-1.5 border-[#5c4738] shadow-[2px_2px_0px_#5c4738] transition">🔄 Làm Mới</button>
                 </div>
 
-                <div id="weather-card-bg"
-                    class="bg-gradient-to-br from-[#8fa8be] to-[#6a849b] text-white p-5 rounded-2xl shadow-[3px_3px_0px_#5c4738] border-2 border-[#5c4738] flex items-center justify-between gap-3">
+                <div id="weather-card-bg" class="bg-gradient-to-br from-[#8fa8be] to-[#6a849b] text-white p-5 rounded-2xl shadow-[3px_3px_0px_#5c4738] border-2 border-[#5c4738] flex items-center justify-between gap-3">
                     <div class="space-y-1 min-w-0">
                         <p id="weather-condition" class="text-sm font-extrabold">Đang tải thời tiết...</p>
                         <p id="weather-temp" class="text-3xl font-black">--°C</p>
@@ -828,20 +708,14 @@
                 </div>
 
                 <div class="bg-[#f5ede2] border-1.5 border-[#5c4738] p-4 rounded-2xl space-y-3 shadow-[2px_2px_0px_#5c4738]">
-                    <h4 class="font-bold text-[#4a3b32] text-xs sm:text-sm flex items-center gap-2">
-                        <span>👕</span> Gợi ý trang phục khi ra ngoài:
-                    </h4>
+                    <h4 class="font-bold text-[#4a3b32] text-xs sm:text-sm flex items-center gap-2"><span>👕</span> Gợi ý trang phục khi ra ngoài:</h4>
 
                     <div class="grid grid-cols-1 gap-2.5">
                         <div class="bg-white p-3 rounded-xl border-1.5 border-[#5c4738] text-xs text-[#4a3b32] flex items-center gap-2.5 shadow-sm">
                             <div class="flex-shrink-0 w-9 h-9 flex items-center justify-center">
                                 <div class="vintage-scarf-icon" style="width:34px;height:34px;">
                                     <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
-                                        <defs>
-                                            <filter id="scarf-shadow">
-                                                <feGaussianBlur stdDeviation="2"/>
-                                            </filter>
-                                        </defs>
+                                        <defs><filter id="scarf-shadow"><feGaussianBlur stdDeviation="2"/></filter></defs>
                                         <ellipse cx="59" cy="101" rx="35" ry="6" fill="#8ba9a6" opacity=".18" filter="url(#scarf-shadow)"/>
                                         <path d="M24 29 Q35 17 49 25 Q62 31 76 23 Q91 16 99 29 L91 47 Q77 42 64 51 Q49 59 34 49 Q25 43 24 29 Z" fill="#b9d9d6" stroke="#668e89" stroke-width="3.2" stroke-linejoin="round"/>
                                         <path d="M31 31 Q45 43 59 37 Q77 29 91 30" fill="none" stroke="#e5f0e9" stroke-width="3" stroke-linecap="round"/>
@@ -851,9 +725,7 @@
                                             <circle cx="43" cy="34" r="3"/><circle cx="40" cy="30" r="2.5"/><circle cx="46" cy="30" r="2.5"/><circle cx="40" cy="38" r="2.5"/><circle cx="46" cy="38" r="2.5"/>
                                             <circle cx="80" cy="30" r="2.5"/><circle cx="77" cy="27" r="2"/><circle cx="83" cy="27" r="2"/><circle cx="77" cy="33" r="2"/><circle cx="83" cy="33" r="2"/>
                                         </g>
-                                        <g fill="#d9b77d">
-                                            <circle cx="43" cy="34" r="1.8"/><circle cx="80" cy="30" r="1.5"/>
-                                        </g>
+                                        <g fill="#d9b77d"><circle cx="43" cy="34" r="1.8"/><circle cx="80" cy="30" r="1.5"/></g>
                                         <g fill="#819f83">
                                             <path d="M53 43 Q48 36 55 35 Q60 39 53 43Z"/><path d="M55 43 Q61 36 63 42 Q60 47 55 43Z"/><path d="M86 81 Q80 74 87 72 Q92 76 86 81Z"/>
                                         </g>
@@ -876,12 +748,9 @@
                                     <path d="M12 53 Q19 60 27 54 M9 68 Q17 75 24 69 M88 53 Q81 60 73 54 M91 68 Q83 75 76 69" fill="none" stroke="#829B7D" stroke-width="3" stroke-linecap="round"/>
                                     <path d="M31 46 Q50 53 69 46 M29 62 Q50 69 71 62 M26 78 Q50 84 74 78" fill="none" stroke="#D4DFCB" stroke-width="3" stroke-linecap="round"/>
                                     <path d="M50 35 L50 88" stroke="#75634F" stroke-width="2"/>
-                                    <circle cx="50" cy="44" r="1.5" fill="#F5EBD8"/>
-                                    <circle cx="50" cy="56" r="1.5" fill="#F5EBD8"/>
-                                    <circle cx="50" cy="68" r="1.5" fill="#F5EBD8"/>
+                                    <circle cx="50" cy="44" r="1.5" fill="#F5EBD8"/><circle cx="50" cy="56" r="1.5" fill="#F5EBD8"/><circle cx="50" cy="68" r="1.5" fill="#F5EBD8"/>
                                     <path d="M42 32 L42 50 M58 32 L58 50" stroke="#F5EBD8" stroke-width="2" stroke-linecap="round"/>
-                                    <circle cx="42" cy="52" r="3" fill="#F5EBD8"/>
-                                    <circle cx="58" cy="52" r="3" fill="#F5EBD8"/>
+                                    <circle cx="42" cy="52" r="3" fill="#F5EBD8"/><circle cx="58" cy="52" r="3" fill="#F5EBD8"/>
                                     <path d="M29 60 L41 62 L37 75 L26 72Z M71 60 L59 62 L63 75 L74 72Z" fill="#C5D3B5" stroke="#75634F" stroke-width="1.8"/>
                                     <path d="M7 79 Q15 85 24 80 L22 90 Q14 94 6 87Z M93 79 Q85 85 76 80 L78 90 Q86 94 94 87Z" fill="#C5D3B5" stroke="#75634F" stroke-width="1.8"/>
                                     <path d="M23 87 Q50 94 77 87 L76 94 Q50 99 24 94Z" fill="#C5D3B5" stroke="#75634F" stroke-width="1.8"/>
@@ -902,9 +771,7 @@
                 </h2>
 
                 <div class="vint-card p-4 space-y-3 bg-white" id="timer-setup-box">
-                    <p class="text-xs font-bold text-[#4a3b32]">
-                        ⏱️ Chọn thời gian nấu (hoặc nhập số phút tùy ý):
-                    </p>
+                    <p class="text-xs font-bold text-[#4a3b32]">⏱️ Chọn thời gian nấu (hoặc nhập số phút tùy ý):</p>
 
                     <div class="timer-buttons-grid">
                         <button onclick="setTimerMinutes(15)" class="px-3.5 py-1.5 bg-[#f5ede2] hover:bg-[#e8dac7] text-[#4a3b32] rounded-xl text-xs font-bold border border-[#5c4738] transition">15 phút</button>
@@ -914,37 +781,23 @@
                     </div>
 
                     <div class="flex items-center gap-2 pt-1">
-                        <input type="number" id="custom-minutes"
-                            placeholder="Nhập số phút tùy ý..."
-                            min="1" max="180"
-                            class="flex-1 px-3 py-2 rounded-xl border-1.5 border-[#5c4738] text-xs bg-[#fffaf4]">
-
-                        <button onclick="startCustomTimer()"
-                            class="px-4 py-2 bg-[#8c7355] text-white text-xs font-bold rounded-xl border-1.5 border-[#5c4738] shadow-[2px_2px_0px_#5c4738] transition whitespace-nowrap">
-                            Bắt Đầu
-                        </button>
+                        <input type="number" id="custom-minutes" placeholder="Nhập số phút tùy ý..." min="1" max="180" class="flex-1 px-3 py-2 rounded-xl border-1.5 border-[#5c4738] text-xs bg-[#fffaf4]">
+                        <button onclick="startCustomTimer()" class="px-4 py-2 bg-[#8c7355] text-white text-xs font-bold rounded-xl border-1.5 border-[#5c4738] shadow-[2px_2px_0px_#5c4738] transition whitespace-nowrap">Bắt Đầu</button>
                     </div>
                 </div>
 
-                <div id="timer-display-box"
-                    class="hidden p-4 rounded-2xl bg-[#f5ede2] border-1.5 border-[#5c4738] text-center space-y-3 shadow-[2px_2px_0px_#5c4738]">
-
+                <div id="timer-display-box" class="hidden p-4 rounded-2xl bg-[#f5ede2] border-1.5 border-[#5c4738] text-center space-y-3 shadow-[2px_2px_0px_#5c4738]">
                     <div>
                         <p class="text-xs font-bold text-[#5c3232]">⏳ Đang đếm ngược thời gian nấu nướng...</p>
                         <p id="countdown-text" class="text-3xl font-black text-[#4a3b32] mt-1">00:00</p>
                     </div>
 
                     <div class="bg-white p-3 rounded-xl border border-[#5c4738]/40 flex items-center justify-between gap-2 text-xs">
-                        <span class="font-bold text-[#4a3b32] flex items-center gap-1.5">
-                            🚪 Bạn đã đóng cửa nhà bếp chưa?
-                        </span>
+                        <span class="font-bold text-[#4a3b32] flex items-center gap-1.5">🚪 Bạn đã đóng cửa nhà bếp chưa?</span>
                         <input type="checkbox" id="kitchen-door-checkbox" class="w-4 h-4 accent-[#8c7355] cursor-pointer">
                     </div>
 
-                    <button onclick="stopTimer()"
-                        class="px-3 py-2 bg-[#fbe8e6] hover:bg-[#f5d0cd] text-[#5c3232] rounded-lg text-xs font-bold border border-[#5c4738]">
-                        Hủy Hẹn Giờ
-                    </button>
+                    <button onclick="stopTimer()" class="px-3 py-2 bg-[#fbe8e6] hover:bg-[#f5d0cd] text-[#5c3232] rounded-lg text-xs font-bold border border-[#5c4738]">Hủy Hẹn Giờ</button>
                 </div>
             </div>
         </div>
@@ -952,62 +805,33 @@
     </main>
 
     <!-- SAFETY CHAT -->
-    <section id="safety-chat-overlay"
-        class="chat-overlay hidden"
-        role="dialog"
-        aria-modal="true">
-
+    <section id="safety-chat-overlay" class="chat-overlay hidden" role="dialog" aria-modal="true">
         <div class="chat-window">
-
             <div class="flex justify-between items-center border-b-2 border-[#d8c7b0] pb-3 gap-2">
                 <div>
-                    <p class="text-xs font-bold text-[#8c7355]">
-                        ECO-BUDDY HOME MANAGER
-                    </p>
-                    <h2 class="text-lg font-extrabold">
-                        Cùng Bé Mây kiểm tra bếp nhé!
-                    </h2>
+                    <p class="text-xs font-bold text-[#8c7355]">ECO-BUDDY HOME MANAGER</p>
+                    <h2 class="text-lg font-extrabold">Cùng Bé Mây kiểm tra bếp nhé!</h2>
                 </div>
-
-                <button onclick="closeSafetyChat()"
-                    class="rounded-full border border-[#8c7355] px-3 py-2 font-bold flex-shrink-0">
-                    ✕
-                </button>
+                <button onclick="closeSafetyChat()" class="rounded-full border border-[#8c7355] px-3 py-2 font-bold flex-shrink-0">✕</button>
             </div>
 
             <div class="flex flex-col items-center py-3 gap-2">
-                <div id="chat-mascot"
-                    class="eco-mascot"
-                    style="width:140px;height:140px;">
-                </div>
-
+                <div id="chat-mascot" class="eco-mascot" style="width:140px;height:140px;"></div>
                 <div class="chat-bubble">
-                    <p class="font-extrabold text-sm mb-0.5 text-[#5c4738]">
-                        Bé Mây Xanh ☁️
-                    </p>
-                    <p id="chat-question" class="text-sm font-medium text-[#4a3b32]">
-                        Hết giờ rồi! Cùng mình kiểm tra căn bếp nha!
-                    </p>
+                    <p class="font-extrabold text-sm mb-0.5 text-[#5c4738]">Bé Mây Xanh ☁️</p>
+                    <p id="chat-question" class="text-sm font-medium text-[#4a3b32]">Hết giờ rồi! Cùng mình kiểm tra căn bếp nha!</p>
                 </div>
             </div>
 
-            <div id="chat-scene"
-                class="chat-scene text-center text-5xl py-3 flex items-center justify-center shadow-inner">
-                🔥
-            </div>
+            <div id="chat-scene" class="chat-scene text-center text-5xl py-3 flex items-center justify-center shadow-inner">🔥</div>
 
             <div class="bg-[#f5ede2] rounded-2xl p-3.5 mb-3 mt-3 border border-[#d8c7b0]">
-                <p id="chat-action-title" class="font-extrabold text-sm mb-0.5 text-[#5c4738]">
-                    Tắt bếp
-                </p>
+                <p id="chat-action-title" class="font-extrabold text-sm mb-0.5 text-[#5c4738]">Tắt bếp</p>
                 <p id="chat-action-hint" class="text-xs text-[#7a6452] font-medium"></p>
             </div>
 
             <div id="chat-actions" class="space-y-2"></div>
-
-            <p id="chat-progress" class="text-xs text-[#8c7355] text-center font-bold mt-3">
-                Bước 1 / 4
-            </p>
+            <p id="chat-progress" class="text-xs text-[#8c7355] text-center font-bold mt-3">Bước 1 / 4</p>
         </div>
     </section>
 
@@ -1032,12 +856,8 @@
         if ("serviceWorker" in navigator) {
             window.addEventListener("load", () => {
                 navigator.serviceWorker.register("/Saving_Money/sw.js")
-                    .then(() => {
-                        console.log("Eco-Buddy PWA ready!");
-                    })
-                    .catch(error => {
-                        console.error("PWA error:", error);
-                    });
+                    .then(() => console.log("Eco-Buddy PWA ready!"))
+                    .catch(error => console.error("PWA error:", error));
             });
         }
 
@@ -1046,57 +866,43 @@
             function updateClock() {
                 const now = new Date();
                 const clockEl = document.getElementById('realtime-clock');
-
-                if (clockEl) {
-                    clockEl.innerText = `| 🕒 ${now.toLocaleTimeString()}`;
-                }
+                if (clockEl) clockEl.innerText = `| 🕒 ${now.toLocaleTimeString()}`;
             }
-
             updateClock();
             setInterval(updateClock, 1000);
         }
 
         /* TAB SWITCHING */
         function switchTab(tabName) {
-            const trackerTab = document.getElementById('tab-content-tracker');
-            const calendarTab = document.getElementById('tab-content-calendar');
-            const weatherTab = document.getElementById('tab-content-weather');
-            const checklistTab = document.getElementById('tab-content-checklist');
+            const tabs = {
+                tracker: document.getElementById('tab-content-tracker'),
+                calendar: document.getElementById('tab-content-calendar'),
+                weather: document.getElementById('tab-content-weather'),
+                checklist: document.getElementById('tab-content-checklist')
+            };
 
-            const btnTracker = document.getElementById('tab-btn-tracker');
-            const btnCalendar = document.getElementById('tab-btn-calendar');
-            const btnWeather = document.getElementById('tab-btn-weather');
-            const btnChecklist = document.getElementById('tab-btn-checklist');
+            const buttons = {
+                tracker: document.getElementById('tab-btn-tracker'),
+                calendar: document.getElementById('tab-btn-calendar'),
+                weather: document.getElementById('tab-btn-weather'),
+                checklist: document.getElementById('tab-btn-checklist')
+            };
 
-            trackerTab.classList.add('hidden');
-            calendarTab.classList.add('hidden');
-            weatherTab.classList.add('hidden');
-            checklistTab.classList.add('hidden');
+            Object.values(tabs).forEach(tab => tab.classList.add('hidden'));
+            Object.values(buttons).forEach(btn => btn.classList.remove('active'));
 
-            [btnTracker, btnCalendar, btnWeather, btnChecklist]
-                .forEach(btn => btn.classList.remove("active"));
+            if (!tabs[tabName]) tabName = 'tracker';
 
-            if (tabName === "tracker") {
-                trackerTab.classList.remove("hidden");
-                btnTracker.classList.add("active");
-            } else if (tabName === "calendar") {
-                calendarTab.classList.remove("hidden");
-                btnCalendar.classList.add("active");
-                renderCalendar();
-            } else if (tabName === "weather") {
-                weatherTab.classList.remove("hidden");
-                btnWeather.classList.add("active");
-            } else {
-                checklistTab.classList.remove("hidden");
-                btnChecklist.classList.add("active");
-            }
+            tabs[tabName].classList.remove('hidden');
+            buttons[tabName].classList.add('active');
+
+            if (tabName === 'calendar') renderCalendar();
         }
 
         /* ELECTRICITY TARIFF */
         function checkTariffStatus() {
             const now = new Date();
             const hour = now.getHours();
-
             const badge = document.getElementById('status-badge');
             const speech = document.getElementById('mascot-speech');
 
@@ -1121,7 +927,6 @@
         function renderCalendar() {
             const year = calendarCursor.getFullYear();
             const month = calendarCursor.getMonth();
-
             const label = document.getElementById("calendar-month-label");
             const grid = document.getElementById("calendar-days");
 
@@ -1139,8 +944,7 @@
             const daysInMonth = new Date(year, month + 1, 0).getDate();
 
             for (let i = 0; i < offset; i++) {
-                const empty = document.createElement("div");
-                grid.appendChild(empty);
+                grid.appendChild(document.createElement("div"));
             }
 
             const today = new Date();
@@ -1149,25 +953,15 @@
                 const date = new Date(year, month, day);
                 const isTuesday = date.getDay() === 2;
                 const isToday = date.toDateString() === today.toDateString();
-
                 const cell = document.createElement("div");
 
                 cell.className =
                     "h-10 rounded-xl flex flex-col items-center justify-center text-xs font-bold relative border border-[#5c4738]/20 " +
-                    (isTuesday
-                        ? "bg-[#d9534f] text-white shadow-sm"
-                        : "bg-[#f5ede2] text-[#5c4738]") +
+                    (isTuesday ? "bg-[#d9534f] text-white shadow-sm" : "bg-[#f5ede2] text-[#5c4738]") +
                     (isToday ? " ring-2 ring-[#87a96b] ring-offset-1" : "");
 
-                cell.innerHTML = `
-                    <span>${day}</span>
-                    ${isTuesday ? '<span class="text-[8px]">🗑️</span>' : ""}
-                `;
-
-                cell.title = isTuesday
-                    ? "Thứ Ba - Ngày đổ rác"
-                    : isToday ? "Hôm nay" : "";
-
+                cell.innerHTML = `<span>${day}</span>${isTuesday ? '<span class="text-[8px]">🗑️</span>' : ""}`;
+                cell.title = isTuesday ? "Thứ Ba - Ngày đổ rác" : isToday ? "Hôm nay" : "";
                 grid.appendChild(cell);
             }
 
@@ -1179,10 +973,8 @@
             } while (next.getDay() !== 2);
 
             const reminder = document.getElementById("next-trash-reminder");
-
             if (reminder) {
-                reminder.textContent =
-                    `Lần nhắc đổ rác tiếp theo: Thứ Ba, ${next.toLocaleDateString("vi-VN")}`;
+                reminder.textContent = `Lần nhắc đổ rác tiếp theo: Thứ Ba, ${next.toLocaleDateString("vi-VN")}`;
             }
         }
 
@@ -1192,7 +984,6 @@
                 calendarCursor.getMonth() + delta,
                 1
             );
-
             renderCalendar();
         }
 
@@ -1213,14 +1004,12 @@
             }
 
             const totalSecs = mins * 60;
-
             const checkbox = document.getElementById('kitchen-door-checkbox');
             if (checkbox) checkbox.checked = false;
 
             clearInterval(countdownInterval);
 
             let remaining = totalSecs;
-
             const displayBox = document.getElementById('timer-display-box');
             const textEl = document.getElementById('countdown-text');
 
@@ -1230,13 +1019,11 @@
                 const m = Math.floor(remaining / 60);
                 const s = remaining % 60;
 
-                textEl.innerText =
-                    `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+                textEl.innerText = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
 
                 if (remaining <= 0) {
                     clearInterval(countdownInterval);
                     countdownInterval = null;
-
                     displayBox.classList.add('hidden');
                     openSafetyChat();
                     return;
@@ -1252,11 +1039,10 @@
         function stopTimer() {
             clearInterval(countdownInterval);
             countdownInterval = null;
-
             document.getElementById('timer-display-box').classList.add('hidden');
         }
 
-        /* SAFETY CHAT - GIỮ NGUYÊN LUỒNG HỎI ĐÁP GỐC */
+        /* SAFETY CHAT - GIỮ NGUYÊN LUỒNG HỎI ĐÁP */
         const safetySteps = [
             {
                 title: "Tắt bếp",
@@ -1297,25 +1083,16 @@
         function syncChatMascot() {
             const original = document.getElementById("main-mascot-svg");
             const container = document.getElementById("chat-mascot");
-
             if (!original || !container) return;
 
             container.innerHTML = original.outerHTML;
-
             const cloned = container.querySelector("svg");
 
             if (cloned) {
                 cloned.removeAttribute("id");
-
                 cloned.classList.remove(
-                    "pose-happy",
-                    "pose-check",
-                    "pose-wait",
-                    "pose-dance",
-                    "pose-stove",
-                    "pose-oven",
-                    "pose-light",
-                    "pose-wipe"
+                    "pose-happy","pose-check","pose-wait","pose-dance",
+                    "pose-stove","pose-oven","pose-light","pose-wipe"
                 );
             }
         }
@@ -1323,35 +1100,22 @@
         function setMascotPose(pose) {
             const container = document.getElementById("chat-mascot");
             const mascot = container?.querySelector(".eco-character");
-
             if (!mascot) return;
 
             mascot.classList.remove(
-                "pose-happy",
-                "pose-check",
-                "pose-wait",
-                "pose-dance",
-                "pose-stove",
-                "pose-oven",
-                "pose-light",
-                "pose-wipe"
+                "pose-happy","pose-check","pose-wait","pose-dance",
+                "pose-stove","pose-oven","pose-light","pose-wipe"
             );
 
             void mascot.offsetWidth;
-
-            if (pose) {
-                mascot.classList.add("pose-" + pose);
-            }
+            if (pose) mascot.classList.add("pose-" + pose);
         }
 
         function openSafetyChat() {
             safetyStepIndex = 0;
-
             syncChatMascot();
-
             document.getElementById("safety-chat-overlay").classList.remove("hidden");
             document.body.style.overflow = "hidden";
-
             renderSafetyStep();
         }
 
@@ -1365,20 +1129,15 @@
             const scene = document.getElementById("chat-scene");
             const actions = document.getElementById("chat-actions");
 
-            /* KIỂM TRA HOÀN THÀNH TRƯỚC KHI LẤY STEP */
+            /* Kiểm tra hoàn thành trước khi lấy step */
             if (safetyStepIndex >= safetySteps.length) {
                 setMascotPose("dance");
 
-                question.textContent =
-                    "Hoàn thành rồi! Cảm ơn bạn đã cùng Bé Mây giữ an toàn cho căn bếp nhé! 💚";
-
+                question.textContent = "Hoàn thành rồi! Cảm ơn bạn đã cùng Bé Mây giữ an toàn cho căn bếp nhé! 💚";
                 scene.textContent = "🌱✨💚";
 
-                document.getElementById("chat-action-title").textContent =
-                    "Hoàn thành kiểm tra!";
-
-                document.getElementById("chat-action-hint").textContent =
-                    "Bé Mây rất tự hào về bạn!";
+                document.getElementById("chat-action-title").textContent = "Hoàn thành kiểm tra!";
+                document.getElementById("chat-action-hint").textContent = "Bé Mây rất tự hào về bạn!";
 
                 actions.innerHTML = `
                     <button class="chat-choice text-center" onclick="closeSafetyChat()">
@@ -1386,34 +1145,25 @@
                     </button>
                 `;
 
-                document.getElementById("chat-progress").textContent =
-                    "4 / 4 · Hoàn thành";
-
+                document.getElementById("chat-progress").textContent = "4 / 4 · Hoàn thành";
                 return;
             }
 
             const step = safetySteps[safetyStepIndex];
-            const poses = ["stove", "oven", "light", "wipe"];
+            const poses = ["stove","oven","light","wipe"];
 
             setMascotPose(poses[safetyStepIndex]);
-
             question.textContent = step.question;
             scene.textContent = step.scene;
 
-            document.getElementById("chat-action-title").textContent =
-                step.title;
-
-            document.getElementById("chat-action-hint").textContent =
-                step.hint;
-
-            document.getElementById("chat-progress").textContent =
-                `Bước ${safetyStepIndex + 1} / 4`;
+            document.getElementById("chat-action-title").textContent = step.title;
+            document.getElementById("chat-action-hint").textContent = step.hint;
+            document.getElementById("chat-progress").textContent = `Bước ${safetyStepIndex + 1} / 4`;
 
             actions.innerHTML = `
                 <button class="chat-choice" onclick="answerSafetyStep(true)">
                     ☑️ Rồi, mình đã làm xong!
                 </button>
-
                 <button class="chat-choice" onclick="answerSafetyStep(false)">
                     ⏳ Chưa, để mình làm ngay
                 </button>
@@ -1422,34 +1172,27 @@
 
         function answerSafetyStep(done) {
             const step = safetySteps[safetyStepIndex];
-
             if (!step) return;
 
             if (!done) {
                 setMascotPose("wait");
-
-                document.getElementById("chat-question").textContent =
-                    step.no;
+                document.getElementById("chat-question").textContent = step.no;
 
                 document.getElementById("chat-actions").innerHTML = `
                     <button class="chat-choice" onclick="answerSafetyStep(true)">
                         💚 Mình đã làm xong, tiếp tục nhé!
                     </button>
-
                     <button class="chat-choice" onclick="closeSafetyChat()">
                         Để mình làm sau
                     </button>
                 `;
-
                 return;
             }
 
             setMascotPose("happy");
+            document.getElementById("chat-question").textContent = step.yes;
 
-            document.getElementById("chat-question").textContent =
-                step.yes;
-
-            /* GIỮ NGUYÊN CÁCH CHUYỂN CÂU: CHỜ 1.1 GIÂY RỒI HIỆN CÂU TIẾP */
+            /* Tự động chuyển câu sau 1.1 giây, giữ nguyên luồng cũ */
             setTimeout(() => {
                 safetyStepIndex++;
                 renderSafetyStep();
@@ -1471,9 +1214,7 @@
                     `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,precipitation,weather_code,wind_speed_10m&timezone=Europe/Dublin`
                 );
 
-                if (!res.ok) {
-                    throw new Error("Không thể tải dữ liệu thời tiết");
-                }
+                if (!res.ok) throw new Error("Không thể tải dữ liệu thời tiết");
 
                 const data = await res.json();
 
