@@ -1169,7 +1169,6 @@
         }
         async function estimateBillCategoryShares(file,ocrText,words){
             if(!file)return {ok:false,reason:"missing-image"};
-            const normalized=String(ocrText||"").toLowerCase().replace(/[^a-z]/g,"");
             const categories=[
                 ["waterHeating",["waterheating","waterheater"]],
                 ["cooking",["cooking"]],
@@ -1180,23 +1179,23 @@
                 ["lighting",["lighting"]],
                 ["other",["other"]]
             ];
-            const detected=categories.filter(([,aliases])=>aliases.some(alias=>normalized.includes(alias)));
-            if(detected.length<4)return {ok:false,reason:"not-enough-labels",detected:detected.length};
+            const normalized=String(ocrText||"").toLowerCase().replace(/[^a-z]/g,"");
+            const detected=categories.filter(([,aliases])=>aliases.some(alias=>normalized.includes(alias))).length;
             let bitmap=null;
             try{
                 bitmap=await createImageBitmap(file);
                 const canvas=document.createElement("canvas");
                 canvas.width=bitmap.width;canvas.height=bitmap.height;
                 const ctx=canvas.getContext("2d",{willReadFrequently:true});
-                if(!ctx)return {ok:false,reason:"canvas"};
+                if(!ctx)return {ok:false,reason:"canvas",detected};
                 ctx.drawImage(bitmap,0,0);
                 const w=canvas.width,h=canvas.height,pixels=ctx.getImageData(0,0,w,h).data;
                 let cx=w/2,cy=h*(h/w>1.15?0.397:0.5);
                 const centerWords=(words||[]).filter(word=>/usage|kwh/i.test(word.text||"")&&word.bbox);
                 if(centerWords.length){
-                    const points=centerWords.map(word=>({x:(word.bbox.x0+word.bbox.x1)/2,y:(word.bbox.y0+word.bbox.y1)/2}));
-                    cx=points.reduce((n,p)=>n+p.x,0)/points.length;
-                    cy=points.reduce((n,p)=>n+p.y,0)/points.length;
+                    const pts=centerWords.map(word=>({x:(word.bbox.x0+word.bbox.x1)/2,y:(word.bbox.y0+word.bbox.y1)/2}));
+                    const candidate={x:pts.reduce((n,p)=>n+p.x,0)/pts.length,y:pts.reduce((n,p)=>n+p.y,0)/pts.length};
+                    if(candidate.x>w*.3&&candidate.x<w*.7&&candidate.y>h*.2&&candidate.y<h*.7){cx=candidate.x;cy=candidate.y;}
                 }
                 const radius=Math.min(w*0.43,h*(h/w>1.15?0.24:0.43));
                 const occupied=[];
@@ -1207,8 +1206,8 @@
                         const r=radius*(0.75+j*0.014);
                         const x=Math.round(cx+Math.cos(angle)*r),y=Math.round(cy+Math.sin(angle)*r);
                         if(x<0||y<0||x>=w||y>=h)continue;
-                        const k=(y*w+x)*4,red=pixels[k],green=pixels[k+1],blue=pixels[k+2];
-                        if(Math.max(red,green,blue)-Math.min(red,green,blue)>24||Math.max(red,green,blue)<226)hits++;
+                        const k=(y*w+x)*4,red=pixels[k],green=pixels[k+1],blue=pixels[k+2],max=Math.max(red,green,blue),min=Math.min(red,green,blue);
+                        if(max-min>24||max<226)hits++;
                     }
                     occupied.push(hits>=7);
                 }
@@ -1220,23 +1219,25 @@
                     while(a<360&&occupied[a])a++;
                     if(a-begin>=2)runs.push({start:begin,length:a-begin});
                 }
-                if(runs.length<8)return {ok:false,reason:"segments",segments:runs.length,detected:detected.length};
-                const orderedRuns=runs.slice(0,7);
-                const finalLength=runs.slice(7).reduce((sum,run)=>sum+run.length,0);
-                orderedRuns.push({start:runs[7].start,length:finalLength});
-                if(orderedRuns.length!==8)return {ok:false,reason:"segment-count"};
-                const total=orderedRuns.reduce((sum,run)=>sum+run.length,0);
-                if(total<90)return {ok:false,reason:"weak-ring"};
-                const raw=orderedRuns.map(run=>run.length/total*100);
-                const rounded=raw.map(value=>Math.round(value*10)/10);
-                rounded[0]=Math.round((rounded[0]+100-rounded.reduce((sum,value)=>sum+value,0))*10)/10;
+                if(runs.length>1&&runs[0].start===0&&runs[runs.length-1].start+runs[runs.length-1].length>=358){
+                    const wrap={start:runs[runs.length-1].start,length:runs[runs.length-1].length+runs[0].length};
+                    runs.splice(runs.length-1,1);runs[0]=wrap;
+                }
+                if(runs.length!==8)return {ok:false,reason:"segments",segments:runs.length,detected};
+                const total=runs.reduce((sum,run)=>sum+run.length,0);
+                if(total<90)return {ok:false,reason:"weak-ring",detected};
+                const raw=runs.map(run=>run.length/total*100);
                 const shares={};
-                categories.forEach(([key],index)=>{shares[key]=rounded[index];});
-                return {ok:true,shares,detected:detected.length,segments:runs.length};
+                let roundedTotal=0;
+                categories.forEach(([key],index)=>{
+                    const value=index===7?Math.round((100-roundedTotal)*10)/10:Math.round(raw[index]*10)/10;
+                    shares[key]=Math.max(0,value);roundedTotal+=shares[key];
+                });
+                return {ok:true,shares,detected,segments:runs.length};
             }catch(error){
                 if(bitmap)bitmap.close();
                 console.warn("Could not estimate bill donut shares",error);
-                return {ok:false,reason:"image-analysis"};
+                return {ok:false,reason:"image-analysis",detected};
             }
         }
         async function runBillOCR(){
