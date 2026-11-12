@@ -1149,24 +1149,75 @@
             const ordered=categories.map(([key,aliases])=>({key,position:Math.min(...aliases.map(x=>normalized.indexOf(x)).filter(x=>x>=0))})).filter(x=>Number.isFinite(x.position)).sort((a,b)=>a.position-b.position);
             let bitmap=null;
             try{
-                bitmap=await createImageBitmap(file);const canvas=document.createElement("canvas"),scale=Math.min(1,1200/Math.max(bitmap.width,bitmap.height)),w=Math.max(1,Math.round(bitmap.width*scale)),h=Math.max(1,Math.round(bitmap.height*scale));
-                canvas.width=w;canvas.height=h;const ctx=canvas.getContext("2d",{willReadFrequently:true});if(!ctx)return {ok:false,reason:"canvas"};
-                ctx.drawImage(bitmap,0,0,w,h);const pixels=ctx.getImageData(0,0,w,h).data,minDim=Math.min(w,h);let cx=w/2,cy=h/2;
+                bitmap=await createImageBitmap(file);
+                const canvas=document.createElement("canvas"),scale=Math.min(1,1400/Math.max(bitmap.width,bitmap.height));
+                const w=Math.max(1,Math.round(bitmap.width*scale)),h=Math.max(1,Math.round(bitmap.height*scale));
+                canvas.width=w;canvas.height=h;
+                const ctx=canvas.getContext("2d",{willReadFrequently:true});
+                if(!ctx)return {ok:false,reason:"canvas"};
+                ctx.drawImage(bitmap,0,0,w,h);
+                const pixels=ctx.getImageData(0,0,w,h).data,minDim=Math.min(w,h);
+                let cx=w/2,cy=h/2;
                 const centerWords=(words||[]).filter(x=>/usage|consumption|kwh|total/i.test(x.text||"")&&x.bbox);
-                if(centerWords.length){const pts=centerWords.map(x=>({x:(x.bbox.x0+x.bbox.x1)/2*scale,y:(x.bbox.y0+x.bbox.y1)/2*scale}));cx=pts.reduce((n,p)=>n+p.x,0)/pts.length;cy=pts.reduce((n,p)=>n+p.y,0)/pts.length;}
-                const sample=(deg,r)=>{const a=(deg-90)*Math.PI/180;let best=null,bs=-1;for(const off of [-.025,0,.025]){const x=Math.round(cx+Math.cos(a)*r*(1+off)),y=Math.round(cy+Math.sin(a)*r*(1+off));if(x<0||y<0||x>=w||y>=h)continue;const k=(y*w+x)*4,R=pixels[k],G=pixels[k+1],B=pixels[k+2],light=(R+G+B)/3,score=Math.max(R,G,B)-Math.min(R,G,B)+(255-light)*.08;if(score>bs){bs=score;best={R,G,B,light,score};}}return best;};
-                const dist=(a,b)=>!a||!b?999:Math.hypot(a.R-b.R,a.G-b.G,a.B-b.B);let best=null;const steps=720;
-                for(let r=minDim*.12;r<=minDim*.46;r+=Math.max(1,minDim*.004)){const colors=Array.from({length:steps},(_,i)=>sample(i*.5,r)),valid=colors.map(c=>!!c&&c.score>10&&c.light<250),coverage=valid.filter(Boolean).length/steps;if(coverage<.22||coverage>.97)continue;let changes=0;for(let i=0;i<steps;i++){const j=(i+1)%steps;if(valid[i]&&valid[j]&&dist(colors[i],colors[j])>27)changes++;}const score=Math.abs(coverage-.72)+Math.abs(changes/2-8)*.018;if(changes>=8&&changes<=30&&(!best||score<best.score))best={colors,valid,score};}
-                bitmap.close();bitmap=null;if(!best)return {ok:false,reason:"ring-not-found"};
-                const {colors,valid}=best,bounds=[];for(let i=0;i<steps;i++){const p=(i+steps-1)%steps;if(valid[i]&&valid[p]&&dist(colors[i],colors[p])>27)bounds.push(i);}
-                if(bounds.length<2)return {ok:false,reason:"unclear-segments"};
-                const segments=bounds.map((start,i)=>({start,length:(bounds[(i+1)%bounds.length]-start+steps)%steps})).filter(x=>x.length>=5);
-                if(segments.length<2||segments.length>8)return {ok:false,reason:"unclear-segments",segments:segments.length};
+                if(centerWords.length){
+                    const pts=centerWords.map(x=>({x:(x.bbox.x0+x.bbox.x1)/2*scale,y:(x.bbox.y0+x.bbox.y1)/2*scale}));
+                    cx=pts.reduce((n,p)=>n+p.x,0)/pts.length;cy=pts.reduce((n,p)=>n+p.y,0)/pts.length;
+                }
+                const rgbAt=(deg,r)=>{
+                    const a=(deg-90)*Math.PI/180,values=[];
+                    for(const ro of [-.025,0,.025]){
+                        const x=Math.round(cx+Math.cos(a)*r*(1+ro)),y=Math.round(cy+Math.sin(a)*r*(1+ro));
+                        if(x<0||y<0||x>=w||y>=h)continue;
+                        const k=(y*w+x)*4,R=pixels[k],G=pixels[k+1],B=pixels[k+2];
+                        values.push({R,G,B,light:(R+G+B)/3,chroma:Math.max(R,G,B)-Math.min(R,G,B)});
+                    }
+                    if(!values.length)return null;
+                    values.sort((a,b)=>b.chroma-a.chroma);
+                    return values[0];
+                };
+                const colorDistance=(a,b)=>!a||!b?999:Math.hypot(a.R-b.R,a.G-b.G,a.B-b.B);
+                let best=null;
+                const samples=360;
+                for(let radius=minDim*.13;radius<=minDim*.46;radius+=Math.max(1,minDim*.003)){
+                    const colors=Array.from({length:samples},(_,i)=>rgbAt(i,radius));
+                    const valid=colors.map(c=>!!c&&c.light<249&&(c.chroma>7||c.light<205));
+                    const coverage=valid.filter(Boolean).length/samples;
+                    if(coverage<.30||coverage>.96)continue;
+                    let transitions=0,contrast=0;
+                    for(let i=0;i<samples;i++){
+                        const j=(i+1)%samples;
+                        if(valid[i]&&valid[j]){
+                            const d=colorDistance(colors[i],colors[j]);
+                            if(d>30){transitions++;contrast+=d;}
+                        }
+                    }
+                    const segmentCount=Math.round(transitions/2);
+                    if(segmentCount<2||segmentCount>8||transitions<segmentCount*2-2)continue;
+                    const score=coverage*2+Math.min(contrast/(transitions||1),100)/100-Math.abs(transitions-segmentCount*2)*.15;
+                    if(!best||score>best.score)best={colors,valid,score,segmentCount};
+                }
+                bitmap.close();bitmap=null;
+                if(!best)return {ok:false,reason:"ring-not-found"};
+                const {colors,valid}=best,boundaries=[];
+                for(let i=0;i<samples;i++){
+                    const prev=(i+samples-1)%samples;
+                    if(valid[i]&&valid[prev]&&colorDistance(colors[i],colors[prev])>30)boundaries.push(i);
+                }
+                if(boundaries.length<4)return {ok:false,reason:"unclear-segments"};
+                const segments=boundaries.map((from,i)=>({from,to:boundaries[(i+1)%boundaries.length],length:(boundaries[(i+1)%boundaries.length]-from+samples)%samples})).filter(x=>x.length>=3);
+                if(segments.length<2||segments.length>8)return {ok:false,reason:"unclear-segments"};
                 if(ordered.length!==segments.length)return {ok:false,reason:"labels-do-not-match-slices",detected:ordered.length,segments:segments.length};
-                const total=segments.reduce((n,x)=>n+x.length,0),shares=segments.map(x=>Math.round(x.length/total*1000)/10);shares[0]=Math.round((shares[0]+100-shares.reduce((n,v)=>n+v,0))*10)/10;
-                const result={};segments.forEach((x,i)=>{result[ordered[i].key]=shares[i];});
+                const total=segments.reduce((n,x)=>n+x.length,0);
+                const shares=segments.map(x=>Math.round(x.length/total*1000)/10);
+                shares[shares.length-1]=Math.round((shares[shares.length-1]+100-shares.reduce((n,v)=>n+v,0))*10)/10;
+                const result={};
+                segments.forEach((segment,i)=>{result[ordered[i].key]=shares[i];});
                 return {ok:true,shares:result,detected:ordered.length,segments:segments.length,unmatched:false};
-            }catch(e){if(bitmap)bitmap.close();console.warn("Donut estimation failed",e);return {ok:false,reason:"image-analysis"};}
+            }catch(e){
+                if(bitmap)bitmap.close();
+                console.warn("Donut estimation failed",e);
+                return {ok:false,reason:"image-analysis"};
+            }
         }
         async function runBillOCR(){
             const files=[billImageFiles.total,billImageFiles.breakdown].filter(Boolean),status=document.getElementById("bill-ocr-status"),button=document.getElementById("bill-ocr-button");
