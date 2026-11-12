@@ -1957,6 +1957,20 @@
                 .replace(/[^a-z0-9? ]/g, " ").replace(/\s+/g, " ").trim();
         }
 
+        function detectBabyCloudLanguage(text) {
+            const raw = String(text || "").toLowerCase();
+            if (/[àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđ]/i.test(raw)) return "vi";
+            const normalized = normalizeBabyCloudText(raw);
+            const words = new Set(normalized.split(" "));
+            const viSignals = ["toi","minh","ban","be","may","la","gi","khong","co","hom","nay","bao","nhieu","do","dien","hoa","don","tiet","kiem","the","nao","dau","giup","nhe","nha","cam","on","chao","tai","len","anh","viet"];
+            const enSignals = ["the","what","how","when","where","why","is","are","can","could","would","should","today","temperature","weather","bill","electricity","save","energy","please","help","does","do","mean","upload","read","my","your","you","me","thanks","hello"];
+            const viScore = viSignals.reduce((sum, word) => sum + (words.has(word) ? 1 : 0), 0);
+            const enScore = enSignals.reduce((sum, word) => sum + (words.has(word) ? 1 : 0), 0);
+            if (viScore > enScore) return "vi";
+            if (enScore > viScore) return "en";
+            return localStorage.getItem("eco_buddy_language") === "vi" ? "vi" : "en";
+        }
+
         function findBabyCloudKnowledge(userText) {
             const entries = window.BABY_CLOUD_KNOWLEDGE || [];
             const query = normalizeBabyCloudText(userText);
@@ -2003,7 +2017,7 @@
             userBubble.append(userLabel, userMessage);
             msgs.appendChild(userBubble);
 
-            const lang = localStorage.getItem("eco_buddy_language") === "vi" ? "vi" : "en";
+            const lang = detectBabyCloudLanguage(userText);
             const entry = findBabyCloudKnowledge(userText);
             let reply = "";
             try {
@@ -2348,6 +2362,27 @@ const languagePairs = [
 ["Selected bill · time-of-use data","Hóa đơn đã chọn · dữ liệu khung giờ"],
 ["Observed total","Tổng số liệu đã ghi nhận"],
 ["No time-of-use data for this selection.","Không có dữ liệu khung giờ cho lựa chọn này."],
+ ["📷 Upload & read electricity bill","📷 Tải lên & đọc hóa đơn điện"],
+ ["🧾 Image A · Total bill","🧾 Ảnh A · Tổng hóa đơn"],
+ ["🍩 Image B · Energy distribution","🍩 Ảnh B · Phân bổ điện năng"],
+ ["📸 Take photo / choose image","📸 Chụp / chọn ảnh"],
+ ["🔎 Read image with OCR","🔎 Đọc ảnh bằng OCR"],
+ ["✨ Read information from uploaded images","✨ Đọc thông tin từ ảnh đã tải"],
+ ["Waiting for images","Đang chờ ảnh"],
+ ["New image selected — run OCR again","Có ảnh mới — cần đọc lại"],
+ ["OCR not loaded — please enter values manually","OCR chưa tải được — vui lòng nhập tay"],
+ ["OCR could not load. You can still enter the values manually.","OCR chưa tải được. Bạn vẫn có thể nhập tay."],
+ ["Processing images…","Đang xử lý ảnh…"],
+ ["Reading images...","Đang đọc ảnh..."],
+ ["Image reading failed","Đọc ảnh thất bại"],
+ ["No information found","Không tìm thấy thông tin"],
+ ["No images selected","Chưa chọn ảnh"],
+ ["Images ready. Run OCR or enter the values manually, then save.","Ảnh đã sẵn sàng. Chạy OCR hoặc nhập số liệu thủ công rồi lưu."],
+ ["No estimate yet — upload a clear breakdown image and run OCR.","Chưa có ước tính — hãy tải ảnh phân bổ rõ nét rồi chạy OCR."],
+ ["OCR error — please enter values manually.","Lỗi OCR — vui lòng nhập số liệu thủ công."],
+ ["Please choose an image.","Vui lòng chọn ảnh."],
+ ["OCR is ready","OCR đã sẵn sàng"],
+ ["OCR is reading the images…","OCR đang đọc ảnh…"],
 ];
 const lang = () => localStorage.getItem("eco_buddy_language") === "vi" ? "vi" : "en";
 function translateText(value, target){
