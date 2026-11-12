@@ -585,7 +585,7 @@
                     </div>
                 </div>
 
-                <!-- SUB-TAB 3: DASHBOARD (COLUMN + LINE CHO TỪNG THÁNG & DONUT CHART PHÂN BỔ) -->
+                <!-- SUB-TAB 3: DASHBOARD (MONTHLY BILL / KWH + DAY / PEAK / NIGHT) -->
                 <div id="report-subtab-dashboard" class="hidden space-y-5">
                     <!-- SLIDE CARDS LỌC MONTH & YEAR -->
                     <div class="grid grid-cols-2 gap-3 text-xs">
@@ -646,14 +646,14 @@
                         <p class="text-xs font-bold text-[#5c4738] text-center">Energy Breakdown · Day / Peak / Night</p>
                         <div class="grid grid-cols-1 gap-4 items-start">
                             <div class="min-w-0 overflow-x-auto">
-                                <p class="text-[10px] font-extrabold text-[#7a6452] uppercase tracking-wider text-center">Selected Usage: <span id="donut-center-val" class="text-[#32455c] tabular-nums">— kWh</span></p>
+                                <p class="text-[10px] font-extrabold text-[#7a6452] uppercase tracking-wider text-center">Selected Usage: <span id="dashboard-selected-kwh" class="text-[#32455c] tabular-nums">— kWh</span></p>
                                 <table class="w-full text-[10px] tabular-nums text-right mt-1">
                                     <thead><tr class="text-[#7a6452]"><th class="text-left font-bold">Khung giờ</th><th class="font-bold">kWh</th><th class="font-bold">% kWh</th><th class="font-bold">€</th><th class="font-bold">% tiền</th></tr></thead>
                                     <tbody id="dashboard-bands-body"></tbody>
                                 </table>
                             </div>
                         </div>
-                        <p id="dashboard-donut-note" class="text-[10px] text-[#7a6452] text-center">Lưu hoá đơn có bảng Day / Peak / Night để xem ở đây.</p>
+                        <p id="dashboard-bands-note" class="text-[10px] text-[#7a6452] text-center">Lưu hoá đơn có bảng Day / Peak / Night để xem ở đây.</p>
                     </div>
 
             <!-- DASHBOARD-ONLY REMINDERS -->
@@ -1514,10 +1514,10 @@
             document.getElementById('dash-trend-info').innerText = monthVal === 'all' ? "Showing All-Months Average" : `Showing ${monthVal}`;
 
             renderDashboardColumnLineChart(filtered);
-            renderDashboardEnergyDonut(filtered, monthVal === "all");
+            renderDashboardBandsTable(filtered, monthVal === "all");
         }
-        function renderDashboardEnergyDonut(records, aggregateAll) {
-            const body=_bbEl("dashboard-bands-body"),note=_bbEl("dashboard-donut-note");
+        function renderDashboardBandsTable(records, aggregateAll) {
+            const body=_bbEl("dashboard-bands-body"),note=_bbEl("dashboard-bands-note");
             if(!body)return;
             const recs=records||[];
             const totals={day:{kwh:0,eur:0},peak:{kwh:0,eur:0},night:{kwh:0,eur:0}};let has=false;
@@ -1526,7 +1526,7 @@
             const totalKwh=Object.values(totals).reduce((n,v)=>n+v.kwh,0),totalEur=Object.values(totals).reduce((n,v)=>n+v.eur,0);
             const row=(label,hint,value)=>'<tr class="border-t border-[#e3d6c6]"><td class="py-1.5 text-left font-bold">'+label+' <span class="font-normal text-[#7a6452]">'+hint+'</span></td><td>'+value.kwh.toFixed(0)+'</td><td>'+(totalKwh>0?(value.kwh/totalKwh*100).toFixed(1)+"%":"–")+'</td><td>€'+value.eur.toFixed(2)+'</td><td>'+(totalEur>0?(value.eur/totalEur*100).toFixed(1)+"%":"–")+'</td></tr>';
             body.innerHTML=BILL_BANDS.map(([key,label,hint])=>row(label,hint,totals[key])).join('')+'<tr class="border-t-2 border-[#5c4738] font-extrabold"><td class="py-1.5 text-left">Total</td><td>'+totalKwh.toFixed(0)+'</td><td>100%</td><td>€'+totalEur.toFixed(2)+'</td><td>100%</td></tr>';
-            const center=_bbEl("donut-center-val");if(center)center.textContent=Math.round(totalKwh)+" kWh";
+            const center=_bbEl("dashboard-selected-kwh");if(center)center.textContent=Math.round(totalKwh)+" kWh";
             if(note)note.textContent=aggregateAll||recs.length>1?"Nhiều tháng · cộng dồn kWh và € theo từng khung giờ":"Tháng đã chọn · bảng đọc từ hoá đơn";
         }
         // Combo chart: monthly bill as columns (€), energy usage as a line (kWh).
