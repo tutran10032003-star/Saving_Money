@@ -17,6 +17,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
 
     <style>
+#report-subtab-upload input[type="number"],#report-subtab-upload input[type="date"],#billing-listing-container,#dash-stat-kwh,#dash-stat-bill,#dash-stat-savings,#donut-center-val{font-family:inherit;font-variant-numeric:tabular-nums;font-feature-settings:"tnum";}
         * { box-sizing: border-box; caret-color: transparent; }
 
         html {
@@ -552,7 +553,7 @@
                         <button type="button" id="bill-ocr-button" onclick="runBillOCR()" class="w-full py-2 bg-[#e8dac7] rounded-xl border text-xs font-bold">✨ Đọc thông tin từ ảnh đã tải</button>
                     </div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-3 border-t text-xs">
-                        <label class="font-bold">Kỳ hoá đơn / tháng<input id="edit-bill-month" type="text" placeholder="September" class="w-full px-3 py-2 rounded-xl border mt-1"></label>
+                        <label class="font-bold">Kỳ hoá đơn / tháng<select id="edit-bill-month" class="w-full px-3 py-2 rounded-xl border mt-1 bg-white"><option value="">Chọn tháng / Select month</option><option value="January">Tháng 1 · January</option><option value="February">Tháng 2 · February</option><option value="March">Tháng 3 · March</option><option value="April">Tháng 4 · April</option><option value="May">Tháng 5 · May</option><option value="June">Tháng 6 · June</option><option value="July">Tháng 7 · July</option><option value="August">Tháng 8 · August</option><option value="September">Tháng 9 · September</option><option value="October">Tháng 10 · October</option><option value="November">Tháng 11 · November</option><option value="December">Tháng 12 · December</option></select></label>
                         <label class="font-bold">Năm<input id="edit-bill-year" type="number" placeholder="2026" min="2000" max="2100" class="w-full px-3 py-2 rounded-xl border mt-1"></label>
                         <label class="font-bold">Ngày bắt đầu<input id="edit-bill-start" type="date" class="w-full px-3 py-2 rounded-xl border mt-1"></label>
                         <label class="font-bold">Ngày kết thúc<input id="edit-bill-end" type="date" class="w-full px-3 py-2 rounded-xl border mt-1"></label>
@@ -634,37 +635,11 @@
                         </div>
                     </div>
 
-                    <!-- DONUT CHART PHÂN BỔ CÁC THÀNH PHẦN (WATER HEATING, LIGHTING, ETC) -->
                     <div class="vint-card p-5 bg-[#fffaf4] flex flex-col items-center space-y-4">
-                        <p class="text-xs font-bold text-[#5c4738]">🍩 Breakdown Donut Chart (Based on Bill Scan / Est. Avg)</p>
-                        
-                        <div class="relative w-56 h-56 flex items-center justify-center">
-                            <svg class="w-full h-full transform -rotate-90" viewBox="0 0 200 200">
-                                <circle cx="100" cy="100" r="70" fill="transparent" stroke="#A8C7A0" stroke-width="26" stroke-dasharray="439.8" stroke-dashoffset="0"></circle>
-                                <circle cx="100" cy="100" r="70" fill="transparent" stroke="#C9B7A5" stroke-width="26" stroke-dasharray="439.8" stroke-dashoffset="-154"></circle>
-                                <circle cx="100" cy="100" r="70" fill="transparent" stroke="#E9A8A8" stroke-width="26" stroke-dasharray="439.8" stroke-dashoffset="-264"></circle>
-                                <circle cx="100" cy="100" r="70" fill="transparent" stroke="#B8AEDB" stroke-width="26" stroke-dasharray="439.8" stroke-dashoffset="-330"></circle>
-                                <circle cx="100" cy="100" r="70" fill="transparent" stroke="#F2C6A0" stroke-width="26" stroke-dasharray="439.8" stroke-dashoffset="-374"></circle>
-                                <circle cx="100" cy="100" r="70" fill="transparent" stroke="#9BCAD3" stroke-width="26" stroke-dasharray="439.8" stroke-dashoffset="-409"></circle>
-                                <circle cx="100" cy="100" r="70" fill="transparent" stroke="#E8D58E" stroke-width="26" stroke-dasharray="439.8" stroke-dashoffset="-427"></circle>
-                            </svg>
-
-                            <div class="absolute flex flex-col items-center justify-center text-center">
-                                <span class="text-[10px] font-extrabold text-[#7a6452] uppercase tracking-wider">Active Total</span>
-                                <span id="donut-center-val" class="text-base font-black text-[#32455c]">0 kWh</span>
-                            </div>
-                        </div>
-
-                        <!-- CHÚ THÍCH CÁC CATEGORY -->
-                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 w-full text-[11px] font-bold text-[#4a3b32]">
-                            <div class="vint-card p-2 bg-white flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#C9B7A5] flex-shrink-0"></span> Other (25%)</div>
-                            <div class="vint-card p-2 bg-white flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#A8C7A0] flex-shrink-0"></span> Water Heating (35%)</div>
-                            <div class="vint-card p-2 bg-white flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#E9A8A8] flex-shrink-0"></span> Cooking (15%)</div>
-                            <div class="vint-card p-2 bg-white flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#B8AEDB] flex-shrink-0"></span> Laundry (10%)</div>
-                            <div class="vint-card p-2 bg-white flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#F2C6A0] flex-shrink-0"></span> Lighting (8%)</div>
-                            <div class="vint-card p-2 bg-white flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#9BCAD3] flex-shrink-0"></span> Refrigeration (4%)</div>
-                            <div class="vint-card p-2 bg-white flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#E8D58E] flex-shrink-0"></span> Always On (3%)</div>
-                        </div>
+                        <p class="text-xs font-bold text-[#5c4738]">🍩 Energy Distribution by Category</p>
+                        <div class="relative w-56 h-56 flex items-center justify-center"><svg id="dashboard-energy-donut" class="w-full h-full" viewBox="0 0 220 220" role="img" aria-label="Energy distribution by category"></svg><div class="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none"><span class="text-[10px] font-extrabold text-[#7a6452] uppercase tracking-wider">Selected Usage</span><span id="donut-center-val" class="text-base font-black tabular-nums text-[#32455c]">— kWh</span></div></div>
+                        <div id="dashboard-category-legend" class="grid grid-cols-2 sm:grid-cols-4 gap-2 w-full text-[10px] font-bold text-[#4a3b32]"></div><p id="dashboard-donut-note" class="text-[10px] text-[#7a6452] text-center">Save a bill with an estimated breakdown to show all 8 categories.</p>
+                    </div>
                     </div>
                     </div>
                     <!-- REMINDERS & TIPS: DASHBOARD ONLY -->
@@ -781,7 +756,7 @@
         <div id="tab-content-calendar" class="hidden space-y-6">
             <div class="vintage-panel p-6 space-y-4">
                 <div class="flex items-center justify-between border-b-2 border-[#5c4738] pb-2.5 gap-2">
-                    <h2 class="font-bold text-[#4a3b32] text-base flex items-center gap-2"><span>📅</span> Waste Collection & Rent Payment</h2>
+                    <h2 class="font-bold text-[#4a3b32] text-base flex items-center gap-2"><span>📅</span> Home & Waste Schedule</h2>
                     <div class="flex items-center gap-2 flex-shrink-0">
                         <button onclick="changeCalendarMonth(-1)" class="px-2.5 py-1 bg-[#f0e6d6] rounded-lg border border-[#5c4738] text-xs font-bold">◀</button>
                         <span id="calendar-month-label" class="text-xs font-extrabold text-[#5c4738] min-w-[100px] text-center">Month...</span>
@@ -797,12 +772,7 @@
 
                 <!-- CHÚ THÍCH MÀU SẮC LỊCH -->
                 <div class="vint-card p-3 bg-white space-y-1.5 text-xs">
-                    <p class="font-bold text-[#5c4738]">📌 Calendar Legend & Notes:</p>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
-                        <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#d9534f] inline-block"></span> <span>🗑️ Waste Collection Day (Tuesday)</span></div>
-                        <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#bc6c25] inline-block"></span> <span>🏠 Rent Payment Due (1st of Month)</span></div>
-                        <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#E9A8A8] inline-block"></span> <span>⚠️ Overlapping (Waste & Rent Due Same Day)</span></div>
-                    </div>
+                    <p class="font-bold text-[#5c4738]">🗓️ Schedule Notes</p><div class="grid grid-cols-1 sm:grid-cols-2 gap-2"><div class="flex items-center gap-2 min-w-0"><span class="w-3 h-3 rounded-full bg-[#d9534f] inline-block shrink-0"></span><span>♻️ Waste Collection · Every Tuesday</span></div><div class="flex items-center gap-2 min-w-0"><span class="w-3 h-3 rounded-full bg-[#bc6c25] inline-block shrink-0"></span><span>🏡 Rent Payment · 1st of each month</span></div></div><p class="text-[10px] text-[#8c7355]">✦ marks a day when both are due.</p>
                 </div>
 
                 <div class="vint-card p-3 bg-[#fff5f0] text-center">
@@ -1233,7 +1203,7 @@
                 if(p.kwh!==undefined)document.getElementById("edit-bill-kwh").value=p.kwh;
                 if(p.start)document.getElementById("edit-bill-start").value=p.start;
                 if(p.end)document.getElementById("edit-bill-end").value=p.end;
-                if(p.month)document.getElementById("edit-bill-month").value=p.month;
+                if(p.month)document.getElementById("edit-bill-month").value=p.month;else if(p.start){const startDate=new Date(p.start+"T12:00:00");document.getElementById("edit-bill-month").value=startDate.toLocaleString("en",{month:"long"});if(!p.year)document.getElementById("edit-bill-year").value=startDate.getFullYear();}
                 if(p.year)document.getElementById("edit-bill-year").value=p.year;
                 const estimate=await estimateBillCategoryShares(billImageFiles.breakdown,breakdownText,breakdownWords);
                 if(estimate.ok){
@@ -1336,6 +1306,17 @@
             document.getElementById('dash-trend-info').innerText = monthVal === 'all' ? "Showing All-Months Average" : `Showing ${monthVal}`;
 
             renderDashboardColumnLineChart(filtered);
+            renderDashboardEnergyDonut(filtered, monthVal === "all");
+        }
+        function renderDashboardEnergyDonut(records, aggregateAll) {
+            const svg=document.getElementById("dashboard-energy-donut"),legend=document.getElementById("dashboard-category-legend"),note=document.getElementById("dashboard-donut-note");if(!svg||!legend)return;
+            const keys=billCategoryDefaults,totals=Object.fromEntries(keys.map(([key])=>[key,0]));let hasBreakdown=false;
+            (records||[]).forEach(record=>{const cats=Array.isArray(record.categories)?record.categories:[],valid=cats.filter(c=>c&&Object.prototype.hasOwnProperty.call(totals,c.key)&&Number.isFinite(Number(c.percent))&&Number(c.percent)>=0),sum=valid.reduce((n,c)=>n+Number(c.percent),0);if(valid.length!==8||Math.abs(sum-100)>0.2)return;hasBreakdown=true;valid.forEach(c=>{totals[c.key]+=Number(record.kwh||0)*Number(c.percent)/100;});});
+            svg.innerHTML="";legend.innerHTML="";const circumference=2*Math.PI*76,total=Object.values(totals).reduce((a,b)=>a+b,0);
+            const bg=document.createElementNS("http://www.w3.org/2000/svg","circle");bg.setAttribute("cx","110");bg.setAttribute("cy","110");bg.setAttribute("r","76");bg.setAttribute("fill","none");bg.setAttribute("stroke","#eadfd1");bg.setAttribute("stroke-width","31");svg.appendChild(bg);
+            if(!hasBreakdown||total<=0){document.getElementById("donut-center-val").textContent="— kWh";if(note)note.textContent="No category estimate yet. Save a bill with all 8 category percentages to display its distribution.";keys.forEach(([key,label],i)=>{const row=document.createElement("div");row.className="vint-card p-2 bg-white flex items-center gap-2 min-w-0";row.innerHTML='<span class="w-2.5 h-2.5 rounded-full shrink-0" style="background:'+billCategoryColors[i]+'"></span><span class="truncate">'+label+'</span>';legend.appendChild(row);});return;}
+            let offset=0;keys.forEach(([key,label],i)=>{const value=totals[key],share=value/total*100,length=circumference*share/100;if(length>0){const seg=document.createElementNS("http://www.w3.org/2000/svg","circle");seg.setAttribute("cx","110");seg.setAttribute("cy","110");seg.setAttribute("r","76");seg.setAttribute("fill","none");seg.setAttribute("stroke",billCategoryColors[i]);seg.setAttribute("stroke-width","31");seg.setAttribute("stroke-dasharray",length+" "+(circumference-length));seg.setAttribute("stroke-dashoffset",String(-offset));seg.setAttribute("transform","rotate(-90 110 110)");svg.appendChild(seg);}offset+=length;const row=document.createElement("div");row.className="vint-card p-2 bg-white flex items-center gap-2 min-w-0";row.innerHTML='<span class="w-2.5 h-2.5 rounded-full shrink-0" style="background:'+billCategoryColors[i]+'"></span><span class="truncate">'+label+'</span><strong class="ml-auto tabular-nums">'+(value>0?share.toFixed(1)+"%":"—")+'</strong>';legend.appendChild(row);});
+            document.getElementById("donut-center-val").textContent=Math.round(total)+" kWh";if(note)note.textContent=aggregateAll?"All months · kWh-weighted category distribution":"Selected bill · estimated from its uploaded breakdown";
         }
 
         // BIỂU ĐỒ CỘT (€) KẾT HỢP LINE (kWh)
@@ -1637,13 +1618,13 @@
 
                 if (isTuesday && isFirstOfMonth) {
                     bgClass = "bg-[#E9A8A8] text-white shadow-sm"; // Trùng ngày: Tím
-                    badgeIcon = '<span class="text-[7px]">🗑️🏠</span>';
+                    badgeIcon = '<span class="text-[8px] leading-none">✦</span>';
                 } else if (isTuesday) {
                     bgClass = "bg-[#d9534f] text-white shadow-sm"; // Đổ rác: Đỏ
-                    badgeIcon = '<span class="text-[8px]">🗑️</span>';
+                    badgeIcon = '<span class="text-[8px] leading-none">♻️</span>';
                 } else if (isFirstOfMonth) {
                     bgClass = "bg-[#bc6c25] text-white shadow-sm"; // Đóng tiền nhà: Cam
-                    badgeIcon = '<span class="text-[8px]">🏠</span>';
+                    badgeIcon = '<span class="text-[8px] leading-none">⌂</span>';
                 }
 
                 cell.className = `h-10 rounded-xl flex flex-col items-center justify-center text-xs font-bold relative border border-[#5c4738]/20 ${bgClass} ${isToday ? " ring-2 ring-[#87a96b] ring-offset-1" : ""}`;
@@ -1653,7 +1634,7 @@
 
             const reminder = document.getElementById("next-trash-reminder");
             if (reminder) {
-                reminder.innerHTML = `💡 <strong>Reminder:</strong> Rent payment is due on the 1st of every month (🏠). Waste collection is every Tuesday (🗑️).`;
+                reminder.innerHTML = `🗓️ <strong>Home & Waste:</strong> Rent is due on the 1st (⌂); waste collection is every Tuesday (♻️).`;
             }
         }
 
@@ -1878,7 +1859,27 @@ const reportTranslations = {
  "OCR gặp lỗi — vui lòng nhập tay.":"OCR error — please enter values manually.","Ảnh đã sẵn sàng. Bấm đọc OCR hoặc nhập tay rồi lưu.":"Images ready. Run OCR or enter the values manually, then save.",
  "Đã tự điền ":"Auto-filled "," trường. ":" fields. ","✓ Ước tính 8 nhóm theo kích thước múi donut (OCR nhận ":"✓ Estimated 8 categories from donut segment sizes (OCR detected ","/8 keyword).":"/8 keywords).",
  "No estimate yet — upload a clear breakdown image and run OCR.":"No estimate yet — upload a clear breakdown image and run OCR.","Distribution must add up to 100%.":"Distribution must add up to 100%.",
- "Hãy nhập hoặc ước tính tỷ lệ các nhóm sao cho tổng bằng 100% trước khi lưu.":"Please enter or estimate category percentages so they add up to 100% before saving."
+ "Hãy nhập hoặc ước tính tỷ lệ các nhóm sao cho tổng bằng 100% trước khi lưu.":"Please enter or estimate category percentages so they add up to 100% before saving.",
+"Energy Distribution by Category":"Energy Distribution by Category",
+"Selected Usage":"Selected Usage",
+"Save a bill with an estimated breakdown to show all 8 categories.":"Save a bill with an estimated breakdown to show all 8 categories.",
+"No category estimate yet. Save a bill with all 8 category percentages to display its distribution.":"No category estimate yet. Save a bill with all 8 category percentages to display its distribution.",
+"All months · kWh-weighted category distribution":"All months · kWh-weighted category distribution",
+"Selected bill · estimated from its uploaded breakdown":"Selected bill · estimated from its uploaded breakdown",
+"Chọn tháng / Select month":"Choose month / Select month",
+"Tháng 1 · January":"January",
+"Tháng 2 · February":"February",
+"Tháng 3 · March":"March",
+"Tháng 4 · April":"April",
+"Tháng 5 · May":"May",
+"Tháng 6 · June":"June",
+"Tháng 7 · July":"July",
+"Tháng 8 · August":"August",
+"Tháng 9 · September":"September",
+"Tháng 10 · October":"October",
+"Tháng 11 · November":"November",
+"Tháng 12 · December":"December"
+
 };
 function applyReportLanguage(){
  const lang=localStorage.getItem("eco_buddy_language")||"en";
