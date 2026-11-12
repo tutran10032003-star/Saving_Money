@@ -538,7 +538,7 @@
                 <!-- SUB-TAB 1: UPLOAD & EDIT BILL -->
                 <div id="report-subtab-upload" class="space-y-4 vint-card p-4 bg-white">
                     <h3 class="font-bold text-sm text-[#5c4738]">📷 Upload & đọc hoá đơn điện</h3>
-                    <p class="text-[11px] text-[#7a6452]">Tải hai ảnh: tổng hoá đơn và biểu đồ phân bổ. OCR chỉ hỗ trợ đọc thử; hãy kiểm tra số liệu trước khi lưu.</p>
+                    <p class="text-[11px] text-[#7a6452]">Tải ảnh hoá đơn có bảng chi tiết Day / Peak / Night. OCR chỉ hỗ trợ đọc thử; hãy kiểm tra số liệu trước khi lưu.</p>
                     <div class="grid grid-cols-1 gap-3">
                         <div class="vint-card p-3 bg-[#fffaf4] space-y-2"><b class="text-xs">🧾 Ảnh hoá đơn</b>
                             <label class="block px-3 py-2 bg-[#8C735F] text-white rounded-xl text-xs text-center cursor-pointer">📸 Chụp / chọn ảnh<input type="file" id="bill-img-file" accept="image/*" capture="environment" class="hidden" onchange="previewUploadedBill(event,'total')"></label>
@@ -1130,7 +1130,7 @@
             const inputs=[...document.querySelectorAll("[data-category-percent]")],hasValues=inputs.some(input=>input.value.trim()!=="");
             const cats=getBillCategoryValues(),total=cats.reduce((n,c)=>n+c.percent,0),t=document.getElementById("bill-category-total"),w=document.getElementById("bill-category-warning");
             if(t)t.textContent=hasValues?total.toFixed(1)+"%":"—";
-            if(w)w.textContent=!hasValues?"Chưa có ước tính — hãy tải ảnh phân bổ rõ nét rồi chạy OCR.":(Math.abs(total-100)<0.11?"✓ Tổng phân bổ bằng 100%.":"Tỷ lệ phân bổ phải bằng 100%.");
+            if(w)w.textContent=!hasValues?"Chưa có ước tính — có thể nhập tỷ lệ thủ công.":(Math.abs(total-100)<0.11?"✓ Tổng phân bổ bằng 100%.":"Tỷ lệ phân bổ phải bằng 100%.");
             renderBillDonut();
         }
         function previewUploadedBill(event){
@@ -1439,7 +1439,7 @@
             const categories=[...document.querySelectorAll("[data-category-percent]")].map(x=>({key:x.dataset.categoryPercent,label:(document.querySelector('[data-category-label="'+x.dataset.categoryPercent+'"]')||{}).value||"",percent:x.value===""?null:Number(x.value)}));
             if(categories.some(c=>!c.label||(c.percent!==null&&(!Number.isFinite(c.percent)||c.percent<0||c.percent>100)))){alert("Kiểm tra tên nhóm và tỷ lệ (0–100%).");return;}
             const populated=categories.filter(c=>c.percent!==null),sum=populated.reduce((n,c)=>n+c.percent,0);
-            if(populated.length&&Math.abs(sum-100)>.11){alert("Nếu đã nhập EST, tổng tỷ lệ cần bằng 100%. Nếu chưa EST được, cứ để trống và lưu ảnh gốc.");return;}
+            if(populated.length&&Math.abs(sum-100)>.11){alert("Nếu đã nhập EST, tổng tỷ lệ cần bằng 100%. Nếu chưa EST được, cứ để trống.");return;}
             const id=month.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")+"-"+year,old=billingRecords.find(x=>x.id===id),bands=readBillBands().filter(b=>b.kwh!==null),record={id,month,year,bill:amount,kwh,startDate:start,endDate:end,categories:populated.length?categories.filter(c=>c.percent!==null):[],bands:bands.length?bands:(old?.bands||[]),savings:"€"+(kwh*.08).toFixed(2)+" cr"};
             const idx=billingRecords.findIndex(x=>x.id===id);if(idx>=0)billingRecords[idx]={...billingRecords[idx],...record};else billingRecords.push(record);
             try{saveUserData();}catch(e){alert("Không đủ bộ nhớ để lưu hoá đơn. M thử xoá bớt dữ liệu cũ nhé.");return;}
@@ -2087,7 +2087,7 @@ const reportTranslations = {
 "Manage bills, edit data, list history & view dashboard analytics":"Manage bills, edit data, review history & view dashboard analytics",
 "1. Upload & Edit Bill":"1. Upload & Edit Bill","2. Billing Listing":"2. Billing Listing","3. Dashboard":"3. Dashboard",
 "📷 Upload & đọc hoá đơn điện":"📷 Upload & Read Electricity Bill",
-"Tải hai ảnh: tổng hoá đơn và biểu đồ phân bổ. OCR chỉ hỗ trợ đọc thử; hãy kiểm tra số liệu trước khi lưu.":"Upload two images: bill total and energy breakdown. OCR provides an estimate; please verify all values before saving.",
+"Tải hai ảnh: tổng hoá đơn và biểu đồ phân bổ. OCR chỉ hỗ trợ đọc thử; hãy kiểm tra số liệu trước khi lưu.":"Upload a bill image showing the Day / Peak / Night detail table. OCR provides an estimate; please verify all values before saving.",
 "🧾 Ảnh A · Tổng hoá đơn":"🧾 Image A · Bill Total","🍩 Ảnh B · Phân bổ điện năng":"🍩 Image B · Energy Breakdown",
 "📸 Chụp / chọn ảnh":"📸 Take Photo / Choose Image","🔎 Đọc ảnh bằng OCR":"🔎 Read Images with OCR",
 "Đang chờ ảnh":"Waiting for images","✨ Đọc thông tin từ ảnh đã tải":"✨ Read Information from Uploaded Images",
