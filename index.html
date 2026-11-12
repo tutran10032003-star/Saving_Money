@@ -537,22 +537,22 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div class="vint-card p-3 bg-[#fffaf4] space-y-2"><b class="text-xs">🧾 Ảnh A · Tổng hoá đơn</b>
                             <label class="block px-3 py-2 bg-[#8c7355] text-white rounded-xl text-xs text-center cursor-pointer">📸 Chụp / chọn ảnh<input type="file" id="bill-img-file" accept="image/*" capture="environment" class="hidden" onchange="previewUploadedBill(event,'total')"></label>
-                            <img id="bill-preview-img" alt="Bill preview" class="hidden max-h-40 w-full object-contain rounded-xl border"><p id="bill-total-file-status" class="text-[10px]">Chưa chọn ảnh.</p>
+                            <img id="bill-preview-img" alt="Bill preview" class="hidden max-h-40 w-full object-contain rounded-xl border">
                         </div>
                         <div class="vint-card p-3 bg-[#fffaf4] space-y-2"><b class="text-xs">🍩 Ảnh B · Phân bổ điện năng</b>
                             <label class="block px-3 py-2 bg-[#8c7355] text-white rounded-xl text-xs text-center cursor-pointer">📸 Chụp / chọn ảnh<input type="file" id="bill-breakdown-file" accept="image/*" capture="environment" class="hidden" onchange="previewUploadedBill(event,'breakdown')"></label>
-                            <img id="bill-breakdown-preview" alt="Breakdown preview" class="hidden max-h-40 w-full object-contain rounded-xl border"><p id="bill-breakdown-file-status" class="text-[10px]">Chưa chọn ảnh.</p>
+                            <img id="bill-breakdown-preview" alt="Breakdown preview" class="hidden max-h-40 w-full object-contain rounded-xl border">
                         </div>
                     </div>
                     <div class="rounded-xl bg-[#f5ede2] p-3 space-y-2"><div class="flex justify-between"><b class="text-xs">🔎 Đọc ảnh bằng OCR</b><span id="bill-ocr-status" class="text-[10px]">Đang chờ ảnh</span></div>
-                        <button type="button" id="bill-ocr-button" onclick="runBillOCR()" class="w-full py-2 bg-[#e8dac7] rounded-xl border text-xs font-bold">✨ Đọc thông tin từ ảnh đã tải</button><pre id="bill-ocr-text" class="hidden whitespace-pre-wrap text-[10px] max-h-28 overflow-auto bg-white rounded-lg p-2"></pre>
+                        <button type="button" id="bill-ocr-button" onclick="runBillOCR()" class="w-full py-2 bg-[#e8dac7] rounded-xl border text-xs font-bold">✨ Đọc thông tin từ ảnh đã tải</button>
                     </div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-3 border-t text-xs">
                         <label class="font-bold">Kỳ hoá đơn / tháng<input id="edit-bill-month" type="text" placeholder="September" class="w-full px-3 py-2 rounded-xl border mt-1"></label>
                         <label class="font-bold">Năm<input id="edit-bill-year" type="number" placeholder="2026" min="2000" max="2100" class="w-full px-3 py-2 rounded-xl border mt-1"></label>
                         <label class="font-bold">Ngày bắt đầu<input id="edit-bill-start" type="date" class="w-full px-3 py-2 rounded-xl border mt-1"></label>
                         <label class="font-bold">Ngày kết thúc<input id="edit-bill-end" type="date" class="w-full px-3 py-2 rounded-xl border mt-1"></label>
-                        <label class="font-bold">Tổng tiền (€)<input id="edit-bill-amount" type="number" min="0" step="0.01" placeholder="Nhập theo bill" class="w-full px-3 py-2 rounded-xl border mt-1"></label>
+                        <div><label class="font-bold">Tổng tiền (€)<input id="edit-bill-amount" type="number" min="0" step="0.01" placeholder="Nhập theo bill" oninput="updateBillPerPerson()" class="w-full px-3 py-2 rounded-xl border mt-1"></label><p id="bill-per-person-note" class="mt-1 text-[10px] italic font-normal text-[#8c7355]">Ghi chú: chia đều cho 4 người · €— / người</p></div>
                         <label class="font-bold">Tổng điện năng (kWh)<input id="edit-bill-kwh" type="number" min="0" step="0.01" placeholder="Nhập theo bill" class="w-full px-3 py-2 rounded-xl border mt-1"></label>
                     </div>
                     <div class="pt-3 border-t space-y-3">
@@ -1105,6 +1105,7 @@
             });
             if(cats.length)selectBillCategory(Math.min(activeBillCategory,cats.length-1));
         }
+        function updateBillPerPerson(){const amount=Number(document.getElementById("edit-bill-amount")?.value),note=document.getElementById("bill-per-person-note");if(note)note.textContent="Ghi chú: chia đều cho 4 người · "+(Number.isFinite(amount)&&amount>=0&&document.getElementById("edit-bill-amount").value!==""?"€"+(amount/4).toFixed(2):"€—")+" / người";}
         function updateBillCategoryTotals(){
             const cats=getBillCategoryValues(),total=cats.reduce((n,c)=>n+c.percent,0),t=document.getElementById("bill-category-total"),w=document.getElementById("bill-category-warning");
             if(t)t.textContent=total.toFixed(1)+"%";if(w)w.textContent=Math.abs(total-100)<0.11?"✓ Tổng phân bổ bằng 100%.":"Tỷ lệ hiện tại chưa bằng 100%; hãy kiểm tra lại nhé.";
@@ -1113,8 +1114,8 @@
         function previewUploadedBill(event,type){
             type=type||"total";const file=event.target.files&&event.target.files[0];if(!file)return;if(!file.type.startsWith("image/")){alert("Please choose an image.");return;}
             billImageFiles[type]=file;if(billImageUrls[type])URL.revokeObjectURL(billImageUrls[type]);billImageUrls[type]=URL.createObjectURL(file);
-            const p=document.getElementById(type==="total"?"bill-preview-img":"bill-breakdown-preview"),s=document.getElementById(type==="total"?"bill-total-file-status":"bill-breakdown-file-status");
-            if(p){p.src=billImageUrls[type];p.classList.remove("hidden");}if(s)s.textContent="✓ "+file.name;
+            const p=document.getElementById(type==="total"?"bill-preview-img":"bill-breakdown-preview");
+            if(p){p.src=billImageUrls[type];p.classList.remove("hidden");}
             document.getElementById("upload-status-text").textContent="Ảnh đã sẵn sàng. Bấm đọc OCR hoặc nhập tay rồi lưu.";document.getElementById("bill-ocr-status").textContent="Có ảnh mới — cần đọc lại";
         }
         function parseBillDateParts(text){
@@ -1143,18 +1144,17 @@
             if(kwhMatch)r.kwh=Number((kwhMatch[1]||kwhMatch[2]).replace(",","."));
             const issueMatch=text.match(/date\s*of\s*issue\s*[:：]?\s*(\d{1,2}\s+[A-Za-z]{3,9}\.?,?\s+(?:20\d{2}|\d{2})|\d{1,2}[\/.-]\d{1,2}[\/.-](?:20\d{2}|\d{2}))/i);
             if(issueMatch){const issue=parseBillDateParts(issueMatch[1])[0];if(issue){r.issueDate=issue.iso;if(!r.start&&!r.end){r.month=new Date(issue.iso+"T12:00:00").toLocaleString("en",{month:"long"});r.year=issue.year;}}}
-            if(r.end){const d=new Date(r.end+"T12:00:00");r.month=d.toLocaleString("en",{month:"long"});r.year=d.getFullYear();}
+            const periodAnchor=r.start||r.end;if(periodAnchor){const d=new Date(periodAnchor+"T12:00:00");r.month=d.toLocaleString("en",{month:"long"});r.year=d.getFullYear();}
             return r;
         }
         async function runBillOCR(){
-            const files=[billImageFiles.total,billImageFiles.breakdown].filter(Boolean),status=document.getElementById("bill-ocr-status"),button=document.getElementById("bill-ocr-button"),box=document.getElementById("bill-ocr-text");
+            const files=[billImageFiles.total,billImageFiles.breakdown].filter(Boolean),status=document.getElementById("bill-ocr-status"),button=document.getElementById("bill-ocr-button");
             if(!files.length){status.textContent="Chưa có ảnh để đọc";return;}
             if(!window.Tesseract){status.textContent="OCR chưa tải được — nhập tay nhé";alert("OCR chưa tải được. M vẫn có thể nhập tay.");return;}
             button.disabled=true;button.textContent="⏳ Đang đọc ảnh...";status.textContent="Đang xử lý ảnh…";let worker=null;
             try{
                 worker=await Tesseract.createWorker("eng");let raw="";
                 for(let i=0;i<files.length;i++){const result=await worker.recognize(files[i]);raw+="\n--- "+(i===0?"TOTAL BILL":"ENERGY BREAKDOWN")+" ---\n"+(result.data.text||"")+"\n";}
-                box.textContent=raw.trim()||"OCR không nhận diện được chữ rõ ràng.";box.classList.remove("hidden");
                 const p=parseBillOcrText(raw);
                 if(p.amount!==undefined)document.getElementById("edit-bill-amount").value=p.amount.toFixed(2);
                 if(p.kwh!==undefined)document.getElementById("edit-bill-kwh").value=p.kwh;
@@ -1162,7 +1162,7 @@
                 if(p.end)document.getElementById("edit-bill-end").value=p.end;
                 if(p.month)document.getElementById("edit-bill-month").value=p.month;
                 if(p.year)document.getElementById("edit-bill-year").value=p.year;
-                updateBillCategoryTotals();
+                updateBillCategoryTotals();updateBillPerPerson();
                 const filled=[p.start,p.end,p.amount!==undefined,p.kwh!==undefined,p.month,p.year].filter(Boolean).length;
                 status.textContent=filled?"Đã tự điền "+filled+" trường — m kiểm tra lại trước khi lưu nhé.":"Chưa nhận diện chắc được trường nào; m nhập tay giúp t nhé.";
             }catch(err){console.error(err);status.textContent="OCR gặp lỗi — vui lòng nhập tay.";}
@@ -1176,7 +1176,7 @@
             if(categories.some(c=>!c.label||c.percent<0||c.percent>100)){alert("Kiểm tra tên nhóm và tỷ lệ (0–100%).");return;}
             const id=month.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")+"-"+year,record={id,month,year,bill:amount,kwh,startDate:start,endDate:end,categories,savings:"€"+(kwh*0.08).toFixed(2)+" cr"};
             const idx=billingRecords.findIndex(x=>x.id===id);if(idx>=0)billingRecords[idx]={...billingRecords[idx],...record};else billingRecords.push(record);
-            saveUserData();renderBillingListing();populateDashboardFilters();updateDashboardView();document.getElementById("upload-status-text").textContent="✓ Đã lưu hoá đơn và cập nhật Billing Listing + Dashboard.";alert("💾 Đã lưu hoá đơn!");
+            saveUserData();renderBillingListing();populateDashboardFilters();updateDashboardView();updateBillPerPerson();document.getElementById("upload-status-text").textContent="✓ Đã lưu hoá đơn và cập nhật Billing Listing + Dashboard.";alert("💾 Đã lưu hoá đơn!");
         }
 
         function renderBillingListing() {
