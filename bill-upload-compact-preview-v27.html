@@ -530,7 +530,7 @@
 
                 <!-- 3 SUB-TABS CHO REPORTS -->
                 <div class="grid grid-cols-3 gap-2 text-xs">
-                    <button onclick="switchReportSubTab('upload')" id="subtab-btn-upload" class="p-2.5 bg-[#8C735F] text-white font-bold rounded-xl border border-[#5c4738]">1. Upload & Edit Bill</button>
+                    <button onclick="switchReportSubTab('upload')" id="subtab-btn-upload" class="p-2.5 bg-[#A8C7A0] text-white font-bold rounded-xl border border-[#5c4738]">1. Upload & Edit Bill</button>
                     <button onclick="switchReportSubTab('listing')" id="subtab-btn-listing" class="p-2.5 bg-[#fffaf4] text-[#4a3b32] font-bold rounded-xl border border-[#5c4738]">2. Billing Listing</button>
                     <button onclick="switchReportSubTab('dashboard')" id="subtab-btn-dashboard" class="p-2.5 bg-[#fffaf4] text-[#4a3b32] font-bold rounded-xl border border-[#5c4738]">3. Dashboard</button>
                 </div>
@@ -704,7 +704,7 @@
                 <div class="vint-card p-4 bg-white space-y-3">
                     <div id="chatbot-messages" class="space-y-2.5 max-h-96 overflow-y-auto pr-1 text-xs">
                         <div class="bg-[#f5ede2] p-3 rounded-2xl border border-[#d8c7b0]">
-                            <p class="font-bold text-[#5c4738]">Bé Mây ☁️ [Atlantic Style]</p>
+                            <p class="font-bold text-[#5c4738]">Bé Mây ☁️</p>
                             <p class="mt-1 text-[#4a3b32]">Ahoy, traveller! Welcome to this week's 10-question eco challenge straight from our 40-question master pool. Let's test your knowledge!</p>
                         </div>
                     </div>
@@ -740,7 +740,7 @@
 
                     <div class="flex items-center gap-2 pt-1">
                         <input type="number" id="custom-minutes" placeholder="Enter custom minutes..." min="1" max="180" class="flex-1 px-3 py-2 rounded-xl border-1.5 border-[#5c4738] text-xs bg-[#fffaf4]">
-                        <button onclick="startCustomTimer()" class="px-4 py-2 bg-[#B8AEDB] text-white text-xs font-bold rounded-xl border-1.5 border-[#5c4738] shadow-[2px_2px_0px_#5c4738] transition whitespace-nowrap">Start</button>
+                        <button onclick="startCustomTimer()" class="px-4 py-2 bg-[#A8C7A0] text-white text-xs font-bold rounded-xl border-1.5 border-[#5c4738] shadow-[2px_2px_0px_#5c4738] transition whitespace-nowrap">Start</button>
                     </div>
                 </div>
 
@@ -1038,7 +1038,7 @@
                 const btn = document.getElementById(`subtab-btn-${s}`);
                 if (el) el.classList.add('hidden');
                 if (btn) {
-                    btn.classList.remove('bg-[#8C735F]', 'text-white');
+                    btn.classList.remove('bg-[#A8C7A0]', 'text-white');
                     btn.classList.add('bg-[#fffaf4]', 'text-[#4a3b32]');
                 }
             });
@@ -1048,7 +1048,7 @@
             if (targetEl) targetEl.classList.remove('hidden');
             if (targetBtn) {
                 targetBtn.classList.remove('bg-[#fffaf4]', 'text-[#4a3b32]');
-                targetBtn.classList.add('bg-[#8C735F]', 'text-white');
+                targetBtn.classList.add('bg-[#A8C7A0]', 'text-white');
             }
 
             if (subName === 'listing') renderBillingListing();
@@ -1599,12 +1599,12 @@
             const inputArea = document.getElementById('chatbot-input-area');
 
             if (mode === 'quiz') {
-                btnQuiz.className = "p-2.5 bg-[#B8AEDB] text-white font-bold rounded-xl border border-[#5c4738]";
+                btnQuiz.className = "p-2.5 bg-[#A8C7A0] text-white font-bold rounded-xl border border-[#5c4738]";
                 btnChat.className = "p-2.5 bg-[#fffaf4] text-[#4a3b32] font-bold rounded-xl border border-[#5c4738]";
                 quizArea.classList.remove('hidden');
                 inputArea.classList.add('hidden');
             } else {
-                btnChat.className = "p-2.5 bg-[#B8AEDB] text-white font-bold rounded-xl border border-[#5c4738]";
+                btnChat.className = "p-2.5 bg-[#A8C7A0] text-white font-bold rounded-xl border border-[#5c4738]";
                 btnQuiz.className = "p-2.5 bg-[#fffaf4] text-[#4a3b32] font-bold rounded-xl border border-[#5c4738]";
                 quizArea.classList.add('hidden');
                 inputArea.classList.remove('hidden');
