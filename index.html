@@ -33,6 +33,9 @@
             min-height: 100vh;
             min-height: 100dvh;
             overflow-x: hidden;
+
+            /* Chừa chỗ cho header cố định */
+            padding-top: var(--header-height, 75px);
         }
 
         button, input { font-family: inherit; touch-action: manipulation; }
@@ -56,13 +59,15 @@
             box-shadow: 2px 2px 0 #5c4738;
         }
 
-        /* HEADER + THANH ĐIỀU HƯỚNG LUÔN GHIM TRÊN ĐẦU */
+        /* HEADER LUÔN CỐ ĐỊNH TRÊN CÙNG */
         header {
-            position: sticky !important;
-            position: -webkit-sticky !important;
+            position: fixed !important;
             top: 0 !important;
-            z-index: 1000 !important;
+            left: 0 !important;
+            right: 0 !important;
+            z-index: 10000 !important;
             width: 100%;
+
             background: rgba(255,253,250,.97);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
@@ -114,12 +119,12 @@
             box-shadow: 2px 2px 0 #5c4738;
         }
 
-        /* Giữ nội dung không bị che khi nhảy đến tab */
+        /* Khoảng cách khi cuộn đến nội dung */
         #tab-content-tracker,
         #tab-content-calendar,
         #tab-content-weather,
         #tab-content-checklist {
-            scroll-margin-top: 110px;
+            scroll-margin-top: calc(var(--header-height, 75px) + 12px);
         }
 
         /* TIMER */
@@ -488,7 +493,7 @@
 
 <body class="min-h-screen flex flex-col justify-between selection:bg-amber-200">
 
-    <!-- HEADER + STICKY NAVIGATION -->
+    <!-- HEADER + FIXED NAVIGATION -->
     <header class="border-b-2 border-[#5c4738]">
         <div class="header-inner">
             <div class="flex items-center space-x-2.5">
@@ -842,7 +847,23 @@
 
     <!-- JAVASCRIPT -->
     <script>
+        /* TỰ ĐỘNG ĐO CHIỀU CAO HEADER */
+        function updateHeaderHeight() {
+            const header = document.querySelector("header");
+
+            if (!header) return;
+
+            const height = header.offsetHeight;
+
+            document.documentElement.style.setProperty(
+                "--header-height",
+                height + "px"
+            );
+        }
+
         window.addEventListener('DOMContentLoaded', () => {
+            updateHeaderHeight();
+
             startRealtimeClock();
             checkTariffStatus();
             fetchWeatherData();
@@ -850,6 +871,25 @@
 
             setInterval(checkTariffStatus, 30000);
             setInterval(fetchWeatherData, 600000);
+
+            /* Theo dõi chiều cao header khi màn hình thay đổi */
+            if ("ResizeObserver" in window) {
+                const header = document.querySelector("header");
+
+                if (header) {
+                    const headerObserver = new ResizeObserver(() => {
+                        updateHeaderHeight();
+                    });
+
+                    headerObserver.observe(header);
+                }
+            }
+        });
+
+        /* Cập nhật lại chiều cao khi xoay màn hình hoặc resize */
+        window.addEventListener("resize", updateHeaderHeight);
+        window.addEventListener("orientationchange", () => {
+            setTimeout(updateHeaderHeight, 150);
         });
 
         /* PWA */
@@ -1192,7 +1232,7 @@
             setMascotPose("happy");
             document.getElementById("chat-question").textContent = step.yes;
 
-            /* Tự động chuyển câu sau 1.1 giây, giữ nguyên luồng cũ */
+            /* Tự động chuyển câu sau 1.1 giây */
             setTimeout(() => {
                 safetyStepIndex++;
                 renderSafetyStep();
