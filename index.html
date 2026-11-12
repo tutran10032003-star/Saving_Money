@@ -1150,7 +1150,17 @@
             billImageFiles[type]=file;if(billImageUrls[type])URL.revokeObjectURL(billImageUrls[type]);billImageUrls[type]=URL.createObjectURL(file);
             const p=document.getElementById(type==="total"?"bill-preview-img":"bill-breakdown-preview");
             if(p){p.src=billImageUrls[type];p.classList.remove("hidden");}
-            if(type==="breakdown"){window.currentBillDonutSegments=null;const card=p&&p.parentElement;if(card&&!card.querySelector(".bill-redrawn-preview")){const host=document.createElement("div");host.className="bill-redrawn-preview mt-2 rounded-xl border border-[#d8c7b0] bg-white p-2";host.innerHTML='<p class="text-[10px] text-[#7a6452] text-center">Donut vẽ lại sẽ hiện sau khi đọc OCR.</p>';card.appendChild(host);}}
+            if(type==="breakdown"){
+                window.currentBillDonutSegments=null;
+                const card=p&&p.parentElement;let host=card&&card.querySelector(".bill-redrawn-preview");
+                if(card&&!host){host=document.createElement("div");host.className="bill-redrawn-preview mt-2 rounded-xl border border-[#d8c7b0] bg-white p-2";card.appendChild(host);}
+                if(host){host.innerHTML='<p class="text-[10px] text-[#7a6452] text-center">Đang nhận diện và vẽ lại donut…</p>';
+                    detectDonutSegments(file).then(detected=>{
+                        if(detected.ok){window.currentBillDonutSegments=detected.segments;renderRebuiltDonut(host,detected.segments,"");}
+                        else host.innerHTML='<p class="text-[10px] text-[#9b6655] text-center">Chưa nhận diện được vòng donut rõ ràng. Thử ảnh rõ hơn nhé.</p>';
+                    }).catch(error=>console.warn("Donut preview failed",error));
+                }
+            }
             document.getElementById("upload-status-text").textContent="Ảnh đã sẵn sàng. Bấm đọc OCR hoặc nhập tay rồi lưu.";document.getElementById("bill-ocr-status").textContent="Có ảnh mới — cần đọc lại";if(type==="breakdown"){showBillDonutOriginal();document.querySelectorAll("[data-category-percent]").forEach(input=>input.value="");updateBillCategoryTotals();}
         }
         function parseBillDateParts(text){
@@ -1287,7 +1297,7 @@
                     const cx=w*fx,cy=h*fy;
                     for(let rf=.14;rf<=.43;rf+=.012){
                         const r=minDim*rf,colors=Array.from({length:N},(_,i)=>read(cx,cy,r,i)),valid=colors.map(Boolean),coverage=valid.filter(Boolean).length/N;
-                        if(coverage<.28||coverage>.98)continue;
+                        if(coverage<.28)continue;
                         let changes=0,strength=0;
                         for(let i=0;i<N;i++){const j=(i+1)%N;if(valid[i]&&valid[j]){const d=dist(colors[i],colors[j]);if(d>34){changes++;strength+=d;}}}
                         if(changes<2||changes>32)continue;
