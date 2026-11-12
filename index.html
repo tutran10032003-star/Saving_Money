@@ -1,12 +1,11 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Eco-Buddy Home Manager ⚡☁️</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Eco-Buddy Home Manager V2 ⚡☁️</title>
 
-    <!-- PWA -->
+    <!-- PWA CONFIGURATION -->
     <link rel="manifest" href="/Saving_Money/manifest.json">
     <meta name="theme-color" content="#fcf8f2">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -82,12 +81,13 @@
             gap: 12px;
         }
 
+        /* 5 TABS NGANG HÀNG GỌN GÀNG */
         .nav-pills {
             width: 100%;
-            max-width: 390px;
+            max-width: 440px;
             padding: 5px;
             display: grid;
-            grid-template-columns: repeat(4, minmax(0, 1fr));
+            grid-template-columns: repeat(5, minmax(0, 1fr));
             gap: 3px;
             background: #f0e6d6;
             border-radius: 30px;
@@ -99,8 +99,8 @@
             min-width: 0;
             border: 2px solid transparent;
             border-radius: 20px;
-            padding: 8px 2px;
-            font-size: 11px;
+            padding: 8px 1px;
+            font-size: 10px;
             font-weight: 700;
             color: #4a3b32;
             background: transparent;
@@ -117,6 +117,7 @@
         }
 
         #tab-content-tracker,
+        #tab-content-reports,
         #tab-content-calendar,
         #tab-content-weather,
         #tab-content-checklist {
@@ -401,7 +402,7 @@
             }
 
             .nav-btn {
-                font-size: 10px;
+                font-size: 9px;
                 padding: 8px 1px;
             }
 
@@ -451,39 +452,6 @@
                 padding-right: 12px;
             }
         }
-
-        @media (max-width: 380px) {
-            .eco-mascot {
-                width: 160px;
-                height: 160px;
-            }
-
-            .nav-btn { font-size: 9px; }
-
-            .vintage-panel { padding: 14px !important; }
-            .chat-window { padding: 13px; }
-            .chat-bubble { padding: 11px; }
-
-            .chat-choice {
-                font-size: 12px;
-                padding: 11px;
-            }
-
-            #calendar-days { gap: 3px; }
-            #calendar-days > div { height: 36px; }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            .eco-character,
-            .mascot-leaves,
-            .mascot-arm-right,
-            .mascot-arm-left,
-            .mascot-sparkle,
-            .mascot-battery,
-            .vintage-scarf-icon svg {
-                animation-duration: 5s;
-            }
-        }
     </style>
 </head>
 
@@ -495,7 +463,7 @@
             <div class="flex items-center space-x-2.5">
                 <span class="text-2xl">🌿</span>
                 <div>
-                    <h1 class="font-bold text-base text-[#4a3b32] leading-tight">Eco-Buddy Home Manager</h1>
+                    <h1 class="font-bold text-base text-[#4a3b32] leading-tight">Eco-Buddy Home Manager <span class="text-[10px] bg-[#8c7355] text-white px-2 py-0.5 rounded-full">V2</span></h1>
                     <p class="text-[11px] text-[#7a6452] font-medium">
                         Live Tariff & Weather ⚡
                         <span id="realtime-clock" class="text-[#5c4738] font-bold"></span>
@@ -503,8 +471,10 @@
                 </div>
             </div>
 
+            <!-- 5 TABS NGANG HÀNG -->
             <nav class="nav-pills" aria-label="Main navigation">
                 <button onclick="switchTab('tracker')" id="tab-btn-tracker" class="nav-btn active">⚡ Tariff</button>
+                <button onclick="switchTab('reports')" id="tab-btn-reports" class="nav-btn">📊 Reports</button>
                 <button onclick="switchTab('weather')" id="tab-btn-weather" class="nav-btn">🌦️ Weather</button>
                 <button onclick="switchTab('checklist')" id="tab-btn-checklist" class="nav-btn">🍳 Cooking</button>
                 <button onclick="switchTab('calendar')" id="tab-btn-calendar" class="nav-btn">📅 Calendar</button>
@@ -515,8 +485,17 @@
     <!-- MAIN -->
     <main class="max-w-xl mx-auto px-4 py-6 flex-grow w-full space-y-6">
 
-        <!-- MASCOT CARD -->
+        <!-- MASCOT CARD & LEVEL-UP -->
         <div class="vintage-panel p-5 flex flex-col items-center text-center">
+            <div class="w-full flex justify-between items-center px-2 mb-2 text-xs font-extrabold text-[#5c4738]">
+                <span id="mascot-level-badge" class="bg-[#f0e6d6] px-3 py-1 rounded-full border border-[#5c4738]">🌱 Level 1: Sprout</span>
+                <span id="mascot-xp-text" class="text-[#7a6452]">0 / 100 XP</span>
+            </div>
+            <!-- XP Progress Bar -->
+            <div class="w-full bg-[#f0e6d6] h-2.5 rounded-full border border-[#5c4738] overflow-hidden mb-3">
+                <div id="mascot-xp-bar" class="bg-[#87a96b] h-full w-[0%] transition-all duration-500"></div>
+            </div>
+
             <div class="relative mb-2 w-full flex justify-center">
                 <div class="eco-mascot">
                     <svg id="main-mascot-svg" class="eco-character" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
@@ -612,10 +591,10 @@
 
             <h3 class="font-bold text-[#4a3b32] text-base mt-2">Eco Buddy</h3>
             <p class="text-[11px] text-[#7a6452] font-semibold italic mt-0.5">🌿 A little battery, leafy ears, and a friendly companion by your side.</p>
-            <p id="mascot-speech" class="text-xs text-[#5c4738] font-medium bg-[#f5ede2] p-3 rounded-2xl border-1.5 border-[#5c4738] w-full mt-3 leading-relaxed">"Let's save energy together! 🤍"</p>
+            <p id="mascot-speech" class="text-xs text-[#5c4738] font-medium bg-[#f5ede2] p-3 rounded-2xl border-1.5 border-[#5c4738] w-full mt-3 leading-relaxed">"Let's save energy together! Complete daily tasks to level me up! 🤍"</p>
         </div>
 
-        <!-- TAB 1: TARIFF -->
+        <!-- TAB 1: TARIFF & ECO TASKS & TIPS -->
         <div id="tab-content-tracker" class="space-y-6">
             <div class="vintage-panel p-5 space-y-4">
                 <h2 class="font-bold text-[#4a3b32] text-base flex items-center gap-2 border-b-2 border-[#5c4738] pb-2.5">
@@ -634,7 +613,7 @@
                     <div class="p-3.5 rounded-2xl bg-[#fbe8e6] border-2 border-[#5c4738] flex items-start justify-between gap-3 shadow-[2px_2px_0px_#5c4738]">
                         <div class="flex-1 min-w-0">
                             <p class="font-extrabold text-[#5c3232]">🔴 Peak Rate</p>
-                            <p class="text-[#7c4d4d] text-[11px] mt-0.5">17:00 - 19:00 (Limit the use of high-energy appliances)</p>
+                            <p class="text-[#7c4d4d] text-[11px] mt-0.5">17:00 - 19:00 (Limit high-energy appliances)</p>
                         </div>
                         <span class="font-black text-[#5c3232] bg-[#f5d0cd] px-2.5 py-1 rounded-xl border border-[#5c4738] whitespace-nowrap">€0.3968/kWh</span>
                     </div>
@@ -649,6 +628,31 @@
                 </div>
             </div>
 
+            <!-- ECO POINTS & TASKS -->
+            <div class="vintage-panel p-5 space-y-3">
+                <h3 class="font-bold text-[#4a3b32] text-sm flex items-center justify-between">
+                    <span class="flex items-center gap-2"><span>🌱</span> Daily Eco Tasks</span>
+                    <span id="eco-points-label" class="text-xs bg-[#8c7355] text-white px-2.5 py-1 rounded-xl">0 Points 🌱</span>
+                </h3>
+                <div class="space-y-2 text-xs">
+                    <div class="vint-card p-3 flex items-center justify-between gap-2 bg-white">
+                        <div>
+                            <p class="font-bold text-[#4a3b32]">Turn off lights when leaving rooms (+20 XP)</p>
+                            <p class="text-[10px] text-[#7a6452]">Check all rooms in the house.</p>
+                        </div>
+                        <button onclick="completeTask(this, 20)" class="px-3 py-1.5 bg-[#87a96b] text-white font-bold rounded-xl border border-[#5c4738] hover:opacity-90 flex-shrink-0">Complete</button>
+                    </div>
+                    <div class="vint-card p-3 flex items-center justify-between gap-2 bg-white">
+                        <div>
+                            <p class="font-bold text-[#4a3b32]">Laundry during Night Saver hours (+30 XP)</p>
+                            <p class="text-[10px] text-[#7a6452]">Run washing machine after 23:00.</p>
+                        </div>
+                        <button onclick="completeTask(this, 30)" class="px-3 py-1.5 bg-[#87a96b] text-white font-bold rounded-xl border border-[#5c4738] hover:opacity-90 flex-shrink-0">Complete</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- REMINDERS & TIPS -->
             <div class="vintage-panel p-5 space-y-3">
                 <h3 class="font-bold text-[#4a3b32] text-sm flex items-center gap-2"><span>💡</span> Daily Reminders & Eco Tips:</h3>
                 <ul class="text-xs space-y-2 text-[#5c4738] font-medium">
@@ -660,26 +664,42 @@
             </div>
         </div>
 
-        <!-- TAB 2: CALENDAR -->
-        <div id="tab-content-calendar" class="hidden space-y-6">
+        <!-- TAB 2: ENERGY REPORTS (SO SÁNH THÁNG NAY VS THÁNG TRƯỚC) -->
+        <div id="tab-content-reports" class="hidden space-y-6">
             <div class="vintage-panel p-5 space-y-4">
-                <div class="flex items-center justify-between border-b-2 border-[#5c4738] pb-2.5 gap-2">
-                    <h2 class="font-bold text-[#4a3b32] text-base flex items-center gap-2"><span>📅</span> Waste Collection & Chores</h2>
-                    <div class="flex items-center gap-2 flex-shrink-0">
-                        <button onclick="changeCalendarMonth(-1)" class="px-2.5 py-1 bg-[#f0e6d6] rounded-lg border border-[#5c4738] text-xs font-bold">◀</button>
-                        <span id="calendar-month-label" class="text-xs font-extrabold text-[#5c4738] min-w-[100px] text-center">Month...</span>
-                        <button onclick="changeCalendarMonth(1)" class="px-2.5 py-1 bg-[#f0e6d6] rounded-lg border border-[#5c4738] text-xs font-bold">▶</button>
+                <h2 class="font-bold text-[#4a3b32] text-base flex items-center gap-2 border-b-2 border-[#5c4738] pb-2.5">
+                    <span>📊</span> Bill Reports & Comparison
+                </h2>
+                <p class="text-xs text-[#7a6452]">Enter total bill amounts for last month and this month to compare instantly:</p>
+                
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="vint-card p-3 bg-white space-y-1">
+                        <label class="text-[11px] font-bold text-[#7a6452]">Last Month (€):</label>
+                        <input type="number" id="bill-prev" value="240" oninput="updateReportChart()" class="w-full px-3 py-2 rounded-xl border border-[#5c4738] text-xs font-bold">
+                    </div>
+                    <div class="vint-card p-3 bg-white space-y-1">
+                        <label class="text-[11px] font-bold text-[#7a6452]">This Month (€):</label>
+                        <input type="number" id="bill-curr" value="221.73" oninput="updateReportChart()" class="w-full px-3 py-2 rounded-xl border border-[#5c4738] text-xs font-bold">
                     </div>
                 </div>
 
-                <div class="grid grid-cols-7 gap-1 text-center text-[11px] font-extrabold text-[#7a6452] mb-2">
-                    <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
-                </div>
-
-                <div id="calendar-days" class="grid grid-cols-7 gap-1.5"></div>
-
-                <div class="vint-card p-3 bg-[#fff5f0] text-center">
-                    <p id="next-trash-reminder" class="text-xs font-bold text-[#9c413b]">Calculating the next waste collection day...</p>
+                <!-- Biểu đồ cột so sánh trực quan -->
+                <div class="vint-card p-4 bg-[#f5ede2] space-y-3">
+                    <div class="flex justify-between items-end h-40 pt-6 px-8 border-b-2 border-[#5c4738]">
+                        <div class="w-16 flex flex-col items-center gap-1">
+                            <span id="chart-val-prev" class="text-xs font-bold">€240</span>
+                            <div id="bar-prev" class="w-full bg-[#d8c7b0] rounded-t-xl transition-all duration-500" style="height: 120px;"></div>
+                            <span class="text-[11px] font-bold mt-1">Last Month</span>
+                        </div>
+                        <div class="w-16 flex flex-col items-center gap-1">
+                            <span id="chart-val-curr" class="text-xs font-bold">€221.73</span>
+                            <div id="bar-curr" class="w-full bg-[#87a96b] rounded-t-xl transition-all duration-500" style="height: 110px;"></div>
+                            <span class="text-[11px] font-bold mt-1">This Month</span>
+                        </div>
+                    </div>
+                    <div id="report-summary" class="text-center text-xs font-extrabold text-[#3b4a32] pt-2">
+                        🎉 Wonderful! You saved €18.27 compared to last month!
+                    </div>
                 </div>
             </div>
         </div>
@@ -799,14 +819,38 @@
             </div>
         </div>
 
+        <!-- TAB 5: CALENDAR -->
+        <div id="tab-content-calendar" class="hidden space-y-6">
+            <div class="vintage-panel p-5 space-y-4">
+                <div class="flex items-center justify-between border-b-2 border-[#5c4738] pb-2.5 gap-2">
+                    <h2 class="font-bold text-[#4a3b32] text-base flex items-center gap-2"><span>📅</span> Waste Collection & Chores</h2>
+                    <div class="flex items-center gap-2 flex-shrink-0">
+                        <button onclick="changeCalendarMonth(-1)" class="px-2.5 py-1 bg-[#f0e6d6] rounded-lg border border-[#5c4738] text-xs font-bold">◀</button>
+                        <span id="calendar-month-label" class="text-xs font-extrabold text-[#5c4738] min-w-[100px] text-center">Month...</span>
+                        <button onclick="changeCalendarMonth(1)" class="px-2.5 py-1 bg-[#f0e6d6] rounded-lg border border-[#5c4738] text-xs font-bold">▶</button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-7 gap-1 text-center text-[11px] font-extrabold text-[#7a6452] mb-2">
+                    <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+                </div>
+
+                <div id="calendar-days" class="grid grid-cols-7 gap-1.5"></div>
+
+                <div class="vint-card p-3 bg-[#fff5f0] text-center">
+                    <p id="next-trash-reminder" class="text-xs font-bold text-[#9c413b]">Calculating the next waste collection day...</p>
+                </div>
+            </div>
+        </div>
+
     </main>
 
-    <!-- SAFETY CHAT -->
+    <!-- SAFETY CHAT (5-STEP CHECKLIST) -->
     <section id="safety-chat-overlay" class="chat-overlay hidden" role="dialog" aria-modal="true">
         <div class="chat-window">
             <div class="flex justify-between items-center border-b-2 border-[#d8c7b0] pb-3 gap-2">
                 <div>
-                    <p class="text-xs font-bold text-[#8c7355]">ECO-BUDDY HOME MANAGER</p>
+                    <p class="text-xs font-bold text-[#8c7355]">ECO-BUDDY HOME MANAGER V2</p>
                     <h2 class="text-lg font-extrabold">Let's check the kitchen together!</h2>
                 </div>
                 <button onclick="closeSafetyChat()" class="rounded-full border border-[#8c7355] px-3 py-2 font-bold flex-shrink-0">✕</button>
@@ -834,48 +878,43 @@
 
     <!-- FOOTER -->
     <footer class="text-center py-5 text-xs text-[#7a6452] font-medium border-t-2 border-[#5c4738] bg-[#f7f1e5] mt-4">
-        Eco-Buddy Home Manager · Vintage Pastel Edition 🌿🤍
+        Eco-Buddy Home Manager V2 · Vintage Pastel Edition 🌿🤍
     </footer>
 
     <!-- JAVASCRIPT -->
     <script>
-        /* AUTOMATIC HEADER HEIGHT */
+        let currentXP = 0;
+        let currentPoints = 0;
+
         function updateHeaderHeight() {
             const header = document.querySelector("header");
             if (!header) return;
-
             const height = header.offsetHeight;
             document.documentElement.style.setProperty("--header-height", height + "px");
         }
 
         window.addEventListener('DOMContentLoaded', () => {
             updateHeaderHeight();
-
             startRealtimeClock();
             checkTariffStatus();
             fetchWeatherData();
             renderCalendar();
+            updateReportChart();
 
             setInterval(checkTariffStatus, 30000);
             setInterval(fetchWeatherData, 600000);
 
             if ("ResizeObserver" in window) {
                 const header = document.querySelector("header");
-
                 if (header) {
-                    const headerObserver = new ResizeObserver(() => {
-                        updateHeaderHeight();
-                    });
-
+                    const headerObserver = new ResizeObserver(() => updateHeaderHeight());
                     headerObserver.observe(header);
                 }
             }
         });
 
         window.addEventListener("resize", updateHeaderHeight);
-        window.addEventListener("orientationchange", () => {
-            setTimeout(updateHeaderHeight, 150);
-        });
+        window.addEventListener("orientationchange", () => setTimeout(updateHeaderHeight, 150));
 
         /* PWA */
         if ("serviceWorker" in navigator) {
@@ -893,39 +932,83 @@
                 const clockEl = document.getElementById('realtime-clock');
                 if (clockEl) clockEl.innerText = `| 🕒 ${now.toLocaleTimeString()}`;
             }
-
             updateClock();
             setInterval(updateClock, 1000);
         }
 
         /* TAB SWITCHING */
         function switchTab(tabName) {
-            const tabs = {
-                tracker: document.getElementById('tab-content-tracker'),
-                calendar: document.getElementById('tab-content-calendar'),
-                weather: document.getElementById('tab-content-weather'),
-                checklist: document.getElementById('tab-content-checklist')
-            };
+            const tabs = ['tracker', 'reports', 'weather', 'checklist', 'calendar'];
+            tabs.forEach(t => {
+                document.getElementById(`tab-content-${t}`).classList.add('hidden');
+                document.getElementById(`tab-btn-${t}`).classList.remove('active');
+            });
 
-            const buttons = {
-                tracker: document.getElementById('tab-btn-tracker'),
-                calendar: document.getElementById('tab-btn-calendar'),
-                weather: document.getElementById('tab-btn-weather'),
-                checklist: document.getElementById('tab-btn-checklist')
-            };
-
-            Object.values(tabs).forEach(tab => tab.classList.add('hidden'));
-            Object.values(buttons).forEach(btn => btn.classList.remove('active'));
-
-            if (!tabs[tabName]) tabName = 'tracker';
-
-            tabs[tabName].classList.remove('hidden');
-            buttons[tabName].classList.add('active');
+            document.getElementById(`tab-content-${tabName}`).classList.remove('hidden');
+            document.getElementById(`tab-btn-${tabName}`).classList.add('active');
 
             if (tabName === 'calendar') renderCalendar();
+            if (tabName === 'reports') updateReportChart();
         }
 
-        /* ELECTRICITY TARIFF */
+        /* ECO POINTS & LEVEL SYSTEM */
+        function completeTask(btn, xpReward) {
+            currentXP += xpReward;
+            currentPoints += Math.floor(xpReward / 2);
+            
+            btn.innerText = "Done ✓";
+            btn.disabled = true;
+            btn.classList.add('bg-gray-400');
+
+            updateMascotLevel();
+            document.getElementById('mascot-speech').innerText = `🎉 Awesome! You earned +${xpReward} XP and +${Math.floor(xpReward / 2)} Eco Points!`;
+        }
+
+        function updateMascotLevel() {
+            let level = 1;
+            let title = "Sprout";
+            let maxXP = 100;
+
+            if (currentXP >= 100 && currentXP < 250) {
+                level = 2; title = "Green Sprout"; maxXP = 250;
+            } else if (currentXP >= 250) {
+                level = 3; title = "Eco Master 🌿"; maxXP = 500;
+            }
+
+            const percent = Math.min(100, (currentXP / maxXP) * 100);
+            document.getElementById('mascot-xp-bar').style.width = percent + '%';
+            document.getElementById('mascot-xp-text').innerText = `${currentXP} / ${maxXP} XP`;
+            document.getElementById('mascot-level-badge').innerText = `🌱 Level ${level}: ${title}`;
+            document.getElementById('eco-points-label').innerText = `${currentPoints} Points 🌱`;
+        }
+
+        /* ENERGY REPORTS COMPARISON */
+        function updateReportChart() {
+            const prev = parseFloat(document.getElementById('bill-prev').value) || 0;
+            const curr = parseFloat(document.getElementById('bill-curr').value) || 0;
+
+            document.getElementById('chart-val-prev').innerText = `€${prev.toFixed(2)}`;
+            document.getElementById('chart-val-curr').innerText = `€${curr.toFixed(2)}`;
+
+            const maxVal = Math.max(prev, curr, 10);
+            const heightPrev = Math.max(30, (prev / maxVal) * 120);
+            const heightCurr = Math.max(30, (curr / maxVal) * 120);
+
+            document.getElementById('bar-prev').style.height = heightPrev + 'px';
+            document.getElementById('bar-curr').style.height = heightCurr + 'px';
+
+            const diff = prev - curr;
+            const summary = document.getElementById('report-summary');
+            if (diff > 0) {
+                summary.innerHTML = `🎉 Wonderful! You saved <span class="text-green-700">€${diff.toFixed(2)}</span> compared to last month!`;
+            } else if (diff < 0) {
+                summary.innerHTML = `⚠️ This month is <span class="text-red-700">€${Math.abs(diff).toFixed(2)}</span> higher than last month. Let's save more!`;
+            } else {
+                summary.innerHTML = `⚖️ Electricity bills for both months are equal.`;
+            }
+        }
+
+        /* ELECTRICITY TARIFF STATUS */
         function checkTariffStatus() {
             const now = new Date();
             const hour = now.getHours();
@@ -943,26 +1026,19 @@
             } else {
                 badge.className = "absolute -bottom-2 left-1/2 -translate-x-1/2 bg-[#d4a373] text-white text-[11px] font-extrabold px-4 py-1 rounded-full shadow border-2 border-[#5c4738] whitespace-nowrap";
                 badge.innerText = "Normal Hours ☀️";
-                speech.innerText = "Let's save energy together! 🤍";
             }
         }
 
         /* CALENDAR */
         let calendarCursor = new Date();
-
         function renderCalendar() {
             const year = calendarCursor.getFullYear();
             const month = calendarCursor.getMonth();
             const label = document.getElementById("calendar-month-label");
             const grid = document.getElementById("calendar-days");
-
             if (!label || !grid) return;
 
-            label.textContent = new Intl.DateTimeFormat("en-IE", {
-                month: "long",
-                year: "numeric"
-            }).format(calendarCursor);
-
+            label.textContent = new Intl.DateTimeFormat("en-IE", { month: "long", year: "numeric" }).format(calendarCursor);
             grid.innerHTML = "";
 
             const firstDay = new Date(year, month, 1);
@@ -974,16 +1050,14 @@
             }
 
             const today = new Date();
-
             for (let day = 1; day <= daysInMonth; day++) {
                 const date = new Date(year, month, day);
                 const isTuesday = date.getDay() === 2;
                 const isToday = date.toDateString() === today.toDateString();
                 const cell = document.createElement("div");
 
-                cell.className =
-                    "h-10 rounded-xl flex flex-col items-center justify-center text-xs font-bold relative border border-[#5c4738]/20 " +
-                    (isTuesday ? "bg-[#d9534f] text-white shadow-sm" : "bg-[#f5ede2] text-[#5c4738]") +
+                cell.className = "h-10 rounded-xl flex flex-col items-center justify-center text-xs font-bold relative border border-[#5c4738]/20 " +
+                    (isTuesday ? "bg-[#d9534f] text-white shadow-sm" : "bg-[#f5ede2] text-[#4a3b32]") +
                     (isToday ? " ring-2 ring-[#87a96b] ring-offset-1" : "");
 
                 cell.innerHTML = `<span>${day}</span>${isTuesday ? '<span class="text-[8px]">🗑️</span>' : ""}`;
@@ -993,37 +1067,24 @@
 
             const next = new Date();
             next.setHours(0, 0, 0, 0);
-
-            do {
-                next.setDate(next.getDate() + 1);
-            } while (next.getDay() !== 2);
+            do { next.setDate(next.getDate() + 1); } while (next.getDay() !== 2);
 
             const reminder = document.getElementById("next-trash-reminder");
-            if (reminder) {
-                reminder.textContent = `Next waste collection reminder: Tuesday, ${next.toLocaleDateString("en-IE")}`;
-            }
+            if (reminder) reminder.textContent = `Next waste collection reminder: Tuesday, ${next.toLocaleDateString("en-IE")}`;
         }
 
         function changeCalendarMonth(delta) {
-            calendarCursor = new Date(
-                calendarCursor.getFullYear(),
-                calendarCursor.getMonth() + delta,
-                1
-            );
+            calendarCursor = new Date(calendarCursor.getFullYear(), calendarCursor.getMonth() + delta, 1);
             renderCalendar();
         }
 
         /* COOKING TIMER */
         let countdownInterval = null;
-
-        function setTimerMinutes(mins) {
-            document.getElementById('custom-minutes').value = mins;
-        }
+        function setTimerMinutes(mins) { document.getElementById('custom-minutes').value = mins; }
 
         function startCustomTimer() {
             const minsInput = document.getElementById('custom-minutes').value.trim();
             const mins = Number(minsInput);
-
             if (!Number.isInteger(mins) || mins < 1 || mins > 180) {
                 alert("Please enter a number of minutes between 1 and 180.");
                 return;
@@ -1034,17 +1095,14 @@
             if (checkbox) checkbox.checked = false;
 
             clearInterval(countdownInterval);
-
             let remaining = totalSecs;
             const displayBox = document.getElementById('timer-display-box');
             const textEl = document.getElementById('countdown-text');
-
             displayBox.classList.remove('hidden');
 
             function updateCountdown() {
                 const m = Math.floor(remaining / 60);
                 const s = remaining % 60;
-
                 textEl.innerText = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
 
                 if (remaining <= 0) {
@@ -1054,7 +1112,6 @@
                     openSafetyChat();
                     return;
                 }
-
                 remaining--;
             }
 
@@ -1068,7 +1125,7 @@
             document.getElementById('timer-display-box').classList.add('hidden');
         }
 
-        /* SAFETY CHAT - FIVE-STEP CHECKLIST */
+        /* SAFETY CHAT - 5-STEP CHECKLIST */
         const safetySteps = [
             {
                 title: "Turn off the cooker",
@@ -1081,7 +1138,7 @@
             {
                 title: "Turn off the cooker hood",
                 question: "Have you turned off the cooker hood?",
-                hint: "Make sure the cooker hood is switched off and the fan has stopped running.",
+                hint: "Make sure the cooker hood is switched off and fan stopped.",
                 scene: "🌬️",
                 yes: "The cooker hood is off. Great job!",
                 no: "Let's check and switch off the cooker hood!"
@@ -1105,7 +1162,7 @@
             {
                 title: "Wipe the cooker",
                 question: "Have you cleaned the cooker surface?",
-                hint: "Wait until the cooker has cooled down, then wipe it with a damp cloth.",
+                hint: "Wait until the cooker has cooled down, then wipe with a damp cloth.",
                 scene: "🧽",
                 yes: "A sparkling clean cooker! Eco Buddy is proud of you!",
                 no: "Let's clean up the kitchen together!"
@@ -1121,13 +1178,9 @@
 
             container.innerHTML = original.outerHTML;
             const cloned = container.querySelector("svg");
-
             if (cloned) {
                 cloned.removeAttribute("id");
-                cloned.classList.remove(
-                    "pose-happy","pose-check","pose-wait","pose-dance",
-                    "pose-stove","pose-oven","pose-light","pose-wipe"
-                );
+                cloned.classList.remove("pose-happy","pose-check","pose-wait","pose-dance","pose-stove","pose-oven","pose-light","pose-wipe");
             }
         }
 
@@ -1136,11 +1189,7 @@
             const mascot = container?.querySelector(".eco-character");
             if (!mascot) return;
 
-            mascot.classList.remove(
-                "pose-happy","pose-check","pose-wait","pose-dance",
-                "pose-stove","pose-oven","pose-light","pose-wipe"
-            );
-
+            mascot.classList.remove("pose-happy","pose-check","pose-wait","pose-dance","pose-stove","pose-oven","pose-light","pose-wipe");
             void mascot.offsetWidth;
             if (pose) mascot.classList.add("pose-" + pose);
         }
@@ -1156,6 +1205,8 @@
         function closeSafetyChat() {
             document.getElementById("safety-chat-overlay").classList.add("hidden");
             document.body.style.overflow = "";
+            currentXP += 30;
+            updateMascotLevel();
         }
 
         function renderSafetyStep() {
@@ -1163,11 +1214,9 @@
             const scene = document.getElementById("chat-scene");
             const actions = document.getElementById("chat-actions");
 
-            /* Check completion before accessing the current step */
             if (safetyStepIndex >= safetySteps.length) {
                 setMascotPose("dance");
-
-                question.textContent = "All done! Thank you for helping Eco Buddy keep the kitchen safe! 💚";
+                question.textContent = "All done! You earned +30 XP for keeping the kitchen safe! 💚";
                 scene.textContent = "🌱✨💚";
 
                 document.getElementById("chat-action-title").textContent = "Safety check completed!";
@@ -1175,16 +1224,17 @@
 
                 actions.innerHTML = `
                     <button class="chat-choice text-center" onclick="closeSafetyChat()">
-                        💚 Done! Back to the app
+                        💚 Done! Collect XP reward
                     </button>
                 `;
-
                 document.getElementById("chat-progress").textContent = "5 / 5 · Completed";
+                currentXP += 30;
+                updateMascotLevel();
                 return;
             }
 
             const step = safetySteps[safetyStepIndex];
-            const poses = ["stove", null, "oven", "light", "wipe"];
+            const poses = ["stove", "wind", "oven", "light", "wipe"];
 
             setMascotPose(poses[safetyStepIndex]);
             question.textContent = step.question;
@@ -1195,12 +1245,8 @@
             document.getElementById("chat-progress").textContent = `Step ${safetyStepIndex + 1} / 5`;
 
             actions.innerHTML = `
-                <button class="chat-choice" onclick="answerSafetyStep(true)">
-                    ☑️ Yes, I've done it!
-                </button>
-                <button class="chat-choice" onclick="answerSafetyStep(false)">
-                    ⏳ Not yet, I'll do it now
-                </button>
+                <button class="chat-choice" onclick="answerSafetyStep(true)">☑️ Yes, I've done it!</button>
+                <button class="chat-choice" onclick="answerSafetyStep(false)">⏳ Not yet, I'll do it now</button>
             `;
         }
 
@@ -1211,22 +1257,15 @@
             if (!done) {
                 setMascotPose("wait");
                 document.getElementById("chat-question").textContent = step.no;
-
                 document.getElementById("chat-actions").innerHTML = `
-                    <button class="chat-choice" onclick="answerSafetyStep(true)">
-                        💚 I've done it! Let's continue.
-                    </button>
-                    <button class="chat-choice" onclick="closeSafetyChat()">
-                        I'll do it later
-                    </button>
+                    <button class="chat-choice" onclick="answerSafetyStep(true)">💚 I've done it! Let's continue.</button>
+                    <button class="chat-choice" onclick="closeSafetyChat()">I'll do it later</button>
                 `;
                 return;
             }
 
             setMascotPose("happy");
             document.getElementById("chat-question").textContent = step.yes;
-
-            /* Automatically move to the next question after 1.1 seconds */
             setTimeout(() => {
                 safetyStepIndex++;
                 renderSafetyStep();
@@ -1241,15 +1280,8 @@
             const weatherIcon = document.getElementById('weather-icon-lg');
 
             try {
-                const lat = 53.3498;
-                const lon = -6.2603;
-
-                const res = await fetch(
-                    `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,precipitation,weather_code,wind_speed_10m&timezone=Europe/Dublin`
-                );
-
+                const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=53.3498&longitude=-6.2603&current=temperature_2m,precipitation,weather_code,wind_speed_10m&timezone=Europe/Dublin`);
                 if (!res.ok) throw new Error("Unable to load weather data.");
-
                 const data = await res.json();
 
                 if (data && data.current) {
