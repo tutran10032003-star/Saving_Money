@@ -561,7 +561,7 @@
                         <label class="font-bold">Tổng điện năng (kWh)<input id="edit-bill-kwh" type="number" min="0" step="0.01" placeholder="Nhập theo bill" class="w-full px-3 py-2 rounded-xl border mt-1"></label>
                     </div>
                     <div class="pt-3 border-t space-y-3">
-                        <div><b class="text-xs">🍩 Biểu đồ phân bổ gốc & bảng khung giờ</b><p class="text-[10px] text-[#7a6452] mt-1">Ảnh B hiển thị nguyên bản. Bảng Day / Peak / Night đọc từ hoá đơn trang chi tiết; nếu OCR sai thì sửa tay được.</p></div>
+                        <div><b class="text-xs">🍩 Biểu đồ phân bổ gốc & bảng khung giờ</b><p class="text-[10px] text-[#7a6452] mt-1"></p></div>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-start">
                             <div class="rounded-xl border border-[#d8c7b0] bg-white p-2 text-center">
                                 <img id="bill-donut-original" alt="Original energy distribution chart" class="hidden w-full max-h-72 object-contain rounded-lg">
@@ -650,13 +650,22 @@
                     </div>
 
 
-                    <div class="vint-card p-5 bg-[#fffaf4] space-y-3 text-center">
-                        <p id="dashboard-energy-title" class="text-xs font-bold text-[#5c4738] uppercase tracking-wider">Energy Breakdown</p>
-                        <p id="dashboard-total-label" class="text-[11px] font-bold text-[#7a6452] uppercase tracking-widest">Total Usage</p>
-                        <div class="flex items-baseline justify-center gap-2 py-3">
-                            <span id="dashboard-total-usage" class="text-5xl sm:text-6xl font-extrabold text-[#32455c] tabular-nums">—</span>
-                            <span class="text-lg font-bold text-[#7a6452]">kWh</span>
+                    <div class="vint-card p-5 bg-[#fffaf4] space-y-4">
+                        <p class="text-xs font-bold text-[#5c4738] text-center">🍩 Energy Distribution · biểu đồ gốc & khung giờ</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-start">
+                            <div class="rounded-xl border border-[#d8c7b0] bg-white p-2 text-center">
+                                <div id="dashboard-donut-redraw" class="w-full min-h-64 flex items-center justify-center" aria-label="Redrawn monthly energy donut chart"><p class="text-[10px] text-[#7a6452] py-8">Chọn một tháng để xem biểu đồ donut.</p></div>
+                                <p id="dashboard-original-empty" class="text-[10px] text-[#7a6452] py-8">Chọn một tháng để xem biểu đồ gốc.</p>
+                            </div>
+                            <div class="min-w-0 overflow-x-auto">
+                                <p class="text-[10px] font-extrabold text-[#7a6452] uppercase tracking-wider text-center">Selected Usage: <span id="donut-center-val" class="text-[#32455c] tabular-nums">— kWh</span></p>
+                                <table class="w-full text-[10px] tabular-nums text-right mt-1">
+                                    <thead><tr class="text-[#7a6452]"><th class="text-left font-bold">Khung giờ</th><th class="font-bold">kWh</th><th class="font-bold">% kWh</th><th class="font-bold">€</th><th class="font-bold">% tiền</th></tr></thead>
+                                    <tbody id="dashboard-bands-body"></tbody>
+                                </table>
+                            </div>
                         </div>
+                        <p id="dashboard-donut-note" class="text-[10px] text-[#7a6452] text-center">Lưu hoá đơn có bảng Day / Peak / Night để xem ở đây.</p>
                     </div>
 
             <!-- DASHBOARD-ONLY REMINDERS -->
@@ -996,15 +1005,8 @@
 
         const appLanguageText={en:{"tab-btn-weather":"🌦️ Weather","tab-btn-tracker":"⚡ Tariff","tab-btn-reports":"📊 Reports","tab-btn-tips":"💡 Tips","tab-btn-chatbot":"☁️ Bé Mây","tab-btn-checklist":"🍳 Cooking","tab-btn-calendar":"📅 Calendar"},vi:{"tab-btn-weather":"🌦️ Thời tiết","tab-btn-tracker":"⚡ Giá điện","tab-btn-reports":"📊 Báo cáo","tab-btn-tips":"💡 Mẹo hay","tab-btn-chatbot":"☁️ Bé Mây","tab-btn-checklist":"🍳 Nấu ăn","tab-btn-calendar":"📅 Lịch"}};
         function toggleLanguageMenu(){const menu=document.getElementById("language-menu"),button=document.getElementById("language-toggle");if(!menu)return;menu.classList.toggle("hidden");button?.setAttribute("aria-expanded",String(!menu.classList.contains("hidden")));}
-        function setAppLanguage(language){const lang=language==="vi"?"vi":"en";document.documentElement.lang=lang;localStorage.setItem("eco_buddy_language",lang);const languageCurrent=document.getElementById("language-current");if(languageCurrent)languageCurrent.textContent=lang.toUpperCase();Object.entries(appLanguageText[lang]).forEach(([id,label])=>{const el=document.getElementById(id);if(el)el.textContent=label;});document.getElementById("language-menu")?.classList.add("hidden");document.getElementById("language-toggle")?.setAttribute("aria-expanded","false");refreshEnergyBreakdownLanguage();}
-        function appIsVietnamese(){return (localStorage.getItem("eco_buddy_language")||"en")==="vi";}
-        function refreshEnergyBreakdownLanguage(){
-            const vi=appIsVietnamese();
-            const title=document.getElementById("dashboard-energy-title"),label=document.getElementById("dashboard-total-label");
-            if(title)title.textContent=vi?"Phân tích điện năng":"Energy Breakdown";
-            if(label)label.textContent=vi?"Tổng điện năng tiêu thụ":"Total Usage";
-        }
-        function initAppLanguage(){setAppLanguage(localStorage.getItem("eco_buddy_language")||"en");refreshEnergyBreakdownLanguage();}
+        function setAppLanguage(language){const lang=language==="vi"?"vi":"en";document.documentElement.lang=lang;localStorage.setItem("eco_buddy_language",lang);const languageCurrent=document.getElementById("language-current");if(languageCurrent)languageCurrent.textContent=lang.toUpperCase();Object.entries(appLanguageText[lang]).forEach(([id,label])=>{const el=document.getElementById(id);if(el)el.textContent=label;});document.getElementById("language-menu")?.classList.add("hidden");document.getElementById("language-toggle")?.setAttribute("aria-expanded","false");}
+        function initAppLanguage(){setAppLanguage(localStorage.getItem("eco_buddy_language")||"en");}
         window.addEventListener("resize", updateHeaderHeight);
         window.addEventListener("orientationchange", () => setTimeout(updateHeaderHeight, 150));
 
@@ -1148,7 +1150,17 @@
             billImageFiles[type]=file;if(billImageUrls[type])URL.revokeObjectURL(billImageUrls[type]);billImageUrls[type]=URL.createObjectURL(file);
             const p=document.getElementById(type==="total"?"bill-preview-img":"bill-breakdown-preview");
             if(p){p.src=billImageUrls[type];p.classList.remove("hidden");}
-            if(type==="breakdown") window.currentBillDonutSegments=null;
+            if(type==="breakdown"){
+                window.currentBillDonutSegments=null;
+                const card=p&&p.parentElement;let host=card&&card.querySelector(".bill-redrawn-preview");
+                if(card&&!host){host=document.createElement("div");host.className="bill-redrawn-preview mt-2 rounded-xl border border-[#d8c7b0] bg-white p-4 text-center";card.appendChild(host);}
+                if(host){host.innerHTML='<p class="text-xs font-bold uppercase tracking-wider text-[#7a6452]">Total Energy (kWh)</p><p id="bill-total-energy-readout" class="mt-2 text-4xl sm:text-5xl font-extrabold tabular-nums text-[#32455c]">—</p>';
+                    detectDonutSegments(file).then(detected=>{
+                        if(detected.ok)window.currentBillDonutSegments=detected.segments;
+                        else console.warn("Image B energy distribution recognition:",detected.reason||"not detected");
+                    }).catch(error=>console.warn("Image B reading failed",error));
+                }
+            }
             document.getElementById("upload-status-text").textContent="Ảnh đã sẵn sàng. Bấm đọc OCR hoặc nhập tay rồi lưu.";document.getElementById("bill-ocr-status").textContent="Có ảnh mới — cần đọc lại";if(type==="breakdown"){showBillDonutOriginal();document.querySelectorAll("[data-category-percent]").forEach(input=>input.value="");updateBillCategoryTotals();}
         }
         function parseBillDateParts(text){
@@ -1175,9 +1187,9 @@
             if(moneyMatches.length){const vals=moneyMatches.map(m=>Number(m[1].replace(",","."))).filter(Number.isFinite);if(vals.length)r.amount=vals[vals.length-1];}
             const usageUnitMatch=text.match(/usage\s*unit\s*[:：]?\s*(\d{1,6}(?:[,.]\d{1,2})?)/i);
             const kwhMatch=text.match(/(?:total\s*(?:consumption|usage|electricity|energy)?\s*[:：]?\s*)(\d{1,6}(?:[,.]\d{1,2})?)\s*kwh\b|(\d{1,6}(?:[,.]\d{1,2})?)\s*kwh\b/i);
-            const usageValue=usageUnitMatch&&usageUnitMatch[1] ? usageUnitMatch[1] : (kwhMatch&&(kwhMatch[1]||kwhMatch[2]));
-            if(usageValue)r.kwh=Number(usageValue.replace(",", "."));
-                        const issueMatch=text.match(/date\s*of\s*issue\s*[:：]?\s*(\d{1,2}\s+[A-Za-z]{3,9}\.?,?\s+(?:20\d{2}|\d{2})|\d{1,2}[\/.-]\d{1,2}[\/.-](?:20\d{2}|\d{2}))/i);
+            const kwhValue=usageUnitMatch&&usageUnitMatch[1]?usageUnitMatch[1]:(kwhMatch&&(kwhMatch[1]||kwhMatch[2]));
+            if(kwhValue)r.kwh=Number(kwhValue.replace(",","."));
+            const issueMatch=text.match(/date\s*of\s*issue\s*[:：]?\s*(\d{1,2}\s+[A-Za-z]{3,9}\.?,?\s+(?:20\d{2}|\d{2})|\d{1,2}[\/.-]\d{1,2}[\/.-](?:20\d{2}|\d{2}))/i);
             if(issueMatch){const issue=parseBillDateParts(issueMatch[1])[0];if(issue){r.issueDate=issue.iso;if(!r.start&&!r.end){r.month=new Date(issue.iso+"T12:00:00").toLocaleString("en",{month:"long"});r.year=issue.year;}}}
             const periodAnchor=r.start||r.end;if(periodAnchor){const d=new Date(periodAnchor+"T12:00:00");r.month=d.toLocaleString("en",{month:"long"});r.year=d.getFullYear();}
             return r;
@@ -1418,22 +1430,28 @@
             if(!window.Tesseract){status.textContent="OCR chưa tải được — nhập tay nhé";alert("OCR chưa tải được. M vẫn có thể nhập tay.");return;}
             button.disabled=true;button.textContent="⏳ Đang đọc ảnh...";status.textContent="Đang xử lý ảnh…";let worker=null;
             try{
-                worker=await Tesseract.createWorker("eng");let totalResult=null,breakdownResult=null;
+                worker=await Tesseract.createWorker("eng");let raw="",totalResult=null,breakdownResult=null;
                 for(let i=0;i<files.length;i++){
                     const result=await worker.recognize(files[i]),part=result.data.text||"";
+                    raw+="\n--- "+(files[i]===billImageFiles.total?"TOTAL BILL":"ENERGY BREAKDOWN")+" ---\n"+part+"\n";
                     if(files[i]===billImageFiles.total)totalResult={file:files[i],text:part,words:result.data.words||[]};
                     if(files[i]===billImageFiles.breakdown)breakdownResult={file:files[i],text:part,words:result.data.words||[]};
                 }
                 window.currentBillDonutSegments=null;
                 if(breakdownResult){
-                    const detected=await detectDonutSegments(breakdownResult.file);
-                    if(detected.ok)window.currentBillDonutSegments=detected.segments;
+                    const detected=await detectDonutSegments(breakdownResult.file),preview=_bbEl("bill-breakdown-preview"),host=preview&&preview.parentElement.querySelector(".bill-redrawn-preview");
+                    if(detected.ok){window.currentBillDonutSegments=detected.segments;if(host)renderRebuiltDonut(host,detected.segments,"");}
+                    else if(host)host.innerHTML='<p class="text-[10px] text-[#9b6655] text-center">Chưa nhận diện được vòng donut rõ ràng. Hãy thử ảnh rõ hơn hoặc lưu ảnh gốc.</p>';
                 }
-                // Image A: invoice dates, billing period, total amount, Usage Unit and Day/Peak/Night rows.
-                // Image B: energy-distribution image reading.
-                const parsed=parseBillOcrText(totalResult ? totalResult.text : "");
+                const parsed=parseBillOcrText(raw);
+                const imageBParsed=breakdownResult?parseBillOcrText(breakdownResult.text):{};
+                const imageAParsed=totalResult?parseBillOcrText(totalResult.text):{};
+                const totalEnergyKwh=imageBParsed.kwh!==undefined?imageBParsed.kwh:(imageAParsed.kwh!==undefined?imageAParsed.kwh:parsed.kwh);
                 if(parsed.amount!==undefined)_bbEl("edit-bill-amount").value=parsed.amount.toFixed(2);
-                if(parsed.kwh!==undefined)_bbEl("edit-bill-kwh").value=parsed.kwh;
+                if(totalEnergyKwh!==undefined){
+                    _bbEl("edit-bill-kwh").value=totalEnergyKwh;
+                    const readout=_bbEl("bill-total-energy-readout");if(readout)readout.textContent=Number(totalEnergyKwh).toLocaleString();
+                }
                 if(parsed.start)_bbEl("edit-bill-start").value=parsed.start;
                 if(parsed.end)_bbEl("edit-bill-end").value=parsed.end;
                 if(parsed.month)_bbEl("edit-bill-month").value=parsed.month;else if(parsed.start){const d=new Date(parsed.start+"T12:00:00");_bbEl("edit-bill-month").value=d.toLocaleString("en",{month:"long"});if(!parsed.year)_bbEl("edit-bill-year").value=d.getFullYear();}
@@ -1533,11 +1551,11 @@
             document.getElementById('dash-stat-kwh').innerText = `${displayKwh} kWh`;
             document.getElementById('dash-stat-bill').innerText = `€${displayBill.toFixed(2)}`;
             document.getElementById('dash-stat-savings').innerText = `€${(displayKwh * 0.08).toFixed(2)} cr`;
-            const totalUsageEl = document.getElementById("dashboard-total-usage");
-            if (totalUsageEl) totalUsageEl.textContent = count ? displayKwh.toLocaleString() : "—";
+            document.getElementById('donut-center-val').innerText = `${displayKwh} kWh`;
             document.getElementById('dash-trend-info').innerText = monthVal === 'all' ? "Showing All-Months Average" : `Showing ${monthVal}`;
 
             renderDashboardColumnLineChart(filtered);
+            renderDashboardEnergyDonut(filtered, monthVal === "all");
         }
         function renderDashboardEnergyDonut(records, aggregateAll) {
             const host=_bbEl("dashboard-donut-redraw"),body=_bbEl("dashboard-bands-body"),note=_bbEl("dashboard-donut-note");
@@ -1593,10 +1611,8 @@
             const plotH = H - top - bottom;
             const maxBill = Math.max(1, ...records.map(r => Number(r.bill) || 0)) * 1.12;
             const maxKwh = Math.max(1, ...records.map(r => Number(r.kwh) || 0)) * 1.12;
-            const plotW = W - left - right;
-            const step = records.length > 1 ? Math.min(46, plotW / (records.length - 1)) : 0;
-            const barW = Math.min(34, Math.max(20, step * 0.78 || 30));
-            const centerX = left + plotW / 2;
+            const step = (W - left - right) / records.length;
+            const barW = Math.min(34, step * 0.48);
             const selected = new Set((activeRecords || []).map(r => r.id));
             const points = [];
             let bars = "";
@@ -1610,7 +1626,7 @@
             }
 
             records.forEach((r, i) => {
-                const cx = records.length === 1 ? centerX : centerX + (i - (records.length - 1) / 2) * step;
+                const cx = left + step * (i + 0.5);
                 const bill = Math.max(0, Number(r.bill) || 0);
                 const kwh = Math.max(0, Number(r.kwh) || 0);
                 const billY = top + plotH * (1 - bill / maxBill);
@@ -1618,7 +1634,7 @@
                 const opacity = selected.size && !selected.has(r.id) ? 0.35 : 1;
                 bars += '<rect x="' + (cx-barW/2).toFixed(1) + '" y="' + billY.toFixed(1) + '" width="' + barW.toFixed(1) + '" height="' + Math.max(0,top+plotH-billY).toFixed(1) + '" rx="5" fill="#e8b98f" opacity="' + opacity + '"><title>' + r.month + ': €' + bill.toFixed(2) + '</title></rect>';
                 points.push({x:cx,y:kwhY,kwh,opacity});
-                xLabels.innerHTML += '<span class="text-center min-w-0 absolute -translate-x-1/2 ' + (opacity < 1 ? 'opacity-40' : '') + '" style="left:' + (cx / W * 100).toFixed(3) + '%">' + String(r.month || '').substring(0,3) + '</span>';
+                xLabels.innerHTML += '<span class="text-center flex-1 min-w-0 ' + (opacity < 1 ? 'opacity-40' : '') + '">' + String(r.month || '').substring(0,3) + '</span>';
             });
 
             const linePoints = points.map(p => p.x.toFixed(1) + ',' + p.y.toFixed(1)).join(' ');
