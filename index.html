@@ -1075,7 +1075,7 @@
 
         const billCategoryDefaults=[["waterHeating","Water Heating",null],["cooking","Cooking",null],["entertainment","Entertainment",null],["laundry","Laundry",null],["refrigeration","Refrigeration",null],["alwaysOn","Always On",null],["lighting","Lighting",null],["other","Other",null]];
         const billCategoryColors=["#A8C7A0","#EAD58E","#E9B0AA","#A9BDC0","#BCA996","#A9CBD8","#C1D4B1","#D9C6AE"];
-        let billImageFiles={total:null,breakdown:null},billImageUrls={total:"",breakdown:""},activeBillCategory=0;
+        let billImageFiles={total:null},billImageUrls={total:""},activeBillCategory=0;
         function getBillCategoryValues(){
             return [...document.querySelectorAll("[data-category-percent]")].map((x,i)=>({
                 key:x.dataset.categoryPercent,
@@ -1133,22 +1133,16 @@
             if(w)w.textContent=!hasValues?"Chưa có ước tính — hãy tải ảnh phân bổ rõ nét rồi chạy OCR.":(Math.abs(total-100)<0.11?"✓ Tổng phân bổ bằng 100%.":"Tỷ lệ phân bổ phải bằng 100%.");
             renderBillDonut();
         }
-        function previewUploadedBill(event,type){
-            type=type||"total";const file=event.target.files&&event.target.files[0];if(!file)return;if(!file.type.startsWith("image/")){alert("Please choose an image.");return;}
-            billImageFiles[type]=file;if(billImageUrls[type])URL.revokeObjectURL(billImageUrls[type]);billImageUrls[type]=URL.createObjectURL(file);
-            const p=document.getElementById(type==="total"?"bill-preview-img":"bill-breakdown-preview");
-            if(p){p.src=billImageUrls[type];p.classList.remove("hidden");}
-            if(type==="breakdown"){
-                window.currentBillDonutSegments=null;
-                const host=_bbEl("bill-donut-redrawn");
-                if(host){host.innerHTML='<p class="text-[10px] text-[#7a6452] text-center py-8">Đang nhận diện donut…</p>';
-                    detectDonutSegments(file).then(detected=>{
-                        if(detected.ok){window.currentBillDonutSegments=detected.segments;renderRebuiltDonut(host,detected.segments,"");}
-                        else host.innerHTML='<p class="text-[10px] text-[#9b6655] text-center py-8">Chưa nhận diện được donut rõ ràng. Thử ảnh rõ hơn nhé.</p>';
-                    }).catch(error=>console.warn("Donut preview failed",error));
-                }
-            }
-            document.getElementById("upload-status-text").textContent="Ảnh đã sẵn sàng. Bấm đọc OCR hoặc nhập tay rồi lưu.";document.getElementById("bill-ocr-status").textContent="Có ảnh mới — cần đọc lại";if(type==="breakdown"){showBillDonutOriginal();document.querySelectorAll("[data-category-percent]").forEach(input=>input.value="");updateBillCategoryTotals();}
+        function previewUploadedBill(event){
+            const file=event.target.files&&event.target.files[0];if(!file)return;
+            if(!file.type.startsWith("image/")){alert("Please choose an image.");return;}
+            billImageFiles.total=file;
+            if(billImageUrls.total)URL.revokeObjectURL(billImageUrls.total);
+            billImageUrls.total=URL.createObjectURL(file);
+            const preview=document.getElementById("bill-preview-img");
+            if(preview){preview.src=billImageUrls.total;preview.classList.remove("hidden");}
+            document.getElementById("upload-status-text").textContent="Ảnh hoá đơn đã sẵn sàng. Bấm đọc OCR hoặc nhập tay rồi lưu.";
+            document.getElementById("bill-ocr-status").textContent="Có ảnh mới — cần đọc lại";
         }
         function parseBillDateParts(text){
             const months={jan:1,feb:2,mar:3,apr:4,may:5,jun:6,jul:7,aug:8,sep:9,oct:10,nov:11,dec:12};
@@ -1257,66 +1251,7 @@
             }
         }
 
-        // Generic donut reconstruction: no fixed categories or reference image.
-        async function detectDonutSegments(file){
-            if(!file)return {ok:false,reason:"missing-image"};
-            let bitmap=null;
-            try{
-                bitmap=await createImageBitmap(file);
-                const scale=Math.min(1,1200/Math.max(bitmap.width,bitmap.height)),w=Math.max(1,Math.round(bitmap.width*scale)),h=Math.max(1,Math.round(bitmap.height*scale));
-                const canvas=document.createElement("canvas");canvas.width=w;canvas.height=h;
-                const ctx=canvas.getContext("2d",{willReadFrequently:true});if(!ctx)return {ok:false,reason:"canvas"};
-                ctx.drawImage(bitmap,0,0,w,h);bitmap.close();bitmap=null;
-                const data=ctx.getImageData(0,0,w,h).data,minDim=Math.min(w,h),N=720;
-                const read=(cx,cy,r,i)=>{
-                    const a=(i/N)*Math.PI*2-Math.PI/2,samples=[];
-                    for(const off of [-.035,-.017,0,.017,.035]){
-                        const x=Math.round(cx+Math.cos(a)*r*(1+off)),y=Math.round(cy+Math.sin(a)*r*(1+off));
-                        if(x<0||y<0||x>=w||y>=h)continue;
-                        const p=(y*w+x)*4,R=data[p],G=data[p+1],B=data[p+2],light=(R+G+B)/3,chroma=Math.max(R,G,B)-Math.min(R,G,B);
-                        if(light<248&&chroma>7)samples.push({R,G,B});
-                    }
-                    if(!samples.length)return null;samples.sort((a,b)=>(Math.max(b.R,b.G,b.B)-Math.min(b.R,b.G,b.B))-(Math.max(a.R,a.G,a.B)-Math.min(a.R,a.G,a.B)));return samples[0];
-                };
-                const dist=(a,b)=>!a||!b?999:Math.hypot(a.R-b.R,a.G-b.G,a.B-b.B);
-                let best=null;
-                for(const fx of [.38,.44,.5,.56,.62])for(const fy of [.38,.44,.5,.56,.62]){
-                    const cx=w*fx,cy=h*fy;
-                    for(let rf=.14;rf<=.43;rf+=.012){
-                        const r=minDim*rf,colors=Array.from({length:N},(_,i)=>read(cx,cy,r,i)),valid=colors.map(Boolean),coverage=valid.filter(Boolean).length/N;
-                        if(coverage<.28)continue;
-                        let changes=0,strength=0;
-                        for(let i=0;i<N;i++){const j=(i+1)%N;if(valid[i]&&valid[j]){const d=dist(colors[i],colors[j]);if(d>34){changes++;strength+=d;}}}
-                        if(changes<2||changes>32)continue;
-                        const score=coverage*2+Math.min(strength/Math.max(1,changes),120)/120;
-                        if(!best||score>best.score)best={colors,score};
-                    }
-                }
-                if(!best)return {ok:false,reason:"ring-not-found"};
-                const runs=[];let current=null;
-                for(let i=0;i<N;i++){
-                    const c=best.colors[i];
-                    if(!c){if(current){runs.push(current);current=null;}continue;}
-                    if(!current||dist(current.color,c)>34){if(current)runs.push(current);current={count:1,color:{R:c.R,G:c.G,B:c.B},samples:[c]};}
-                    else{current.count++;current.samples.push(c);current.color={R:current.samples.reduce((n,v)=>n+v.R,0)/current.samples.length,G:current.samples.reduce((n,v)=>n+v.G,0)/current.samples.length,B:current.samples.reduce((n,v)=>n+v.B,0)/current.samples.length};}
-                }
-                if(current)runs.push(current);
-                if(runs.length>1&&dist(runs[0].color,runs[runs.length-1].color)<34){const last=runs.pop(),first=runs.shift(),count=last.count+first.count;runs.unshift({count,color:{R:(last.color.R*last.count+first.color.R*first.count)/count,G:(last.color.G*last.count+first.color.G*first.count)/count,B:(last.color.B*last.count+first.color.B*first.count)/count}});}
-                const segments=runs.filter(x=>x.count>=5);
-                if(segments.length<2||segments.length>16)return {ok:false,reason:"unclear-segments",detected:segments.length};
-                const total=segments.reduce((n,x)=>n+x.count,0),result=segments.map((x,i)=>({key:"slice-"+(i+1),label:"Slice "+(i+1),percent:Math.round(x.count/total*1000)/10,color:"#"+[x.color.R,x.color.G,x.color.B].map(v=>Math.max(0,Math.min(255,Math.round(v))).toString(16).padStart(2,"0")).join("")}));
-                result[result.length-1].percent=Math.round((result[result.length-1].percent+100-result.reduce((n,x)=>n+x.percent,0))*10)/10;
-                return {ok:true,segments:result};
-            }catch(error){if(bitmap)bitmap.close();console.warn("Donut reconstruction failed",error);return {ok:false,reason:"image-analysis"};}
-        }
-        function renderRebuiltDonut(host,segments,centerText){
-            if(!host)return;
-            if(!Array.isArray(segments)||segments.length<2){host.innerHTML='<p class="text-[10px] text-[#7a6452] py-8">Chưa nhận diện được donut từ ảnh tháng này.</p>';return;}
-            const r=75,circ=2*Math.PI*r;let offset=0;
-            const circles=segments.map(seg=>{const len=circ*Math.max(0,Number(seg.percent)||0)/100,html='<circle cx="110" cy="110" r="75" fill="none" stroke="'+seg.color+'" stroke-width="30" stroke-dasharray="'+len+' '+Math.max(0,circ-len)+'" stroke-dashoffset="'+(-offset)+'" transform="rotate(-90 110 110)"/>';offset+=len;return html;}).join("");
-            const safeCenter=String(centerText||"").replace(/[<>&"]/g,"");
-            host.innerHTML='<svg viewBox="0 0 220 220" class="w-full max-w-[260px] max-h-64" role="img" aria-label="Reconstructed donut chart"><circle cx="110" cy="110" r="75" fill="none" stroke="#eadfd1" stroke-width="30"/>'+circles+'<text x="110" y="106" text-anchor="middle" font-size="14" font-weight="700" fill="#5c4738">'+safeCenter+'</text><text x="110" y="124" text-anchor="middle" font-size="9" fill="#7a6452">TOTAL</text></svg><div class="w-full grid grid-cols-2 gap-x-2 gap-y-1 mt-2 text-[9px] text-left">'+segments.map(seg=>'<div class="flex items-center gap-1 min-w-0"><i class="w-2 h-2 rounded-full shrink-0" style="background:'+seg.color+'"></i><span class="truncate">'+seg.label+'</span><b class="ml-auto">'+Number(seg.percent).toFixed(1)+'%</b></div>').join("")+'</div>';
-        }
+        // Image-based donut reconstruction removed; tariff rows are read directly from the bill.
         // ===== BẢNG KHUNG GIỜ DAY / PEAK / NIGHT =====
         const BILL_BANDS=[["day","Day","8am–11pm",0.3719],["peak","Peak","5–7pm",0.3968],["night","Night","11pm–8am",0.1954]];
         const _bbEl=id=>document.getElementById(id);
@@ -1339,11 +1274,6 @@
             if(t1)t1.textContent=tk>0?tk.toFixed(0):"–";
             if(t2)t2.textContent=te>0?"€"+te.toFixed(2):"–";
             if(warning){const total=totalInput&&totalInput.value!==""?Number(totalInput.value):null;warning.textContent=tk>0&&total!==null&&Math.abs(tk-total)>1?"Tổng 3 khung giờ ("+tk.toFixed(0)+" kWh) khác tổng kWh đã nhập ("+total+" kWh) — hãy kiểm tra lại.":"";}
-        }
-        function showBillDonutOriginal(){
-            const img=_bbEl("bill-donut-original"),empty=_bbEl("bill-donut-original-empty");if(!img)return;
-            if(billImageUrls.breakdown){img.src=billImageUrls.breakdown;img.classList.remove("hidden");if(empty)empty.classList.add("hidden");}
-            else{img.classList.add("hidden");if(empty)empty.classList.remove("hidden");}
         }
         function parseBillBands(text){
             const out={};
