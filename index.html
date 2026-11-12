@@ -529,7 +529,7 @@
 
                 <!-- 3 SUB-TABS CHO REPORTS -->
                 <div class="grid grid-cols-3 gap-2 text-xs">
-                    <button onclick="switchReportSubTab('upload')" id="subtab-btn-upload" class="p-2.5 bg-[#B8AEDB] text-white font-bold rounded-xl border border-[#5c4738]">1. Upload & Edit Bill</button>
+                    <button onclick="switchReportSubTab('upload')" id="subtab-btn-upload" class="p-2.5 bg-[#8C735F] text-white font-bold rounded-xl border border-[#5c4738]">1. Upload & Edit Bill</button>
                     <button onclick="switchReportSubTab('listing')" id="subtab-btn-listing" class="p-2.5 bg-[#fffaf4] text-[#4a3b32] font-bold rounded-xl border border-[#5c4738]">2. Billing Listing</button>
                     <button onclick="switchReportSubTab('dashboard')" id="subtab-btn-dashboard" class="p-2.5 bg-[#fffaf4] text-[#4a3b32] font-bold rounded-xl border border-[#5c4738]">3. Dashboard & Avg</button>
                 </div>
@@ -540,11 +540,11 @@
                     <p class="text-[11px] text-[#7a6452]">Tải hai ảnh: tổng hoá đơn và biểu đồ phân bổ. OCR chỉ hỗ trợ đọc thử; hãy kiểm tra số liệu trước khi lưu.</p>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div class="vint-card p-3 bg-[#fffaf4] space-y-2"><b class="text-xs">🧾 Ảnh A · Tổng hoá đơn</b>
-                            <label class="block px-3 py-2 bg-[#B8AEDB] text-white rounded-xl text-xs text-center cursor-pointer">📸 Chụp / chọn ảnh<input type="file" id="bill-img-file" accept="image/*" capture="environment" class="hidden" onchange="previewUploadedBill(event,'total')"></label>
+                            <label class="block px-3 py-2 bg-[#8C735F] text-white rounded-xl text-xs text-center cursor-pointer">📸 Chụp / chọn ảnh<input type="file" id="bill-img-file" accept="image/*" capture="environment" class="hidden" onchange="previewUploadedBill(event,'total')"></label>
                             <img id="bill-preview-img" alt="Bill preview" class="hidden max-h-40 w-full object-contain rounded-xl border">
                         </div>
                         <div class="vint-card p-3 bg-[#fffaf4] space-y-2"><b class="text-xs">🍩 Ảnh B · Phân bổ điện năng</b>
-                            <label class="block px-3 py-2 bg-[#B8AEDB] text-white rounded-xl text-xs text-center cursor-pointer">📸 Chụp / chọn ảnh<input type="file" id="bill-breakdown-file" accept="image/*" capture="environment" class="hidden" onchange="previewUploadedBill(event,'breakdown')"></label>
+                            <label class="block px-3 py-2 bg-[#8C735F] text-white rounded-xl text-xs text-center cursor-pointer">📸 Chụp / chọn ảnh<input type="file" id="bill-breakdown-file" accept="image/*" capture="environment" class="hidden" onchange="previewUploadedBill(event,'breakdown')"></label>
                             <img id="bill-breakdown-preview" alt="Breakdown preview" class="hidden max-h-40 w-full object-contain rounded-xl border">
                         </div>
                     </div>
@@ -562,11 +562,11 @@
                     <div class="pt-3 border-t space-y-3">
                         <div><b class="text-xs">🍩 Phân bổ điện năng theo nhóm</b><p class="text-[10px] text-[#7a6452] mt-1">Rê chuột hoặc bấm vào từng phần của donut để xem điện năng ước tính theo nhóm.</p></div>
                         <div class="grid grid-cols-1 sm:grid-cols-[minmax(180px,0.9fr)_minmax(0,1.1fr)] gap-4 items-center">
-                            <div class="relative mx-auto w-full max-w-[250px] aspect-square">
+                            <div class="relative mx-auto w-full max-w-[210px] aspect-square">
                                 <svg id="bill-category-donut" viewBox="0 0 220 220" role="img" aria-label="Energy use distribution donut chart" class="w-full h-full overflow-visible"></svg>
                                 <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none"><strong id="bill-donut-center-kwh" class="text-xl text-[#5c4738]">—</strong><span class="text-[10px] text-[#7a6452]">estimated kWh</span><span id="bill-donut-center-label" class="text-[10px] font-bold text-[#8c7355] mt-1">All categories</span></div>
                             </div>
-                            <div id="bill-category-editor" class="space-y-2 min-w-0"></div>
+                            <div id="bill-category-editor" class="grid grid-cols-2 gap-2 min-w-0"></div>
                         </div>
                         <div id="bill-category-detail" class="rounded-xl bg-[#f5ede2] border border-[#d8c7b0] p-3 text-xs" aria-live="polite">Chọn một lát donut để xem ước tính phân bổ.</div>
                         <div class="flex justify-between bg-[#f5ede2] p-3 rounded-xl text-xs font-bold"><span>Tổng tỷ lệ</span><span id="bill-category-total">0%</span></div>
@@ -666,7 +666,10 @@
                             <div class="vint-card p-2 bg-white flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#E8D58E] flex-shrink-0"></span> Always On (3%)</div>
                         </div>
                     </div>
-                </div>
+                    </div>
+                    <!-- REMINDERS & TIPS: DASHBOARD ONLY -->
+
+
             </div>
 
             <!-- REMINDERS & TIPS -->
@@ -1056,7 +1059,7 @@
                 const btn = document.getElementById(`subtab-btn-${s}`);
                 if (el) el.classList.add('hidden');
                 if (btn) {
-                    btn.classList.remove('bg-[#B8AEDB]', 'text-white');
+                    btn.classList.remove('bg-[#8C735F]', 'text-white');
                     btn.classList.add('bg-[#fffaf4]', 'text-[#4a3b32]');
                 }
             });
@@ -1066,15 +1069,15 @@
             if (targetEl) targetEl.classList.remove('hidden');
             if (targetBtn) {
                 targetBtn.classList.remove('bg-[#fffaf4]', 'text-[#4a3b32]');
-                targetBtn.classList.add('bg-[#B8AEDB]', 'text-white');
+                targetBtn.classList.add('bg-[#8C735F]', 'text-white');
             }
 
             if (subName === 'listing') renderBillingListing();
             if (subName === 'dashboard') updateDashboardView();
         }
 
-        const billCategoryDefaults=[["waterHeating","Water Heating",0],["cooking","Cooking",0],["entertainment","Entertainment",0],["laundry","Laundry",0],["refrigeration","Refrigeration",0],["alwaysOn","Always On",0],["lighting","Lighting",0],["other","Other",0]];
-        const billCategoryColors=["#A8C7A0","#F2C6A0","#E9A8A8","#B8AEDB","#9BCAD3","#E8D58E","#C9B7A5"];
+        const billCategoryDefaults=[["waterHeating","Water Heating",null],["cooking","Cooking",null],["entertainment","Entertainment",null],["laundry","Laundry",null],["refrigeration","Refrigeration",null],["alwaysOn","Always On",null],["lighting","Lighting",null],["other","Other",null]];
+        const billCategoryColors=["#A8C7A0","#EAD58E","#E9B0AA","#A9BDC0","#BCA996","#A9CBD8","#C1D4B1","#D9C6AE"];
         let billImageFiles={total:null,breakdown:null},billImageUrls={total:"",breakdown:""},activeBillCategory=0;
         function getBillCategoryValues(){
             return [...document.querySelectorAll("[data-category-percent]")].map((x,i)=>({
@@ -1087,7 +1090,7 @@
         function renderBillCategoryEditor(items){
             const host=document.getElementById("bill-category-editor");if(!host)return;
             const data=items&&items.length?items:billCategoryDefaults.map(x=>({key:x[0],label:x[1],percent:x[2]}));
-            host.innerHTML=data.map((c,i)=>'<div class="grid grid-cols-[minmax(0,1fr)_76px] gap-2 items-center rounded-xl border bg-[#fffaf4] p-2"><label class="min-w-0 flex items-center gap-2 text-[10px] font-bold"><span class="w-3 h-3 rounded-full shrink-0" style="background:'+billCategoryColors[i%billCategoryColors.length]+'"></span><input aria-label="Category name" data-category-label="'+(c.key||("category"+i))+'" value="'+String(c.label||"").replace(/&/g,"&amp;").replace(/"/g,"&quot;")+'" class="min-w-0 w-full bg-transparent outline-none"></label><label class="flex items-center gap-1 text-[10px]"><input aria-label="Percentage" data-category-percent="'+(c.key||("category"+i))+'" type="number" min="0" max="100" step="0.1" value="'+(Number(c.percent)||0)+'" oninput="updateBillCategoryTotals()" class="w-full min-w-0 px-1.5 py-1.5 rounded-lg border text-xs"><span>%</span></label></div>').join("");
+            host.innerHTML=data.map((c,i)=>'<div class="rounded-xl border border-[#e3d6c6] bg-[#fffaf4] px-2 py-1.5 min-w-0"><div class="flex items-center gap-1.5 min-w-0"><span class="w-2.5 h-2.5 rounded-full shrink-0" style="background:'+billCategoryColors[i%billCategoryColors.length]+'"></span><input aria-label="Category name" data-category-label="'+(c.key||("category"+i))+'" value="'+String(c.label||"").replace(/&/g,"&amp;").replace(/"/g,"&quot;")+'" class="min-w-0 w-full bg-transparent outline-none text-[10px] font-bold"></div><label class="flex items-center gap-1 mt-1 text-[9px] text-[#8c7355]"><input aria-label="Estimated percentage" data-category-percent="'+(c.key||("category"+i))+'" type="number" min="0" max="100" step="0.1" value="'+(c.percent===undefined||c.percent===null?"":(Number(c.percent)||0))+'" oninput="updateBillCategoryTotals()" class="w-full min-w-0 px-1.5 py-1 rounded-lg border border-[#d8c7b0] text-[10px] bg-white"><span>% est.</span></label></div>').join("");
             updateBillCategoryTotals();
         }
         function showBillCategorySummary(){
@@ -1096,7 +1099,7 @@
             if(detail)detail.innerHTML='<div class="font-extrabold text-[#5c4738]">Tổng phân bổ điện năng</div><div class="mt-1 text-[#7a6452]">'+totalPercent.toFixed(1)+'% phân bổ · <strong class="text-[#5c4738]">'+(validKwh?totalKwh.toFixed(1)+" kWh total":"Nhập tổng kWh để xem ước tính")+'</strong></div>';
             if(center)center.textContent=validKwh?totalKwh.toFixed(1):"—";
             if(label)label.textContent="Total usage";
-            document.querySelectorAll("#bill-category-donut circle[data-segment]").forEach(circle=>{circle.style.opacity="1";circle.style.strokeWidth="19";});
+            document.querySelectorAll("#bill-category-donut circle[data-segment]").forEach(circle=>{circle.style.opacity="1";circle.style.strokeWidth="31";});
             activeBillCategory=-1;
         }
         function selectBillCategory(index){
@@ -1108,27 +1111,29 @@
             const center=document.getElementById("bill-donut-center-kwh"),label=document.getElementById("bill-donut-center-label");
             if(center)center.textContent=estimated===null?"—":estimated.toFixed(1);
             if(label)label.textContent=cat.label;
-            document.querySelectorAll("#bill-category-donut circle[data-segment]").forEach((circle,i)=>{circle.style.opacity=i===index?"1":"0.62";circle.style.strokeWidth=i===index?"24":"19";});
+            document.querySelectorAll("#bill-category-donut circle[data-segment]").forEach((circle,i)=>{circle.style.opacity=i===index?"1":"0.62";circle.style.strokeWidth=i===index?"35":"31";});
         }
         function renderBillDonut(){
             const svg=document.getElementById("bill-category-donut");if(!svg)return;
-            const cats=getBillCategoryValues(),total=cats.reduce((n,c)=>n+c.percent,0),r=78,circ=2*Math.PI*r;
+            const cats=getBillCategoryValues(),total=cats.reduce((n,c)=>n+c.percent,0),r=76,circ=2*Math.PI*r;
             let offset=0;
-            svg.innerHTML='<circle cx="110" cy="110" r="'+r+'" fill="none" stroke="#eadfD1" stroke-width="19"></circle>';
+            svg.innerHTML='<circle cx="110" cy="110" r="'+r+'" fill="none" stroke="#eadfD1" stroke-width="31"></circle>';
             svg.onmouseleave=showBillCategorySummary;
             cats.forEach((cat,i)=>{
                 const length=total>0?circ*cat.percent/100:0;
                 const circle=document.createElementNS("http://www.w3.org/2000/svg","circle");
                 circle.setAttribute("cx","110");circle.setAttribute("cy","110");circle.setAttribute("r",String(r));circle.setAttribute("fill","none");
-                circle.setAttribute("stroke",cat.color);circle.setAttribute("stroke-width","19");circle.setAttribute("stroke-dasharray",length+" "+Math.max(0,circ-length));circle.setAttribute("stroke-dashoffset",String(-offset));circle.setAttribute("transform","rotate(-90 110 110)");circle.setAttribute("stroke-linecap","butt");circle.setAttribute("data-segment",String(i));circle.style.cursor="pointer";circle.style.transition="stroke-width .15s,opacity .15s";
+                circle.setAttribute("stroke",cat.color);circle.setAttribute("stroke-width","31");circle.setAttribute("stroke-dasharray",length+" "+Math.max(0,circ-length));circle.setAttribute("stroke-dashoffset",String(-offset));circle.setAttribute("transform","rotate(-90 110 110)");circle.setAttribute("stroke-linecap","butt");circle.setAttribute("data-segment",String(i));circle.style.cursor="pointer";circle.style.transition="stroke-width .15s,opacity .15s";
                 circle.addEventListener("mouseenter",()=>selectBillCategory(i));circle.addEventListener("click",()=>selectBillCategory(i));svg.appendChild(circle);offset+=length;
             });
             showBillCategorySummary();
         }
         function updateBillPerPerson(){const amount=Number(document.getElementById("edit-bill-amount")?.value),countInput=document.getElementById("bill-household-size"),count=Math.max(1,Math.min(50,Math.floor(Number(countInput?.value)||1))),note=document.getElementById("bill-per-person-note");if(countInput&&Number(countInput.value)!==count)countInput.value=count;if(note)note.textContent="Ghi chú: chia đều cho "+count+" người · "+(Number.isFinite(amount)&&amount>=0&&document.getElementById("edit-bill-amount").value!==""?"€"+(amount/count).toFixed(2):"€—")+" / người";}
         function updateBillCategoryTotals(){
+            const inputs=[...document.querySelectorAll("[data-category-percent]")],hasValues=inputs.some(input=>input.value.trim()!=="");
             const cats=getBillCategoryValues(),total=cats.reduce((n,c)=>n+c.percent,0),t=document.getElementById("bill-category-total"),w=document.getElementById("bill-category-warning");
-            if(t)t.textContent=total.toFixed(1)+"%";if(w)w.textContent=Math.abs(total-100)<0.11?"✓ Tổng phân bổ bằng 100%.":"Tỷ lệ hiện tại chưa bằng 100%; hãy kiểm tra lại nhé.";
+            if(t)t.textContent=hasValues?total.toFixed(1)+"%":"—";
+            if(w)w.textContent=!hasValues?"No estimate yet — upload a clear breakdown image and run OCR.":(Math.abs(total-100)<0.11?"✓ Total distribution is 100%.":"Distribution must add up to 100%.");
             renderBillDonut();
         }
         function previewUploadedBill(event,type){
@@ -1136,7 +1141,7 @@
             billImageFiles[type]=file;if(billImageUrls[type])URL.revokeObjectURL(billImageUrls[type]);billImageUrls[type]=URL.createObjectURL(file);
             const p=document.getElementById(type==="total"?"bill-preview-img":"bill-breakdown-preview");
             if(p){p.src=billImageUrls[type];p.classList.remove("hidden");}
-            document.getElementById("upload-status-text").textContent="Ảnh đã sẵn sàng. Bấm đọc OCR hoặc nhập tay rồi lưu.";document.getElementById("bill-ocr-status").textContent="Có ảnh mới — cần đọc lại";
+            document.getElementById("upload-status-text").textContent="Ảnh đã sẵn sàng. Bấm đọc OCR hoặc nhập tay rồi lưu.";document.getElementById("bill-ocr-status").textContent="Có ảnh mới — cần đọc lại";if(type==="breakdown"){document.querySelectorAll("[data-category-percent]").forEach(input=>input.value="");updateBillCategoryTotals();}
         }
         function parseBillDateParts(text){
             const months={jan:1,feb:2,mar:3,apr:4,may:5,jun:6,jul:7,aug:8,sep:9,oct:10,nov:11,dec:12};
@@ -1169,76 +1174,43 @@
         }
         async function estimateBillCategoryShares(file,ocrText,words){
             if(!file)return {ok:false,reason:"missing-image"};
-            const categories=[
-                ["waterHeating",["waterheating","waterheater"]],
-                ["cooking",["cooking"]],
-                ["entertainment",["entertainment"]],
-                ["laundry",["laundry"]],
-                ["refrigeration",["refrigeration"]],
-                ["alwaysOn",["alwayson","alwaysonload"]],
-                ["lighting",["lighting"]],
-                ["other",["other"]]
-            ];
             const normalized=String(ocrText||"").toLowerCase().replace(/[^a-z]/g,"");
-            const detected=categories.filter(([,aliases])=>aliases.some(alias=>normalized.includes(alias))).length;
+            const categories=[["waterHeating",["waterheating","waterheater"]],["cooking",["cooking"]],["entertainment",["entertainment"]],["laundry",["laundry"]],["refrigeration",["refrigeration"]],["alwaysOn",["alwayson","alwaysonload"]],["lighting",["lighting"]],["other",["other"]]];
+            const detected=categories.filter(([,aliases])=>aliases.some(alias=>normalized.includes(alias)));
+            if(detected.length<4)return {ok:false,reason:"not-enough-labels",detected:detected.length};
             let bitmap=null;
             try{
                 bitmap=await createImageBitmap(file);
-                const canvas=document.createElement("canvas");
-                canvas.width=bitmap.width;canvas.height=bitmap.height;
-                const ctx=canvas.getContext("2d",{willReadFrequently:true});
-                if(!ctx)return {ok:false,reason:"canvas",detected};
-                ctx.drawImage(bitmap,0,0);
-                const w=canvas.width,h=canvas.height,pixels=ctx.getImageData(0,0,w,h).data;
-                let cx=w/2,cy=h*(h/w>1.15?0.397:0.5);
-                const centerWords=(words||[]).filter(word=>/usage|kwh/i.test(word.text||"")&&word.bbox);
-                if(centerWords.length){
-                    const pts=centerWords.map(word=>({x:(word.bbox.x0+word.bbox.x1)/2,y:(word.bbox.y0+word.bbox.y1)/2}));
-                    const candidate={x:pts.reduce((n,p)=>n+p.x,0)/pts.length,y:pts.reduce((n,p)=>n+p.y,0)/pts.length};
-                    if(candidate.x>w*.3&&candidate.x<w*.7&&candidate.y>h*.2&&candidate.y<h*.7){cx=candidate.x;cy=candidate.y;}
+                const canvas=document.createElement("canvas"),scale=Math.min(1,1000/Math.max(bitmap.width,bitmap.height));
+                const w=Math.max(1,Math.round(bitmap.width*scale)),h=Math.max(1,Math.round(bitmap.height*scale));
+                canvas.width=w;canvas.height=h;
+                const ctx=canvas.getContext("2d",{willReadFrequently:true});if(!ctx)return {ok:false,reason:"canvas"};
+                ctx.drawImage(bitmap,0,0,w,h);const pixels=ctx.getImageData(0,0,w,h).data;
+                let cx=w/2,cy=h/2;
+                const centerWords=(words||[]).filter(word=>/usage|consumption|kwh/i.test(word.text||"")&&word.bbox);
+                if(centerWords.length){const pts=centerWords.map(word=>({x:(word.bbox.x0+word.bbox.x1)/2*scale,y:(word.bbox.y0+word.bbox.y1)/2*scale}));cx=pts.reduce((n,p)=>n+p.x,0)/pts.length;cy=pts.reduce((n,p)=>n+p.y,0)/pts.length;}
+                const minDim=Math.min(w,h);
+                const sample=(deg,radius)=>{const a=(deg-90)*Math.PI/180;let best=null,scoreBest=-1;for(const off of [-.035,-.017,0,.017,.035]){const x=Math.round(cx+Math.cos(a)*radius*(1+off)),y=Math.round(cy+Math.sin(a)*radius*(1+off));if(x<0||y<0||x>=w||y>=h)continue;const k=(y*w+x)*4,R=pixels[k],G=pixels[k+1],B=pixels[k+2],light=(R+G+B)/3,score=Math.max(R,G,B)-Math.min(R,G,B)+(255-light)*.12;if(score>scoreBest){scoreBest=score;best={R,G,B,light,score};}}return best;};
+                const dist=(a,b)=>!a||!b?999:Math.hypot(a.R-b.R,a.G-b.G,a.B-b.B);
+                let bestScan=null;
+                for(let radius=minDim*.12;radius<=minDim*.44;radius+=Math.max(1,minDim*.006)){
+                    const colors=Array.from({length:360},(_,deg)=>sample(deg,radius)),valid=colors.map(c=>!!c&&c.score>13&&c.light<249),coverage=valid.filter(Boolean).length/360;
+                    if(coverage<.28||coverage>.98)continue;
+                    let changes=0;for(let a=0;a<360;a++){const b=(a+359)%360;if(valid[a]!==valid[b]||(valid[a]&&dist(colors[a],colors[b])>25))changes++;}
+                    const score=Math.abs(coverage-.82)*.7+Math.abs(changes-16)*.018;
+                    if(!bestScan||score<bestScan.score)bestScan={colors,valid,score};
                 }
-                const radius=Math.min(w*0.43,h*(h/w>1.15?0.24:0.43));
-                const occupied=[];
-                for(let deg=0;deg<360;deg++){
-                    const angle=(deg-90)*Math.PI/180;
-                    let hits=0;
-                    for(let j=0;j<15;j++){
-                        const r=radius*(0.75+j*0.014);
-                        const x=Math.round(cx+Math.cos(angle)*r),y=Math.round(cy+Math.sin(angle)*r);
-                        if(x<0||y<0||x>=w||y>=h)continue;
-                        const k=(y*w+x)*4,red=pixels[k],green=pixels[k+1],blue=pixels[k+2],max=Math.max(red,green,blue),min=Math.min(red,green,blue);
-                        if(max-min>24||max<226)hits++;
-                    }
-                    occupied.push(hits>=7);
-                }
-                bitmap.close();bitmap=null;
-                const runs=[];let a=0;
-                while(a<360){
-                    if(!occupied[a]){a++;continue;}
-                    const begin=a;
-                    while(a<360&&occupied[a])a++;
-                    if(a-begin>=2)runs.push({start:begin,length:a-begin});
-                }
-                if(runs.length>1&&runs[0].start<=2&&runs[runs.length-1].start+runs[runs.length-1].length>=358){
-                    const wrap={start:runs[runs.length-1].start,length:runs[runs.length-1].length+runs[0].length};
-                    runs.splice(runs.length-1,1);runs[0]=wrap;
-                }
-                if(runs.length!==8)return {ok:false,reason:"segments",segments:runs.length,detected};
-                const total=runs.reduce((sum,run)=>sum+run.length,0);
-                if(total<90)return {ok:false,reason:"weak-ring",detected};
-                const raw=runs.map(run=>run.length/total*100);
-                const shares={};
-                let roundedTotal=0;
-                categories.forEach(([key],index)=>{
-                    const value=index===7?Math.round((100-roundedTotal)*10)/10:Math.round(raw[index]*10)/10;
-                    shares[key]=Math.max(0,value);roundedTotal+=shares[key];
-                });
-                return {ok:true,shares,detected,segments:runs.length};
-            }catch(error){
-                if(bitmap)bitmap.close();
-                console.warn("Could not estimate bill donut shares",error);
-                return {ok:false,reason:"image-analysis",detected};
-            }
+                bitmap.close();bitmap=null;if(!bestScan)return {ok:false,reason:"ring-not-found",detected:detected.length};
+                const {colors,valid}=bestScan,arcs=[];let i=0;
+                while(i<360){if(!valid[i]){i++;continue;}const begin=i;while(i<360&&valid[i])i++;if(i-begin>=3)arcs.push({start:begin,length:i-begin});}
+                if(arcs.length>1&&valid[0]&&valid[359]){const f=arcs[0],l=arcs[arcs.length-1];arcs[0]={start:l.start,length:l.length+f.length};arcs.pop();}
+                let slices=arcs.filter(a=>a.length>=5);
+                if(slices.length!==8){const starts=[];for(let a=0;a<360;a++){const b=(a+359)%360;if(valid[a]&&valid[b]&&dist(colors[a],colors[b])>25)starts.push(a);}if(starts.length>=8&&starts.length<=16){const eight=starts.slice(0,8).sort((a,b)=>a-b);slices=eight.map((s,j)=>({start:s,length:(eight[(j+1)%8]-s+360)%360}));}}
+                if(slices.length!==8)return {ok:false,reason:"unclear-segments",segments:slices.length,detected:detected.length};
+                slices.sort((a,b)=>a.start-b.start);const total=slices.reduce((n,a)=>n+a.length,0);if(total<100)return {ok:false,reason:"weak-ring",detected:detected.length};
+                const shares=slices.map(a=>Math.round(a.length/total*1000)/10);shares[0]=Math.round((shares[0]+100-shares.reduce((n,v)=>n+v,0))*10)/10;
+                const result={};categories.forEach(([key],index)=>result[key]=shares[index]);return {ok:true,shares:result,detected:detected.length,segments:8};
+            }catch(error){if(bitmap)bitmap.close();console.warn("Could not estimate bill donut shares",error);return {ok:false,reason:"image-analysis"};}
         }
         async function runBillOCR(){
             const files=[billImageFiles.total,billImageFiles.breakdown].filter(Boolean),status=document.getElementById("bill-ocr-status"),button=document.getElementById("bill-ocr-button");
@@ -1268,6 +1240,8 @@
                     });
                     updateBillCategoryTotals();
                 }else{
+                    document.querySelectorAll("[data-category-percent]").forEach(input=>input.value="");
+                    updateBillCategoryTotals();
                     status.textContent="Đã đọc thông tin hoá đơn, nhưng chưa đo được donut. M thử ảnh rõ và chụp trọn vòng donut nhé.";
                 }
                 updateBillCategoryTotals();updateBillPerPerson();
@@ -1283,6 +1257,8 @@
             if(start&&end&&start>end){alert("Ngày bắt đầu không thể sau ngày kết thúc.");return;}
             const categories=[...document.querySelectorAll("[data-category-percent]")].map(x=>({key:x.dataset.categoryPercent,label:(document.querySelector('[data-category-label="'+x.dataset.categoryPercent+'"]')||{}).value||"",percent:Number(x.value)||0}));
             if(categories.some(c=>!c.label||c.percent<0||c.percent>100)){alert("Kiểm tra tên nhóm và tỷ lệ (0–100%).");return;}
+            const shareTotal=categories.reduce((sum,c)=>sum+c.percent,0);
+            if(Math.abs(shareTotal-100)>0.11){alert("Please estimate or enter the category percentages so they add up to 100% before saving.");return;}
             const id=month.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")+"-"+year,record={id,month,year,bill:amount,kwh,startDate:start,endDate:end,categories,savings:"€"+(kwh*0.08).toFixed(2)+" cr"};
             const idx=billingRecords.findIndex(x=>x.id===id);if(idx>=0)billingRecords[idx]={...billingRecords[idx],...record};else billingRecords.push(record);
             saveUserData();renderBillingListing();populateDashboardFilters();updateDashboardView();updateBillPerPerson();document.getElementById("upload-status-text").textContent="✓ Đã lưu hoá đơn và cập nhật Billing Listing + Dashboard.";alert("💾 Đã lưu hoá đơn!");
@@ -1862,5 +1838,76 @@
             }
         }
     </script>
+
+<script>
+(function(){
+const reportTranslations = {
+"📊 Energy Analytics & Reports":"📊 Energy Analytics & Reports",
+"Manage bills, edit data, list history & view dashboard analytics":"Manage bills, edit data, review history & view dashboard analytics",
+"1. Upload & Edit Bill":"1. Upload & Edit Bill","2. Billing Listing":"2. Billing Listing","3. Dashboard & Avg":"3. Dashboard & Average",
+"📷 Upload & đọc hoá đơn điện":"📷 Upload & Read Electricity Bill",
+"Tải hai ảnh: tổng hoá đơn và biểu đồ phân bổ. OCR chỉ hỗ trợ đọc thử; hãy kiểm tra số liệu trước khi lưu.":"Upload two images: bill total and energy breakdown. OCR provides an estimate; please verify all values before saving.",
+"🧾 Ảnh A · Tổng hoá đơn":"🧾 Image A · Bill Total","🍩 Ảnh B · Phân bổ điện năng":"🍩 Image B · Energy Breakdown",
+"📸 Chụp / chọn ảnh":"📸 Take Photo / Choose Image","🔎 Đọc ảnh bằng OCR":"🔎 Read Images with OCR",
+"Đang chờ ảnh":"Waiting for images","✨ Đọc thông tin từ ảnh đã tải":"✨ Read Information from Uploaded Images",
+"Kỳ hoá đơn / tháng":"Billing Period / Month","Năm":"Year","Ngày bắt đầu":"Start Date","Ngày kết thúc":"End Date","Tổng tiền (€)":"Total Bill (€)","Số người trong nhà":"People in Household","Tổng điện năng (kWh)":"Total Energy (kWh)",
+"Nhập theo bill":"Enter bill value","🍩 Phân bổ điện năng theo nhóm":"🍩 Energy Distribution by Category",
+"Rê chuột hoặc bấm vào từng phần của donut để xem điện năng ước tính theo nhóm.":"Hover over or select a donut segment to view the estimated energy use for that category.",
+"estimated kWh":"estimated kWh","All categories":"All categories","Chọn một lát donut để xem ước tính phân bổ.":"Select a donut segment to view its estimated distribution.",
+"Tổng tỷ lệ":"Total Share","Hãy kiểm tra tổng tỷ lệ.":"Please check the total percentage.",
+"Chưa lưu hoá đơn.":"Bill not saved yet.","💾 Lưu hoá đơn & cập nhật Dashboard":"💾 Save Bill & Update Dashboard",
+"📋 Historical Billing Listing":"📋 Historical Billing Listing","📅 Filter by Month:":"📅 Filter by Month:","📆 Filter by Year:":"📆 Filter by Year:",
+"-- All Months (Average) --":"-- All Months (Average) --","-- All Years --":"-- All Years --",
+"Selected / Avg kWh":"Selected / Average kWh","Selected / Avg Bill":"Selected / Average Bill","Estimated Savings":"Estimated Savings",
+"📈 Bill (€ - Columns) & kWh Usage (Lines)":"📈 Bill (€ - Columns) & kWh Usage (Line)",
+"Auto Average Calculated":"Average Calculated Automatically",
+"Đọc lại ảnh":"Read Images Again","Đã lưu hoá đơn và cập nhật Billing Listing + Dashboard.":"Bill saved and Billing Listing + Dashboard updated.",
+"Nhập tháng, năm, tổng tiền và tổng kWh hợp lệ trước khi lưu nhé.":"Enter a valid month, year, total bill and total kWh before saving.",
+"Ngày bắt đầu không thể sau ngày kết thúc.":"The start date cannot be later than the end date.",
+"Kiểm tra tên nhóm và tỷ lệ (0–100%).":"Check category names and percentages (0–100%).",
+"💾 Đã lưu hoá đơn!":"💾 Bill saved!","Delete":"Delete","Usage:":"Usage:","Savings:":"Savings:",
+"Ghi chú: chia đều cho":"Note: split equally between","người":"people","/ người":"/ person",
+"Đọc ảnh thất bại":"Image reading failed","Không tìm thấy thông tin":"No information found",
+ "Chưa có ảnh để đọc":"No images selected","OCR chưa tải được — nhập tay nhé":"OCR could not load — please enter values manually.","Đang xử lý ảnh…":"Processing images…","Đang đọc ảnh...":"Reading images...",
+ "Đã đọc thông tin hoá đơn, nhưng chưa đo được donut. M thử ảnh rõ và chụp trọn vòng donut nhé.":"Error: Could not detect the donut. Try a clearer image showing the full donut.",
+ "OCR gặp lỗi — vui lòng nhập tay.":"OCR error — please enter values manually.","Ảnh đã sẵn sàng. Bấm đọc OCR hoặc nhập tay rồi lưu.":"Images ready. Run OCR or enter the values manually, then save.",
+ "Đã tự điền ":"Auto-filled "," trường. ":" fields. ","✓ Ước tính 8 nhóm theo kích thước múi donut (OCR nhận ":"✓ Estimated 8 categories from donut segment sizes (OCR detected ","/8 keyword).":"/8 keywords).",
+ "No estimate yet — upload a clear breakdown image and run OCR.":"No estimate yet — upload a clear breakdown image and run OCR.","Distribution must add up to 100%.":"Distribution must add up to 100%.",
+ "Please estimate or enter the category percentages so they add up to 100% before saving.":"Please estimate or enter the category percentages so they add up to 100% before saving."
+};
+function applyReportLanguage(){
+ const lang=localStorage.getItem("eco_buddy_language")||"en";
+ const root=document.getElementById("tab-content-reports"); if(!root)return;
+ const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);
+ const nodes=[]; while(walker.nextNode())nodes.push(walker.currentNode);
+ nodes.forEach(n=>{
+   if(!n.__originalText)n.__originalText=n.nodeValue;
+   const original=n.__originalText;
+   if(lang==="en"){
+     let value=original;
+     Object.entries(reportTranslations).forEach(([vi,en])=>{if(vi!==en)value=value.split(vi).join(en);});
+     n.nodeValue=value;
+   } else n.nodeValue=original;
+ });
+ root.querySelectorAll("input[placeholder],option,button[aria-label],img[alt]").forEach(el=>{
+   ["placeholder","aria-label","alt"].forEach(attr=>{
+     if(!el.hasAttribute(attr))return;
+     const key="__original_"+attr;if(!el.dataset[key])el.dataset[key]=el.getAttribute(attr);
+     let value=el.dataset[key];
+     if(lang==="en")Object.entries(reportTranslations).forEach(([vi,en])=>{if(vi!==en)value=value.split(vi).join(en);});
+     el.setAttribute(attr,value);
+   });
+ });
+}
+window.applyReportLanguage=applyReportLanguage;
+const oldSetAppLanguage=window.setAppLanguage;
+window.setAppLanguage=function(language){
+ if(typeof oldSetAppLanguage==="function")oldSetAppLanguage(language);
+ applyReportLanguage();
+};
+document.addEventListener("DOMContentLoaded",()=>{applyReportLanguage();new MutationObserver(()=>applyReportLanguage()).observe(document.getElementById("tab-content-reports")||document.body,{childList:true,subtree:true});});
+})();
+</script>
+
 </body>
 </html>
