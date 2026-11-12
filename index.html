@@ -457,12 +457,12 @@
                 <div class="flex items-center justify-between gap-2 border-b-2 border-[#5c4738] pb-2.5">
                     <div>
                         <h3 class="font-bold text-[#4a3b32] text-base flex items-center gap-2">
-                            <span>🌦️</span> Thời Tiết Dublin & Gợi Ý Mặc Đồ
+                            <span>🌦️</span> <span id="weather-heading-text">Thời Tiết Dublin & Gợi Ý Mặc Đồ</span>
                         </h3>
-                        <p class="text-xs text-[#7a6452] mt-0.5">Dữ liệu thực tế cập nhật liên tục.</p>
+                        <p id="weather-live-label" class="text-xs text-[#7a6452] mt-0.5">Dữ liệu thực tế cập nhật liên tục.</p>
                     </div>
                     <button onclick="fetchWeatherData()" class="bg-[#f0e6d6] hover:bg-[#e4d8c5] text-[#4a3b32] text-xs font-bold px-3 py-2 rounded-xl border-1.5 border-[#5c4738] shadow-[2px_2px_0px_#5c4738] transition">
-                        🔄 Làm Mới
+                        <span id="weather-refresh-label">🔄 Làm Mới</span>
                     </button>
                 </div>
 
@@ -477,7 +477,7 @@
 
                 <div class="bg-[#f5ede2] border-1.5 border-[#5c4738] p-4 rounded-2xl space-y-3 shadow-[2px_2px_0px_#5c4738]">
                     <h4 class="font-bold text-[#4a3b32] text-xs sm:text-sm flex items-center gap-2">
-                        <span>👕</span> Gợi ý trang phục khi ra ngoài:
+                        <span>👕</span> <span id="weather-outfit-heading">Gợi ý trang phục khi ra ngoài:</span>
                     </h4>
                     <div class="grid grid-cols-1 gap-2.5">
                         <div class="bg-white p-3 rounded-xl border-1.5 border-[#5c4738] text-xs text-[#4a3b32] flex items-center gap-2.5 shadow-sm">
@@ -2284,6 +2284,28 @@
             updateMascotLevel();
             closeSafetyChat();
         }
+        function renderWeatherLanguage() {
+            const vi = localStorage.getItem("eco_buddy_language") === "vi";
+            const setText = (id, value) => {
+                const el = document.getElementById(id);
+                if (el) el.textContent = value;
+            };
+            setText("weather-heading-text", vi ? "Thời Tiết Dublin & Gợi Ý Mặc Đồ" : "Dublin Weather & Outfit Suggestions");
+            setText("weather-live-label", vi ? "Dữ liệu thực tế cập nhật liên tục." : "Live weather data, updated regularly.");
+            setText("weather-refresh-label", vi ? "🔄 Làm Mới" : "🔄 Refresh");
+            setText("weather-outfit-heading", vi ? "Gợi ý trang phục khi ra ngoài:" : "What to wear outdoors:");
+            setText("outfit-text-1", vi ? "Khăn choàng cổ và găng tay ấm" : "Warm scarf and gloves");
+            setText("outfit-text-2", vi ? "Áo phao mùa đông (Xám/Xanh ấm áp)" : "Winter puffer jacket (warm grey/blue)");
+            const weather = window.latestWeather;
+            if (weather) {
+                setText("weather-condition", vi ? weather.conditionVi : weather.condition);
+                setText("weather-wind", vi ? `Gió: ${weather.wind} km/h` : `Wind: ${weather.wind} km/h`);
+            } else {
+                setText("weather-condition", vi ? "Đang tải thời tiết..." : "Loading weather...");
+                setText("weather-wind", vi ? "Gió: -- km/h" : "Wind: -- km/h");
+            }
+        }
+
         async function fetchWeatherData() {
             const weatherCondition = document.getElementById('weather-condition');
             const weatherTemp = document.getElementById('weather-temp');
@@ -2335,11 +2357,9 @@
                         updatedAt: Date.now()
                     };
 
-                    const weatherLang = localStorage.getItem("eco_buddy_language") === "vi" ? "vi" : "en";
-                    if (weatherCondition) weatherCondition.innerText = weatherLang === "vi" ? conditionVi : condition;
                     if (weatherTemp) weatherTemp.innerText = `${Math.round(temp)}°C`;
-                    if (weatherWind) weatherWind.innerText = weatherLang === "vi" ? `Gió: ${Math.round(wind)} km/h` : `Wind: ${Math.round(wind)} km/h`;
                     if (weatherIcon) weatherIcon.innerText = icon;
+                    renderWeatherLanguage();
                     return window.latestWeather;
                 }
                 return null;
