@@ -1218,7 +1218,7 @@
                     else console.warn("Image B energy distribution recognition:",detected.reason||"not detected");
                 }).catch(error=>console.warn("Image B reading failed",error));
             }
-            document.getElementById("upload-status-text").textContent="Ảnh đã sẵn sàng. Bấm đọc OCR hoặc nhập tay rồi lưu.";document.getElementById("bill-ocr-status").textContent="Có ảnh mới — cần đọc lại";if(type==="breakdown"){showBillDonutOriginal();document.querySelectorAll("[data-category-percent]").forEach(input=>input.value="");updateBillCategoryTotals();}
+            document.getElementById("upload-status-text").textContent="Ảnh đã sẵn sàng. Bấm đọc OCR hoặc nhập tay rồi lưu.";document.getElementById("bill-ocr-status").textContent="Có ảnh mới — cần đọc lại";renderBillUploadLanguage();if(type==="breakdown"){showBillDonutOriginal();document.querySelectorAll("[data-category-percent]").forEach(input=>input.value="");updateBillCategoryTotals();}
         }
         function parseBillDateParts(text){
             const months={jan:1,feb:2,mar:3,apr:4,may:5,jun:6,jul:7,aug:8,sep:9,oct:10,nov:11,dec:12};
@@ -2406,6 +2406,9 @@ const languagePairs = [
  ["📸 Take photo / choose image","📸 Chụp / chọn ảnh"],
  ["🔎 Read image with OCR","🔎 Đọc ảnh bằng OCR"],
  ["✨ Read information from uploaded images","✨ Đọc thông tin từ ảnh đã tải"],
+ ["Total Electricity Bill","Tổng tiền điện"],
+ ["Read images again","Đọc lại ảnh"],
+ ["New image selected — run OCR again","Có ảnh mới — cần đọc lại"],
  ["Waiting for images","Đang chờ ảnh"],
  ["New image selected — run OCR again","Có ảnh mới — cần đọc lại"],
  ["OCR not loaded — please enter values manually","OCR chưa tải được — vui lòng nhập tay"],
@@ -2469,11 +2472,32 @@ function applyAppLanguage(){
   }
  });
 }
+function renderBillUploadLanguage(){
+ const target=lang();
+ const button=document.getElementById("bill-ocr-button");
+ const status=document.getElementById("bill-ocr-status");
+ if(button)button.textContent=target==="vi"?"✨ Đọc thông tin từ ảnh đã tải":"✨ Read information from uploaded images";
+ if(status){
+  const current=status.textContent.trim();
+  const known={
+   "Đang chờ ảnh":["Waiting for images","Đang chờ ảnh"],
+   "Có ảnh mới — cần đọc lại":["New image selected — run OCR again","Có ảnh mới — cần đọc lại"],
+   "Chưa có ảnh để đọc":["No image selected for reading","Chưa có ảnh để đọc"],
+   "OCR chưa tải được — nhập tay nhé":["OCR unavailable — enter values manually","OCR chưa tải được — nhập tay nhé"],
+   "Đang đọc ảnh...":["Reading images...","Đang đọc ảnh..."],
+   "⏳ Đang đọc ảnh...":["⏳ Reading images...","⏳ Đang đọc ảnh..."]
+  };
+  const pair=known[current];
+  if(pair)status.textContent=target==="vi"?pair[1]:pair[0];
+  else status.textContent=translateText(current,target);
+ }
+}
 window.applyAppLanguage=applyAppLanguage;
 const originalSetLanguage=window.setAppLanguage;
 window.setAppLanguage=function(language){
  if(typeof originalSetLanguage==="function")originalSetLanguage(language);
  applyAppLanguage();
+ renderBillUploadLanguage();
  if(typeof renderCalendar==="function")renderCalendar();
  if(typeof initWeeklyContent==="function")initWeeklyContent();
  if(typeof loadWeeklyQuizQuestion==="function")loadWeeklyQuizQuestion();
