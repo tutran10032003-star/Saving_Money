@@ -1133,7 +1133,7 @@
             const inputs=[...document.querySelectorAll("[data-category-percent]")],hasValues=inputs.some(input=>input.value.trim()!=="");
             const cats=getBillCategoryValues(),total=cats.reduce((n,c)=>n+c.percent,0),t=document.getElementById("bill-category-total"),w=document.getElementById("bill-category-warning");
             if(t)t.textContent=hasValues?total.toFixed(1)+"%":"—";
-            if(w)w.textContent=!hasValues?"No estimate yet — upload a clear breakdown image and run OCR.":(Math.abs(total-100)<0.11?"✓ Total distribution is 100%.":"Distribution must add up to 100%.");
+            if(w)w.textContent=!hasValues?"Chưa có ước tính — hãy tải ảnh phân bổ rõ nét rồi chạy OCR.":(Math.abs(total-100)<0.11?"✓ Tổng phân bổ bằng 100%.":"Tỷ lệ phân bổ phải bằng 100%.");
             renderBillDonut();
         }
         function previewUploadedBill(event,type){
@@ -1242,7 +1242,7 @@
                 }else{
                     document.querySelectorAll("[data-category-percent]").forEach(input=>input.value="");
                     updateBillCategoryTotals();
-                    status.textContent="Đã đọc thông tin hoá đơn, nhưng chưa đo được donut. M thử ảnh rõ và chụp trọn vòng donut nhé.";
+                    status.textContent="Lỗi: Không nhận diện được biểu đồ donut. Hãy thử ảnh rõ hơn và chụp trọn vòng biểu đồ.";
                 }
                 updateBillCategoryTotals();updateBillPerPerson();
                 const filled=[p.start,p.end,p.amount!==undefined,p.kwh!==undefined,p.month,p.year].filter(Boolean).length;
@@ -1258,7 +1258,7 @@
             const categories=[...document.querySelectorAll("[data-category-percent]")].map(x=>({key:x.dataset.categoryPercent,label:(document.querySelector('[data-category-label="'+x.dataset.categoryPercent+'"]')||{}).value||"",percent:Number(x.value)||0}));
             if(categories.some(c=>!c.label||c.percent<0||c.percent>100)){alert("Kiểm tra tên nhóm và tỷ lệ (0–100%).");return;}
             const shareTotal=categories.reduce((sum,c)=>sum+c.percent,0);
-            if(Math.abs(shareTotal-100)>0.11){alert("Please estimate or enter the category percentages so they add up to 100% before saving.");return;}
+            if(Math.abs(shareTotal-100)>0.11){alert("Hãy nhập hoặc ước tính tỷ lệ các nhóm sao cho tổng bằng 100% trước khi lưu.");return;}
             const id=month.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")+"-"+year,record={id,month,year,bill:amount,kwh,startDate:start,endDate:end,categories,savings:"€"+(kwh*0.08).toFixed(2)+" cr"};
             const idx=billingRecords.findIndex(x=>x.id===id);if(idx>=0)billingRecords[idx]={...billingRecords[idx],...record};else billingRecords.push(record);
             saveUserData();renderBillingListing();populateDashboardFilters();updateDashboardView();updateBillPerPerson();document.getElementById("upload-status-text").textContent="✓ Đã lưu hoá đơn và cập nhật Billing Listing + Dashboard.";alert("💾 Đã lưu hoá đơn!");
@@ -1869,11 +1869,13 @@ const reportTranslations = {
 "Ghi chú: chia đều cho":"Note: split equally between","người":"people","/ người":"/ person",
 "Đọc ảnh thất bại":"Image reading failed","Không tìm thấy thông tin":"No information found",
  "Chưa có ảnh để đọc":"No images selected","OCR chưa tải được — nhập tay nhé":"OCR could not load — please enter values manually.","Đang xử lý ảnh…":"Processing images…","Đang đọc ảnh...":"Reading images...",
- "Đã đọc thông tin hoá đơn, nhưng chưa đo được donut. M thử ảnh rõ và chụp trọn vòng donut nhé.":"Error: Could not detect the donut. Try a clearer image showing the full donut.",
+ "Lỗi: Không nhận diện được biểu đồ donut. Hãy thử ảnh rõ hơn và chụp trọn vòng biểu đồ.":"Error: Could not detect the donut. Try a clearer image showing the full donut.",
+ "Chưa có ước tính — hãy tải ảnh phân bổ rõ nét rồi chạy OCR.":"No estimate yet — upload a clear breakdown image and run OCR.",
+ "✓ Tổng phân bổ bằng 100%.":"✓ Total distribution is 100%.","Tỷ lệ phân bổ phải bằng 100%.":"Distribution must add up to 100%.",
  "OCR gặp lỗi — vui lòng nhập tay.":"OCR error — please enter values manually.","Ảnh đã sẵn sàng. Bấm đọc OCR hoặc nhập tay rồi lưu.":"Images ready. Run OCR or enter the values manually, then save.",
  "Đã tự điền ":"Auto-filled "," trường. ":" fields. ","✓ Ước tính 8 nhóm theo kích thước múi donut (OCR nhận ":"✓ Estimated 8 categories from donut segment sizes (OCR detected ","/8 keyword).":"/8 keywords).",
  "No estimate yet — upload a clear breakdown image and run OCR.":"No estimate yet — upload a clear breakdown image and run OCR.","Distribution must add up to 100%.":"Distribution must add up to 100%.",
- "Please estimate or enter the category percentages so they add up to 100% before saving.":"Please estimate or enter the category percentages so they add up to 100% before saving."
+ "Hãy nhập hoặc ước tính tỷ lệ các nhóm sao cho tổng bằng 100% trước khi lưu.":"Please enter or estimate category percentages so they add up to 100% before saving."
 };
 function applyReportLanguage(){
  const lang=localStorage.getItem("eco_buddy_language")||"en";
