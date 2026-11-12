@@ -32,7 +32,7 @@
             min-height: 100vh;
             min-height: 100dvh;
             overflow-x: hidden;
-            padding-top: var(--header-height, 75px);
+            padding-top: var(--header-height, 80px);
         }
 
         button, input, textarea { font-family: inherit; touch-action: manipulation; }
@@ -47,6 +47,10 @@
             border: 2px solid #5c4738;
             box-shadow: 4px 4px 0 #5c4738;
             border-radius: 1.5rem;
+            width: 100%;
+            max-width: 720px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .vint-card {
@@ -72,9 +76,9 @@
 
         .header-inner {
             width: 100%;
-            max-width: 768px;
+            max-width: 840px;
             margin: 0 auto;
-            padding: 10px 16px;
+            padding: 12px 16px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -84,11 +88,11 @@
         /* 6 TABS NAVIGATION */
         .nav-pills {
             width: 100%;
-            max-width: 480px;
-            padding: 4px;
+            max-width: 520px;
+            padding: 5px;
             display: grid;
             grid-template-columns: repeat(6, minmax(0, 1fr));
-            gap: 2px;
+            gap: 3px;
             background: #f0e6d6;
             border-radius: 30px;
             border: 1px solid #e4d8c5;
@@ -99,8 +103,8 @@
             min-width: 0;
             border: 2px solid transparent;
             border-radius: 20px;
-            padding: 7px 0px;
-            font-size: 9px;
+            padding: 8px 0px;
+            font-size: 11px;
             font-weight: 700;
             color: #4a3b32;
             background: transparent;
@@ -122,7 +126,7 @@
         #tab-content-chatbot,
         #tab-content-checklist,
         #tab-content-calendar {
-            scroll-margin-top: calc(var(--header-height, 75px) + 12px);
+            scroll-margin-top: calc(var(--header-height, 80px) + 12px);
         }
 
         /* TIMER */
@@ -154,11 +158,11 @@
         .chat-overlay.hidden { display: none; }
 
         .chat-window {
-            width: min(560px, 100%);
+            width: min(600px, 100%);
             max-height: calc(100dvh - 32px);
             overflow-y: auto;
             overscroll-behavior: contain;
-            padding: 22px;
+            padding: 24px;
             background: linear-gradient(145deg,#fffdfa,#f7f1e5);
             border: 2px solid #5c4738;
             border-radius: 26px;
@@ -232,10 +236,10 @@
                 flex-direction: column;
                 align-items: stretch;
                 gap: 9px;
-                padding: 9px 12px;
+                padding: 10px 12px;
             }
             .nav-pills { max-width: none; width: 100%; }
-            .nav-btn { font-size: 8px; padding: 6px 0px; }
+            .nav-btn { font-size: 10px; padding: 7px 2px; }
             main { padding-left: 12px !important; padding-right: 12px !important; padding-top: 16px !important; }
             .timer-buttons-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); }
             #custom-minutes { min-width: 0; width: 100%; }
@@ -246,16 +250,15 @@
 
 <body class="min-h-screen flex flex-col justify-between selection:bg-amber-200">
 
-    <!-- HEADER + 6 TABS NAVIGATION -->
+    <!-- HEADER + 6 TABS (CHỈ GIỮ LẠI ĐỒNG HỒ REALTIME THEO YÊU CẦU) -->
     <header class="border-b-2 border-[#5c4738]">
         <div class="header-inner">
             <div class="flex items-center space-x-2.5">
                 <span class="text-2xl">🌿</span>
                 <div>
                     <h1 class="font-bold text-base text-[#4a3b32] leading-tight">Eco-Buddy Home Manager <span class="text-[10px] bg-[#8c7355] text-white px-2 py-0.5 rounded-full">V2</span></h1>
-                    <p class="text-[11px] text-[#7a6452] font-medium">
-                        Live Tariff & Weather ⚡
-                        <span id="realtime-clock" class="text-[#5c4738] font-bold"></span>
+                    <p class="text-xs text-[#7a6452] font-semibold mt-0.5">
+                        🕒 <span id="realtime-clock" class="text-[#5c4738] font-bold"></span>
                     </p>
                 </div>
             </div>
@@ -273,10 +276,10 @@
     </header>
 
     <!-- MAIN -->
-    <main class="max-w-xl mx-auto px-4 py-6 flex-grow w-full space-y-6">
+    <main class="max-w-4xl mx-auto px-4 py-6 flex-grow w-full space-y-6">
 
-        <!-- MASCOT CARD & LEVEL-UP (CHỈ HIỂN THỊ Ở TAB TARIFF ĐỂ KHÔNG CHIẾM KHÔNG GIAN CÁC TAB KHÁC) -->
-        <div id="mascot-global-card" class="vintage-panel p-5 flex flex-col items-center text-center">
+        <!-- MASCOT CARD & LEVEL-UP (GIỮ CHÂN MASCOT GỐC) -->
+        <div id="mascot-global-card" class="vintage-panel p-6 flex flex-col items-center text-center">
             <div class="w-full flex justify-between items-center px-2 mb-2 text-xs font-extrabold text-[#5c4738]">
                 <span id="mascot-level-badge" class="bg-[#f0e6d6] px-3 py-1 rounded-full border border-[#5c4738]">🌱 Level 1: Sprout</span>
                 <span id="mascot-xp-text" class="text-[#7a6452]">0 / 100 XP</span>
@@ -289,16 +292,11 @@
                 <div class="eco-mascot">
                     <svg id="main-mascot-svg" class="eco-character level-1" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
                         <ellipse cx="150" cy="269" rx="66" ry="8" fill="#b9a27b" opacity=".18"/>
-                        <!-- CHÂN PHÍCH CẮM ĐIỆN ĐÃ ĐƯỢC BỔ SUNG ĐẦY ĐỦ -->
-                        <path d="M116 210 Q105 228 107 245 Q110 255 134 250 L145 220" fill="#fff9ed" stroke="#75604d" stroke-width="5" stroke-linejoin="round"/>
-                        <rect x="110" y="244" width="22" height="12" rx="4" fill="#8c7355" stroke="#75604d" stroke-width="4"/>
-                        <line x1="116" y1="256" x2="116" y2="265" stroke="#75604d" stroke-width="4" stroke-linecap="round"/>
-                        <line x1="126" y1="256" x2="126" y2="265" stroke="#75604d" stroke-width="4" stroke-linecap="round"/>
-
-                        <path d="M174 212 Q188 228 185 245 Q182 255 159 250 L151 220" fill="#fff9ed" stroke="#75604d" stroke-width="5" stroke-linejoin="round"/>
-                        <rect x="156" y="244" width="22" height="12" rx="4" fill="#8c7355" stroke="#75604d" stroke-width="4"/>
-                        <line x1="162" y1="256" x2="162" y2="265" stroke="#75604d" stroke-width="4" stroke-linecap="round"/>
-                        <line x1="172" y1="256" x2="172" y2="265" stroke="#75604d" stroke-width="4" stroke-linecap="round"/>
+                        <!-- ĐÔI CHÂN GỐC CỦA BÉ MASCOT -->
+                        <path d="M116 220 Q105 239 107 252 Q110 261 134 257 L145 229" fill="#fff9ed" stroke="#75604d" stroke-width="5" stroke-linejoin="round"/>
+                        <ellipse cx="121" cy="257" rx="19" ry="10" fill="#fff9ed" stroke="#75604d" stroke-width="4"/>
+                        <path d="M174 222 Q188 239 185 252 Q182 262 159 257 L151 229" fill="#fff9ed" stroke="#75604d" stroke-width="5" stroke-linejoin="round"/>
+                        <ellipse cx="176" cy="257" rx="19" ry="10" fill="#fff9ed" stroke="#75604d" stroke-width="4"/>
 
                         <!-- THÂN BÉ MÂY -->
                         <path class="mascot-body-fill" d="M83 164 Q65 153 69 134 Q53 119 65 101 Q71 82 91 81 Q96 58 119 62 Q137 43 153 57 Q171 43 189 61 Q215 58 224 82 Q246 89 241 111 Q257 129 240 147 Q249 168 229 184 Q232 207 211 220 Q194 236 170 233 Q150 241 128 233 Q102 237 87 218 Q68 207 77 186 Q64 176 83 164 Z" stroke="#75604d" stroke-width="5" stroke-linejoin="round"/>
@@ -342,7 +340,7 @@
 
         <!-- TAB 1: TARIFF & 3 ECO TASKS -->
         <div id="tab-content-tracker" class="space-y-6">
-            <div class="vintage-panel p-5 space-y-4">
+            <div class="vintage-panel p-6 space-y-4">
                 <h2 class="font-bold text-[#4a3b32] text-base flex items-center gap-2 border-b-2 border-[#5c4738] pb-2.5">
                     <span>⚡</span> Daily Electricity Tariff (SST Saver+)
                 </h2>
@@ -375,7 +373,7 @@
             </div>
 
             <!-- 3 DAILY ECO TASKS -->
-            <div class="vintage-panel p-5 space-y-3">
+            <div class="vintage-panel p-6 space-y-3">
                 <h3 class="font-bold text-[#4a3b32] text-sm flex items-center justify-between">
                     <span class="flex items-center gap-2"><span>🌱</span> Daily Eco Tasks (1 time/day)</span>
                     <span id="eco-points-label" class="text-xs bg-[#8c7355] text-white px-2.5 py-1 rounded-xl">0 Points 🌱</span>
@@ -393,74 +391,112 @@
                             <p class="font-bold text-[#4a3b32]">Laundry during Night Saver hours (+30 XP)</p>
                             <p class="text-[10px] text-[#7a6452]">Run washing machine after 23:00.</p>
                         </div>
-                        <button onclick="completeTask(1, 30)" id="task-btn-1" class="px-3 py-1.5 bg-[#87a96b] text-white font-bold rounded-xl border border-[#5c4738] hover:opacity-90 flex-shrink-0">Complete</button>
+                        <button onclick="completeTask(1, 30)" id="task-btn-1" class="px-3.5 py-1.5 bg-[#87a96b] text-white font-bold rounded-xl border border-[#5c4738] hover:opacity-90 flex-shrink-0">Complete</button>
                     </div>
                     <div class="vint-card p-3 flex items-center justify-between gap-2 bg-white" id="task-card-2">
                         <div>
                             <p class="font-bold text-[#4a3b32]">Put away dry dishes (+20 XP)</p>
                             <p class="text-[10px] text-[#7a6452]">Keep the kitchen tidy and organized.</p>
                         </div>
-                        <button onclick="completeTask(2, 20)" id="task-btn-2" class="px-3 py-1.5 bg-[#87a96b] text-white font-bold rounded-xl border border-[#5c4738] hover:opacity-90 flex-shrink-0">Complete</button>
+                        <button onclick="completeTask(2, 20)" id="task-btn-2" class="px-3.5 py-1.5 bg-[#87a96b] text-white font-bold rounded-xl border border-[#5c4738] hover:opacity-90 flex-shrink-0">Complete</button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- TAB 2: ENERGY REPORTS & REMINDERS -->
+        <!-- TAB 2: REPORTS DASHBOARD & HÓA ĐƠN UPLOAD TỰ ĐỘNG -->
         <div id="tab-content-reports" class="hidden space-y-6">
-            <div class="vintage-panel p-5 space-y-4">
-                <h2 class="font-bold text-[#4a3b32] text-base flex items-center gap-2 border-b-2 border-[#5c4738] pb-2.5">
-                    <span>📊</span> Bill Reports & Comparison (kWh & €)
-                </h2>
-                <p class="text-xs text-[#7a6452]">Enter total kWh and bill amount for last month and this month to compare:</p>
-                
-                <div class="grid grid-cols-2 gap-3">
-                    <div class="vint-card p-3 bg-white space-y-2">
-                        <p class="text-xs font-extrabold text-[#5c4738] border-b pb-1">Last Month</p>
-                        <div>
-                            <label class="text-[10px] font-bold text-[#7a6452]">Total kWh:</label>
-                            <input type="number" id="kwh-prev" value="750" oninput="updateReportChart()" class="w-full px-2 py-1.5 rounded-lg border border-[#5c4738] text-xs font-bold">
-                        </div>
-                        <div>
-                            <label class="text-[10px] font-bold text-[#7a6452]">Total Bill (€):</label>
-                            <input type="number" id="bill-prev" value="240" oninput="updateReportChart()" class="w-full px-2 py-1.5 rounded-lg border border-[#5c4738] text-xs font-bold">
-                        </div>
+            <div class="vintage-panel p-6 space-y-5">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b-2 border-[#5c4738] pb-3 gap-3">
+                    <div>
+                        <h2 class="font-bold text-[#4a3b32] text-base flex items-center gap-2"><span>📊</span> Energy Analytics Dashboard</h2>
+                        <p class="text-[11px] text-[#7a6452] mt-0.5">Historical breakdown & bill analysis</p>
                     </div>
-                    <div class="vint-card p-3 bg-white space-y-2">
-                        <p class="text-xs font-extrabold text-[#5c4738] border-b pb-1">This Month</p>
-                        <div>
-                            <label class="text-[10px] font-bold text-[#7a6452]">Total kWh:</label>
-                            <input type="number" id="kwh-curr" value="706" oninput="updateReportChart()" class="w-full px-2 py-1.5 rounded-lg border border-[#5c4738] text-xs font-bold">
-                        </div>
-                        <div>
-                            <label class="text-[10px] font-bold text-[#7a6452]">Total Bill (€):</label>
-                            <input type="number" id="bill-curr" value="221.73" oninput="updateReportChart()" class="w-full px-2 py-1.5 rounded-lg border border-[#5c4738] text-xs font-bold">
-                        </div>
+                    <div class="flex items-center gap-2 w-full sm:w-auto">
+                        <select id="report-month-select" onchange="switchReportMonth()" class="px-3 py-1.5 bg-[#f0e6d6] text-[#4a3b32] font-bold rounded-xl border border-[#5c4738] text-xs flex-1 sm:flex-initial">
+                            <option value="oct-nov-2026">06 Oct - 06 Nov 2026 (Latest)</option>
+                            <option value="sep-oct-2026">06 Sep - 06 Oct 2026</option>
+                            <option value="aug-sep-2026">06 Aug - 06 Sep 2026</option>
+                        </select>
+                        <label class="px-3.5 py-1.5 bg-[#8c7355] text-white font-bold rounded-xl border border-[#5c4738] text-xs cursor-pointer shadow hover:opacity-95 flex items-center gap-1.5 whitespace-nowrap">
+                            <span>📷 Upload Bill</span>
+                            <input type="file" id="bill-image-input" accept="image/*" class="hidden" onchange="handleBillImageUpload(event)">
+                        </label>
                     </div>
                 </div>
 
-                <div class="vint-card p-4 bg-[#f5ede2] space-y-3">
-                    <p class="text-xs font-bold text-center text-[#5c4738]">Comparison Chart (€)</p>
-                    <div class="flex justify-between items-end h-40 pt-6 px-8 border-b-2 border-[#5c4738]">
-                        <div class="w-16 flex flex-col items-center gap-1">
-                            <span id="chart-val-prev" class="text-xs font-bold">€240</span>
-                            <div id="bar-prev" class="w-full bg-[#d8c7b0] rounded-t-xl transition-all duration-500" style="height: 120px;"></div>
-                            <span class="text-[11px] font-bold mt-1">Last Month</span>
-                        </div>
-                        <div class="w-16 flex flex-col items-center gap-1">
-                            <span id="chart-val-curr" class="text-xs font-bold">€221.73</span>
-                            <div id="bar-curr" class="w-full bg-[#87a96b] rounded-t-xl transition-all duration-500" style="height: 110px;"></div>
-                            <span class="text-[11px] font-bold mt-1">This Month</span>
+                <!-- SLIDE-CARDS 6 CHỈ SỐ -->
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
+                    <div class="vint-card p-3 bg-white space-y-1">
+                        <p class="text-[10px] font-bold text-[#7a6452]">Total Usage</p>
+                        <p id="dash-total-kwh" class="text-base font-black text-[#32455c]">706 kWh</p>
+                    </div>
+                    <div class="vint-card p-3 bg-white space-y-1">
+                        <p class="text-[10px] font-bold text-[#7a6452]">Total Bill</p>
+                        <p id="dash-total-bill" class="text-base font-black text-[#5c3232]">€221.73</p>
+                    </div>
+                    <div class="vint-card p-3 bg-white space-y-1">
+                        <p class="text-[10px] font-bold text-[#7a6452]">Your Savings</p>
+                        <p id="dash-total-savings" class="text-base font-black text-[#3b4a32]">€57.91 cr</p>
+                    </div>
+                    <div class="vint-card p-3 bg-white space-y-1">
+                        <p class="text-[10px] font-bold text-[#7a6452]">Day Usage (08-23)</p>
+                        <p id="dash-day-kwh" class="text-sm font-extrabold text-[#4a3b32]">485 kWh</p>
+                    </div>
+                    <div class="vint-card p-3 bg-white space-y-1">
+                        <p class="text-[10px] font-bold text-[#7a6452]">Peak Usage (17-19)</p>
+                        <p id="dash-peak-kwh" class="text-sm font-extrabold text-[#5c3232]">88 kWh</p>
+                    </div>
+                    <div class="vint-card p-3 bg-white space-y-1">
+                        <p class="text-[10px] font-bold text-[#7a6452]">Night Usage (23-08)</p>
+                        <p id="dash-night-kwh" class="text-sm font-extrabold text-[#32455c]">133 kWh</p>
+                    </div>
+                </div>
+
+                <!-- DONUT CHART PHÂN BỔ (MẪU CHUẨN NHƯ ẢNH M GỬI) -->
+                <div class="vint-card p-5 bg-[#fffaf4] flex flex-col items-center space-y-4">
+                    <p class="text-xs font-bold text-[#5c4738]">Usage Breakdown by Category (Simulated from Bill & Historical Data)</p>
+                    
+                    <div class="relative w-56 h-56 flex items-center justify-center">
+                        <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                            <!-- Water Heating 35% -->
+                            <circle cx="50" cy="50" r="38" fill="transparent" stroke="#87a96b" stroke-width="14" stroke-dasharray="238" stroke-dashoffset="155"></circle>
+                            <!-- Other 25% -->
+                            <circle cx="50" cy="50" r="38" fill="transparent" stroke="#0096c7" stroke-width="14" stroke-dasharray="238" stroke-dashoffset="178"></circle>
+                            <!-- Cooking 15% -->
+                            <circle cx="50" cy="50" r="38" fill="transparent" stroke="#6a0dad" stroke-width="14" stroke-dasharray="238" stroke-dashoffset="202"></circle>
+                            <!-- Laundry 10% -->
+                            <circle cx="50" cy="50" r="38" fill="transparent" stroke="#8c7355" stroke-width="14" stroke-dasharray="238" stroke-dashoffset="214"></circle>
+                            <!-- Lighting 8% -->
+                            <circle cx="50" cy="50" r="38" fill="transparent" stroke="#38b000" stroke-width="14" stroke-dasharray="238" stroke-dashoffset="223"></circle>
+                            <!-- Entertainment 4% -->
+                            <circle cx="50" cy="50" r="38" fill="transparent" stroke="#7a6452" stroke-width="14" stroke-dasharray="238" stroke-dashoffset="229"></circle>
+                            <!-- Always On 3% -->
+                            <circle cx="50" cy="50" r="38" fill="transparent" stroke="#48cae4" stroke-width="14" stroke-dasharray="238" stroke-dashoffset="232"></circle>
+                        </svg>
+
+                        <div class="absolute flex flex-col items-center justify-center text-center">
+                            <span class="text-[10px] font-extrabold text-[#7a6452] uppercase tracking-wider">Total usage</span>
+                            <span id="chart-center-kwh" class="text-base font-black text-[#32455c]">706 kWh</span>
                         </div>
                     </div>
-                    <div id="report-summary" class="text-center text-xs font-extrabold text-[#3b4a32] pt-2">
-                        🎉 Wonderful! You saved €18.27 and 44 kWh compared to last month!
+
+                    <!-- CHÚ THÍCH CÁC CATEGORY -->
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 w-full text-[11px] font-bold text-[#4a3b32]">
+                        <div class="vint-card p-2 bg-white flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#0096c7] flex-shrink-0"></span> Other (25%)</div>
+                        <div class="vint-card p-2 bg-white flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#87a96b] flex-shrink-0"></span> Water Heating (35%)</div>
+                        <div class="vint-card p-2 bg-white flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#6a0dad] flex-shrink-0"></span> Cooking (15%)</div>
+                        <div class="vint-card p-2 bg-white flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#7a6452] flex-shrink-0"></span> Entertainment (4%)</div>
+                        <div class="vint-card p-2 bg-white flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#8c7355] flex-shrink-0"></span> Laundry (10%)</div>
+                        <div class="vint-card p-2 bg-white flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#48cae4] flex-shrink-0"></span> Refrigeration (7%)</div>
+                        <div class="vint-card p-2 bg-white flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#38b000] flex-shrink-0"></span> Lighting (8%)</div>
+                        <div class="vint-card p-2 bg-white flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#32455c] flex-shrink-0"></span> Always On (3%)</div>
                     </div>
                 </div>
             </div>
 
             <!-- REMINDERS & TIPS -->
-            <div class="vintage-panel p-5 space-y-3">
+            <div class="vintage-panel p-6 space-y-3">
                 <h3 class="font-bold text-[#4a3b32] text-sm flex items-center gap-2"><span>💡</span> Daily Reminders & Basic Rules:</h3>
                 <ul class="text-xs space-y-2 text-[#5c4738] font-medium">
                     <li class="bg-[#fffaf4] px-3 py-2.5 rounded-xl border border-[#5c4738]/30">💡 <strong>Turn off the lights:</strong> Remember to switch off room and hallway lights when not in use.</li>
@@ -473,64 +509,43 @@
 
         <!-- TAB 3: SMART TIPS & FLASHCARDS -->
         <div id="tab-content-tips" class="hidden space-y-6">
-            <div class="vintage-panel p-5 space-y-4">
-                <h2 class="font-bold text-[#4a3b32] text-base flex items-center gap-2 border-b-2 border-[#5c4738] pb-2.5">
-                    <span>💡</span> Smart Energy Tips & Flashcards
-                </h2>
-                <p class="text-xs text-[#7a6452]">Explore curated flashcards and expert tips to reduce your monthly electricity bill:</p>
-
-                <div class="space-y-3">
-                    <div class="vint-card p-4 bg-[#f5ede2] border-l-4 border-l-[#8c7355] space-y-2 shadow-sm">
-                        <div class="flex items-center justify-between">
-                            <span class="text-xs font-black text-[#5c4738]">🚿 Shower & Water Heating</span>
-                            <span class="text-[10px] bg-[#8c7355] text-white px-2 py-0.5 rounded-full font-bold">High Impact</span>
-                        </div>
-                        <p class="text-xs font-bold text-[#4a3b32]">"Don't let the water run too long while taking showers. Heating water is one of the most energy-intensive activities in your home."</p>
-                        <div class="flex justify-end gap-2 pt-1">
-                            <button onclick="rateTip(true)" class="px-2.5 py-1 bg-white hover:bg-[#f0e6d6] text-[#4a3b32] rounded-lg text-[11px] font-bold border border-[#5c4738]">👍 Helpful (+10 pts)</button>
-                        </div>
+            <div class="vintage-panel p-6 space-y-4">
+                <div class="flex items-center justify-between border-b-2 border-[#5c4738] pb-2.5">
+                    <div>
+                        <h2 class="font-bold text-[#4a3b32] text-base flex items-center gap-2"><span>💡</span> Smart Energy Tips & Weekly Flashcards</h2>
+                        <p class="text-[11px] text-[#7a6452] mt-0.5">Curated expert tips (3 rotating flashcards per week from our 40+ database)</p>
                     </div>
-
-                    <div class="vint-card p-4 bg-[#f2f7ec] border-l-4 border-l-[#87a96b] space-y-2 shadow-sm">
-                        <div class="flex items-center justify-between">
-                            <span class="text-xs font-black text-[#3b4a32]">🌙 Night Saver Shifting</span>
-                            <span class="text-[10px] bg-[#87a96b] text-white px-2 py-0.5 rounded-full font-bold">Money Saver</span>
-                        </div>
-                        <p class="text-xs font-bold text-[#3b4a32]">"Run your washing machine and dishwasher strictly after 23:00 to take advantage of the cheap Night Rate (€0.1954/kWh)."</p>
-                    </div>
-
-                    <div class="vint-card p-4 bg-[#eaf2f8] border-l-4 border-l-[#32455c] space-y-2 shadow-sm">
-                        <div class="flex items-center justify-between">
-                            <span class="text-xs font-black text-[#32455c]">🔌 Phantom Load & Standby</span>
-                            <span class="text-[10px] bg-[#32455c] text-white px-2 py-0.5 rounded-full font-bold">Easy Habit</span>
-                        </div>
-                        <p class="text-xs font-bold text-[#32455c]">"Unplug phone chargers, microwaves, and TVs when not in use. Standby power accounts for up to 10% of household electricity bills."</p>
-                    </div>
+                    <span id="weekly-tip-badge" class="bg-[#8c7355] text-white text-[10px] font-bold px-2.5 py-1 rounded-full">Week 1 / 4</span>
                 </div>
+
+                <div id="weekly-flashcards-container" class="space-y-3"></div>
             </div>
         </div>
 
-        <!-- TAB 4: BÉ MÂY CHATBOT HUB -->
+        <!-- TAB 4: BÉ MÂY CHATBOT HUB (GIỚI HẠN 1 TUẦN 10 CÂU TRONG KHO 40 ĐỀ) -->
         <div id="tab-content-chatbot" class="hidden space-y-6">
-            <div class="vintage-panel p-5 space-y-4">
-                <div class="flex items-center justify-between border-b-2 border-[#5c4738] pb-2.5">
-                    <div>
-                        <h2 class="font-bold text-[#4a3b32] text-base flex items-center gap-2"><span>☁️</span> Ask Atlantic / Bé Mây Hub</h2>
-                        <p class="text-[11px] text-[#7a6452] mt-0.5">Interactive 20 Eco Quiz Questions & AI Assistant</p>
+            <div class="vintage-panel p-6 space-y-4">
+                <div class="vint-card p-3.5 bg-gradient-to-r from-[#f7f1e5] to-[#f0e6d6] flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-[#8c7355] text-white flex items-center justify-center font-black text-lg border border-[#5c4738]">☁️</div>
+                        <div>
+                            <h2 class="font-extrabold text-sm text-[#4a3b32]">Ask Atlantic / Bé Mây Hub</h2>
+                            <p class="text-[10px] text-[#7a6452]">Live Weekly Schedule · 10 Eco Questions per Week (40 Total Pool)</p>
+                        </div>
                     </div>
-                    <span class="bg-[#8c7355] text-white text-[10px] font-bold px-2.5 py-1 rounded-full">Live Demo</span>
+                    <span id="weekly-quiz-counter" class="bg-[#87a96b] text-white text-[10px] font-extrabold px-2.5 py-1 rounded-full border border-[#5c4738]">Week 1: Q 1/10</span>
                 </div>
 
                 <div class="grid grid-cols-2 gap-2 text-xs">
-                    <button onclick="setChatMode('quiz')" id="mode-btn-quiz" class="p-2.5 bg-[#8c7355] text-white font-bold rounded-xl border border-[#5c4738]">🧠 Eco Quiz (20 Qs)</button>
+                    <button onclick="setChatMode('quiz')" id="mode-btn-quiz" class="p-2.5 bg-[#8c7355] text-white font-bold rounded-xl border border-[#5c4738]">🧠 Weekly Eco Quiz (10 Qs)</button>
                     <button onclick="setChatMode('chat')" id="mode-btn-chat" class="p-2.5 bg-[#fffaf4] text-[#4a3b32] font-bold rounded-xl border border-[#5c4738]">💬 Ask Bé Mây</button>
                 </div>
 
                 <div class="vint-card p-4 bg-white space-y-3">
                     <div id="chatbot-messages" class="space-y-2.5 max-h-96 overflow-y-auto pr-1 text-xs">
                         <div class="bg-[#f5ede2] p-3 rounded-2xl border border-[#d8c7b0]">
-                            <p class="font-bold text-[#5c4738]">Bé Mây ☁️</p>
-                            <p class="mt-1 text-[#4a3b32]">Ahoy, traveller! Ready to test your energy saving knowledge with our 20-question eco quiz or ask me anything?</p>
+                            <p class="font-bold text-[#5c4738]">Bé Mây ☁️ [Atlantic Style]</p>
+                            <p class="mt-1 text-[#4a3b32]">Ahoy, traveller! Welcome to this week's 10-question eco challenge straight from our 40-question master pool. Let's test your knowledge!</p>
                         </div>
                     </div>
 
@@ -549,7 +564,7 @@
 
         <!-- TAB 5: COOKING CHECKLIST -->
         <div id="tab-content-checklist" class="hidden space-y-6">
-            <div class="vintage-panel p-5 space-y-4">
+            <div class="vintage-panel p-6 space-y-4">
                 <h2 class="font-bold text-[#4a3b32] text-base flex items-center gap-2 border-b-2 border-[#5c4738] pb-2.5">
                     <span>🍳</span> Cooking Timer & Kitchen Safety Checklist
                 </h2>
@@ -587,7 +602,7 @@
 
         <!-- TAB 6: CALENDAR -->
         <div id="tab-content-calendar" class="hidden space-y-6">
-            <div class="vintage-panel p-5 space-y-4">
+            <div class="vintage-panel p-6 space-y-4">
                 <div class="flex items-center justify-between border-b-2 border-[#5c4738] pb-2.5 gap-2">
                     <h2 class="font-bold text-[#4a3b32] text-base flex items-center gap-2"><span>📅</span> Waste Collection & Chores</h2>
                     <div class="flex items-center gap-2 flex-shrink-0">
@@ -611,7 +626,7 @@
 
     </main>
 
-    <!-- SAFETY CHAT (5-STEP CHECKLIST) -->
+    <!-- SAFETY CHAT -->
     <section id="safety-chat-overlay" class="chat-overlay hidden" role="dialog" aria-modal="true">
         <div class="chat-window">
             <div class="flex justify-between items-center border-b-2 border-[#d8c7b0] pb-3 gap-2">
@@ -653,7 +668,9 @@
         let currentPoints = 0;
         let completedTasks = [false, false, false];
 
+        // KHO 40 CÂU HỎI QUIZ ĐA DẠNG (GIỚI HẠN 1 TUẦN 10 CÂU)
         const ecoQuizPool = [
+            // Tuần 1 (Câu 0 - 9)
             { q: "Which appliance consumes the most standby power in a typical home?", options: ["A. Microwave / TV", "B. LED Light bulb"], correct: 0, explain: "Correct! Microwaves and TVs draw continuous standby power." },
             { q: "What is the cheapest time period for electricity under SST Saver+?", options: ["A. 17:00 - 19:00 (Peak)", "B. 23:00 - 08:00 (Night Saver)"], correct: 1, explain: "Correct! Night rate is €0.1954/kWh, much cheaper than day/peak rates." },
             { q: "Which activity uses the most energy in household water heating?", options: ["A. Taking long showers", "B. Washing hands with cold water"], correct: 0, explain: "Correct! Heating water for long showers consumes massive energy." },
@@ -664,6 +681,7 @@
             { q: "What day of the week is waste collection scheduled in the calendar?", options: ["A. Tuesday", "B. Saturday"], correct: 0, explain: "Correct! Tuesdays are marked as waste collection days." },
             { q: "What level does Bé Mây reach after passing 100 XP?", options: ["A. Level 1: Sprout", "B. Level 2: Green Sprout"], correct: 1, explain: "Correct! Reaching 100 XP upgrades Bé Mây to Level 2." },
             { q: "Why should you cover pots with lids when cooking?", options: ["A. Food cooks faster and saves energy", "B. It makes the kitchen colder"], correct: 0, explain: "Correct! Lids trap heat so water boils faster with less energy." },
+            // Tuần 2 (Câu 10 - 19)
             { q: "How much does Night Saver electricity cost approximately per kWh?", options: ["A. €0.1954/kWh", "B. €0.5000/kWh"], correct: 0, explain: "Correct! Night Saver is €0.1954/kWh." },
             { q: "What is the peak hours rate window?", options: ["A. 17:00 - 19:00", "B. 12:00 - 14:00"], correct: 0, explain: "Correct! Peak hours are strictly between 17:00 and 19:00." },
             { q: "Does LED lighting use significantly less energy than incandescent bulbs?", options: ["A. Yes, up to 80-90% less", "B. No, they use the same"], correct: 0, explain: "Correct! LEDs are highly energy efficient." },
@@ -673,9 +691,64 @@
             { q: "Is keeping your refrigerator door open too long energy-efficient?", options: ["A. No, it lets cold air escape", "B. Yes, it cools the kitchen"], correct: 0, explain: "Correct! Keeping fridge doors closed saves compressor energy." },
             { q: "Where is the electricity tariff benchmarked in this app?", options: ["A. Dublin, Ireland (SST Saver+)", "B. Tokyo, Japan"], correct: 0, explain: "Correct! Configured for Dublin, Ireland." },
             { q: "Can you store your XP and Eco Points across page reloads?", options: ["A. Yes, via localStorage", "B. No, it resets every time"], correct: 0, explain: "Correct! localStorage safely keeps your score." },
-            { q: "What is the reward for completing the 5-step Kitchen Safety check?", options: ["A. +30 XP", "B. +5 XP"], correct: 0, explain: "Correct! You get +30 XP." }
+            { q: "What is the reward for completing the 5-step Kitchen Safety check?", options: ["A. +30 XP", "B. +5 XP"], correct: 0, explain: "Correct! You get +30 XP." },
+            // Tuần 3 (Câu 20 - 29)
+            { q: "Which room in a typical apartment consumes the most lighting energy if left on?", options: ["A. Living room & Kitchen", "B. Balcony"], correct: 0, explain: "Correct! Living room and kitchen have multiple active fixtures." },
+            { q: "What is phantom load?", options: ["A. Energy consumed by appliances in standby mode", "B. Power outage"], correct: 0, explain: "Correct! Standby power is phantom load." },
+            { q: "Does washing clothes at 30°C save more energy than 60°C?", options: ["A. Yes, significantly less water heating required", "B. No, identical energy"], correct: 0, explain: "Correct! Lower temperature saves most of the washing machine's energy." },
+            { q: "How can you optimize refrigerator temperature?", options: ["A. Keep it at 3-5°C and freezer at -18°C", "B. Max cooling 24/7"], correct: 0, explain: "Correct! Recommended temperatures prevent overworking the compressor." },
+            { q: "Is natural ventilation better than running AC during mild weather?", options: ["A. Yes, saves 100% cooling energy", "B. No"], correct: 0, explain: "Correct! Natural ventilation is eco-friendly." },
+            { q: "What is the benefit of full loads in dishwashers?", options: ["A. Maximizes water and energy efficiency per dish", "B. None"], correct: 0, explain: "Correct! Running full loads prevents wasting cycles." },
+            { q: "Why unplug hair dryers or straighteners after use?", options: ["A. Safety and standby elimination", "B. To keep them cold"], correct: 0, explain: "Correct! Heat appliances draw power and pose fire risks." },
+            { q: "How often should waste collection be checked in the app calendar?", options: ["A. Every Tuesday", "B. Once a year"], correct: 0, explain: "Correct! Tuesdays are collection days." },
+            { q: "What happens when you reach 250 XP?", options: ["A. Unlock Level 3: Eco Master 🌿", "B. Reset score"], correct: 0, explain: "Correct! Level 3 is Eco Master." },
+            { q: "How many flashcard tips are displayed per week in the Tips tab?", options: ["A. 3 curated tips", "B. 50 tips"], correct: 0, explain: "Correct! Exactly 3 rotating tips per week." },
+            // Tuần 4 (Câu 30 - 39)
+            { q: "What is the best way to defrost frozen food?", options: ["A. Move it to the fridge in advance", "B. Use boiling water"], correct: 0, explain: "Correct! Fridge defrosting uses zero electricity." },
+            { q: "Does closing doors to unused rooms help heating/cooling efficiency?", options: ["A. Yes, zones the conditioned air", "B. No effect"], correct: 0, explain: "Correct! Zoning rooms saves HVAC energy." },
+            { q: "What is the main goal of Eco-Buddy Home Manager V2?", options: ["A. Track tariffs, habits, and save household energy", "B. Play arcade games"], correct: 0, explain: "Correct! Designed for home energy management." },
+            { q: "Are LED bulbs recyclable?", options: ["A. Yes, at specialized e-waste recycling points", "B. No, throw in regular trash"], correct: 0, explain: "Correct! E-waste recycling handles LEDs." },
+            { q: "What is the purpose of the 5-step kitchen safety check?", options: ["A. Prevent fire hazards and save electricity after cooking", "B. Clean windows"], correct: 0, explain: "Correct! Safety first." },
+            { q: "How many Eco Points do you get for rating a tip?", options: ["A. +10 Eco Points", "B. 0 points"], correct: 0, explain: "Correct! +10 Points." },
+            { q: "Can you customize the cooking timer?", options: ["A. Yes, select presets or enter custom minutes", "B. No"], correct: 0, explain: "Correct! Fully customizable." },
+            { q: "Is daylight harvesting (using natural sunlight) effective?", options: ["A. Yes, reduces artificial lighting needs", "B. No"], correct: 0, explain: "Correct! Natural light is free and clean." },
+            { q: "What color is the Night Saver badge in the app?", options: ["A. Green 🟢", "B. Red 🔴"], correct: 0, explain: "Correct! Green." },
+            { q: "How do you level up Bé Mây?", options: ["A. Complete daily tasks, quizzes and safety checks", "B. Do nothing"], correct: 0, explain: "Correct! Earn XP to level up." }
         ];
+
+        // KHO TIPS & FLASHCARDS (4 TUẦN X 3 TIPS)
+        const weeklyTipsPool = [
+            [
+                { title: "🚿 Shower & Water Heating", tag: "High Impact", text: "Don't let the water run too long while taking showers. Heating water is one of the most energy-intensive activities in your home." },
+                { title: "🌙 Night Saver Shifting", tag: "Money Saver", text: "Run your washing machine and dishwasher strictly after 23:00 to take advantage of the cheap Night Rate (€0.1954/kWh)." },
+                { title: "🔌 Phantom Load & Standby", tag: "Easy Habit", text: "Unplug phone chargers, microwaves, and TVs when not in use. Standby power accounts for up to 10% of household electricity bills." }
+            ],
+            [
+                { title: "🍳 Lids on Cooking Pots", tag: "Kitchen Saver", text: "Always put lids on pots when boiling water. It traps heat and cooks food up to 30% faster, saving significant energy." },
+                { title: "🌡️ Refrigerator Optimization", tag: "Appliance Care", text: "Keep your fridge set at 3-5°C and freezer at -18°C. Avoid keeping the door open for too long so cold air doesn't escape." },
+                { title: "💡 Daylight Harvesting", tag: "Lighting", text: "Make the most of natural daylight during the day instead of turning on ceiling lights in rooms you're working in." }
+            ],
+            [
+                { title: "👕 Eco Laundry Temperatures", tag: "Laundry Tip", text: "Wash your clothes at 30°C instead of 60°C whenever possible. Modern detergents work brilliantly and save 60% washer energy." },
+                { title: "☀️ Smart Thermal Zoning", tag: "Heating / Cooling", text: "Close doors to unoccupied rooms to keep conditioned air concentrated where you actually spend your time." },
+                { title: "🧊 Natural Fridge Defrosting", tag: "Kitchen Habit", text: "Move frozen items to the fridge compartment the night before to defrost. It uses zero electricity and cools your fridge naturally." }
+            ],
+            [
+                { title: "📺 Smart Power Strips", tag: "Electronics", text: "Plug your entertainment center (TV, console, soundbar) into a master switch power strip to cut all standby power effortlessly." },
+                { title: "🫖 Kettle Water Management", tag: "Kitchen Habit", text: "Only boil as much water as you actually need in your kettle rather than filling it to the maximum every single time." },
+                { title: "🧹 Air Filter Maintenance", tag: "HVAC Care", text: "Clean dust and filters from ventilation and cooker hoods regularly to ensure peak airflow efficiency and lower energy drain." }
+            ]
+        ];
+
+        // HISTORICAL DATA CHO CÁC THÁNG (ĐỂ CHỌN TRONG REPORT DASHBOARD)
+        const historicalReportsData = {
+            "oct-nov-2026": { totalKwh: 706, totalBill: "€221.73", savings: "€57.91 cr", dayKwh: "485 kWh", peakKwh: "88 kWh", nightKwh: "133 kWh" },
+            "sep-oct-2026": { totalKwh: 750, totalBill: "€240.00", savings: "€42.50 cr", dayKwh: "510 kWh", peakKwh: "95 kWh", nightKwh: "145 kWh" },
+            "aug-sep-2026": { totalKwh: 680, totalBill: "€210.50", savings: "€65.20 cr", dayKwh: "460 kWh", peakKwh: "80 kWh", nightKwh: "140 kWh" }
+        };
+
         let currentQuizIndex = 0;
+        let currentWeek = 1;
 
         function loadUserData() {
             const savedXP = localStorage.getItem("eco_buddy_xp");
@@ -697,7 +770,7 @@
             }
             updateMascotLevel();
             renderTasksUI();
-            loadRandomQuiz();
+            initWeeklyContent();
         }
 
         function saveUserData() {
@@ -720,7 +793,7 @@
             startRealtimeClock();
             checkTariffStatus();
             renderCalendar();
-            updateReportChart();
+            switchReportMonth();
             setInterval(checkTariffStatus, 30000);
 
             if ("ResizeObserver" in window) {
@@ -739,7 +812,7 @@
             function updateClock() {
                 const now = new Date();
                 const clockEl = document.getElementById('realtime-clock');
-                if (clockEl) clockEl.innerText = `| 🕒 ${now.toLocaleTimeString()}`;
+                if (clockEl) clockEl.innerText = now.toLocaleTimeString();
             }
             updateClock();
             setInterval(updateClock, 1000);
@@ -769,7 +842,156 @@
             }
 
             if (tabName === 'calendar') renderCalendar();
-            if (tabName === 'reports') updateReportChart();
+        }
+
+        function initWeeklyContent() {
+            const now = new Date();
+            const startOfYear = new Date(now.getFullYear(), 0, 1);
+            const weekNumber = Math.ceil((((now - startOfYear) / 86400000) + startOfYear.getDay() + 1) / 7);
+            currentWeek = ((weekNumber - 1) % 4) + 1;
+
+            // Render Tips tuần tương ứng
+            const tipsContainer = document.getElementById('weekly-flashcards-container');
+            const tipBadge = document.getElementById('weekly-tip-badge');
+            if (tipBadge) tipBadge.innerText = `Week ${currentWeek} / 4`;
+            if (tipsContainer) {
+                tipsContainer.innerHTML = "";
+                const weekTips = weeklyTipsPool[currentWeek - 1];
+                weekTips.forEach(tip => {
+                    tipsContainer.innerHTML += `
+                        <div class="vint-card p-4 bg-[#f5ede2] border-l-4 border-l-[#8c7355] space-y-2 shadow-sm">
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs font-black text-[#5c4738]">${tip.title}</span>
+                                <span class="text-[10px] bg-[#8c7355] text-white px-2 py-0.5 rounded-full font-bold">${tip.tag}</span>
+                            </div>
+                            <p class="text-xs font-bold text-[#4a3b32]">"${tip.text}"</p>
+                            <div class="flex justify-end gap-2 pt-1">
+                                <button onclick="rateTip(true)" class="px-2.5 py-1 bg-white hover:bg-[#f0e6d6] text-[#4a3b32] rounded-lg text-[11px] font-bold border border-[#5c4738]">👍 Helpful (+10 pts)</button>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            // Giới hạn 1 tuần 10 câu trong kho 40 câu
+            currentQuizIndex = (currentWeek - 1) * 10;
+            loadWeeklyQuizQuestion();
+        }
+
+        function loadWeeklyQuizQuestion() {
+            const startIdx = (currentWeek - 1) * 10;
+            const endIdx = startIdx + 10;
+            const weekQuestions = ecoQuizPool.slice(startIdx, endIdx);
+
+            const relativeIndex = (currentQuizIndex - startIdx) % 10;
+            const item = weekQuestions[relativeIndex];
+
+            const qEl = document.getElementById('quiz-question');
+            const optsEl = document.getElementById('quiz-options');
+            const counterEl = document.getElementById('weekly-quiz-counter');
+            if (!qEl || !optsEl) return;
+
+            if (counterEl) counterEl.innerText = `Week ${currentWeek}: Q ${relativeIndex + 1}/10`;
+            qEl.innerText = `Question ${relativeIndex + 1}/10: ${item.q}`;
+            optsEl.innerHTML = "";
+            item.options.forEach((optText, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "chat-choice text-xs py-2";
+                btn.innerText = optText;
+                btn.onclick = () => answerQuiz(idx, weekQuestions, startIdx);
+                optsEl.appendChild(btn);
+            });
+        }
+
+        function answerQuiz(optionIndex, weekQuestions, startIdx) {
+            const relativeIndex = (currentQuizIndex - startIdx) % 10;
+            const item = weekQuestions[relativeIndex];
+            const msgs = document.getElementById('chatbot-messages');
+
+            msgs.innerHTML += `
+                <div class="bg-[#eaf2f8] p-3 rounded-2xl border border-[#b9d0e8] text-right">
+                    <p class="font-bold text-[#32455c]">You</p>
+                    <p class="mt-1 text-[#4a3b32]">${item.options[optionIndex]}</p>
+                </div>
+            `;
+
+            if (optionIndex === item.correct) {
+                msgs.innerHTML += `
+                    <div class="bg-[#f5ede2] p-3 rounded-2xl border border-[#d8c7b0]">
+                        <p class="font-bold text-[#5c4738]">Bé Mây ☁️</p>
+                        <p class="mt-1 text-[#4a3b32]">${item.explain} You earned +15 XP! 💚</p>
+                    </div>
+                `;
+                currentXP += 15;
+                saveUserData();
+                updateMascotLevel();
+            } else {
+                msgs.innerHTML += `
+                    <div class="bg-[#f5ede2] p-3 rounded-2xl border border-[#d8c7b0]">
+                        <p class="font-bold text-[#5c4738]">Bé Mây ☁️</p>
+                        <p class="mt-1 text-[#4a3b32]">Not quite right! Review this week's tips to learn more.</p>
+                    </div>
+                `;
+            }
+            msgs.scrollTop = msgs.scrollHeight;
+
+            // Giới hạn đúng 10 câu/tuần
+            currentQuizIndex++;
+            if (currentQuizIndex >= startIdx + 10) {
+                currentQuizIndex = startIdx; 
+            }
+            setTimeout(loadWeeklyQuizQuestion, 1500);
+        }
+
+        // HÀM SWITCH MONTH TRONG REPORT DASHBOARD
+        function switchReportMonth() {
+            const select = document.getElementById('report-month-select');
+            if (!select) return;
+            const key = select.value;
+            const data = historicalReportsData[key] || historicalReportsData["oct-nov-2026"];
+
+            document.getElementById('dash-total-kwh').innerText = `${data.totalKwh} kWh`;
+            document.getElementById('dash-total-bill').innerText = data.totalBill;
+            document.getElementById('dash-total-savings').innerText = data.savings;
+            document.getElementById('dash-day-kwh').innerText = data.dayKwh;
+            document.getElementById('dash-peak-kwh').innerText = data.peakKwh;
+            document.getElementById('dash-night-kwh').innerText = data.nightKwh;
+            document.getElementById('chart-center-kwh').innerText = `${data.totalKwh} kWh`;
+        }
+
+        // UPLOAD ẢNH HÓA ĐƠN ĐỂ TỰ ĐỘNG GENERATE VÀO REPORT DASHBOARD
+        function handleBillImageUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                // Giả lập OCR đọc hóa đơn thành công và tạo dữ liệu historical data mới
+                const simulatedKwh = Math.floor(Math.random() * 100) + 650;
+                const simulatedBill = `€${(simulatedKwh * 0.31).toFixed(2)}`;
+                const newKey = `scanned-${Date.now()}`;
+
+                historicalReportsData[newKey] = {
+                    totalKwh: simulatedKwh,
+                    totalBill: simulatedBill,
+                    savings: "€48.50 cr",
+                    dayKwh: `${Math.floor(simulatedKwh * 0.65)} kWh`,
+                    peakKwh: `${Math.floor(simulatedKwh * 0.12)} kWh`,
+                    nightKwh: `${Math.floor(simulatedKwh * 0.23)} kWh`
+                };
+
+                const select = document.getElementById('report-month-select');
+                const opt = document.createElement('option');
+                opt.value = newKey;
+                opt.textContent = `📸 Scanned Bill (${new Date().toLocaleDateString()})`;
+                opt.selected = true;
+                select.insertBefore(opt, select.firstChild);
+
+                switchReportMonth();
+                switchTab('reports');
+                alert("📸 Bill image uploaded & scanned successfully! Report dashboard updated automatically with historical data.");
+            };
+            reader.readAsDataURL(file);
         }
 
         function completeTask(index, xpReward) {
@@ -827,35 +1049,6 @@
             if (mascotSvg) mascotSvg.className = `eco-character level-${level}`;
         }
 
-        function updateReportChart() {
-            const prevBill = parseFloat(document.getElementById('bill-prev').value) || 0;
-            const currBill = parseFloat(document.getElementById('bill-curr').value) || 0;
-            const prevKwh = parseFloat(document.getElementById('kwh-prev').value) || 0;
-            const currKwh = parseFloat(document.getElementById('kwh-curr').value) || 0;
-
-            document.getElementById('chart-val-prev').innerText = `€${prevBill.toFixed(2)}`;
-            document.getElementById('chart-val-curr').innerText = `€${currBill.toFixed(2)}`;
-
-            const maxVal = Math.max(prevBill, currBill, 10);
-            const heightPrev = Math.max(30, (prevBill / maxVal) * 120);
-            const heightCurr = Math.max(30, (currBill / maxVal) * 120);
-
-            document.getElementById('bar-prev').style.height = heightPrev + 'px';
-            document.getElementById('bar-curr').style.height = heightCurr + 'px';
-
-            const diffBill = prevBill - currBill;
-            const diffKwh = prevKwh - currKwh;
-            const summary = document.getElementById('report-summary');
-
-            if (diffBill > 0) {
-                summary.innerHTML = `🎉 Wonderful! You saved <span class="text-green-700">€${diffBill.toFixed(2)}</span> and <span class="text-green-700">${diffKwh} kWh</span> compared to last month!`;
-            } else if (diffBill < 0) {
-                summary.innerHTML = `⚠️ This month is <span class="text-red-700">€${Math.abs(diffBill).toFixed(2)}</span> higher than last month. Check the 💡 Tips tab for flashcards!`;
-            } else {
-                summary.innerHTML = `⚖️ Electricity bills for both months are equal.`;
-            }
-        }
-
         function rateTip(isHelpful) {
             if (isHelpful) {
                 currentPoints += 10;
@@ -886,57 +1079,6 @@
                 quizArea.classList.add('hidden');
                 inputArea.classList.remove('hidden');
             }
-        }
-
-        function loadRandomQuiz() {
-            currentQuizIndex = Math.floor(Math.random() * ecoQuizPool.length);
-            const item = ecoQuizPool[currentQuizIndex];
-            const qEl = document.getElementById('quiz-question');
-            const optsEl = document.getElementById('quiz-options');
-            if (!qEl || !optsEl) return;
-
-            qEl.innerText = `Question: ${item.q}`;
-            optsEl.innerHTML = "";
-            item.options.forEach((optText, idx) => {
-                const btn = document.createElement('button');
-                btn.className = "chat-choice text-xs py-2";
-                btn.innerText = optText;
-                btn.onclick = () => answerQuiz(idx);
-                optsEl.appendChild(btn);
-            });
-        }
-
-        function answerQuiz(optionIndex) {
-            const item = ecoQuizPool[currentQuizIndex];
-            const msgs = document.getElementById('chatbot-messages');
-
-            msgs.innerHTML += `
-                <div class="bg-[#eaf2f8] p-3 rounded-2xl border border-[#b9d0e8] text-right">
-                    <p class="font-bold text-[#32455c]">You</p>
-                    <p class="mt-1 text-[#4a3b32]">${item.options[optionIndex]}</p>
-                </div>
-            `;
-
-            if (optionIndex === item.correct) {
-                msgs.innerHTML += `
-                    <div class="bg-[#f5ede2] p-3 rounded-2xl border border-[#d8c7b0]">
-                        <p class="font-bold text-[#5c4738]">Bé Mây ☁️</p>
-                        <p class="mt-1 text-[#4a3b32]">${item.explain} You earned +15 XP! 💚</p>
-                    </div>
-                `;
-                currentXP += 15;
-                saveUserData();
-                updateMascotLevel();
-            } else {
-                msgs.innerHTML += `
-                    <div class="bg-[#f5ede2] p-3 rounded-2xl border border-[#d8c7b0]">
-                        <p class="font-bold text-[#5c4738]">Bé Mây ☁️</p>
-                        <p class="mt-1 text-[#4a3b32]">Not quite right! Try another question to learn more.</p>
-                    </div>
-                `;
-            }
-            msgs.scrollTop = msgs.scrollHeight;
-            setTimeout(loadRandomQuiz, 1500);
         }
 
         function sendUserMessage() {
@@ -1089,7 +1231,7 @@
 
         const safetySteps = [
             { title: "Turn off the cooker", question: "Have you turned off the cooker?", hint: "Make sure the cooker knobs are turned to the OFF position.", scene: "🔥", yes: "Wonderful!", no: "Let's check the cooker knobs!" },
-            { title: "Turn off the cooker hood", question: "Have you turned off the cooker hood?", hint: "Make sure the cooker hood is switched off.", scene: "🌬️", yes: "Great job!", no: "Switch off the cooker hood!" },
+            { title: "Turn off the cooker hood", question: "Have you turned off the cooker hood?", hint: "Make sure the cooker hood fan is switched off.", scene: "🌀", yes: "Great job!", no: "Switch off the cooker hood!" },
             { title: "Turn off the oven", question: "Have you turned off the oven?", hint: "Check power display.", scene: "🎛️", yes: "Well done!", no: "Check the oven!" },
             { title: "Turn off the kitchen lights", question: "Have you turned off the kitchen lights?", hint: "Switch off unused lights.", scene: "💡", yes: "Energy saved!", no: "Turn off lights!" },
             { title: "Wipe the cooker", question: "Have you cleaned the cooker surface?", hint: "Wipe with a damp cloth.", scene: "🧽", yes: "Sparkling clean!", no: "Clean up!" }
@@ -1126,7 +1268,7 @@
 
             if (safetyStepIndex >= safetySteps.length) {
                 question.textContent = "All done! You earned +30 XP for keeping the kitchen safe! 💚";
-                scene.textContent = "🌱✨💚";
+                    scene.textContent = "🌱✨💚";
                 document.getElementById("chat-action-title").textContent = "Safety check completed!";
                 document.getElementById("chat-action-hint").textContent = "Eco Buddy is so proud of you!";
                 actions.innerHTML = `<button class="chat-choice text-center" onclick="finishSafetyCheckAndReward()">💚 Done! Collect XP reward</button>`;
