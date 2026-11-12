@@ -1358,22 +1358,60 @@
         }
         function parseBillBands(text){
             const out={};
-            const toNumber=t=>Number(String(t).replace(/,/g,"").replace(/[Oo](?=\d)/g,"0").replace(/[Il|](?=\d)/g,"1").replace(",","."));
+            const fix=t=>String(t).replace(/[Oo](?=\d)/g,"0").replace(/[Il|](?=\d)/g,"1");
+            const num=t=>Number(fix(t).replace(/,/g,"").replace(",","."));
             String(text||"").split(/\n/).forEach(line=>{
                 if(/standing|levy|charge/i.test(line))return;
                 const match=line.match(/\b(day|peak|night)\b/i);if(!match)return;
                 const key=match[1].toLowerCase();if(out[key])return;
-                // Strip tariff hours first; preserve currency amounts such as €34.92.
                 const clean=line.replace(/\b\d{1,2}\s*[-–—]\s*\d{1,2}\s*(?:am|pm)\b/gi," ")
                     .replace(/\b\d{1,2}\s*(?:am|pm)\b\s*(?:[-–—to]+\s*\d{1,2}\s*(?:am|pm)\b)?/gi," ")
                     .replace(/\b\d{1,2}:\d{2}\b/g," ");
-                const tokens=(clean.match(/[\dOoIl|]+(?:[.,]\d+)?/g)||[]).map(t=>t.replace(/[Oo](?=\d)/g,"0").replace(/[Il|](?=\d)/g,"1"));
+                const tokens=(clean.match(/[\dOoIl|]+(?:[.,]\d+)?/g)||[]).map(fix);
                 const pi=tokens.findIndex(t=>/^0[.,]\d{4}$/.test(t));if(pi<1)return;
                 const kwhToken=[...tokens.slice(0,pi)].reverse().find(t=>/^\d{2,5}(?:[.,]\d{1,2})?$/.test(t));if(!kwhToken)return;
                 const amountToken=tokens.slice(pi+1).find(t=>/^\d{1,5}[.,]\d{2}$/.test(t));
-                const kwh=toNumber(kwhToken),price=toNumber(tokens[pi]),amount=amountToken?toNumber(amountToken):null;
+                const kwh=num(kwhToken),price=num(tokens[pi]),amount=amountToken?num(amountToken):Math.round(kwh*price*100)/100;
                 if(Number.isFinite(kwh)&&Number.isFinite(price))out[key]={kwh,price,amount};
             });
+            return out;
+        }
+        function billWordText(w){return String(w&&w.text||"").trim();}
+        function billWordX(w){return (Number(w.bbox.x0)+Number(w.bbox.x1))/2;}
+        function billWordY(w){return (Number(w.bbox.y0)+Number(w.bbox.y1))/2;}
+        function findBillColumnX(words,first,second){
+            const ws=(words||[]).filter(w=>w&&w.bbox&&w.text);
+            const a=ws.filter(w=>new RegExp("^"+first+"$","i").test(billWordText(w)));
+            const b=ws.filter(w=>new RegExp("^"+second+"$","i").test(billWordText(w)));
+            for(const x of a)for(const y of b){
+                const h=Math.max(5,x.bbox.y1-x.bbox.y0,y.bbox.y1-y.bbox.y0);
+                if(Math.abs(billWordY(x)-billWordY(y))<=h*2.2)return (billWordX(x)+billWordX(y))/2;
+            }
+            const single=ws.find(w=>new RegExp("^"+first+"$","i").test(billWordText(w)));
+            return single?billWordX(single):null;
+        }
+        function parseBillBandsFromColumn(words,W,H,columnX){
+            if(!Number.isFinite(columnX))return {};
+            const ws=(words||[]).filter(w=>w&&w.bbox&&w.text),out={};
+            const defaults={day:.3719,peak:.3968,night:.1954};
+            for(const key of ["day","peak","night"]){
+                const label=ws.find(w=>new RegExp("^"+key+"$","i").test(billWordText(w)));
+                if(!label)continue;
+                const rowH=Math.max(7,label.bbox.y1-label.bbox.y0),cy=billWordY(label),tol=Math.max(rowH*1.9,H*.012);
+                const row=ws.filter(w=>Math.abs(billWordY(w)-cy)<=tol);
+                const numeric=row.filter(w=>{
+                    const t=billWordText(w).replace(/[Oo](?=\d)/g,"0").replace(/[Il|](?=\d)/g,"1");
+                    return /^\d{2,5}$/.test(t)&&Math.abs(billWordX(w)-columnX)<=W*.16;
+                }).sort((a,b)=>Math.abs(billWordX(a)-columnX)-Math.abs(billWordX(b)-columnX));
+                if(!numeric.length)continue;
+                const kwh=Number(numeric[0].text.replace(/[Oo]/g,"0").replace(/[Il|]/g,"1"));
+                if(!Number.isFinite(kwh)||kwh<0)continue;
+                const rateWord=row.find(w=>/^0[.,]\d{4}$/.test(billWordText(w).replace(/[Oo]/g,"0")));
+                const amountWord=row.find(w=>/^\d{1,5}[.,]\d{2}$/.test(billWordText(w).replace(/,/g,".")));
+                const price=rateWord?Number(rateWord.text.replace(",",".").replace(/[Oo]/g,"0")):defaults[key];
+                const amount=amountWord?Number(amountWord.text.replace(",", ".")):Math.round(kwh*price*100)/100;
+                if(Number.isFinite(price)&&price>0)out[key]={kwh,price,amount};
+            }
             return out;
         }
         function validBillBand(r){return !!r&&Number.isFinite(r.kwh)&&r.kwh>=0&&Number.isFinite(r.price)&&r.price>0&&r.amount!==null&&Number.isFinite(r.amount)&&Math.abs(r.kwh*r.price-r.amount)<=0.06;}
@@ -1381,10 +1419,10 @@
         function billBandsRect(words,W,H,above,below){
             above=above||4;below=below||6;
             const ws=(words||[]).filter(w=>w&&w.bbox&&w.text),yc=w=>(w.bbox.y0+w.bbox.y1)/2;
-            const day=ws.find(w=>/^\(?day\)?$/i.test(w.text.trim())&&ws.some(v=>v!==w&&/[ap]m/i.test(v.text)&&Math.abs(yc(v)-yc(w))<(w.bbox.y1-w.bbox.y0)));
+            const day=ws.find(w=>/^day$/i.test(w.text.trim())&&ws.some(v=>v!==w&&/[ap]m/i.test(v.text)&&Math.abs(yc(v)-yc(w))<(w.bbox.y1-w.bbox.y0)));
             if(!day)return null;
             const h=Math.max(10,day.bbox.y1-day.bbox.y0),y0=Math.max(0,Math.round(day.bbox.y0-above*h)),y1=Math.min(H,Math.round(day.bbox.y1+below*h));
-            return{x:0,y:y0,w:Math.round(W*0.72),h:y1-y0};
+            return{x:0,y:y0,w:W,h:y1-y0};
         }
         async function cropBillBandForOcr(file,rect,scale){
             const bmp=await createImageBitmap(file),canvas=document.createElement("canvas");
@@ -1401,20 +1439,34 @@
             BILL_BANDS.forEach(([key])=>{const rows=candidates.map(c=>c&&c[key]).filter(Boolean);const best=rows.find(validBillBand)||rows[0];if(best)out[key]=best;});
             return out;
         }
-        async function readBillBandsFromImage(worker,file,words,fullText){
+        async function readBillBandsFromImage(worker,file,words,fullText,expectedTotal){
             const candidates=[parseBillBands(fullText)];
+            const W=Math.max(1,...(words||[]).map(w=>w.bbox&&w.bbox.x1||0)),H=Math.max(1,...(words||[]).map(w=>w.bbox&&w.bbox.y1||0));
+            const usageX=findBillColumnX(words,"Usage","Unit");
+            const usageRows=parseBillBandsFromColumn(words,W,H,usageX);
+            if(Object.keys(usageRows).length)candidates.unshift(usageRows);
             if(scoreBillBands(mergeBillBands(candidates))<3){
                 try{
-                    const bmp=await createImageBitmap(file),W=bmp.width,H=bmp.height;bmp.close();
+                    const bmp=await createImageBitmap(file),iw=bmp.width,ih=bmp.height;bmp.close();
                     for(const [above,below,psms] of [[4.5,13,["4"]],[4,6,["4","6"]],[3,9,["4"]]]){
-                        const rect=billBandsRect(words,W,H,above,below);if(!rect)break;
+                        const rect=billBandsRect(words,iw,ih,above,below);if(!rect)break;
                         const crop=await cropBillBandForOcr(file,rect,3);
                         for(const psm of psms){await worker.setParameters({tessedit_pageseg_mode:psm});const result=await worker.recognize(crop);candidates.push(parseBillBands(result.data.text));}
                         if(scoreBillBands(mergeBillBands(candidates))>=3)break;
                     }
                 }catch(error){console.warn("Band crop OCR failed",error);}
             }
-            return mergeBillBands(candidates);
+            let found=mergeBillBands(candidates);
+            if(scoreBillBands(found)<3){
+                const meterX=findBillColumnX(words,"Meter","Number");
+                const meterRows=parseBillBandsFromColumn(words,W,H,meterX);
+                const vals=["day","peak","night"].map(k=>meterRows[k]&&meterRows[k].kwh);
+                const sum=vals.every(Number.isFinite)?vals.reduce((a,b)=>a+b,0):NaN,target=Number(expectedTotal);
+                if(Number.isFinite(sum)&&Number.isFinite(target)&&target>0&&Math.abs(sum-target)<=Math.max(2,target*.01)){
+                    found={...found,...meterRows};
+                }
+            }
+            return found;
         }
         function applyBillBands(found){
             const totalInput=_bbEl("edit-bill-kwh"),total=totalInput&&totalInput.value!==""?Number(totalInput.value):null;
