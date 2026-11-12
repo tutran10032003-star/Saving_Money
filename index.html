@@ -81,9 +81,19 @@
             margin: 0 auto;
             padding: 12px 16px;
             display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
+            flex-direction: column;
+            align-items: stretch;
+            gap: 9px;
+        }
+
+        .header-inner > .flex.items-center.justify-between {
+            width: 100%;
+        }
+
+        .nav-pills {
+            width: 100%;
+            max-width: 100%;
+            grid-template-columns: repeat(7, minmax(0, 1fr));
         }
 
         /* 6 TABS NAVIGATION (TĂNG SIZE CHỮ TO RÕ HƠN NỮA) */
@@ -968,12 +978,8 @@
             ]
         ];
 
-        // HISTORICAL BILLING DATA STORE (CÓ SẴN THÁNG 9, 10, 11)
-        let billingRecords = [
-            { id: "september-2026", month: "September", year: 2026, bill: 123.00, kwh: 390, savings: "€65.20 cr" },
-            { id: "october-2026", month: "October", year: 2026, bill: 240.00, kwh: 750, savings: "€42.50 cr" },
-            { id: "november-2026", month: "November", year: 2026, bill: 221.73, kwh: 706, savings: "€57.91 cr" }
-        ];
+        // Start with an empty billing history. Only user-uploaded bills are shown.
+        let billingRecords = [];
 
         let currentQuizIndex = 0;
         let currentWeek = 1;
@@ -986,7 +992,19 @@
             const savedBills = localStorage.getItem("eco_buddy_bills");
 
             if (savedBills) {
-                try { billingRecords = JSON.parse(savedBills); } catch(e) {}
+                try {
+                    const parsedBills = JSON.parse(savedBills);
+                    if (Array.isArray(parsedBills)) {
+                        // Remove only the three legacy demo bills; keep every user-uploaded bill.
+                        const demoBillIds = new Set(["september-2026", "october-2026", "november-2026"]);
+                        billingRecords = parsedBills.filter(bill => bill && !demoBillIds.has(bill.id));
+                        if (billingRecords.length !== parsedBills.length) {
+                            localStorage.setItem("eco_buddy_bills", JSON.stringify(billingRecords));
+                        }
+                    }
+                } catch(e) {
+                    billingRecords = [];
+                }
             }
 
             const todayStr = new Date().toDateString();
