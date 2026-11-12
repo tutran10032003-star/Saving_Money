@@ -1,0 +1,27 @@
+
+{
+  "id": "/Saving_Money/",
+  "name": "Eco-Buddy Home Manager",
+  "short_name": "Eco-Buddy",
+  "description": "Your friendly home energy-saving companion",
+  "start_url": "/Saving_Money/",
+  "scope": "/Saving_Money/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#fffaf0",
+  "theme_color": "#d8e8c8",
+  "icons": [
+    {
+      "src": "/Saving_Money/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/Saving_Money/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
