@@ -81,14 +81,14 @@
             gap: 12px;
         }
 
-        /* 5 TABS NGANG HÀNG */
+        /* 6 TABS NGANG HÀNG GỌN GÀNG */
         .nav-pills {
             width: 100%;
-            max-width: 440px;
-            padding: 5px;
+            max-width: 480px;
+            padding: 4px;
             display: grid;
-            grid-template-columns: repeat(5, minmax(0, 1fr));
-            gap: 3px;
+            grid-template-columns: repeat(6, minmax(0, 1fr));
+            gap: 2px;
             background: #f0e6d6;
             border-radius: 30px;
             border: 1px solid #e4d8c5;
@@ -99,8 +99,8 @@
             min-width: 0;
             border: 2px solid transparent;
             border-radius: 20px;
-            padding: 8px 1px;
-            font-size: 10px;
+            padding: 7px 0px;
+            font-size: 9px;
             font-weight: 700;
             color: #4a3b32;
             background: transparent;
@@ -118,6 +118,7 @@
 
         #tab-content-tracker,
         #tab-content-reports,
+        #tab-content-tips,
         #tab-content-chatbot,
         #tab-content-checklist,
         #tab-content-calendar {
@@ -196,7 +197,7 @@
         .chat-choice:hover { background: #f0e6d6; }
         .chat-choice:active { transform: scale(.98); }
 
-        /* MASCOT STYLING & DYNAMIC EXPRESSIONS */
+        /* MASCOT */
         .eco-mascot {
             width: 200px;
             height: 200px;
@@ -217,17 +218,15 @@
             transform-origin: center bottom;
         }
 
-        /* Biểu cảm thay đổi theo Level/Trạng thái */
         .eco-character.level-1 .mascot-body-fill { fill: #fff9ed; }
-        .eco-character.level-2 .mascot-body-fill { fill: #eef7eb; } /* Xanh lá nhạt khi lên level 2 */
-        .eco-character.level-3 .mascot-body-fill { fill: #fcf3df; } /* Vàng ấm khi lên level 3 */
+        .eco-character.level-2 .mascot-body-fill { fill: #eef7eb; }
+        .eco-character.level-3 .mascot-body-fill { fill: #fcf3df; }
 
         @keyframes mascot-float {
             0%,100% { transform: translateY(0); }
             50% { transform: translateY(-6px); }
         }
 
-        /* MOBILE */
         @media (max-width: 640px) {
             .header-inner {
                 flex-direction: column;
@@ -235,57 +234,19 @@
                 gap: 9px;
                 padding: 9px 12px;
             }
-
-            .nav-pills {
-                max-width: none;
-                width: 100%;
-            }
-
-            .nav-btn {
-                font-size: 9px;
-                padding: 8px 1px;
-            }
-
-            main {
-                padding-left: 12px !important;
-                padding-right: 12px !important;
-                padding-top: 16px !important;
-            }
-
-            .timer-buttons-grid {
-                display: grid;
-                grid-template-columns: repeat(2,minmax(0,1fr));
-            }
-
-            #custom-minutes {
-                min-width: 0;
-                width: 100%;
-            }
-
-            .chat-overlay {
-                align-items: center;
-                padding: 10px;
-                padding-top: max(10px,env(safe-area-inset-top));
-                padding-bottom: max(10px,env(safe-area-inset-bottom));
-            }
-
-            .chat-window {
-                max-height: calc(100dvh - 20px);
-                padding: 16px;
-                border-radius: 22px;
-            }
-
-            .eco-mascot {
-                width: 180px;
-                height: 180px;
-            }
+            .nav-pills { max-width: none; width: 100%; }
+            .nav-btn { font-size: 8px; padding: 6px 0px; }
+            main { padding-left: 12px !important; padding-right: 12px !important; padding-top: 16px !important; }
+            .timer-buttons-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); }
+            #custom-minutes { min-width: 0; width: 100%; }
+            .eco-mascot { width: 180px; height: 180px; }
         }
     </style>
 </head>
 
 <body class="min-h-screen flex flex-col justify-between selection:bg-amber-200">
 
-    <!-- HEADER + NAVIGATION -->
+    <!-- HEADER + 6 TABS NAVIGATION -->
     <header class="border-b-2 border-[#5c4738]">
         <div class="header-inner">
             <div class="flex items-center space-x-2.5">
@@ -299,10 +260,11 @@
                 </div>
             </div>
 
-            <!-- 5 TABS -->
+            <!-- 6 TABS -->
             <nav class="nav-pills" aria-label="Main navigation">
                 <button onclick="switchTab('tracker')" id="tab-btn-tracker" class="nav-btn active">⚡ Tariff</button>
                 <button onclick="switchTab('reports')" id="tab-btn-reports" class="nav-btn">📊 Reports</button>
+                <button onclick="switchTab('tips')" id="tab-btn-tips" class="nav-btn">💡 Tips</button>
                 <button onclick="switchTab('chatbot')" id="tab-btn-chatbot" class="nav-btn">☁️ Bé Mây</button>
                 <button onclick="switchTab('checklist')" id="tab-btn-checklist" class="nav-btn">🍳 Cooking</button>
                 <button onclick="switchTab('calendar')" id="tab-btn-calendar" class="nav-btn">📅 Calendar</button>
@@ -327,39 +289,31 @@
                 <div class="eco-mascot">
                     <svg id="main-mascot-svg" class="eco-character level-1" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
                         <ellipse cx="150" cy="269" rx="66" ry="8" fill="#b9a27b" opacity=".18"/>
-                        <!-- LEGS -->
                         <path d="M116 220 Q105 239 107 252 Q110 261 134 257 L145 229" fill="#fff9ed" stroke="#75604d" stroke-width="5" stroke-linejoin="round"/>
                         <ellipse cx="121" cy="257" rx="19" ry="10" fill="#fff9ed" stroke="#75604d" stroke-width="4"/>
                         <path d="M174 222 Q188 239 185 252 Q182 262 159 257 L151 229" fill="#fff9ed" stroke="#75604d" stroke-width="5" stroke-linejoin="round"/>
                         <ellipse cx="176" cy="257" rx="19" ry="10" fill="#fff9ed" stroke="#75604d" stroke-width="4"/>
 
-                        <!-- BODY -->
                         <path class="mascot-body-fill" d="M83 164 Q65 153 69 134 Q53 119 65 101 Q71 82 91 81 Q96 58 119 62 Q137 43 153 57 Q171 43 189 61 Q215 58 224 82 Q246 89 241 111 Q257 129 240 147 Q249 168 229 184 Q232 207 211 220 Q194 236 170 233 Q150 241 128 233 Q102 237 87 218 Q68 207 77 186 Q64 176 83 164 Z" stroke="#75604d" stroke-width="5" stroke-linejoin="round"/>
 
-                        <!-- LEAVES -->
                         <g>
                             <path d="M145 57 Q108 45 103 23 Q134 17 151 46 Z" fill="#a3a875" stroke="#756b49" stroke-width="4"/>
                             <path d="M151 48 Q171 13 198 25 Q194 52 158 62 Z" fill="#7d9368" stroke="#756b49" stroke-width="4"/>
                         </g>
 
-                        <!-- FACE (Dynamic Expression based on mood) -->
                         <g id="mascot-face-group">
                             <ellipse cx="105" cy="137" rx="13" ry="9" fill="#f5bca8"/>
                             <ellipse cx="197" cy="137" rx="13" ry="9" fill="#f5bca8"/>
-                            <!-- Eyes -->
                             <ellipse cx="128" cy="124" rx="5" ry="7" fill="#574b40"/>
                             <ellipse cx="177" cy="124" rx="5" ry="7" fill="#574b40"/>
-                            <!-- Mouth -->
                             <path id="mascot-mouth" d="M146 140 Q151 148 157 140" fill="none" stroke="#574b40" stroke-width="3.5" stroke-linecap="round"/>
                         </g>
 
-                        <!-- SCARF -->
                         <g>
                             <path d="M78 159 Q113 173 151 158 Q190 173 226 154 L223 178 Q186 194 150 178 Q113 195 81 178 Z" fill="#8e9973" stroke="#6e7457" stroke-width="4"/>
                             <path d="M204 175 Q224 190 214 217 L197 204 L193 187" fill="#9ca17a" stroke="#6e7457" stroke-width="4"/>
                         </g>
 
-                        <!-- ARMS & PLUG -->
                         <g>
                             <path d="M83 165 Q62 161 52 179 Q42 193 51 205 Q62 217 77 198 Q83 190 89 183" fill="#fff9ed" stroke="#75604d" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
                             <path d="M220 163 Q244 158 249 136" fill="none" stroke="#75604d" stroke-width="18" stroke-linecap="round"/>
@@ -379,26 +333,8 @@
             <p id="mascot-speech" class="text-xs text-[#5c4738] font-medium bg-[#f5ede2] p-3 rounded-2xl border-1.5 border-[#5c4738] w-full mt-3 leading-relaxed">"Let's save energy together! Complete daily tasks to level me up! 🤍"</p>
         </div>
 
-        <!-- TAB 1: TARIFF & 3 ECO TASKS & SMART ENERGY TIP WIDGET -->
+        <!-- TAB 1: TARIFF & 3 ECO TASKS -->
         <div id="tab-content-tracker" class="space-y-6">
-            <!-- SMART ENERGY TIP WIDGET (MỚI - THẺ BÀI CAM NHƯ HÌNH MẪU) -->
-            <div class="vintage-panel p-5 space-y-3 bg-gradient-to-br from-[#e06d53] to-[#c75236] text-white border-2 border-[#5c4738] shadow-[4px_4px_0px_#5c4738]">
-                <div class="flex items-center justify-between">
-                    <span class="bg-[#a83c22] text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider">🌱 Smart Energy Tip</span>
-                    <span class="text-xs opacity-90 font-bold">Week ending <span id="tip-date-label">Sun Nov 15, 2026</span></span>
-                </div>
-                <p id="smart-tip-text" class="text-sm font-bold leading-relaxed pt-1">
-                    "Don't let the water run too long while taking showers. Heating water is one of the more energy-intensive activities in your home."
-                </p>
-                <div class="flex items-center justify-between pt-2 border-t border-white/20 text-xs">
-                    <span class="text-[11px] opacity-90 font-medium">Was this tip helpful?</span>
-                    <div class="flex gap-2">
-                        <button onclick="rateTip(true)" class="px-3 py-1 bg-white/20 hover:bg-white/30 rounded-lg font-bold border border-white/40 transition">👍 Yes</button>
-                        <button onclick="rateTip(false)" class="px-3 py-1 bg-white/20 hover:bg-white/30 rounded-lg font-bold border border-white/40 transition">👎 No</button>
-                    </div>
-                </div>
-            </div>
-
             <div class="vintage-panel p-5 space-y-4">
                 <h2 class="font-bold text-[#4a3b32] text-base flex items-center gap-2 border-b-2 border-[#5c4738] pb-2.5">
                     <span>⚡</span> Daily Electricity Tariff (SST Saver+)
@@ -463,7 +399,7 @@
             </div>
         </div>
 
-        <!-- TAB 2: ENERGY REPORTS -->
+        <!-- TAB 2: ENERGY REPORTS & REMINDERS -->
         <div id="tab-content-reports" class="hidden space-y-6">
             <div class="vintage-panel p-5 space-y-4">
                 <h2 class="font-bold text-[#4a3b32] text-base flex items-center gap-2 border-b-2 border-[#5c4738] pb-2.5">
@@ -515,26 +451,82 @@
                     </div>
                 </div>
             </div>
+
+            <!-- REMINDERS & TIPS GIỮ LẠI ĐẦY ĐỦ Ở DƯỚI REPORT -->
+            <div class="vintage-panel p-5 space-y-3">
+                <h3 class="font-bold text-[#4a3b32] text-sm flex items-center gap-2"><span>💡</span> Daily Reminders & Basic Rules:</h3>
+                <ul class="text-xs space-y-2 text-[#5c4738] font-medium">
+                    <li class="bg-[#fffaf4] px-3 py-2.5 rounded-xl border border-[#5c4738]/30">💡 <strong>Turn off the lights:</strong> Remember to switch off room and hallway lights when not in use.</li>
+                    <li class="bg-[#fffaf4] px-3 py-2.5 rounded-xl border border-[#5c4738]/30">🔒 <strong>Check the doors:</strong> Make sure the doors are locked and the kitchen door is closed.</li>
+                    <li class="bg-[#fffaf4] px-3 py-2.5 rounded-xl border border-[#5c4738]/30">🔌 <strong>Unplug devices:</strong> Unplug standby appliances (TV, microwave) when not in use.</li>
+                    <li class="bg-[#fffaf4] px-3 py-2.5 rounded-xl border border-[#5c4738]/30">🚿 <strong>Water heater:</strong> Remember to switch off the water heater after showering.</li>
+                </ul>
+            </div>
         </div>
 
-        <!-- TAB 3: BÉ MÂY CHATBOT & KHO 10 CÂU HỎI QUIZ -->
-        <div id="tab-content-chatbot" class="hidden space-y-6">
+        <!-- TAB 3: SMART TIPS & FLASHCARDS (MỚI - TAB RIÊNG BIỆT DỊU MẮT) -->
+        <div id="tab-content-tips" class="hidden space-y-6">
             <div class="vintage-panel p-5 space-y-4">
                 <h2 class="font-bold text-[#4a3b32] text-base flex items-center gap-2 border-b-2 border-[#5c4738] pb-2.5">
-                    <span>☁️</span> Bé Mây Interactive Hub (10 Eco Questions)
+                    <span>💡</span> Smart Energy Tips & Flashcards
                 </h2>
-                <p class="text-xs text-[#7a6452]">Chat with Bé Mây, take our expanded 10-question eco quiz, or ask daily questions!</p>
+                <p class="text-xs text-[#7a6452]">Explore curated flashcards and expert tips to reduce your monthly electricity bill:</p>
+
+                <div class="space-y-3">
+                    <!-- Flashcard 1 -->
+                    <div class="vint-card p-4 bg-[#f5ede2] border-l-4 border-l-[#8c7355] space-y-2 shadow-sm">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-black text-[#5c4738]">🚿 Shower & Water Heating</span>
+                            <span class="text-[10px] bg-[#8c7355] text-white px-2 py-0.5 rounded-full font-bold">High Impact</span>
+                        </div>
+                        <p class="text-xs font-bold text-[#4a3b32]">"Don't let the water run too long while taking showers. Heating water is one of the most energy-intensive activities in your home."</p>
+                        <div class="flex justify-end gap-2 pt-1">
+                            <button onclick="rateTip(true)" class="px-2.5 py-1 bg-white hover:bg-[#f0e6d6] text-[#4a3b32] rounded-lg text-[11px] font-bold border border-[#5c4738]">👍 Helpful (+10 pts)</button>
+                        </div>
+                    </div>
+
+                    <!-- Flashcard 2 -->
+                    <div class="vint-card p-4 bg-[#f2f7ec] border-l-4 border-l-[#87a96b] space-y-2 shadow-sm">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-black text-[#3b4a32]">🌙 Night Saver Shifting</span>
+                            <span class="text-[10px] bg-[#87a96b] text-white px-2 py-0.5 rounded-full font-bold">Money Saver</span>
+                        </div>
+                        <p class="text-xs font-bold text-[#3b4a32]">"Run your washing machine and dishwasher strictly after 23:00 to take advantage of the cheap Night Rate (€0.1954/kWh)."</p>
+                    </div>
+
+                    <!-- Flashcard 3 -->
+                    <div class="vint-card p-4 bg-[#eaf2f8] border-l-4 border-l-[#32455c] space-y-2 shadow-sm">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-black text-[#32455c]">🔌 Phantom Load & Standby</span>
+                            <span class="text-[10px] bg-[#32455c] text-white px-2 py-0.5 rounded-full font-bold">Easy Habit</span>
+                        </div>
+                        <p class="text-xs font-bold text-[#32455c]">"Unplug phone chargers, microwaves, and TVs when not in use. Standby power accounts for up to 10% of household electricity bills."</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 4: BÉ MÂY CHATBOT HUB -->
+        <div id="tab-content-chatbot" class="hidden space-y-6">
+            <div class="vintage-panel p-5 space-y-4">
+                <div class="flex items-center justify-between border-b-2 border-[#5c4738] pb-2.5">
+                    <div>
+                        <h2 class="font-bold text-[#4a3b32] text-base flex items-center gap-2"><span>☁️</span> Ask Atlantic / Bé Mây Hub</h2>
+                        <p class="text-[11px] text-[#7a6452] mt-0.5">Interactive 20 Eco Quiz Questions & AI Assistant</p>
+                    </div>
+                    <span class="bg-[#8c7355] text-white text-[10px] font-bold px-2.5 py-1 rounded-full">Live Demo</span>
+                </div>
 
                 <div class="grid grid-cols-2 gap-2 text-xs">
-                    <button onclick="setChatMode('quiz')" id="mode-btn-quiz" class="p-2.5 bg-[#8c7355] text-white font-bold rounded-xl border border-[#5c4738]">🧠 Eco Quiz</button>
+                    <button onclick="setChatMode('quiz')" id="mode-btn-quiz" class="p-2.5 bg-[#8c7355] text-white font-bold rounded-xl border border-[#5c4738]">🧠 Eco Quiz (20 Qs)</button>
                     <button onclick="setChatMode('chat')" id="mode-btn-chat" class="p-2.5 bg-[#fffaf4] text-[#4a3b32] font-bold rounded-xl border border-[#5c4738]">💬 Ask Bé Mây</button>
                 </div>
 
                 <div class="vint-card p-4 bg-white space-y-3">
-                    <div id="chatbot-messages" class="space-y-2.5 max-h-60 overflow-y-auto pr-1 text-xs">
+                    <div id="chatbot-messages" class="space-y-2.5 max-h-72 overflow-y-auto pr-1 text-xs">
                         <div class="bg-[#f5ede2] p-3 rounded-2xl border border-[#d8c7b0]">
                             <p class="font-bold text-[#5c4738]">Bé Mây ☁️</p>
-                            <p class="mt-1 text-[#4a3b32]">Hi there! Ready to test your energy saving knowledge with our 10 quiz questions?</p>
+                            <p class="mt-1 text-[#4a3b32]">Ahoy, traveller! Ready to test your energy saving knowledge with our 20-question eco quiz or ask me anything?</p>
                         </div>
                     </div>
 
@@ -551,7 +543,7 @@
             </div>
         </div>
 
-        <!-- TAB 4: COOKING CHECKLIST -->
+        <!-- TAB 5: COOKING CHECKLIST -->
         <div id="tab-content-checklist" class="hidden space-y-6">
             <div class="vintage-panel p-5 space-y-4">
                 <h2 class="font-bold text-[#4a3b32] text-base flex items-center gap-2 border-b-2 border-[#5c4738] pb-2.5">
@@ -589,7 +581,7 @@
             </div>
         </div>
 
-        <!-- TAB 5: CALENDAR -->
+        <!-- TAB 6: CALENDAR -->
         <div id="tab-content-calendar" class="hidden space-y-6">
             <div class="vintage-panel p-5 space-y-4">
                 <div class="flex items-center justify-between border-b-2 border-[#5c4738] pb-2.5 gap-2">
@@ -657,72 +649,30 @@
         let currentPoints = 0;
         let completedTasks = [false, false, false];
 
-        // KHO 10 CÂU HỎI QUIZ ĐA DẠNG
         const ecoQuizPool = [
-            {
-                q: "Which appliance consumes the most standby power in a typical home?",
-                options: ["A. Microwave / TV", "B. LED Light bulb"],
-                correct: 0,
-                explain: "Correct! Microwaves and TVs draw continuous standby power."
-            },
-            {
-                q: "What is the cheapest time period for electricity under SST Saver+?",
-                options: ["A. 17:00 - 19:00 (Peak)", "B. 23:00 - 08:00 (Night Saver)"],
-                correct: 1,
-                explain: "Correct! Night rate is €0.1954/kWh, much cheaper than day/peak rates."
-            },
-            {
-                q: "Which activity uses the most energy in household water heating?",
-                options: ["A. Taking long showers", "B. Washing hands with cold water"],
-                correct: 0,
-                explain: "Correct! Heating water for long showers consumes massive energy."
-            },
-            {
-                q: "When is the worst time to run your washing machine or dishwasher?",
-                options: ["A. Peak Hours (17:00 - 19:00)", "B. Night Saver Hours (after 23:00)"],
-                correct: 0,
-                explain: "Correct! Peak hours have the highest rate (€0.3968/kWh)."
-            },
-            {
-                q: "How much XP do you get when completing the Kitchen Safety Checklist?",
-                options: ["A. +10 XP", "B. +30 XP"],
-                correct: 1,
-                explain: "Correct! You earn +30 XP for completing all 5 kitchen safety steps!"
-            },
-            {
-                q: "What color badge does Bé Mây show during Night Saver hours?",
-                options: ["A. 🟢 Green Badge", "B. 🔴 Red Badge"],
-                correct: 0,
-                explain: "Correct! Green badge indicates Night Saver rate is active."
-            },
-            {
-                q: "Is it good practice to leave phone chargers plugged into the wall 24/7?",
-                options: ["A. Yes, it uses zero power", "B. No, they draw a small idle current"],
-                correct: 1,
-                explain: "Correct! Unplugging idle chargers saves standby energy."
-            },
-            {
-                q: "What day of the week is waste collection scheduled in the calendar?",
-                options: ["A. Tuesday", "B. Saturday"],
-                correct: 0,
-                explain: "Correct! Tuesdays are marked as waste collection days."
-            },
-            {
-                q: "What level does Bé Mây reach after passing 100 XP?",
-                options: ["A. Level 1: Sprout", "B. Level 2: Green Sprout"],
-                correct: 1,
-                explain: "Correct! Reaching 100 XP upgrades Bé Mây to Level 2."
-            },
-            {
-                q: "Why should you cover pots with lids when cooking?",
-                options: ["A. Food cooks faster and saves energy", "B. It makes the kitchen colder"],
-                correct: 0,
-                explain: "Correct! Lids trap heat so water boils faster with less energy."
-            }
+            { q: "Which appliance consumes the most standby power in a typical home?", options: ["A. Microwave / TV", "B. LED Light bulb"], correct: 0, explain: "Correct! Microwaves and TVs draw continuous standby power." },
+            { q: "What is the cheapest time period for electricity under SST Saver+?", options: ["A. 17:00 - 19:00 (Peak)", "B. 23:00 - 08:00 (Night Saver)"], correct: 1, explain: "Correct! Night rate is €0.1954/kWh, much cheaper than day/peak rates." },
+            { q: "Which activity uses the most energy in household water heating?", options: ["A. Taking long showers", "B. Washing hands with cold water"], correct: 0, explain: "Correct! Heating water for long showers consumes massive energy." },
+            { q: "When is the worst time to run your washing machine or dishwasher?", options: ["A. Peak Hours (17:00 - 19:00)", "B. Night Saver Hours (after 23:00)"], correct: 0, explain: "Correct! Peak hours have the highest rate (€0.3968/kWh)." },
+            { q: "How much XP do you get when completing the Kitchen Safety Checklist?", options: ["A. +10 XP", "B. +30 XP"], correct: 1, explain: "Correct! You earn +30 XP for completing all 5 kitchen safety steps!" },
+            { q: "What color badge does Bé Mây show during Night Saver hours?", options: ["A. 🟢 Green Badge", "B. 🔴 Red Badge"], correct: 0, explain: "Correct! Green badge indicates Night Saver rate is active." },
+            { q: "Is it good practice to leave phone chargers plugged into the wall 24/7?", options: ["A. Yes, it uses zero power", "B. No, they draw a small idle current"], correct: 1, explain: "Correct! Unplugging idle chargers saves standby energy." },
+            { q: "What day of the week is waste collection scheduled in the calendar?", options: ["A. Tuesday", "B. Saturday"], correct: 0, explain: "Correct! Tuesdays are marked as waste collection days." },
+            { q: "What level does Bé Mây reach after passing 100 XP?", options: ["A. Level 1: Sprout", "B. Level 2: Green Sprout"], correct: 1, explain: "Correct! Reaching 100 XP upgrades Bé Mây to Level 2." },
+            { q: "Why should you cover pots with lids when cooking?", options: ["A. Food cooks faster and saves energy", "B. It makes the kitchen colder"], correct: 0, explain: "Correct! Lids trap heat so water boils faster with less energy." },
+            { q: "How much does Night Saver electricity cost approximately per kWh?", options: ["A. €0.1954/kWh", "B. €0.5000/kWh"], correct: 0, explain: "Correct! Night Saver is €0.1954/kWh." },
+            { q: "What is the peak hours rate window?", options: ["A. 17:00 - 19:00", "B. 12:00 - 14:00"], correct: 0, explain: "Correct! Peak hours are strictly between 17:00 and 19:00." },
+            { q: "Does LED lighting use significantly less energy than incandescent bulbs?", options: ["A. Yes, up to 80-90% less", "B. No, they use the same"], correct: 0, explain: "Correct! LEDs are highly energy efficient." },
+            { q: "What should you check right after cooking?", options: ["A. Cooker, hood, oven and lights", "B. The weather forecast"], correct: 0, explain: "Correct! Kitchen safety checklist includes cooker, hood, oven, lights and wipe." },
+            { q: "How many daily eco tasks are available in the app?", options: ["A. 3 tasks", "B. 10 tasks"], correct: 0, explain: "Correct! There are 3 daily eco tasks." },
+            { q: "What is the main mascot of this app called?", options: ["A. Bé Mây (Eco Buddy)", "B. Robo Spark"], correct: 0, explain: "Correct! Bé Mây is your friendly companion." },
+            { q: "Is keeping your refrigerator door open too long energy-efficient?", options: ["A. No, it lets cold air escape", "B. Yes, it cools the kitchen"], correct: 0, explain: "Correct! Keeping fridge doors closed saves compressor energy." },
+            { q: "Where is the electricity tariff benchmarked in this app?", options: ["A. Dublin, Ireland (SST Saver+)", "B. Tokyo, Japan"], correct: 0, explain: "Correct! Configured for Dublin, Ireland." },
+            { q: "Can you store your XP and Eco Points across page reloads?", options: ["A. Yes, via localStorage", "B. No, it resets every time"], correct: 0, explain: "Correct! localStorage safely keeps your score." },
+            { q: "What is the reward for completing the 5-step Kitchen Safety check?", options: ["A. +30 XP", "B. +5 XP"], correct: 0, explain: "Correct! You get +30 XP." }
         ];
         let currentQuizIndex = 0;
 
-        // LOCALSTORAGE LOAD
         function loadUserData() {
             const savedXP = localStorage.getItem("eco_buddy_xp");
             const savedPoints = localStorage.getItem("eco_buddy_points");
@@ -781,7 +731,6 @@
         window.addEventListener("resize", updateHeaderHeight);
         window.addEventListener("orientationchange", () => setTimeout(updateHeaderHeight, 150));
 
-        /* CLOCK */
         function startRealtimeClock() {
             function updateClock() {
                 const now = new Date();
@@ -792,9 +741,8 @@
             setInterval(updateClock, 1000);
         }
 
-        /* TAB SWITCHING */
         function switchTab(tabName) {
-            const tabs = ['tracker', 'reports', 'chatbot', 'checklist', 'calendar'];
+            const tabs = ['tracker', 'reports', 'tips', 'chatbot', 'checklist', 'calendar'];
             tabs.forEach(t => {
                 const el = document.getElementById(`tab-content-${t}`);
                 const btn = document.getElementById(`tab-btn-${t}`);
@@ -811,7 +759,6 @@
             if (tabName === 'reports') updateReportChart();
         }
 
-        /* DAILY TASKS & XP */
         function completeTask(index, xpReward) {
             if (completedTasks[index]) return;
             completedTasks[index] = true;
@@ -842,7 +789,6 @@
             }
         }
 
-        /* CẬP NHẬT LEVEL & THAY ĐỔI BIỂU CẢM BÉ MÂY */
         function updateMascotLevel() {
             let level = 1;
             let title = "Sprout";
@@ -865,14 +811,9 @@
             if (xpText) xpText.innerText = `${currentXP} / ${maxXP} XP`;
             if (levelBadge) levelBadge.innerText = `🌱 Level ${level}: ${title}`;
             if (pointsLabel) pointsLabel.innerText = `${currentPoints} Points 🌱`;
-
-            // Thay đổi style mascot theo level
-            if (mascotSvg) {
-                mascotSvg.className = `eco-character level-${level}`;
-            }
+            if (mascotSvg) mascotSvg.className = `eco-character level-${level}`;
         }
 
-        /* ENERGY REPORTS */
         function updateReportChart() {
             const prevBill = parseFloat(document.getElementById('bill-prev').value) || 0;
             const currBill = parseFloat(document.getElementById('bill-curr').value) || 0;
@@ -896,13 +837,12 @@
             if (diffBill > 0) {
                 summary.innerHTML = `🎉 Wonderful! You saved <span class="text-green-700">€${diffBill.toFixed(2)}</span> and <span class="text-green-700">${diffKwh} kWh</span> compared to last month!`;
             } else if (diffBill < 0) {
-                summary.innerHTML = `⚠️ This month is <span class="text-red-700">€${Math.abs(diffBill).toFixed(2)}</span> higher than last month. Let's save more!`;
+                summary.innerHTML = `⚠️ This month is <span class="text-red-700">€${Math.abs(diffBill).toFixed(2)}</span> higher than last month. Check the 💡 Tips tab for flashcards!`;
             } else {
                 summary.innerHTML = `⚖️ Electricity bills for both months are equal.`;
             }
         }
 
-        /* SMART TIP RATING */
         function rateTip(isHelpful) {
             if (isHelpful) {
                 currentPoints += 10;
@@ -910,11 +850,11 @@
                 updateMascotLevel();
                 alert("Thank you for your feedback! +10 Eco Points added! 💚");
             } else {
-                alert("Thanks! We'll show you better tips next week.");
+                alert("Thanks! We'll show you better tips next time.");
             }
         }
 
-        /* BÉ MÂY CHATBOT & QUIZ 10 CÂU */
+        /* CHATBOT & 20 QUIZ QUESTIONS */
         let chatMode = 'quiz';
         function setChatMode(mode) {
             chatMode = mode;
@@ -984,8 +924,6 @@
                 `;
             }
             msgs.scrollTop = msgs.scrollHeight;
-
-            // Load câu hỏi mới sau 1.5 giây
             setTimeout(loadRandomQuiz, 1500);
         }
 
@@ -1024,7 +962,6 @@
             }, 600);
         }
 
-        /* ELECTRICITY TARIFF STATUS */
         function checkTariffStatus() {
             const now = new Date();
             const hour = now.getHours();
@@ -1045,7 +982,6 @@
             }
         }
 
-        /* CALENDAR */
         let calendarCursor = new Date();
         function renderCalendar() {
             const year = calendarCursor.getFullYear();
@@ -1077,7 +1013,6 @@
                     (isToday ? " ring-2 ring-[#87a96b] ring-offset-1" : "");
 
                 cell.innerHTML = `<span>${day}</span>${isTuesday ? '<span class="text-[8px]">🗑️</span>' : ""}`;
-                cell.title = isTuesday ? "Tuesday - Waste collection day" : isToday ? "Today" : "";
                 grid.appendChild(cell);
             }
 
@@ -1094,7 +1029,6 @@
             renderCalendar();
         }
 
-        /* COOKING TIMER */
         let countdownInterval = null;
         function setTimerMinutes(mins) { document.getElementById('custom-minutes').value = mins; }
 
@@ -1141,48 +1075,12 @@
             document.getElementById('timer-display-box').classList.add('hidden');
         }
 
-        /* SAFETY CHECKLIST 5 STEPS */
         const safetySteps = [
-            {
-                title: "Turn off the cooker",
-                question: "Have you turned off the cooker?",
-                hint: "Make sure the cooker knobs are turned to the OFF position.",
-                scene: "🔥",
-                yes: "Wonderful! Eco Buddy is so happy!",
-                no: "Let's check the cooker knobs together!"
-            },
-            {
-                title: "Turn off the cooker hood",
-                question: "Have you turned off the cooker hood?",
-                hint: "Make sure the cooker hood is switched off and fan stopped.",
-                scene: "🌬️",
-                yes: "The cooker hood is off. Great job!",
-                no: "Let's check and switch off the cooker hood!"
-            },
-            {
-                title: "Turn off the oven",
-                question: "Have you turned off the oven?",
-                hint: "Check the power button and display to make sure the oven is off.",
-                scene: "🎛️",
-                yes: "The oven is off. Well done!",
-                no: "I'll wait while you check the oven!"
-            },
-            {
-                title: "Turn off the kitchen lights",
-                question: "Have you turned off the kitchen lights?",
-                hint: "Make sure all unused kitchen lights are switched off.",
-                scene: "💡",
-                yes: "Your home has saved even more energy!",
-                no: "Let's go and turn off the lights!"
-            },
-            {
-                title: "Wipe the cooker",
-                question: "Have you cleaned the cooker surface?",
-                hint: "Wait until the cooker has cooled down, then wipe with a damp cloth.",
-                scene: "🧽",
-                yes: "A sparkling clean cooker! Eco Buddy is proud of you!",
-                no: "Let's clean up the kitchen together!"
-            }
+            { title: "Turn off the cooker", question: "Have you turned off the cooker?", hint: "Make sure the cooker knobs are turned to the OFF position.", scene: "🔥", yes: "Wonderful!", no: "Let's check the cooker knobs!" },
+            { title: "Turn off the cooker hood", question: "Have you turned off the cooker hood?", hint: "Make sure the cooker hood is switched off.", scene: "🌬️", yes: "Great job!", no: "Switch off the cooker hood!" },
+            { title: "Turn off the oven", question: "Have you turned off the oven?", hint: "Check power display.", scene: "🎛️", yes: "Well done!", no: "Check the oven!" },
+            { title: "Turn off the kitchen lights", question: "Have you turned off the kitchen lights?", hint: "Switch off unused lights.", scene: "💡", yes: "Energy saved!", no: "Turn off lights!" },
+            { title: "Wipe the cooker", question: "Have you cleaned the cooker surface?", hint: "Wipe with a damp cloth.", scene: "🧽", yes: "Sparkling clean!", no: "Clean up!" }
         ];
 
         let safetyStepIndex = 0;
@@ -1217,15 +1115,9 @@
             if (safetyStepIndex >= safetySteps.length) {
                 question.textContent = "All done! You earned +30 XP for keeping the kitchen safe! 💚";
                 scene.textContent = "🌱✨💚";
-
                 document.getElementById("chat-action-title").textContent = "Safety check completed!";
                 document.getElementById("chat-action-hint").textContent = "Eco Buddy is so proud of you!";
-
-                actions.innerHTML = `
-                    <button class="chat-choice text-center" onclick="finishSafetyCheckAndReward()">
-                        💚 Done! Collect XP reward
-                    </button>
-                `;
+                actions.innerHTML = `<button class="chat-choice text-center" onclick="finishSafetyCheckAndReward()">💚 Done! Collect XP reward</button>`;
                 document.getElementById("chat-progress").textContent = "5 / 5 · Completed";
                 return;
             }
@@ -1233,7 +1125,6 @@
             const step = safetySteps[safetyStepIndex];
             question.textContent = step.question;
             scene.textContent = step.scene;
-
             document.getElementById("chat-action-title").textContent = step.title;
             document.getElementById("chat-action-hint").textContent = step.hint;
             document.getElementById("chat-progress").textContent = `Step ${safetyStepIndex + 1} / 5`;
