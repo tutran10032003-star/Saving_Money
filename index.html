@@ -1328,14 +1328,14 @@
             if(!Number.isFinite(columnX))return {};
             const ws=(words||[]).filter(w=>w&&w.bbox&&w.text),out={};
             const defaults={day:.3719,peak:.3968,night:.1954};
-            const clean=t=>String(t).replace(/[OoQ](?=\\d)/g,"0").replace(/[Il|](?=\\d)/g,"1").replace(/[Ss](?=\\d)/g,"5");
+            const clean=t=>String(t).replace(/[OoQ](?=\d)/g,"0").replace(/[Il|](?=\d)/g,"1").replace(/[Ss](?=\d)/g,"5");
             for(const key of ["day","peak","night"]){
                 const label=ws.find(w=>new RegExp("^"+key+"$","i").test(billWordText(w)));
                 if(!label)continue;
                 const rowH=Math.max(7,label.bbox.y1-label.bbox.y0),cy=billWordY(label),tol=Math.max(rowH*2.4,H*.018);
                 const row=ws.filter(w=>Math.abs(billWordY(w)-cy)<=tol);
                 const corridor=W*.28;
-                const digitWords=row.map(w=>({w,t:clean(billWordText(w)).replace(/[.,]/g,"")})).filter(x=>/^\\d{1,4}$/.test(x.t)&&Math.abs(billWordX(x.w)-columnX)<=corridor);
+                const digitWords=row.map(w=>({w,t:clean(billWordText(w)).replace(/[.,]/g,"")})).filter(x=>/^\d{1,4}$/.test(x.t)&&Math.abs(billWordX(x.w)-columnX)<=corridor);
                 const candidates=digitWords.map(x=>({value:Number(x.t),x:billWordX(x.w),source:x.t}));
                 const ordered=digitWords.slice().sort((a,b)=>a.w.bbox.x0-b.w.bbox.x0);
                 for(let i=0;i<ordered.length;i++){
@@ -1351,8 +1351,8 @@
                     .sort((a,b)=>Math.abs(a.x-columnX)-Math.abs(b.x-columnX))[0];
                 if(!best)continue;
                 const kwh=best.value;
-                const rateWord=row.find(w=>/^0[.,]\\d{4}$/.test(clean(billWordText(w)).replace(/[.,]/g,".")));
-                const amountWord=row.find(w=>/^\\d{1,5}[.,]\\d{2}$/.test(billWordText(w).replace(/,/g,".")));
+                const rateWord=row.find(w=>/^0[.,]\d{4}$/.test(clean(billWordText(w)).replace(/[.,]/g,".")));
+                const amountWord=row.find(w=>/^\d{1,5}[.,]\d{2}$/.test(billWordText(w).replace(/,/g,".")));
                 const price=rateWord?Number(clean(rateWord.text).replace(",", ".")):defaults[key];
                 const amount=amountWord?Number(amountWord.text.replace(",", ".")):Math.round(kwh*price*100)/100;
                 if(Number.isFinite(price)&&price>0)out[key]={kwh,price,amount};
@@ -1386,13 +1386,13 @@
         }
         async function readBillBandsFromImage(worker,file,words,fullText,expectedTotal){
             const candidates=[parseBillBands(fullText)];
-            const W=Math.max(1,...(words||[]).map(w=>w.bbox&&w.bbox.x1||0)),H=Math.max(1,...(words||[]).map(w=>w.bbox&&w.bbox.y1||0));
-            const usageX=findBillColumnX(words,"Usage","Unit");
-            const usageRows=parseBillBandsFromColumn(words,W,H,usageX);
-            const usageValues=["day","peak","night"].map(k=>usageRows[k]&&usageRows[k].kwh);
-            const usageSum=usageValues.every(Number.isFinite)?usageValues.reduce((a,b)=>a+b,0):NaN,target=Number(expectedTotal);
-            const usageMatches=!Number.isFinite(target)||target<=0||(Number.isFinite(usageSum)&&Math.abs(usageSum-target)<=Math.max(2,target*.01));
-            if(Object.keys(usageRows).length&&usageMatches)candidates.unshift(usageRows);
+            const W=Math.max(1,...(words||[]).map(w=>w.bbox&&w.bbox.x1||0)),H=Math.max(1,...(words||[]).map(w=>w.bbox&&w.bbox.y1||0)),target=Number(expectedTotal);
+            const usageX=findBillColumnX(words,"Usage","Unit"),meterX=findBillColumnX(words,"Meter","Number");
+            const usageRows=parseBillBandsFromColumn(words,W,H,usageX),meterRows=parseBillBandsFromColumn(words,W,H,meterX);
+            const sumRows=o=>{const v=["day","peak","night"].map(k=>o[k]&&o[k].kwh);return v.every(Number.isFinite)?v.reduce((a,b)=>a+b,0):NaN;};
+            const matches=o=>{const sum=sumRows(o);return Number.isFinite(sum)&&Number.isFinite(target)&&target>0&&Math.abs(sum-target)<=Math.max(2,target*.01);};
+            if(matches(usageRows))candidates.unshift(usageRows);
+            if(matches(meterRows))candidates.unshift(meterRows);
             if(scoreBillBands(mergeBillBands(candidates))<3){
                 try{
                     const bmp=await createImageBitmap(file),iw=bmp.width,ih=bmp.height;bmp.close();
@@ -1404,17 +1404,7 @@
                     }
                 }catch(error){console.warn("Band crop OCR failed",error);}
             }
-            let found=mergeBillBands(candidates);
-            if(scoreBillBands(found)<3){
-                const meterX=findBillColumnX(words,"Meter","Number");
-                const meterRows=parseBillBandsFromColumn(words,W,H,meterX);
-                const vals=["day","peak","night"].map(k=>meterRows[k]&&meterRows[k].kwh);
-                const sum=vals.every(Number.isFinite)?vals.reduce((a,b)=>a+b,0):NaN;
-                if(Number.isFinite(sum)&&Number.isFinite(target)&&target>0&&Math.abs(sum-target)<=Math.max(2,target*.01)){
-                    found={...found,...meterRows};
-                }
-            }
-            return found;
+            return mergeBillBands(candidates);
         }
         function applyBillBands(found){
             const totalInput=_bbEl("edit-bill-kwh"),total=totalInput&&totalInput.value!==""?Number(totalInput.value):null;
