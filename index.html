@@ -538,11 +538,15 @@
                 <!-- SUB-TAB 1: UPLOAD & EDIT BILL -->
                 <div id="report-subtab-upload" class="space-y-4 vint-card p-4 bg-white">
                     <h3 class="font-bold text-sm text-[#5c4738]">📷 Upload & đọc hoá đơn điện</h3>
-                    <p class="text-[11px] text-[#7a6452]">Tải ảnh hoá đơn có bảng chi tiết Day / Peak / Night. OCR chỉ hỗ trợ đọc thử; hãy kiểm tra số liệu trước khi lưu.</p>
-                    <div class="grid grid-cols-1 gap-3">
-                        <div class="vint-card p-3 bg-[#fffaf4] space-y-2"><b class="text-xs">🧾 Ảnh hoá đơn</b>
+                    <p class="text-[11px] text-[#7a6452]">Tải 2 ảnh: ảnh A để đọc tổng hoá đơn; ảnh B để đọc bảng chi tiết Day / Peak / Night. Kiểm tra lại số OCR trước khi lưu.</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div class="vint-card p-3 bg-[#fffaf4] space-y-2"><b class="text-xs">🧾 Ảnh A · Tổng hoá đơn</b>
                             <label class="block px-3 py-2 bg-[#8C735F] text-white rounded-xl text-xs text-center cursor-pointer">📸 Chụp / chọn ảnh<input type="file" id="bill-img-file" accept="image/*" capture="environment" class="hidden" onchange="previewUploadedBill(event,'total')"></label>
-                            <img id="bill-preview-img" alt="Bill preview" class="hidden max-h-40 w-full object-contain rounded-xl border">
+                            <img id="bill-preview-img" alt="Bill total preview" class="hidden max-h-40 w-full object-contain rounded-xl border">
+                        </div>
+                        <div class="vint-card p-3 bg-[#fffaf4] space-y-2"><b class="text-xs">📋 Ảnh B · Bảng khung giờ</b>
+                            <label class="block px-3 py-2 bg-[#8C735F] text-white rounded-xl text-xs text-center cursor-pointer">📸 Chụp / chọn ảnh<input type="file" id="bill-breakdown-file" accept="image/*" capture="environment" class="hidden" onchange="previewUploadedBill(event,'breakdown')"></label>
+                            <img id="bill-breakdown-preview" alt="Tariff table preview" class="hidden max-h-40 w-full object-contain rounded-xl border">
                         </div>
                     </div>
                     <div class="rounded-xl bg-[#f5ede2] p-3 space-y-2"><div class="flex justify-between"><b class="text-xs">🔎 Đọc ảnh bằng OCR</b><span id="bill-ocr-status" class="text-[10px]">Đang chờ ảnh</span></div>
@@ -554,11 +558,16 @@
                         <label class="font-bold">Ngày bắt đầu<input id="edit-bill-start" type="date" class="w-full px-3 py-2 rounded-xl border mt-1"></label>
                         <label class="font-bold">Ngày kết thúc<input id="edit-bill-end" type="date" class="w-full px-3 py-2 rounded-xl border mt-1"></label>
                         <div class="space-y-2"><label class="block font-bold">Tổng tiền (€)<input id="edit-bill-amount" type="number" min="0" step="0.01" placeholder="Nhập theo bill" oninput="updateBillPerPerson()" class="w-full px-3 py-2 rounded-xl border mt-1"></label><div class="flex items-center justify-between gap-3"><label for="bill-household-size" class="text-[11px] font-bold text-[#7a6452]">Số người trong nhà</label><input id="bill-household-size" type="number" min="1" max="50" step="1" value="4" oninput="updateBillPerPerson()" class="w-20 px-3 py-2 rounded-xl border text-center text-xs font-bold"></div><p id="bill-per-person-note" class="text-[10px] italic font-normal text-[#8c7355]">Ghi chú: chia đều cho 4 người · €— / người</p></div>
-                        <label class="font-bold">Tổng điện năng (kWh)<input id="edit-bill-kwh" type="number" min="0" step="0.01" placeholder="Nhập theo bill" class="w-full px-3 py-2 rounded-xl border mt-1"></label>
                     </div>
                     <div class="pt-3 border-t space-y-3">
-                        <div><b class="text-xs">Energy Breakdown · Day / Peak / Night</b><p class="text-[10px] text-[#7a6452] mt-1">Bảng Day / Peak / Night được đọc từ hoá đơn; nếu OCR sai thì m có thể sửa tay.</p></div>
-                        <div class="grid grid-cols-1 gap-4 items-start">
+                        <div><b class="text-xs">Energy Breakdown · Day / Peak / Night</b><p class="text-[10px] text-[#7a6452] mt-1">Tổng điện năng bên trái · chi tiết từng khung giờ bên phải. M có thể sửa số nếu OCR nhận chưa đúng.</p></div>
+                        <div class="grid grid-cols-1 sm:grid-cols-[minmax(170px,0.72fr)_minmax(0,2fr)] gap-4 items-start">
+                            <div class="rounded-2xl border-2 border-[#d8c7b0] bg-[#f5ede2] p-4 sm:sticky sm:top-3">
+                                <p class="text-[11px] font-extrabold tracking-widest text-[#7a6452] uppercase">Total Usage</p>
+                                <input id="edit-bill-kwh" type="number" min="0" step="0.01" placeholder="0" class="mt-2 w-full bg-transparent text-3xl sm:text-4xl font-black text-[#32455c] tabular-nums outline-none border-b-2 border-[#cdbba5] pb-2">
+                                <p class="mt-2 text-xs font-bold text-[#7a6452]">kWh</p>
+                                <p class="mt-3 text-[10px] text-[#8c7355]">Tổng kWh trên ảnh A</p>
+                            </div>
                             <div class="min-w-0 overflow-x-auto">
                                 <table class="w-full text-[10px] tabular-nums text-right">
                                     <thead><tr class="text-[#7a6452]"><th class="text-left font-bold">Khung giờ</th><th class="font-bold">kWh</th><th class="font-bold">€/kWh</th><th class="font-bold">€</th><th class="font-bold">% kWh</th><th class="font-bold">% tiền</th></tr></thead>
@@ -644,9 +653,12 @@
 
                     <div class="vint-card p-5 bg-[#fffaf4] space-y-4">
                         <p class="text-xs font-bold text-[#5c4738] text-center">Energy Breakdown · Day / Peak / Night</p>
-                        <div class="grid grid-cols-1 gap-4 items-start">
+                        <div class="grid grid-cols-1 sm:grid-cols-[minmax(150px,0.7fr)_minmax(0,2fr)] gap-4 items-start">
+                            <div class="rounded-2xl border-2 border-[#d8c7b0] bg-[#f5ede2] p-4 text-left">
+                                <p class="text-[11px] font-extrabold tracking-widest text-[#7a6452] uppercase">Total Usage</p>
+                                <p id="dashboard-selected-kwh" class="mt-2 text-3xl sm:text-4xl font-black text-[#32455c] tabular-nums">— kWh</p>
+                            </div>
                             <div class="min-w-0 overflow-x-auto">
-                                <p class="text-[10px] font-extrabold text-[#7a6452] uppercase tracking-wider text-center">Selected Usage: <span id="dashboard-selected-kwh" class="text-[#32455c] tabular-nums">— kWh</span></p>
                                 <table class="w-full text-[10px] tabular-nums text-right mt-1">
                                     <thead><tr class="text-[#7a6452]"><th class="text-left font-bold">Khung giờ</th><th class="font-bold">kWh</th><th class="font-bold">% kWh</th><th class="font-bold">€</th><th class="font-bold">% tiền</th></tr></thead>
                                     <tbody id="dashboard-bands-body"></tbody>
@@ -1075,7 +1087,7 @@
 
         const billCategoryDefaults=[["waterHeating","Water Heating",null],["cooking","Cooking",null],["entertainment","Entertainment",null],["laundry","Laundry",null],["refrigeration","Refrigeration",null],["alwaysOn","Always On",null],["lighting","Lighting",null],["other","Other",null]];
         const billCategoryColors=["#A8C7A0","#EAD58E","#E9B0AA","#A9BDC0","#BCA996","#A9CBD8","#C1D4B1","#D9C6AE"];
-        let billImageFiles={total:null},billImageUrls={total:""},activeBillCategory=0;
+        let billImageFiles={total:null,breakdown:null},billImageUrls={total:"",breakdown:""},activeBillCategory=0;
         function getBillCategoryValues(){
             return [...document.querySelectorAll("[data-category-percent]")].map((x,i)=>({
                 key:x.dataset.categoryPercent,
@@ -1133,16 +1145,17 @@
             if(w)w.textContent=!hasValues?"Chưa có ước tính — có thể nhập tỷ lệ thủ công.":(Math.abs(total-100)<0.11?"✓ Tổng phân bổ bằng 100%.":"Tỷ lệ phân bổ phải bằng 100%.");
             renderBillDonut();
         }
-        function previewUploadedBill(event){
+        function previewUploadedBill(event,type){
             const file=event.target.files&&event.target.files[0];if(!file)return;
             if(!file.type.startsWith("image/")){alert("Please choose an image.");return;}
-            billImageFiles.total=file;
-            if(billImageUrls.total)URL.revokeObjectURL(billImageUrls.total);
-            billImageUrls.total=URL.createObjectURL(file);
-            const preview=document.getElementById("bill-preview-img");
-            if(preview){preview.src=billImageUrls.total;preview.classList.remove("hidden");}
-            document.getElementById("upload-status-text").textContent="Ảnh hoá đơn đã sẵn sàng. Bấm đọc OCR hoặc nhập tay rồi lưu.";
-            document.getElementById("bill-ocr-status").textContent="Có ảnh mới — cần đọc lại";
+            type=type==="breakdown"?"breakdown":"total";
+            billImageFiles[type]=file;
+            if(billImageUrls[type])URL.revokeObjectURL(billImageUrls[type]);
+            billImageUrls[type]=URL.createObjectURL(file);
+            const preview=document.getElementById(type==="total"?"bill-preview-img":"bill-breakdown-preview");
+            if(preview){preview.src=billImageUrls[type];preview.classList.remove("hidden");}
+            document.getElementById("upload-status-text").textContent=(type==="total"?"Ảnh A đã sẵn sàng.":"Ảnh B đã sẵn sàng.")+" Bấm đọc OCR sau khi tải đủ hai ảnh.";
+            document.getElementById("bill-ocr-status").textContent="Ảnh đã thay đổi — cần đọc lại";
         }
         function parseBillDateParts(text){
             const months={jan:1,feb:2,mar:3,apr:4,may:5,jun:6,jul:7,aug:8,sep:9,oct:10,nov:11,dec:12};
@@ -2088,7 +2101,7 @@ const reportTranslations = {
 "1. Upload & Edit Bill":"1. Upload & Edit Bill","2. Billing Listing":"2. Billing Listing","3. Dashboard":"3. Dashboard",
 "📷 Upload & đọc hoá đơn điện":"📷 Upload & Read Electricity Bill",
 "Tải hai ảnh: tổng hoá đơn và biểu đồ phân bổ. OCR chỉ hỗ trợ đọc thử; hãy kiểm tra số liệu trước khi lưu.":"Upload a bill image showing the Day / Peak / Night detail table. OCR provides an estimate; please verify all values before saving.",
-"🧾 Ảnh A · Tổng hoá đơn":"🧾 Image A · Bill Total","🍩 Ảnh B · Phân bổ điện năng":"🍩 Image B · Energy Breakdown",
+"🧾 Ảnh A · Tổng hoá đơn":"🧾 Image A · Bill Total","📋 Ảnh B · Bảng khung giờ":"📋 Image B · Tariff Table",
 "📸 Chụp / chọn ảnh":"📸 Take Photo / Choose Image","🔎 Đọc ảnh bằng OCR":"🔎 Read Images with OCR",
 "Đang chờ ảnh":"Waiting for images","✨ Đọc thông tin từ ảnh đã tải":"✨ Read Information from Uploaded Images",
 "Kỳ hoá đơn / tháng":"Billing Period / Month","Năm":"Year","Ngày bắt đầu":"Start Date","Ngày kết thúc":"End Date","Tổng tiền (€)":"Total Bill (€)","Số người trong nhà":"People in Household","Tổng điện năng (kWh)":"Total Energy (kWh)",
