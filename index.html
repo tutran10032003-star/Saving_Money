@@ -91,7 +91,7 @@
             max-width: 560px;
             padding: 5px;
             display: grid;
-            grid-template-columns: repeat(6, minmax(0, 1fr));
+            grid-template-columns: repeat(7, minmax(0, 1fr));
             gap: 3px;
             background: #f0e6d6;
             border-radius: 30px;
@@ -239,7 +239,14 @@
                 padding: 10px 12px;
             }
             .nav-pills { max-width: none; width: 100%; }
-            .nav-btn { font-size: 11px; padding: 8px 2px; }
+             .nav-pills { display:flex; overflow-x:auto; overscroll-behavior-x:contain; scrollbar-width:none; }
+            .nav-pills::-webkit-scrollbar { display:none; }
+            .nav-btn { flex:0 0 auto; min-width:max-content; font-size:12px; padding:9px 11px; }
+            .vintage-panel { padding:18px !important; }
+            .grid-cols-3 { grid-template-columns:repeat(2,minmax(0,1fr)); }
+            .grid-cols-2 { grid-template-columns:repeat(1,minmax(0,1fr)); }
+            h2 { font-size:1.1rem !important; }
+            #tab-content-tracker, #tab-content-weather, #tab-content-tips, #tab-content-checklist, #tab-content-calendar { font-size:1rem; }
             main { padding-left: 12px !important; padding-right: 12px !important; padding-top: 16px !important; }
             .timer-buttons-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); }
             #custom-minutes { min-width: 0; width: 100%; }
@@ -265,6 +272,7 @@
 
             <!-- 6 TABS (TĂNG FONT CHỮ TO RÕ) -->
             <nav class="nav-pills" aria-label="Main navigation">
+                <button onclick="switchTab('weather')" id="tab-btn-weather" class="nav-btn">🌦️ Weather</button>
                 <button onclick="switchTab('tracker')" id="tab-btn-tracker" class="nav-btn active">⚡ Tariff</button>
                 <button onclick="switchTab('reports')" id="tab-btn-reports" class="nav-btn">📊 Reports</button>
                 <button onclick="switchTab('tips')" id="tab-btn-tips" class="nav-btn">💡 Tips</button>
@@ -335,7 +343,29 @@
 
             <h3 class="font-bold text-[#4a3b32] text-base mt-2">Eco Buddy (Bé Mây)</h3>
             <p class="text-[11px] text-[#7a6452] font-semibold italic mt-0.5">🌿 A little battery, leafy ears, and a friendly companion by your side.</p>
-            <p id="mascot-speech" class="text-xs text-[#5c4738] font-medium bg-[#f5ede2] p-3 rounded-2xl border-1.5 border-[#5c4738] w-full mt-3 leading-relaxed">"Let's save energy together! Complete daily tasks to level me up! 🤍"</p>
+            <p id="mascot-speech" class="text-xs text-[#5c4738] font-medium bg-[#f5ede2] p-3 rounded-2xl border border-[#5c4738] w-full mt-3 leading-relaxed">"Let's save energy together! Complete daily tasks to level me up! 🤍"</p>
+        </div>
+
+
+        <!-- WEATHER TAB: Dublin forecast via free Open-Meteo API -->
+        <div id="tab-content-weather" class="hidden space-y-6">
+          <section class="vintage-panel p-5 sm:p-6 space-y-4">
+            <div class="flex items-center justify-between gap-3 border-b-2 border-[#5c4738] pb-3">
+              <div><h2 class="font-bold text-lg">🌦️ Dublin Weather</h2><p class="text-sm text-[#7a6452]">Live conditions and wind speed</p></div>
+              <button onclick="loadDublinWeather()" class="px-3 py-2 rounded-xl bg-[#8c7355] text-white text-sm font-bold">↻ Refresh</button>
+            </div>
+            <div id="weather-card" class="rounded-2xl p-5 text-center border-2 border-[#d8c7b0] bg-[#edf1ef] transition-colors">
+              <div id="weather-icon" class="text-5xl mb-2">🌥️</div>
+              <div id="weather-temp" class="text-4xl font-black text-[#4a3b32]">--°C</div>
+              <p id="weather-description" class="font-bold mt-1">Loading Dublin weather…</p>
+              <div class="grid grid-cols-2 gap-3 mt-4">
+                <div class="rounded-xl bg-white/75 p-3"><p class="text-xs text-[#7a6452]">Wind speed</p><p id="weather-wind" class="font-black text-lg">-- km/h</p></div>
+                <div class="rounded-xl bg-white/75 p-3"><p class="text-xs text-[#7a6452]">Feels like</p><p id="weather-feels" class="font-black text-lg">--°C</p></div>
+              </div>
+            </div>
+            <p id="weather-advice" class="text-sm bg-[#f5ede2] p-4 rounded-xl">Bé Mây is checking the weather…</p>
+            <p class="text-xs text-[#7a6452]">Weather data: Open-Meteo. No API key required.</p>
+          </section>
         </div>
 
         <!-- TAB 1: TARIFF & 3 ECO TASKS -->
@@ -456,6 +486,18 @@
                         </div>
                     </div>
 
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                      <div><label class="font-bold">Billing period starts</label><input type="date" id="bill-period-start" class="w-full mt-1 p-2 rounded-xl border"></div>
+                      <div><label class="font-bold">Billing period ends</label><input type="date" id="bill-period-end" class="w-full mt-1 p-2 rounded-xl border"></div>
+                    </div>
+                    <div class="border-t pt-3 space-y-2">
+                      <p class="font-bold">Energy breakdown from image 1</p>
+                      <p class="text-xs text-[#7a6452]">Enter the percentages shown on the donut chart. OCR may not reliably read chart slices, so please verify these values.</p>
+                      <div id="bill-category-fields" class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        <label class="text-xs">Water heating (%)<input type="number" min="0" max="100" step="0.1" data-category="Water heating" class="bill-category w-full p-2 rounded-lg border mt-1" placeholder="0"></label><label class="text-xs">Lighting (%)<input type="number" min="0" max="100" step="0.1" data-category="Lighting" class="bill-category w-full p-2 rounded-lg border mt-1" placeholder="0"></label><label class="text-xs">Cooking (%)<input type="number" min="0" max="100" step="0.1" data-category="Cooking" class="bill-category w-full p-2 rounded-lg border mt-1" placeholder="0"></label><label class="text-xs">Laundry (%)<input type="number" min="0" max="100" step="0.1" data-category="Laundry" class="bill-category w-full p-2 rounded-lg border mt-1" placeholder="0"></label><label class="text-xs">Appliances (%)<input type="number" min="0" max="100" step="0.1" data-category="Appliances" class="bill-category w-full p-2 rounded-lg border mt-1" placeholder="0"></label><label class="text-xs">Other (%)<input type="number" min="0" max="100" step="0.1" data-category="Other" class="bill-category w-full p-2 rounded-lg border mt-1" placeholder="0"></label>
+                      </div>
+                    </div>
                     <button onclick="saveEditedBill()" class="w-full py-2.5 bg-[#87a96b] text-white font-bold rounded-xl border border-[#5c4738] text-xs shadow">💾 Save Bill Data & Update Dashboard</button>
                 </div>
 
@@ -892,7 +934,7 @@
         }
 
         function switchTab(tabName) {
-            const tabs = ['tracker', 'reports', 'tips', 'chatbot', 'checklist', 'calendar'];
+            const tabs = ['weather', 'tracker', 'reports', 'tips', 'chatbot', 'checklist', 'calendar'];
             tabs.forEach(t => {
                 const el = document.getElementById(`tab-content-${t}`);
                 const btn = document.getElementById(`tab-btn-${t}`);
@@ -914,6 +956,7 @@
                 }
             }
 
+            if (tabName === 'weather') loadDublinWeather();
             if (tabName === 'calendar') renderCalendar();
             if (tabName === 'reports') {
                 renderBillingListing();
@@ -1295,7 +1338,7 @@
             setTimeout(() => {
                 let reply = "That's wonderful! Let's save energy together to protect our environment! 🌿";
                 const lower = text.toLowerCase();
-                if (lower.includes('hi') || lower.includes('hello')) {
+                if (/^(hi|hello|hey|good morning|good afternoon|good evening)[!.\\s]*$/i.test(text)) {
                     reply = "Hello! I'm Bé Mây, your friendly eco assistant. How can I help you today? ☁️";
                 } else if (lower.includes('save') || lower.includes('bill')) {
                     reply = "To save on your electricity bill, remember to run your laundry during Night Saver hours (after 23:00) and turn off standby appliances! ⚡";
@@ -1525,6 +1568,97 @@
             updateMascotLevel();
             closeSafetyChat();
         }
+
+        // === ECO-BUDDY ENHANCEMENTS (safe additions; original mascot SVG is untouched) ===
+        async function loadDublinWeather() {
+          const card=document.getElementById('weather-card'); if(!card) return;
+          const tempEl=document.getElementById('weather-temp');
+          try {
+            const url='https://api.open-meteo.com/v1/forecast?latitude=53.3498&longitude=-6.2603&current=temperature_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m&wind_speed_unit=kmh&timezone=Europe%2FDublin';
+            const res=await fetch(url); if(!res.ok) throw new Error('Weather service unavailable');
+            const data=await res.json(), c=data.current, code=c.weather_code, t=c.temperature_2m;
+            const states=code===0?['☀️','Clear sky']:([1,2,3].includes(code)?['🌤️','Partly cloudy']:([45,48].includes(code)?['🌫️','Foggy']:([51,53,55,56,57,61,63,65,66,67,80,81,82].includes(code)?['🌧️','Rainy']:([71,73,75,77,85,86].includes(code)?['❄️','Snow']:['⛈️','Showers / storm']))));
+            document.getElementById('weather-icon').textContent=states[0];
+            tempEl.textContent=Math.round(t)+'°C';
+            document.getElementById('weather-description').textContent=states[1];
+            document.getElementById('weather-wind').textContent=Math.round(c.wind_speed_10m)+' km/h';
+            document.getElementById('weather-feels').textContent=Math.round(c.apparent_temperature)+'°C';
+            card.style.background=t<=5?'#e8edf3':t<=13?'#edf1ef':t<=20?'#f4f0e5':'#f7eadc';
+            document.getElementById('weather-advice').textContent=t<=8?'🧣 Cold in Dublin: keep doors closed, use heating efficiently and dry clothes indoors safely.':c.precipitation>0?'☔ Wet weather: air-dry clothes indoors with ventilation and avoid unnecessary tumble-dryer use.':c.wind_speed_10m>30?'💨 Windy today: check window seals and make use of natural ventilation when safe.':'🌿 Mild conditions: use daylight where possible and avoid heating empty rooms.';
+          } catch(e) { document.getElementById('weather-description').textContent='Could not load weather. Please try again.'; document.getElementById('weather-advice').textContent=e.message; }
+        }
+        // No fabricated bill readings: images are previews; the user enters/verifies every value.
+        const originalPreviewUploadedBill = previewUploadedBill;
+        function previewUploadedBill(event) {
+          const file=event.target.files && event.target.files[0]; if(!file) return;
+          const reader=new FileReader();
+          reader.onload=e=>{const img=document.getElementById('bill-preview-img'); img.src=e.target.result; document.getElementById('bill-preview-container').classList.remove('hidden'); document.getElementById('upload-status-text').textContent='Image added. Please verify or enter the bill values below before saving.';};
+          reader.readAsDataURL(file);
+        }
+        function saveEditedBill() {
+          const monthStr=document.getElementById('edit-bill-month').value.trim();
+          const yearNum=Number(document.getElementById('edit-bill-year').value);
+          const billAmt=Number(document.getElementById('edit-bill-amount').value);
+          const kwhAmt=Number(document.getElementById('edit-bill-kwh').value);
+          const start=document.getElementById('bill-period-start')?.value||'';
+          const end=document.getElementById('bill-period-end')?.value||'';
+          const categories={};
+          document.querySelectorAll('.bill-category').forEach(el=>{if(el.value!=='') categories[el.dataset.category]=Number(el.value);});
+          const pct=Object.values(categories).reduce((a,b)=>a+b,0);
+          if(!monthStr||!Number.isInteger(yearNum)||yearNum<2000||!Number.isFinite(billAmt)||billAmt<0||!Number.isFinite(kwhAmt)||kwhAmt<0){alert('Please check month, year, bill amount and kWh.');return;}
+          if(start&&end&&start>end){alert('Billing period end must be after its start.');return;}
+          if(Object.keys(categories).length&&Math.abs(pct-100)>1){alert('The category percentages should add up to 100%. Please check them.');return;}
+          const id=monthStr.toLowerCase().replace(/[^a-z0-9]+/g,'-')+'-'+yearNum;
+          const record={id,month:monthStr,year:yearNum,bill:billAmt,kwh:kwhAmt,startDate:start,endDate:end,categories,savings:'€'+(kwhAmt*.08).toFixed(2)+' cr'};
+          const idx=billingRecords.findIndex(x=>x.id===id); if(idx>=0) billingRecords[idx]=record; else billingRecords.push(record);
+          saveUserData(); renderBillingListing(); populateDashboardFilters(); updateDashboardView(); switchReportSubTab('dashboard');
+          alert('Bill saved. Please remember that category percentages are user-verified estimates from the bill chart.');
+        }
+        // A true average of category kWh: weighted by each month's total consumption.
+        function getCategoryAverages(records) {
+          const total=records.reduce((n,r)=>n+(Number(r.kwh)||0),0), sums={};
+          records.forEach(r=>Object.entries(r.categories||{}).forEach(([k,p])=>sums[k]=(sums[k]||0)+(Number(r.kwh)||0)*Number(p)/100));
+          return Object.fromEntries(Object.entries(sums).map(([k,v])=>[k,total?v/total*100:0]));
+        }
+        // Weather-aware memory cards: each tip appears twice; matching identical cards earns XP.
+        const memoryTips=[
+          ['🌧️','Rainy-day laundry','Air-dry clothes indoors with good airflow instead of using the tumble dryer.'],
+          ['🥶','Keep the warmth in','Close curtains at dusk to reduce heat loss through windows.'],
+          ['💨','Windy-day check','Check for draughts around doors and windows; seal gaps safely.'],
+          ['☀️','Use daylight','Open curtains during daylight and switch off lights you do not need.'],
+          ['🚿','Hot-water saver','Take a slightly shorter shower to reduce water-heating energy.'],
+          ['🔌','Standby switch-off','Switch off chargers and devices when they are not in use.'],
+          ['🍲','Cook efficiently','Keep lids on pans so food heats faster and uses less energy.'],
+          ['🧺','Full laundry load','Wait for a full load and choose a cool wash when suitable.']
+        ];
+        let memoryDeck=[], memoryOpen=[], memoryMatched=0, memoryBusy=false;
+        function startMemoryGame(){
+          const shuffled=[...memoryTips].sort(()=>Math.random()-.5).slice(0,6);
+          memoryDeck=shuffled.flatMap((tip,i)=>[{id:i,tip},{id:i,tip}]).sort(()=>Math.random()-.5);
+          memoryOpen=[]; memoryMatched=0; memoryBusy=false; renderMemoryGame();
+        }
+        function renderMemoryGame(){
+          const host=document.getElementById('weekly-flashcards-container'); if(!host)return;
+          host.innerHTML='<div class="flex items-center justify-between gap-2"><p class="text-sm font-bold">Find two identical eco cards</p><button class="px-3 py-2 rounded-xl bg-[#8c7355] text-white font-bold" onclick="startMemoryGame()">New game</button></div><p id="memory-score" class="text-xs text-[#7a6452]">Pairs found: '+memoryMatched+'/'+(memoryDeck.length/2)+' · Match identical picture + quote</p><div class="grid grid-cols-2 sm:grid-cols-3 gap-3">'+memoryDeck.map((c,i)=>'<button type="button" aria-label="Flip card" onclick="flipMemoryCard('+i+')" class="memory-card min-h-36 rounded-2xl border-2 border-[#8c7355] bg-[#f0e6d6] p-3 text-center flex flex-col items-center justify-center gap-2">'+(memoryMatchedIds().includes(c.id)||memoryOpen.includes(i)?'<span class="text-3xl">'+c.tip[0]+'</span><strong class="text-xs">'+c.tip[1]+'</strong><span class="text-xs">'+c.tip[2]+'</span>':'<span class="text-4xl">🌿</span><strong class="text-xs">Eco Buddy</strong><span class="text-[10px]">Tap to flip</span>')+'</button>').join('')+'</div>';
+        }
+        function memoryMatchedIds(){return [...new Set(memoryDeck.filter((c,i)=>memoryMatchedCards.includes(c.id)).map(c=>c.id))];}
+        let memoryMatchedCards=[];
+        function flipMemoryCard(i){
+          if(memoryBusy||memoryOpen.includes(i)||memoryMatchedCards.includes(memoryDeck[i].id))return;
+          memoryOpen.push(i); renderMemoryGame();
+          if(memoryOpen.length===2){
+            if(memoryDeck[memoryOpen[0]].id===memoryDeck[memoryOpen[1]].id){
+              memoryMatchedCards.push(memoryDeck[i].id); memoryMatched++; currentXP+=10; currentPoints+=5; saveUserData(); updateMascotLevel(); memoryOpen=[]; renderMemoryGame();
+              if(memoryMatched===memoryDeck.length/2)document.getElementById('memory-score').textContent='🎉 All pairs matched! Bonus +20 XP!';
+            } else {memoryBusy=true;setTimeout(()=>{memoryOpen=[];memoryBusy=false;renderMemoryGame();},900);}
+          }
+        }
+        const originalInitWeeklyContent=initWeeklyContent;
+        function initWeeklyContent(){ originalInitWeeklyContent(); memoryMatchedCards=[]; startMemoryGame(); }
+        // Responsive font sizing, navigation and overflow safety.
+        document.addEventListener('DOMContentLoaded',()=>{ updateHeaderHeight(); setTimeout(updateHeaderHeight,100); });
+        if('serviceWorker' in navigator && location.protocol==='https:') window.addEventListener('load',()=>navigator.serviceWorker.register('/Saving_Money/sw.js').catch(()=>{}));
+
     </script>
 </body>
 </html>
