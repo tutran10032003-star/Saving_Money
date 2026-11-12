@@ -196,7 +196,7 @@
         .chat-choice:hover { background: #f0e6d6; }
         .chat-choice:active { transform: scale(.98); }
 
-        /* MASCOT */
+        /* MASCOT STYLING & DYNAMIC EXPRESSIONS */
         .eco-mascot {
             width: 200px;
             height: 200px;
@@ -206,6 +206,7 @@
             justify-content: center;
             overflow: visible;
             flex-shrink: 0;
+            transition: transform 0.3s ease;
         }
 
         .eco-character {
@@ -216,154 +217,14 @@
             transform-origin: center bottom;
         }
 
-        .mascot-leaves {
-            transform-box: view-box;
-            transform-origin: 150px 60px;
-            animation: mascot-leaves 3s ease-in-out infinite;
-        }
-
-        .mascot-arm-right {
-            transform-box: view-box;
-            transform-origin: 220px 163px;
-            animation: mascot-wave 2.8s ease-in-out infinite;
-            will-change: transform;
-        }
-
-        .mascot-arm-left {
-            transform-box: view-box;
-            transform-origin: 83px 175px;
-            animation: mascot-hand 3s ease-in-out infinite;
-            will-change: transform;
-        }
-
-        .mascot-sparkle { animation: mascot-twinkle 1.8s ease-in-out infinite; }
-
-        .mascot-battery {
-            animation: mascot-breathe 3s ease-in-out infinite;
-            transform-origin: center;
-        }
+        /* Biểu cảm thay đổi theo Level/Trạng thái */
+        .eco-character.level-1 .mascot-body-fill { fill: #fff9ed; }
+        .eco-character.level-2 .mascot-body-fill { fill: #eef7eb; } /* Xanh lá nhạt khi lên level 2 */
+        .eco-character.level-3 .mascot-body-fill { fill: #fcf3df; } /* Vàng ấm khi lên level 3 */
 
         @keyframes mascot-float {
             0%,100% { transform: translateY(0); }
             50% { transform: translateY(-6px); }
-        }
-
-        @keyframes mascot-leaves {
-            0%,100% { transform: rotate(0); }
-            50% { transform: rotate(5deg); }
-        }
-
-        @keyframes mascot-wave {
-            0%,100% { transform: rotate(0); }
-            50% { transform: rotate(-7deg); }
-        }
-
-        @keyframes mascot-hand {
-            0%,100% { transform: rotate(0); }
-            50% { transform: rotate(-3deg); }
-        }
-
-        @keyframes mascot-twinkle {
-            0%,100% { opacity: .45; }
-            50% { opacity: 1; }
-        }
-
-        @keyframes mascot-breathe {
-            0%,100% { transform: translateY(0); }
-            50% { transform: translateY(2px); }
-        }
-
-        .eco-character.pose-happy .mascot-arm-left {
-            animation: arm-cheer-left .6s ease-in-out infinite alternate;
-        }
-
-        .eco-character.pose-happy .mascot-arm-right {
-            animation: arm-cheer-right .6s ease-in-out infinite alternate;
-        }
-
-        .eco-character.pose-wait { animation: mascot-wait 1.2s ease-in-out infinite; }
-        .eco-character.pose-dance { animation: mascot-dance .55s ease-in-out infinite; }
-
-        .eco-character.pose-stove .mascot-arm-right {
-            animation: stove-check .65s ease-in-out infinite alternate;
-        }
-
-        .eco-character.pose-stove { animation: mascot-check 1.2s ease-in-out infinite; }
-
-        @keyframes stove-check {
-            from { transform: rotate(0); }
-            to { transform: rotate(-22deg); }
-        }
-
-        .eco-character.pose-oven .mascot-arm-right {
-            animation: oven-check .65s ease-in-out infinite alternate;
-        }
-
-        @keyframes oven-check {
-            from { transform: rotate(-12deg); }
-            to { transform: rotate(18deg); }
-        }
-
-        .eco-character.pose-light .mascot-arm-left {
-            animation: light-left .6s ease-in-out infinite alternate;
-        }
-
-        .eco-character.pose-light .mascot-arm-right {
-            animation: light-right .6s ease-in-out infinite alternate;
-        }
-
-        @keyframes light-left {
-            from { transform: rotate(0); }
-            to { transform: rotate(-38deg); }
-        }
-
-        @keyframes light-right {
-            from { transform: rotate(0); }
-            to { transform: rotate(30deg); }
-        }
-
-        .eco-character.pose-wipe .mascot-arm-left {
-            animation: wipe-left .45s ease-in-out infinite alternate;
-        }
-
-        .eco-character.pose-wipe .mascot-arm-right {
-            animation: wipe-right .45s ease-in-out infinite alternate;
-        }
-
-        @keyframes wipe-left {
-            from { transform: rotate(-22deg) translateX(-2px); }
-            to { transform: rotate(22deg) translateX(5px); }
-        }
-
-        @keyframes wipe-right {
-            from { transform: rotate(20deg) translateX(2px); }
-            to { transform: rotate(-20deg) translateX(-5px); }
-        }
-
-        @keyframes arm-cheer-left {
-            from { transform: rotate(0); }
-            to { transform: rotate(-18deg); }
-        }
-
-        @keyframes arm-cheer-right {
-            from { transform: rotate(0); }
-            to { transform: rotate(15deg); }
-        }
-
-        @keyframes mascot-check {
-            0%,100% { transform: translateY(0) rotate(0); }
-            50% { transform: translateY(-4px) rotate(-3deg); }
-        }
-
-        @keyframes mascot-wait {
-            0%,100% { transform: translateY(0) rotate(0); }
-            50% { transform: translateY(3px) rotate(2deg); }
-        }
-
-        @keyframes mascot-dance {
-            0%,100% { transform: translateY(0) rotate(0); }
-            25% { transform: translateY(-9px) rotate(-5deg); }
-            75% { transform: translateY(-9px) rotate(5deg); }
         }
 
         /* MOBILE */
@@ -414,21 +275,9 @@
                 border-radius: 22px;
             }
 
-            .chat-scene { min-height: 80px; }
-
             .eco-mascot {
                 width: 180px;
                 height: 180px;
-            }
-
-            #chat-mascot.eco-mascot {
-                width: 130px !important;
-                height: 130px !important;
-            }
-
-            footer {
-                padding-left: 12px;
-                padding-right: 12px;
             }
         }
     </style>
@@ -476,65 +325,46 @@
 
             <div class="relative mb-2 w-full flex justify-center">
                 <div class="eco-mascot">
-                    <svg id="main-mascot-svg" class="eco-character" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
-                        <defs>
-                            <filter id="ecoShadow"><feGaussianBlur stdDeviation="3"/></filter>
-                        </defs>
+                    <svg id="main-mascot-svg" class="eco-character level-1" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
                         <ellipse cx="150" cy="269" rx="66" ry="8" fill="#b9a27b" opacity=".18"/>
-                        <g class="mascot-legs">
-                            <path d="M116 220 Q105 239 107 252 Q110 261 134 257 L145 229" fill="#fff9ed" stroke="#75604d" stroke-width="5" stroke-linejoin="round"/>
-                            <ellipse cx="121" cy="257" rx="19" ry="10" fill="#fff9ed" stroke="#75604d" stroke-width="4"/>
-                            <path d="M174 222 Q188 239 185 252 Q182 262 159 257 L151 229" fill="#fff9ed" stroke="#75604d" stroke-width="5" stroke-linejoin="round"/>
-                            <ellipse cx="176" cy="257" rx="19" ry="10" fill="#fff9ed" stroke="#75604d" stroke-width="4"/>
-                        </g>
-                        <path d="M83 164 Q65 153 69 134 Q53 119 65 101 Q71 82 91 81 Q96 58 119 62 Q137 43 153 57 Q171 43 189 61 Q215 58 224 82 Q246 89 241 111 Q257 129 240 147 Q249 168 229 184 Q232 207 211 220 Q194 236 170 233 Q150 241 128 233 Q102 237 87 218 Q68 207 77 186 Q64 176 83 164 Z" fill="#fff9ed" stroke="#75604d" stroke-width="5" stroke-linejoin="round"/>
-                        <g class="mascot-leaves">
+                        <!-- LEGS -->
+                        <path d="M116 220 Q105 239 107 252 Q110 261 134 257 L145 229" fill="#fff9ed" stroke="#75604d" stroke-width="5" stroke-linejoin="round"/>
+                        <ellipse cx="121" cy="257" rx="19" ry="10" fill="#fff9ed" stroke="#75604d" stroke-width="4"/>
+                        <path d="M174 222 Q188 239 185 252 Q182 262 159 257 L151 229" fill="#fff9ed" stroke="#75604d" stroke-width="5" stroke-linejoin="round"/>
+                        <ellipse cx="176" cy="257" rx="19" ry="10" fill="#fff9ed" stroke="#75604d" stroke-width="4"/>
+
+                        <!-- BODY -->
+                        <path class="mascot-body-fill" d="M83 164 Q65 153 69 134 Q53 119 65 101 Q71 82 91 81 Q96 58 119 62 Q137 43 153 57 Q171 43 189 61 Q215 58 224 82 Q246 89 241 111 Q257 129 240 147 Q249 168 229 184 Q232 207 211 220 Q194 236 170 233 Q150 241 128 233 Q102 237 87 218 Q68 207 77 186 Q64 176 83 164 Z" stroke="#75604d" stroke-width="5" stroke-linejoin="round"/>
+
+                        <!-- LEAVES -->
+                        <g>
                             <path d="M145 57 Q108 45 103 23 Q134 17 151 46 Z" fill="#a3a875" stroke="#756b49" stroke-width="4"/>
                             <path d="M151 48 Q171 13 198 25 Q194 52 158 62 Z" fill="#7d9368" stroke="#756b49" stroke-width="4"/>
-                            <path d="M111 29 Q130 37 145 51" fill="none" stroke="#6e8056" stroke-width="2"/>
-                            <path d="M190 30 Q172 41 158 54" fill="none" stroke="#6e8056" stroke-width="2"/>
                         </g>
-                        <ellipse cx="105" cy="137" rx="13" ry="9" fill="#f5bca8"/>
-                        <ellipse cx="197" cy="137" rx="13" ry="9" fill="#f5bca8"/>
-                        <ellipse cx="128" cy="124" rx="5" ry="7" fill="#574b40"/>
-                        <ellipse cx="177" cy="124" rx="5" ry="7" fill="#574b40"/>
-                        <path d="M146 140 Q151 148 157 140" fill="none" stroke="#574b40" stroke-width="3.5" stroke-linecap="round"/>
-                        <g class="mascot-scarf">
+
+                        <!-- FACE (Dynamic Expression based on mood) -->
+                        <g id="mascot-face-group">
+                            <ellipse cx="105" cy="137" rx="13" ry="9" fill="#f5bca8"/>
+                            <ellipse cx="197" cy="137" rx="13" ry="9" fill="#f5bca8"/>
+                            <!-- Eyes -->
+                            <ellipse cx="128" cy="124" rx="5" ry="7" fill="#574b40"/>
+                            <ellipse cx="177" cy="124" rx="5" ry="7" fill="#574b40"/>
+                            <!-- Mouth -->
+                            <path id="mascot-mouth" d="M146 140 Q151 148 157 140" fill="none" stroke="#574b40" stroke-width="3.5" stroke-linecap="round"/>
+                        </g>
+
+                        <!-- SCARF -->
+                        <g>
                             <path d="M78 159 Q113 173 151 158 Q190 173 226 154 L223 178 Q186 194 150 178 Q113 195 81 178 Z" fill="#8e9973" stroke="#6e7457" stroke-width="4"/>
-                            <path d="M94 165 L107 183 M119 168 L132 186 M157 165 L170 184 M190 163 L204 179" stroke="#c3bd91" stroke-width="3" opacity=".8"/>
                             <path d="M204 175 Q224 190 214 217 L197 204 L193 187" fill="#9ca17a" stroke="#6e7457" stroke-width="4"/>
                         </g>
-                        <g class="mascot-arm-left">
+
+                        <!-- ARMS & PLUG -->
+                        <g>
                             <path d="M83 165 Q62 161 52 179 Q42 193 51 205 Q62 217 77 198 Q83 190 89 183" fill="#fff9ed" stroke="#75604d" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
-                        </g>
-                        <g class="mascot-arm-right">
                             <path d="M220 163 Q244 158 249 136" fill="none" stroke="#75604d" stroke-width="18" stroke-linecap="round"/>
                             <path d="M220 163 Q244 158 249 136" fill="none" stroke="#fff9ed" stroke-width="12" stroke-linecap="round"/>
                             <ellipse cx="249" cy="136" rx="8" ry="7" fill="#fff9ed" stroke="#75604d" stroke-width="3"/>
-                            <path d="M249 136 Q258 132 263 124 Q270 116 264 108 Q260 103 258 99" fill="none" stroke="#75604d" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M249 136 Q258 132 263 124 Q270 116 264 108 Q260 103 258 99" fill="none" stroke="#b7a78b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-                            <g transform="translate(227 67) rotate(13 25 40)">
-                                <rect x="12" y="24" width="42" height="49" rx="12" fill="#b7a78b" stroke="#75604d" stroke-width="4"/>
-                                <rect x="19" y="3" width="7" height="28" rx="3" fill="#75604d"/>
-                                <rect x="41" y="3" width="7" height="28" rx="3" fill="#75604d"/>
-                                <path d="M32 39 L24 52 L32 52 L27 64 L43 47 L34 47 Z" fill="#f6d36d"/>
-                            </g>
-                        </g>
-                        <g class="mascot-battery">
-                            <path d="M95 181 Q120 174 141 182 L143 224 Q119 238 96 222 Z" fill="#a4a981" stroke="#6e7457" stroke-width="4"/>
-                            <rect x="108" y="192" width="28" height="27" rx="6" fill="#e8e3c9" stroke="#72805f" stroke-width="3"/>
-                            <path d="M122 197 L116 207 L122 207 L118 215 L130 203 L124 203 Z" fill="#e7b947"/>
-                        </g>
-                        <g>
-                            <rect x="157" y="191" width="36" height="29" rx="7" fill="#e8e0c7" stroke="#8b8b66" stroke-width="3"/>
-                            <rect x="169" y="187" width="12" height="6" rx="3" fill="#a4a981"/>
-                            <path d="M174 197 L168 207 L176 207 L172 215 L183 203 L177 203 Z" fill="#d7ad4e"/>
-                        </g>
-                        <path d="M69 116 Q60 109 66 102" stroke="#d4b66d" stroke-width="4" fill="none" stroke-linecap="round"/>
-                        <path d="M236 98 Q245 89 251 99" stroke="#d4b66d" stroke-width="4" fill="none" stroke-linecap="round"/>
-                        <g class="mascot-sparkle" fill="#d9b85f">
-                            <path d="M48 76 L52 87 L63 91 L52 95 L48 106 L44 95 L33 91 L44 87 Z"/>
-                            <path d="M263 174 L266 182 L274 185 L266 188 L263 196 L260 188 L252 185 L260 182 Z"/>
                         </g>
                     </svg>
                 </div>
@@ -544,13 +374,31 @@
                 </div>
             </div>
 
-            <h3 class="font-bold text-[#4a3b32] text-base mt-2">Eco Buddy</h3>
+            <h3 class="font-bold text-[#4a3b32] text-base mt-2">Eco Buddy (Bé Mây)</h3>
             <p class="text-[11px] text-[#7a6452] font-semibold italic mt-0.5">🌿 A little battery, leafy ears, and a friendly companion by your side.</p>
             <p id="mascot-speech" class="text-xs text-[#5c4738] font-medium bg-[#f5ede2] p-3 rounded-2xl border-1.5 border-[#5c4738] w-full mt-3 leading-relaxed">"Let's save energy together! Complete daily tasks to level me up! 🤍"</p>
         </div>
 
-        <!-- TAB 1: TARIFF & 3 ECO TASKS -->
+        <!-- TAB 1: TARIFF & 3 ECO TASKS & SMART ENERGY TIP WIDGET -->
         <div id="tab-content-tracker" class="space-y-6">
+            <!-- SMART ENERGY TIP WIDGET (MỚI - THẺ BÀI CAM NHƯ HÌNH MẪU) -->
+            <div class="vintage-panel p-5 space-y-3 bg-gradient-to-br from-[#e06d53] to-[#c75236] text-white border-2 border-[#5c4738] shadow-[4px_4px_0px_#5c4738]">
+                <div class="flex items-center justify-between">
+                    <span class="bg-[#a83c22] text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider">🌱 Smart Energy Tip</span>
+                    <span class="text-xs opacity-90 font-bold">Week ending <span id="tip-date-label">Sun Nov 15, 2026</span></span>
+                </div>
+                <p id="smart-tip-text" class="text-sm font-bold leading-relaxed pt-1">
+                    "Don't let the water run too long while taking showers. Heating water is one of the more energy-intensive activities in your home."
+                </p>
+                <div class="flex items-center justify-between pt-2 border-t border-white/20 text-xs">
+                    <span class="text-[11px] opacity-90 font-medium">Was this tip helpful?</span>
+                    <div class="flex gap-2">
+                        <button onclick="rateTip(true)" class="px-3 py-1 bg-white/20 hover:bg-white/30 rounded-lg font-bold border border-white/40 transition">👍 Yes</button>
+                        <button onclick="rateTip(false)" class="px-3 py-1 bg-white/20 hover:bg-white/30 rounded-lg font-bold border border-white/40 transition">👎 No</button>
+                    </div>
+                </div>
+            </div>
+
             <div class="vintage-panel p-5 space-y-4">
                 <h2 class="font-bold text-[#4a3b32] text-base flex items-center gap-2 border-b-2 border-[#5c4738] pb-2.5">
                     <span>⚡</span> Daily Electricity Tariff (SST Saver+)
@@ -583,7 +431,7 @@
                 </div>
             </div>
 
-            <!-- 3 DAILY ECO TASKS (BAO GỒM PUT AWAY DRY DISHES) -->
+            <!-- 3 DAILY ECO TASKS -->
             <div class="vintage-panel p-5 space-y-3">
                 <h3 class="font-bold text-[#4a3b32] text-sm flex items-center justify-between">
                     <span class="flex items-center gap-2"><span>🌱</span> Daily Eco Tasks (1 time/day)</span>
@@ -613,20 +461,9 @@
                     </div>
                 </div>
             </div>
-
-            <!-- REMINDERS & TIPS -->
-            <div class="vintage-panel p-5 space-y-3">
-                <h3 class="font-bold text-[#4a3b32] text-sm flex items-center gap-2"><span>💡</span> Daily Reminders & Eco Tips:</h3>
-                <ul class="text-xs space-y-2 text-[#5c4738] font-medium">
-                    <li class="bg-[#fffaf4] px-3 py-2.5 rounded-xl border border-[#5c4738]/30">💡 <strong>Turn off the lights:</strong> Remember to switch off room and hallway lights when not in use.</li>
-                    <li class="bg-[#fffaf4] px-3 py-2.5 rounded-xl border border-[#5c4738]/30">🔒 <strong>Check the doors:</strong> Make sure the doors are locked and the kitchen door is closed.</li>
-                    <li class="bg-[#fffaf4] px-3 py-2.5 rounded-xl border border-[#5c4738]/30">🔌 <strong>Unplug devices:</strong> Unplug standby appliances (TV, microwave) when not in use.</li>
-                    <li class="bg-[#fffaf4] px-3 py-2.5 rounded-xl border border-[#5c4738]/30">🚿 <strong>Water heater:</strong> Remember to switch off the water heater after showering.</li>
-                </ul>
-            </div>
         </div>
 
-        <!-- TAB 2: ENERGY REPORTS (SO SÁNH kWh & TIỀN ĐIỆN) -->
+        <!-- TAB 2: ENERGY REPORTS -->
         <div id="tab-content-reports" class="hidden space-y-6">
             <div class="vintage-panel p-5 space-y-4">
                 <h2 class="font-bold text-[#4a3b32] text-base flex items-center gap-2 border-b-2 border-[#5c4738] pb-2.5">
@@ -659,7 +496,6 @@
                     </div>
                 </div>
 
-                <!-- Biểu đồ so sánh trực quan -->
                 <div class="vint-card p-4 bg-[#f5ede2] space-y-3">
                     <p class="text-xs font-bold text-center text-[#5c4738]">Comparison Chart (€)</p>
                     <div class="flex justify-between items-end h-40 pt-6 px-8 border-b-2 border-[#5c4738]">
@@ -681,40 +517,35 @@
             </div>
         </div>
 
-        <!-- TAB 3: BÉ MÂY CHATBOT & INTERACTIVE -->
+        <!-- TAB 3: BÉ MÂY CHATBOT & KHO 10 CÂU HỎI QUIZ -->
         <div id="tab-content-chatbot" class="hidden space-y-6">
             <div class="vintage-panel p-5 space-y-4">
                 <h2 class="font-bold text-[#4a3b32] text-base flex items-center gap-2 border-b-2 border-[#5c4738] pb-2.5">
-                    <span>☁️</span> Bé Mây Interactive Hub
+                    <span>☁️</span> Bé Mây Interactive Hub (10 Eco Questions)
                 </h2>
-                <p class="text-xs text-[#7a6452]">Chat with Bé Mây, take eco quizzes, or ask daily questions offline!</p>
+                <p class="text-xs text-[#7a6452]">Chat with Bé Mây, take our expanded 10-question eco quiz, or ask daily questions!</p>
 
                 <div class="grid grid-cols-2 gap-2 text-xs">
                     <button onclick="setChatMode('quiz')" id="mode-btn-quiz" class="p-2.5 bg-[#8c7355] text-white font-bold rounded-xl border border-[#5c4738]">🧠 Eco Quiz</button>
                     <button onclick="setChatMode('chat')" id="mode-btn-chat" class="p-2.5 bg-[#fffaf4] text-[#4a3b32] font-bold rounded-xl border border-[#5c4738]">💬 Ask Bé Mây</button>
                 </div>
 
-                <!-- Chat Display Box -->
                 <div class="vint-card p-4 bg-white space-y-3">
                     <div id="chatbot-messages" class="space-y-2.5 max-h-60 overflow-y-auto pr-1 text-xs">
                         <div class="bg-[#f5ede2] p-3 rounded-2xl border border-[#d8c7b0]">
                             <p class="font-bold text-[#5c4738]">Bé Mây ☁️</p>
-                            <p class="mt-1 text-[#4a3b32]">Hi there! Ready for today's eco question or want to chat with me?</p>
+                            <p class="mt-1 text-[#4a3b32]">Hi there! Ready to test your energy saving knowledge with our 10 quiz questions?</p>
                         </div>
                     </div>
 
-                    <!-- Input / Action area -->
                     <div id="chatbot-input-area" class="hidden flex gap-2 pt-2 border-t border-[#d8c7b0]">
                         <input type="text" id="chat-input-text" placeholder="Type a message to Bé Mây..." class="flex-1 px-3 py-2 rounded-xl border border-[#5c4738] text-xs">
                         <button onclick="sendUserMessage()" class="px-4 py-2 bg-[#8c7355] text-white font-bold rounded-xl border border-[#5c4738] text-xs">Send</button>
                     </div>
 
                     <div id="chatbot-quiz-area" class="space-y-2 pt-2 border-t border-[#d8c7b0]">
-                        <p id="quiz-question" class="text-xs font-bold text-[#5c4738]">Question: Which appliance consumes the most standby power?</p>
-                        <div id="quiz-options" class="grid grid-cols-1 gap-1.5">
-                            <button onclick="answerQuiz(0)" class="chat-choice text-xs py-2">A. Microwave / TV</button>
-                            <button onclick="answerQuiz(1)" class="chat-choice text-xs py-2">B. LED Light bulb</button>
-                        </div>
+                        <p id="quiz-question" class="text-xs font-bold text-[#5c4738]">Loading question...</p>
+                        <div id="quiz-options" class="grid grid-cols-1 gap-1.5"></div>
                     </div>
                 </div>
             </div>
@@ -729,7 +560,6 @@
 
                 <div class="vint-card p-4 space-y-3 bg-white" id="timer-setup-box">
                     <p class="text-xs font-bold text-[#4a3b32]">⏱️ Choose a cooking time or enter your own:</p>
-
                     <div class="timer-buttons-grid">
                         <button onclick="setTimerMinutes(15)" class="px-3.5 py-1.5 bg-[#f5ede2] hover:bg-[#e8dac7] text-[#4a3b32] rounded-xl text-xs font-bold border border-[#5c4738] transition">15 min</button>
                         <button onclick="setTimerMinutes(30)" class="px-3.5 py-1.5 bg-[#f5ede2] hover:bg-[#e8dac7] text-[#4a3b32] rounded-xl text-xs font-bold border border-[#5c4738] transition">30 min</button>
@@ -785,7 +615,7 @@
 
     </main>
 
-    <!-- SAFETY CHAT (5-STEP CHECKLIST - CHỈ CỘNG 1 LẦN +30 XP) -->
+    <!-- SAFETY CHAT (5-STEP CHECKLIST) -->
     <section id="safety-chat-overlay" class="chat-overlay hidden" role="dialog" aria-modal="true">
         <div class="chat-window">
             <div class="flex justify-between items-center border-b-2 border-[#d8c7b0] pb-3 gap-2">
@@ -826,9 +656,73 @@
         let currentXP = 0;
         let currentPoints = 0;
         let completedTasks = [false, false, false];
-        let lastTaskDate = "";
 
-        // LOCALSTORAGE LOAD ON STARTUP
+        // KHO 10 CÂU HỎI QUIZ ĐA DẠNG
+        const ecoQuizPool = [
+            {
+                q: "Which appliance consumes the most standby power in a typical home?",
+                options: ["A. Microwave / TV", "B. LED Light bulb"],
+                correct: 0,
+                explain: "Correct! Microwaves and TVs draw continuous standby power."
+            },
+            {
+                q: "What is the cheapest time period for electricity under SST Saver+?",
+                options: ["A. 17:00 - 19:00 (Peak)", "B. 23:00 - 08:00 (Night Saver)"],
+                correct: 1,
+                explain: "Correct! Night rate is €0.1954/kWh, much cheaper than day/peak rates."
+            },
+            {
+                q: "Which activity uses the most energy in household water heating?",
+                options: ["A. Taking long showers", "B. Washing hands with cold water"],
+                correct: 0,
+                explain: "Correct! Heating water for long showers consumes massive energy."
+            },
+            {
+                q: "When is the worst time to run your washing machine or dishwasher?",
+                options: ["A. Peak Hours (17:00 - 19:00)", "B. Night Saver Hours (after 23:00)"],
+                correct: 0,
+                explain: "Correct! Peak hours have the highest rate (€0.3968/kWh)."
+            },
+            {
+                q: "How much XP do you get when completing the Kitchen Safety Checklist?",
+                options: ["A. +10 XP", "B. +30 XP"],
+                correct: 1,
+                explain: "Correct! You earn +30 XP for completing all 5 kitchen safety steps!"
+            },
+            {
+                q: "What color badge does Bé Mây show during Night Saver hours?",
+                options: ["A. 🟢 Green Badge", "B. 🔴 Red Badge"],
+                correct: 0,
+                explain: "Correct! Green badge indicates Night Saver rate is active."
+            },
+            {
+                q: "Is it good practice to leave phone chargers plugged into the wall 24/7?",
+                options: ["A. Yes, it uses zero power", "B. No, they draw a small idle current"],
+                correct: 1,
+                explain: "Correct! Unplugging idle chargers saves standby energy."
+            },
+            {
+                q: "What day of the week is waste collection scheduled in the calendar?",
+                options: ["A. Tuesday", "B. Saturday"],
+                correct: 0,
+                explain: "Correct! Tuesdays are marked as waste collection days."
+            },
+            {
+                q: "What level does Bé Mây reach after passing 100 XP?",
+                options: ["A. Level 1: Sprout", "B. Level 2: Green Sprout"],
+                correct: 1,
+                explain: "Correct! Reaching 100 XP upgrades Bé Mây to Level 2."
+            },
+            {
+                q: "Why should you cover pots with lids when cooking?",
+                options: ["A. Food cooks faster and saves energy", "B. It makes the kitchen colder"],
+                correct: 0,
+                explain: "Correct! Lids trap heat so water boils faster with less energy."
+            }
+        ];
+        let currentQuizIndex = 0;
+
+        // LOCALSTORAGE LOAD
         function loadUserData() {
             const savedXP = localStorage.getItem("eco_buddy_xp");
             const savedPoints = localStorage.getItem("eco_buddy_points");
@@ -841,7 +735,6 @@
                 if (savedPoints) currentPoints = parseInt(savedPoints);
                 if (savedTasks) completedTasks = JSON.parse(savedTasks);
             } else {
-                // Reset daily tasks for new day
                 localStorage.setItem("eco_buddy_date", todayStr);
                 completedTasks = [false, false, false];
                 localStorage.setItem("eco_buddy_tasks", JSON.stringify(completedTasks));
@@ -850,6 +743,7 @@
             }
             updateMascotLevel();
             renderTasksUI();
+            loadRandomQuiz();
         }
 
         function saveUserData() {
@@ -873,7 +767,6 @@
             checkTariffStatus();
             renderCalendar();
             updateReportChart();
-
             setInterval(checkTariffStatus, 30000);
 
             if ("ResizeObserver" in window) {
@@ -887,15 +780,6 @@
 
         window.addEventListener("resize", updateHeaderHeight);
         window.addEventListener("orientationchange", () => setTimeout(updateHeaderHeight, 150));
-
-        /* PWA */
-        if ("serviceWorker" in navigator) {
-            window.addEventListener("load", () => {
-                navigator.serviceWorker.register("/Saving_Money/sw.js")
-                    .then(() => console.log("Eco-Buddy PWA ready!"))
-                    .catch(error => console.error("PWA error:", error));
-            });
-        }
 
         /* CLOCK */
         function startRealtimeClock() {
@@ -958,6 +842,7 @@
             }
         }
 
+        /* CẬP NHẬT LEVEL & THAY ĐỔI BIỂU CẢM BÉ MÂY */
         function updateMascotLevel() {
             let level = 1;
             let title = "Sprout";
@@ -974,14 +859,20 @@
             const xpText = document.getElementById('mascot-xp-text');
             const levelBadge = document.getElementById('mascot-level-badge');
             const pointsLabel = document.getElementById('eco-points-label');
+            const mascotSvg = document.getElementById('main-mascot-svg');
 
             if (xpBar) xpBar.style.width = percent + '%';
             if (xpText) xpText.innerText = `${currentXP} / ${maxXP} XP`;
             if (levelBadge) levelBadge.innerText = `🌱 Level ${level}: ${title}`;
             if (pointsLabel) pointsLabel.innerText = `${currentPoints} Points 🌱`;
+
+            // Thay đổi style mascot theo level
+            if (mascotSvg) {
+                mascotSvg.className = `eco-character level-${level}`;
+            }
         }
 
-        /* ENERGY REPORTS COMPARISON (KWH & €) */
+        /* ENERGY REPORTS */
         function updateReportChart() {
             const prevBill = parseFloat(document.getElementById('bill-prev').value) || 0;
             const currBill = parseFloat(document.getElementById('bill-curr').value) || 0;
@@ -1011,7 +902,19 @@
             }
         }
 
-        /* BÉ MÂY CHATBOT & QUIZ OFFLINE */
+        /* SMART TIP RATING */
+        function rateTip(isHelpful) {
+            if (isHelpful) {
+                currentPoints += 10;
+                saveUserData();
+                updateMascotLevel();
+                alert("Thank you for your feedback! +10 Eco Points added! 💚");
+            } else {
+                alert("Thanks! We'll show you better tips next week.");
+            }
+        }
+
+        /* BÉ MÂY CHATBOT & QUIZ 10 CÂU */
         let chatMode = 'quiz';
         function setChatMode(mode) {
             chatMode = mode;
@@ -1033,23 +936,40 @@
             }
         }
 
+        function loadRandomQuiz() {
+            currentQuizIndex = Math.floor(Math.random() * ecoQuizPool.length);
+            const item = ecoQuizPool[currentQuizIndex];
+            const qEl = document.getElementById('quiz-question');
+            const optsEl = document.getElementById('quiz-options');
+            if (!qEl || !optsEl) return;
+
+            qEl.innerText = `Question: ${item.q}`;
+            optsEl.innerHTML = "";
+            item.options.forEach((optText, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "chat-choice text-xs py-2";
+                btn.innerText = optText;
+                btn.onclick = () => answerQuiz(idx);
+                optsEl.appendChild(btn);
+            });
+        }
+
         function answerQuiz(optionIndex) {
+            const item = ecoQuizPool[currentQuizIndex];
             const msgs = document.getElementById('chatbot-messages');
-            const quizQ = document.getElementById('quiz-question');
-            const quizOpts = document.getElementById('quiz-options');
 
             msgs.innerHTML += `
                 <div class="bg-[#eaf2f8] p-3 rounded-2xl border border-[#b9d0e8] text-right">
                     <p class="font-bold text-[#32455c]">You</p>
-                    <p class="mt-1 text-[#4a3b32]">Option ${optionIndex === 0 ? 'A' : 'B'}</p>
+                    <p class="mt-1 text-[#4a3b32]">${item.options[optionIndex]}</p>
                 </div>
             `;
 
-            if (optionIndex === 0) {
+            if (optionIndex === item.correct) {
                 msgs.innerHTML += `
                     <div class="bg-[#f5ede2] p-3 rounded-2xl border border-[#d8c7b0]">
                         <p class="font-bold text-[#5c4738]">Bé Mây ☁️</p>
-                        <p class="mt-1 text-[#4a3b32]">Correct! Microwaves and TVs consume continuous standby power. You earned +15 XP! 💚</p>
+                        <p class="mt-1 text-[#4a3b32]">${item.explain} You earned +15 XP! 💚</p>
                     </div>
                 `;
                 currentXP += 15;
@@ -1059,11 +979,14 @@
                 msgs.innerHTML += `
                     <div class="bg-[#f5ede2] p-3 rounded-2xl border border-[#d8c7b0]">
                         <p class="font-bold text-[#5c4738]">Bé Mây ☁️</p>
-                        <p class="mt-1 text-[#4a3b32]">Not quite! LED lights consume very little energy compared to standby electronics.</p>
+                        <p class="mt-1 text-[#4a3b32]">Not quite right! Try another question to learn more.</p>
                     </div>
                 `;
             }
             msgs.scrollTop = msgs.scrollHeight;
+
+            // Load câu hỏi mới sau 1.5 giây
+            setTimeout(loadRandomQuiz, 1500);
         }
 
         function sendUserMessage() {
@@ -1218,7 +1141,7 @@
             document.getElementById('timer-display-box').classList.add('hidden');
         }
 
-        /* SAFETY CHAT - 5 STEPS (CHỈ CỘNG 1 LẦN +30 XP VÀO CUỐI) */
+        /* SAFETY CHECKLIST 5 STEPS */
         const safetySteps = [
             {
                 title: "Turn off the cooker",
@@ -1268,23 +1191,9 @@
             const original = document.getElementById("main-mascot-svg");
             const container = document.getElementById("chat-mascot");
             if (!original || !container) return;
-
             container.innerHTML = original.outerHTML;
             const cloned = container.querySelector("svg");
-            if (cloned) {
-                cloned.removeAttribute("id");
-                cloned.classList.remove("pose-happy","pose-check","pose-wait","pose-dance","pose-stove","pose-oven","pose-light","pose-wipe");
-            }
-        }
-
-        function setMascotPose(pose) {
-            const container = document.getElementById("chat-mascot");
-            const mascot = container?.querySelector(".eco-character");
-            if (!mascot) return;
-
-            mascot.classList.remove("pose-happy","pose-check","pose-wait","pose-dance","pose-stove","pose-oven","pose-light","pose-wipe");
-            void mascot.offsetWidth;
-            if (pose) mascot.classList.add("pose-" + pose);
+            if (cloned) cloned.removeAttribute("id");
         }
 
         function openSafetyChat() {
@@ -1306,7 +1215,6 @@
             const actions = document.getElementById("chat-actions");
 
             if (safetyStepIndex >= safetySteps.length) {
-                setMascotPose("dance");
                 question.textContent = "All done! You earned +30 XP for keeping the kitchen safe! 💚";
                 scene.textContent = "🌱✨💚";
 
@@ -1323,9 +1231,6 @@
             }
 
             const step = safetySteps[safetyStepIndex];
-            const poses = ["stove", "wind", "oven", "light", "wipe"];
-
-            setMascotPose(poses[safetyStepIndex]);
             question.textContent = step.question;
             scene.textContent = step.scene;
 
@@ -1344,7 +1249,6 @@
             if (!step) return;
 
             if (!done) {
-                setMascotPose("wait");
                 document.getElementById("chat-question").textContent = step.no;
                 document.getElementById("chat-actions").innerHTML = `
                     <button class="chat-choice" onclick="answerSafetyStep(true)">💚 I've done it! Let's continue.</button>
@@ -1353,7 +1257,6 @@
                 return;
             }
 
-            setMascotPose("happy");
             document.getElementById("chat-question").textContent = step.yes;
             setTimeout(() => {
                 safetyStepIndex++;
