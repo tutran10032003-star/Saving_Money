@@ -2335,16 +2335,17 @@
                         updatedAt: Date.now()
                     };
 
-                    if (weatherCondition) weatherCondition.innerText = conditionVi;
+                    const weatherLang = localStorage.getItem("eco_buddy_language") === "vi" ? "vi" : "en";
+                    if (weatherCondition) weatherCondition.innerText = weatherLang === "vi" ? conditionVi : condition;
                     if (weatherTemp) weatherTemp.innerText = `${Math.round(temp)}°C`;
-                    if (weatherWind) weatherWind.innerText = `Gió: ${Math.round(wind)} km/h`;
+                    if (weatherWind) weatherWind.innerText = weatherLang === "vi" ? `Gió: ${Math.round(wind)} km/h` : `Wind: ${Math.round(wind)} km/h`;
                     if (weatherIcon) weatherIcon.innerText = icon;
                     return window.latestWeather;
                 }
                 return null;
             } catch (err) {
                 console.error("Lỗi thời tiết:", err);
-                if (weatherCondition) weatherCondition.innerText = "Lỗi tải thời tiết";
+                if (weatherCondition) weatherCondition.innerText = localStorage.getItem("eco_buddy_language") === "vi" ? "Lỗi tải thời tiết" : "Weather unavailable";
                 return null;
             }
         }
