@@ -549,8 +549,11 @@
                             <img id="bill-breakdown-preview" alt="Tariff table preview" class="hidden max-h-40 w-full object-contain rounded-xl border">
                         </div>
                     </div>
-                    <div class="rounded-xl bg-[#f5ede2] p-3 space-y-2"><div class="flex justify-between"><b class="text-xs">🔎 Đọc ảnh bằng OCR</b><span id="bill-ocr-status" class="text-[10px]">Đang chờ ảnh</span></div>
+                    <div class="rounded-xl bg-[#f5ede2] p-3 space-y-2"><div class="flex justify-between gap-2"><b class="text-xs">🔎 Read Images with OCR · Đọc tổng điện năng</b><span id="bill-ocr-status" class="text-[10px] text-right">Đang chờ ảnh</span></div>
+                        <p class="text-[10px] text-[#7a6452]">Ảnh A: tổng kWh, tiền và kỳ hoá đơn. Ảnh B: bảng Day / Peak / Night.</p>
                         <button type="button" id="bill-ocr-button" onclick="runBillOCR()" class="w-full py-2 bg-[#e8dac7] rounded-xl border text-xs font-bold">✨ Đọc 2 ảnh bằng OCR</button>
+                        <p id="bill-ocr-kwh-result" class="text-sm font-extrabold text-[#32455c]">Total energy detected: — kWh</p>
+                        <pre id="bill-ocr-text" class="hidden whitespace-pre-wrap text-[10px] leading-relaxed max-h-36 overflow-auto bg-white rounded-lg p-2"></pre>
                     </div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-3 border-t text-xs">
                         <label class="font-bold">Kỳ hoá đơn / tháng<select id="edit-bill-month" class="w-full px-3 py-2 rounded-xl border mt-1 bg-white"><option value="">Chọn tháng / Select month</option><option value="January">Tháng 1 · January</option><option value="February">Tháng 2 · February</option><option value="March">Tháng 3 · March</option><option value="April">Tháng 4 · April</option><option value="May">Tháng 5 · May</option><option value="June">Tháng 6 · June</option><option value="July">Tháng 7 · July</option><option value="August">Tháng 8 · August</option><option value="September">Tháng 9 · September</option><option value="October">Tháng 10 · October</option><option value="November">Tháng 11 · November</option><option value="December">Tháng 12 · December</option></select></label>
@@ -636,7 +639,7 @@
                             <p class="text-xs font-bold text-[#5c4738]">📈 Bill (€ - Columns) & kWh Usage (Lines)</p>
                             <span id="dash-trend-info" class="text-[10px] bg-[#f0e6d6] px-2.5 py-0.5 rounded-full font-bold text-[#5c4738]">Auto Average Calculated</span>
                         </div>
-                        <div class="grid grid-cols-[auto_minmax(0,1fr)_auto] gap-2 items-stretch">
+                        <div class="grid grid-cols-[2.8rem_minmax(0,1fr)_2.8rem] gap-1 items-stretch">
                             <div id="dashboard-euro-axis" class="flex flex-col justify-between text-[9px] font-bold text-[#9b6844] py-2 text-right" aria-hidden="true"></div>
                             <div id="dashboard-col-chart" class="min-w-0 h-52 relative">
                                 <!-- SVG combo chart: € bars + kWh line -->
@@ -1179,8 +1182,16 @@
             }
             const moneyMatches=[...text.matchAll(/(?:€\s*|EUR\s*)(\d{1,5}(?:[,.]\d{2})?)/gi),...text.matchAll(/(?:total\s*(?:amount|due|bill)|amount\s*due)\s*[:：]?\s*€?\s*(\d{1,5}(?:[,.]\d{2})?)/gi)];
             if(moneyMatches.length){const vals=moneyMatches.map(m=>Number(m[1].replace(",","."))).filter(Number.isFinite);if(vals.length)r.amount=vals[vals.length-1];}
-            const kwhMatch=text.match(/(?:total\s*(?:consumption|usage|electricity|energy)?\s*[:：]?\s*)(\d{1,6}(?:[,.]\d{1,2})?)\s*kwh\b|(\d{1,6}(?:[,.]\d{1,2})?)\s*kwh\b/i);
+            const kwhMatch=text.match(/(?:total\\s*(?:consumption|usage|electricity|energy)?\\s*[:：]?\\s*)(\\d{1,6}(?:[,.]\\d{1,2})?)\\s*k\\s*w\\s*h\\b|(\\d{1,6}(?:[,.]\\d{1,2})?)\\s*k\\s*w\\s*h\\b/i);
             if(kwhMatch)r.kwh=Number((kwhMatch[1]||kwhMatch[2]).replace(",","."));
+            if(r.kwh===undefined){
+                const usageLines=String(text||"").split(/\\r?\\n/).filter(line=>/(total|usage|consumption|electricity|energy used)/i.test(line)&&!/(meter|account|serial|rate|price|charge|standing)/i.test(line));
+                for(const line of usageLines){
+                    const cleaned=line.replace(/\\b\\d{1,2}[\\/.-]\\d{1,2}[\\/.-]\\d{2,4}\\b/g," ").replace(/[€$£]\\s*\\d[\\d,.]*/g," ");
+                    const nums=[...cleaned.matchAll(/\\b(\\d{2,6}(?:[,.]\\d{1,2})?)\\b/g)].map(m=>Number(m[1].replace(",","."))).filter(n=>Number.isFinite(n)&&n>=10&&n<=100000);
+                    if(nums.length){r.kwh=nums[nums.length-1];break;}
+                }
+            }
             const issueMatch=text.match(/date\s*of\s*issue\s*[:：]?\s*(\d{1,2}\s+[A-Za-z]{3,9}\.?,?\s+(?:20\d{2}|\d{2})|\d{1,2}[\/.-]\d{1,2}[\/.-](?:20\d{2}|\d{2}))/i);
             if(issueMatch){const issue=parseBillDateParts(issueMatch[1])[0];if(issue){r.issueDate=issue.iso;if(!r.start&&!r.end){r.month=new Date(issue.iso+"T12:00:00").toLocaleString("en",{month:"long"});r.year=issue.year;}}}
             const periodAnchor=r.start||r.end;if(periodAnchor){const d=new Date(periodAnchor+"T12:00:00");r.month=d.toLocaleString("en",{month:"long"});r.year=d.getFullYear();}
@@ -1427,7 +1438,6 @@
                     const totalResult=await worker.recognize(totalFile);totalRaw=totalResult.data.text||"";
                     parsed=parseBillOcrText(totalRaw);
                     if(parsed.amount!==undefined)_bbEl("edit-bill-amount").value=parsed.amount.toFixed(2);
-                    if(parsed.kwh!==undefined)_bbEl("edit-bill-kwh").value=parsed.kwh;
                     if(parsed.start)_bbEl("edit-bill-start").value=parsed.start;
                     if(parsed.end)_bbEl("edit-bill-end").value=parsed.end;
                     if(parsed.month)_bbEl("edit-bill-month").value=parsed.month;else if(parsed.start){const d=new Date(parsed.start+"T12:00:00");_bbEl("edit-bill-month").value=d.toLocaleString("en",{month:"long"});if(!parsed.year)_bbEl("edit-bill-year").value=d.getFullYear();}
@@ -1436,14 +1446,20 @@
                 let bandResult={good:0,derived:null},found={};
                 if(tableFile){
                     const tableResult=await worker.recognize(tableFile);tableRaw=tableResult.data.text||"";tableWords=tableResult.data.words||[];
+                    if(parsed.kwh===undefined){const tableParsed=parseBillOcrText(tableRaw);if(tableParsed.kwh!==undefined)parsed.kwh=tableParsed.kwh;}
                     const expectedTotal=Number(_bbEl("edit-bill-kwh")&&_bbEl("edit-bill-kwh").value);
                     found=await readBillBandsFromImage(worker,tableFile,tableWords,tableRaw,expectedTotal);
                     bandResult=applyBillBands(found);
-                    const sum=BILL_BANDS.reduce((n,[key])=>n+(validBillBand(found[key])?found[key].kwh:0),0),kwhInput=_bbEl("edit-bill-kwh");
-                    if(bandResult.good===3&&kwhInput&&kwhInput.value==="")kwhInput.value=sum;
+                    const sum=BILL_BANDS.reduce((n,[key])=>n+(validBillBand(found[key])?found[key].kwh:0),0);
+                    if(bandResult.good===3&&sum>0&&parsed.kwh===undefined)parsed.kwh=sum;
                 }else{
                     applyBillBands({});
                 }
+                const kwhInput=_bbEl("edit-bill-kwh");
+                if(parsed.kwh!==undefined&&Number.isFinite(Number(parsed.kwh))&&Number(parsed.kwh)>0)kwhInput.value=parsed.kwh;
+                const ocrText=_bbEl("bill-ocr-text"),ocrKwh=_bbEl("bill-ocr-kwh-result");
+                if(ocrText){ocrText.textContent=[totalRaw?"--- IMAGE A · TOTAL BILL ---\\n"+totalRaw:"",tableRaw?"--- IMAGE B · DAY / PEAK / NIGHT ---\\n"+tableRaw:""].filter(Boolean).join("\\n\\n")||"OCR không nhận diện được chữ.";ocrText.classList.remove("hidden");}
+                if(ocrKwh)ocrKwh.textContent="Total energy detected: "+(kwhInput&&kwhInput.value&&Number(kwhInput.value)>0?Number(kwhInput.value).toLocaleString()+" kWh":"— kWh");
                 updateBillBands();updateBillPerPerson();
                 let bandMessage="";
                 if(!tableFile)bandMessage=" Chưa có ảnh B để đọc bảng Day/Peak/Night.";
