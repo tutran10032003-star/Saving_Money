@@ -538,22 +538,19 @@
                 <!-- SUB-TAB 1: UPLOAD & EDIT BILL -->
                 <div id="report-subtab-upload" class="space-y-4 vint-card p-4 bg-white">
                     <h3 class="font-bold text-sm text-[#5c4738]">📷 Upload & đọc hoá đơn điện</h3>
-                    <p class="text-[11px] text-[#7a6452]">Tải 2 ảnh: ảnh A để đọc tổng hoá đơn; ảnh B để đọc bảng chi tiết Day / Peak / Night. Kiểm tra lại số OCR trước khi lưu.</p>
+                    <p class="text-[11px] text-[#7a6452]">Tải hai ảnh: tổng hoá đơn và biểu đồ phân bổ. OCR chỉ hỗ trợ đọc thử; hãy kiểm tra số liệu trước khi lưu.</p>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div class="vint-card p-3 bg-[#fffaf4] space-y-2"><b class="text-xs">🧾 Ảnh A · Tổng hoá đơn</b>
                             <label class="block px-3 py-2 bg-[#8C735F] text-white rounded-xl text-xs text-center cursor-pointer">📸 Chụp / chọn ảnh<input type="file" id="bill-img-file" accept="image/*" capture="environment" class="hidden" onchange="previewUploadedBill(event,'total')"></label>
-                            <img id="bill-preview-img" alt="Bill total preview" class="hidden max-h-40 w-full object-contain rounded-xl border">
+                            <img id="bill-preview-img" alt="Bill preview" class="hidden max-h-40 w-full object-contain rounded-xl border">
                         </div>
-                        <div class="vint-card p-3 bg-[#fffaf4] space-y-2"><b class="text-xs">📋 Ảnh B · Bảng khung giờ</b>
+                        <div class="vint-card p-3 bg-[#fffaf4] space-y-2"><b class="text-xs">🍩 Ảnh B · Phân bổ điện năng</b>
                             <label class="block px-3 py-2 bg-[#8C735F] text-white rounded-xl text-xs text-center cursor-pointer">📸 Chụp / chọn ảnh<input type="file" id="bill-breakdown-file" accept="image/*" capture="environment" class="hidden" onchange="previewUploadedBill(event,'breakdown')"></label>
-                            <img id="bill-breakdown-preview" alt="Tariff table preview" class="hidden max-h-40 w-full object-contain rounded-xl border">
+                            <img id="bill-breakdown-preview" alt="Breakdown preview" class="hidden max-h-40 w-full object-contain rounded-xl border">
                         </div>
                     </div>
-                    <div class="rounded-xl bg-[#f5ede2] p-3 space-y-2"><div class="flex justify-between gap-2"><b class="text-xs">🔎 Read Images with OCR · Đọc tổng điện năng</b><span id="bill-ocr-status" class="text-[10px] text-right">Đang chờ ảnh</span></div>
-                        <p class="text-[10px] text-[#7a6452]">Ảnh A: tổng kWh, tiền và kỳ hoá đơn. Ảnh B: bảng Day / Peak / Night.</p>
-                        <button type="button" id="bill-ocr-button" onclick="runBillOCR()" class="w-full py-2 bg-[#e8dac7] rounded-xl border text-xs font-bold">✨ Đọc 2 ảnh bằng OCR</button>
-                        <p id="bill-ocr-kwh-result" class="text-sm font-extrabold text-[#32455c]">Total energy detected: — kWh</p>
-                        <pre id="bill-ocr-text" class="hidden whitespace-pre-wrap text-[10px] leading-relaxed max-h-36 overflow-auto bg-white rounded-lg p-2"></pre>
+                    <div class="rounded-xl bg-[#f5ede2] p-3 space-y-2"><div class="flex justify-between"><b class="text-xs">🔎 Đọc ảnh bằng OCR</b><span id="bill-ocr-status" class="text-[10px]">Đang chờ ảnh</span></div>
+                        <button type="button" id="bill-ocr-button" onclick="runBillOCR()" class="w-full py-2 bg-[#e8dac7] rounded-xl border text-xs font-bold">✨ Đọc thông tin từ ảnh đã tải</button>
                     </div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-3 border-t text-xs">
                         <label class="font-bold">Kỳ hoá đơn / tháng<select id="edit-bill-month" class="w-full px-3 py-2 rounded-xl border mt-1 bg-white"><option value="">Chọn tháng / Select month</option><option value="January">Tháng 1 · January</option><option value="February">Tháng 2 · February</option><option value="March">Tháng 3 · March</option><option value="April">Tháng 4 · April</option><option value="May">Tháng 5 · May</option><option value="June">Tháng 6 · June</option><option value="July">Tháng 7 · July</option><option value="August">Tháng 8 · August</option><option value="September">Tháng 9 · September</option><option value="October">Tháng 10 · October</option><option value="November">Tháng 11 · November</option><option value="December">Tháng 12 · December</option></select></label>
@@ -561,15 +558,14 @@
                         <label class="font-bold">Ngày bắt đầu<input id="edit-bill-start" type="date" class="w-full px-3 py-2 rounded-xl border mt-1"></label>
                         <label class="font-bold">Ngày kết thúc<input id="edit-bill-end" type="date" class="w-full px-3 py-2 rounded-xl border mt-1"></label>
                         <div class="space-y-2"><label class="block font-bold">Tổng tiền (€)<input id="edit-bill-amount" type="number" min="0" step="0.01" placeholder="Nhập theo bill" oninput="updateBillPerPerson()" class="w-full px-3 py-2 rounded-xl border mt-1"></label><div class="flex items-center justify-between gap-3"><label for="bill-household-size" class="text-[11px] font-bold text-[#7a6452]">Số người trong nhà</label><input id="bill-household-size" type="number" min="1" max="50" step="1" value="4" oninput="updateBillPerPerson()" class="w-20 px-3 py-2 rounded-xl border text-center text-xs font-bold"></div><p id="bill-per-person-note" class="text-[10px] italic font-normal text-[#8c7355]">Ghi chú: chia đều cho 4 người · €— / người</p></div>
+                        <label class="font-bold">Tổng điện năng (kWh)<input id="edit-bill-kwh" type="number" min="0" step="0.01" placeholder="Nhập theo bill" class="w-full px-3 py-2 rounded-xl border mt-1"></label>
                     </div>
                     <div class="pt-3 border-t space-y-3">
-                        <div><b class="text-xs">Energy Breakdown · Day / Peak / Night</b><p class="text-[10px] text-[#7a6452] mt-1">Tổng điện năng bên trái · chi tiết từng khung giờ bên phải. M có thể sửa số nếu OCR nhận chưa đúng.</p></div>
-                        <div class="grid grid-cols-1 sm:grid-cols-[minmax(170px,0.72fr)_minmax(0,2fr)] gap-4 items-start">
-                            <div class="rounded-2xl border-2 border-[#d8c7b0] bg-[#f5ede2] p-4 sm:sticky sm:top-3">
-                                <p class="text-[11px] font-extrabold tracking-widest text-[#7a6452] uppercase">Total Usage</p>
-                                <input id="edit-bill-kwh" type="number" min="0" step="0.01" placeholder="0" class="mt-2 w-full bg-transparent text-3xl sm:text-4xl font-black text-[#32455c] tabular-nums outline-none border-b-2 border-[#cdbba5] pb-2">
-                                <p class="mt-2 text-xs font-bold text-[#7a6452]">kWh</p>
-                                <p class="mt-3 text-[10px] text-[#8c7355]">Tổng kWh trên ảnh A</p>
+                        <div><b class="text-xs">🍩 Biểu đồ phân bổ gốc & bảng khung giờ</b><p class="text-[10px] text-[#7a6452] mt-1">Ảnh B hiển thị nguyên bản. Bảng Day / Peak / Night đọc từ hoá đơn trang chi tiết; nếu OCR sai thì sửa tay được.</p></div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-start">
+                            <div class="rounded-xl border border-[#d8c7b0] bg-white p-2 text-center">
+                                <img id="bill-donut-original" alt="Original energy distribution chart" class="hidden w-full max-h-72 object-contain rounded-lg">
+                                <p id="bill-donut-original-empty" class="text-[10px] text-[#7a6452] py-8">Chưa có ảnh B.</p>
                             </div>
                             <div class="min-w-0 overflow-x-auto">
                                 <table class="w-full text-[10px] tabular-nums text-right">
@@ -597,7 +593,7 @@
                     </div>
                 </div>
 
-                <!-- SUB-TAB 3: DASHBOARD (MONTHLY BILL / KWH + DAY / PEAK / NIGHT) -->
+                <!-- SUB-TAB 3: DASHBOARD (COLUMN + LINE CHO TỪNG THÁNG & DONUT CHART PHÂN BỔ) -->
                 <div id="report-subtab-dashboard" class="hidden space-y-5">
                     <!-- SLIDE CARDS LỌC MONTH & YEAR -->
                     <div class="grid grid-cols-2 gap-3 text-xs">
@@ -639,7 +635,7 @@
                             <p class="text-xs font-bold text-[#5c4738]">📈 Bill (€ - Columns) & kWh Usage (Lines)</p>
                             <span id="dash-trend-info" class="text-[10px] bg-[#f0e6d6] px-2.5 py-0.5 rounded-full font-bold text-[#5c4738]">Auto Average Calculated</span>
                         </div>
-                        <div class="grid grid-cols-[2.8rem_minmax(0,1fr)_2.8rem] gap-1 items-stretch">
+                        <div class="grid grid-cols-[auto_minmax(0,1fr)_auto] gap-2 items-stretch">
                             <div id="dashboard-euro-axis" class="flex flex-col justify-between text-[9px] font-bold text-[#9b6844] py-2 text-right" aria-hidden="true"></div>
                             <div id="dashboard-col-chart" class="min-w-0 h-52 relative">
                                 <!-- SVG combo chart: € bars + kWh line -->
@@ -654,21 +650,13 @@
                     </div>
 
 
-                    <div class="vint-card p-5 bg-[#fffaf4] space-y-4">
-                        <p class="text-xs font-bold text-[#5c4738] text-center">Energy Breakdown · Day / Peak / Night</p>
-                        <div class="grid grid-cols-1 sm:grid-cols-[minmax(150px,0.7fr)_minmax(0,2fr)] gap-4 items-start">
-                            <div class="rounded-2xl border-2 border-[#d8c7b0] bg-[#f5ede2] p-4 text-left">
-                                <p class="text-[11px] font-extrabold tracking-widest text-[#7a6452] uppercase">Total Usage</p>
-                                <p id="dashboard-selected-kwh" class="mt-2 text-3xl sm:text-4xl font-black text-[#32455c] tabular-nums">— kWh</p>
-                            </div>
-                            <div class="min-w-0 overflow-x-auto">
-                                <table class="w-full text-[10px] tabular-nums text-right mt-1">
-                                    <thead><tr class="text-[#7a6452]"><th class="text-left font-bold">Khung giờ</th><th class="font-bold">kWh</th><th class="font-bold">% kWh</th><th class="font-bold">€</th><th class="font-bold">% tiền</th></tr></thead>
-                                    <tbody id="dashboard-bands-body"></tbody>
-                                </table>
-                            </div>
+                    <div class="vint-card p-5 bg-[#fffaf4] space-y-3 text-center">
+                        <p id="dashboard-energy-title" class="text-xs font-bold text-[#5c4738] uppercase tracking-wider">Energy Breakdown</p>
+                        <p id="dashboard-total-label" class="text-[11px] font-bold text-[#7a6452] uppercase tracking-widest">Total Usage</p>
+                        <div class="flex items-baseline justify-center gap-2 py-3">
+                            <span id="dashboard-total-usage" class="text-5xl sm:text-6xl font-extrabold text-[#32455c] tabular-nums">—</span>
+                            <span class="text-lg font-bold text-[#7a6452]">kWh</span>
                         </div>
-                        <p id="dashboard-bands-note" class="text-[10px] text-[#7a6452] text-center">Lưu hoá đơn có bảng Day / Peak / Night để xem ở đây.</p>
                     </div>
 
             <!-- DASHBOARD-ONLY REMINDERS -->
@@ -1008,8 +996,15 @@
 
         const appLanguageText={en:{"tab-btn-weather":"🌦️ Weather","tab-btn-tracker":"⚡ Tariff","tab-btn-reports":"📊 Reports","tab-btn-tips":"💡 Tips","tab-btn-chatbot":"☁️ Bé Mây","tab-btn-checklist":"🍳 Cooking","tab-btn-calendar":"📅 Calendar"},vi:{"tab-btn-weather":"🌦️ Thời tiết","tab-btn-tracker":"⚡ Giá điện","tab-btn-reports":"📊 Báo cáo","tab-btn-tips":"💡 Mẹo hay","tab-btn-chatbot":"☁️ Bé Mây","tab-btn-checklist":"🍳 Nấu ăn","tab-btn-calendar":"📅 Lịch"}};
         function toggleLanguageMenu(){const menu=document.getElementById("language-menu"),button=document.getElementById("language-toggle");if(!menu)return;menu.classList.toggle("hidden");button?.setAttribute("aria-expanded",String(!menu.classList.contains("hidden")));}
-        function setAppLanguage(language){const lang=language==="vi"?"vi":"en";document.documentElement.lang=lang;localStorage.setItem("eco_buddy_language",lang);const languageCurrent=document.getElementById("language-current");if(languageCurrent)languageCurrent.textContent=lang.toUpperCase();Object.entries(appLanguageText[lang]).forEach(([id,label])=>{const el=document.getElementById(id);if(el)el.textContent=label;});document.getElementById("language-menu")?.classList.add("hidden");document.getElementById("language-toggle")?.setAttribute("aria-expanded","false");}
-        function initAppLanguage(){setAppLanguage(localStorage.getItem("eco_buddy_language")||"en");}
+        function setAppLanguage(language){const lang=language==="vi"?"vi":"en";document.documentElement.lang=lang;localStorage.setItem("eco_buddy_language",lang);const languageCurrent=document.getElementById("language-current");if(languageCurrent)languageCurrent.textContent=lang.toUpperCase();Object.entries(appLanguageText[lang]).forEach(([id,label])=>{const el=document.getElementById(id);if(el)el.textContent=label;});document.getElementById("language-menu")?.classList.add("hidden");document.getElementById("language-toggle")?.setAttribute("aria-expanded","false");refreshEnergyBreakdownLanguage();}
+        function appIsVietnamese(){return (localStorage.getItem("eco_buddy_language")||"en")==="vi";}
+        function refreshEnergyBreakdownLanguage(){
+            const vi=appIsVietnamese();
+            const title=document.getElementById("dashboard-energy-title"),label=document.getElementById("dashboard-total-label");
+            if(title)title.textContent=vi?"Phân tích điện năng":"Energy Breakdown";
+            if(label)label.textContent=vi?"Tổng điện năng tiêu thụ":"Total Usage";
+        }
+        function initAppLanguage(){setAppLanguage(localStorage.getItem("eco_buddy_language")||"en");refreshEnergyBreakdownLanguage();}
         window.addEventListener("resize", updateHeaderHeight);
         window.addEventListener("orientationchange", () => setTimeout(updateHeaderHeight, 150));
 
@@ -1145,20 +1140,16 @@
             const inputs=[...document.querySelectorAll("[data-category-percent]")],hasValues=inputs.some(input=>input.value.trim()!=="");
             const cats=getBillCategoryValues(),total=cats.reduce((n,c)=>n+c.percent,0),t=document.getElementById("bill-category-total"),w=document.getElementById("bill-category-warning");
             if(t)t.textContent=hasValues?total.toFixed(1)+"%":"—";
-            if(w)w.textContent=!hasValues?"Chưa có ước tính — có thể nhập tỷ lệ thủ công.":(Math.abs(total-100)<0.11?"✓ Tổng phân bổ bằng 100%.":"Tỷ lệ phân bổ phải bằng 100%.");
+            if(w)w.textContent=!hasValues?"Chưa có ước tính — hãy tải ảnh phân bổ rõ nét rồi chạy OCR.":(Math.abs(total-100)<0.11?"✓ Tổng phân bổ bằng 100%.":"Tỷ lệ phân bổ phải bằng 100%.");
             renderBillDonut();
         }
         function previewUploadedBill(event,type){
-            const file=event.target.files&&event.target.files[0];if(!file)return;
-            if(!file.type.startsWith("image/")){alert("Please choose an image.");return;}
-            type=type==="breakdown"?"breakdown":"total";
-            billImageFiles[type]=file;
-            if(billImageUrls[type])URL.revokeObjectURL(billImageUrls[type]);
-            billImageUrls[type]=URL.createObjectURL(file);
-            const preview=document.getElementById(type==="total"?"bill-preview-img":"bill-breakdown-preview");
-            if(preview){preview.src=billImageUrls[type];preview.classList.remove("hidden");}
-            document.getElementById("upload-status-text").textContent=(type==="total"?"Ảnh A đã sẵn sàng.":"Ảnh B đã sẵn sàng.")+" Bấm đọc OCR sau khi tải đủ hai ảnh.";
-            document.getElementById("bill-ocr-status").textContent="Ảnh đã thay đổi — cần đọc lại";
+            type=type||"total";const file=event.target.files&&event.target.files[0];if(!file)return;if(!file.type.startsWith("image/")){alert("Please choose an image.");return;}
+            billImageFiles[type]=file;if(billImageUrls[type])URL.revokeObjectURL(billImageUrls[type]);billImageUrls[type]=URL.createObjectURL(file);
+            const p=document.getElementById(type==="total"?"bill-preview-img":"bill-breakdown-preview");
+            if(p){p.src=billImageUrls[type];p.classList.remove("hidden");}
+            if(type==="breakdown") window.currentBillDonutSegments=null;
+            document.getElementById("upload-status-text").textContent="Ảnh đã sẵn sàng. Bấm đọc OCR hoặc nhập tay rồi lưu.";document.getElementById("bill-ocr-status").textContent="Có ảnh mới — cần đọc lại";if(type==="breakdown"){showBillDonutOriginal();document.querySelectorAll("[data-category-percent]").forEach(input=>input.value="");updateBillCategoryTotals();}
         }
         function parseBillDateParts(text){
             const months={jan:1,feb:2,mar:3,apr:4,may:5,jun:6,jul:7,aug:8,sep:9,oct:10,nov:11,dec:12};
@@ -1182,17 +1173,11 @@
             }
             const moneyMatches=[...text.matchAll(/(?:€\s*|EUR\s*)(\d{1,5}(?:[,.]\d{2})?)/gi),...text.matchAll(/(?:total\s*(?:amount|due|bill)|amount\s*due)\s*[:：]?\s*€?\s*(\d{1,5}(?:[,.]\d{2})?)/gi)];
             if(moneyMatches.length){const vals=moneyMatches.map(m=>Number(m[1].replace(",","."))).filter(Number.isFinite);if(vals.length)r.amount=vals[vals.length-1];}
-            const kwhMatch=text.match(/(?:total\s*(?:consumption|usage|electricity|energy)?\s*[:：]?\s*)(\d{1,6}(?:[,.]\d{1,2})?)\s*k\s*w\s*h\b|(\d{1,6}(?:[,.]\d{1,2})?)\s*k\s*w\s*h\b/i);
-            if(kwhMatch)r.kwh=Number((kwhMatch[1]||kwhMatch[2]).replace(",","."));
-            if(r.kwh===undefined){
-                const usageLines=String(text||"").split(/\r?\n/).filter(line=>/(total|usage|consumption|electricity|energy used)/i.test(line)&&!/(meter|account|serial|rate|price|charge|standing)/i.test(line));
-                for(const line of usageLines){
-                    const cleaned=line.replace(/\b\d{1,2}[\/.-]\d{1,2}[\/.-]\d{2,4}\b/g," ").replace(/[€$£]\s*\d[\d,.]*/g," ");
-                    const nums=[...cleaned.matchAll(/\b(\d{2,6})\b/g)].map(m=>Number(m[1])).filter(n=>Number.isFinite(n)&&n>=10&&n<=100000);
-                    if(nums.length){r.kwh=nums[nums.length-1];break;}
-                }
-            }
-            const issueMatch=text.match(/date\s*of\s*issue\s*[:：]?\s*(\d{1,2}\s+[A-Za-z]{3,9}\.?,?\s+(?:20\d{2}|\d{2})|\d{1,2}[\/.-]\d{1,2}[\/.-](?:20\d{2}|\d{2}))/i);
+            const usageUnitMatch=text.match(/usage\s*unit\s*[:：]?\s*(\d{1,6}(?:[,.]\d{1,2})?)/i);
+            const kwhMatch=text.match(/(?:total\s*(?:consumption|usage|electricity|energy)?\s*[:：]?\s*)(\d{1,6}(?:[,.]\d{1,2})?)\s*kwh\b|(\d{1,6}(?:[,.]\d{1,2})?)\s*kwh\b/i);
+            const usageValue=usageUnitMatch&&usageUnitMatch[1] ? usageUnitMatch[1] : (kwhMatch&&(kwhMatch[1]||kwhMatch[2]));
+            if(usageValue)r.kwh=Number(usageValue.replace(",", "."));
+                        const issueMatch=text.match(/date\s*of\s*issue\s*[:：]?\s*(\d{1,2}\s+[A-Za-z]{3,9}\.?,?\s+(?:20\d{2}|\d{2})|\d{1,2}[\/.-]\d{1,2}[\/.-](?:20\d{2}|\d{2}))/i);
             if(issueMatch){const issue=parseBillDateParts(issueMatch[1])[0];if(issue){r.issueDate=issue.iso;if(!r.start&&!r.end){r.month=new Date(issue.iso+"T12:00:00").toLocaleString("en",{month:"long"});r.year=issue.year;}}}
             const periodAnchor=r.start||r.end;if(periodAnchor){const d=new Date(periodAnchor+"T12:00:00");r.month=d.toLocaleString("en",{month:"long"});r.year=d.getFullYear();}
             return r;
@@ -1275,7 +1260,66 @@
             }
         }
 
-        // Image-based donut reconstruction removed; tariff rows are read directly from the bill.
+        // Generic donut reconstruction: no fixed categories or reference image.
+        async function detectDonutSegments(file){
+            if(!file)return {ok:false,reason:"missing-image"};
+            let bitmap=null;
+            try{
+                bitmap=await createImageBitmap(file);
+                const scale=Math.min(1,1200/Math.max(bitmap.width,bitmap.height)),w=Math.max(1,Math.round(bitmap.width*scale)),h=Math.max(1,Math.round(bitmap.height*scale));
+                const canvas=document.createElement("canvas");canvas.width=w;canvas.height=h;
+                const ctx=canvas.getContext("2d",{willReadFrequently:true});if(!ctx)return {ok:false,reason:"canvas"};
+                ctx.drawImage(bitmap,0,0,w,h);bitmap.close();bitmap=null;
+                const data=ctx.getImageData(0,0,w,h).data,minDim=Math.min(w,h),N=720;
+                const read=(cx,cy,r,i)=>{
+                    const a=(i/N)*Math.PI*2-Math.PI/2,samples=[];
+                    for(const off of [-.035,-.017,0,.017,.035]){
+                        const x=Math.round(cx+Math.cos(a)*r*(1+off)),y=Math.round(cy+Math.sin(a)*r*(1+off));
+                        if(x<0||y<0||x>=w||y>=h)continue;
+                        const p=(y*w+x)*4,R=data[p],G=data[p+1],B=data[p+2],light=(R+G+B)/3,chroma=Math.max(R,G,B)-Math.min(R,G,B);
+                        if(light<248&&chroma>7)samples.push({R,G,B});
+                    }
+                    if(!samples.length)return null;samples.sort((a,b)=>(Math.max(b.R,b.G,b.B)-Math.min(b.R,b.G,b.B))-(Math.max(a.R,a.G,a.B)-Math.min(a.R,a.G,a.B)));return samples[0];
+                };
+                const dist=(a,b)=>!a||!b?999:Math.hypot(a.R-b.R,a.G-b.G,a.B-b.B);
+                let best=null;
+                for(const fx of [.38,.44,.5,.56,.62])for(const fy of [.38,.44,.5,.56,.62]){
+                    const cx=w*fx,cy=h*fy;
+                    for(let rf=.14;rf<=.43;rf+=.012){
+                        const r=minDim*rf,colors=Array.from({length:N},(_,i)=>read(cx,cy,r,i)),valid=colors.map(Boolean),coverage=valid.filter(Boolean).length/N;
+                        if(coverage<.28)continue;
+                        let changes=0,strength=0;
+                        for(let i=0;i<N;i++){const j=(i+1)%N;if(valid[i]&&valid[j]){const d=dist(colors[i],colors[j]);if(d>34){changes++;strength+=d;}}}
+                        if(changes<2||changes>32)continue;
+                        const score=coverage*2+Math.min(strength/Math.max(1,changes),120)/120;
+                        if(!best||score>best.score)best={colors,score};
+                    }
+                }
+                if(!best)return {ok:false,reason:"ring-not-found"};
+                const runs=[];let current=null;
+                for(let i=0;i<N;i++){
+                    const c=best.colors[i];
+                    if(!c){if(current){runs.push(current);current=null;}continue;}
+                    if(!current||dist(current.color,c)>34){if(current)runs.push(current);current={count:1,color:{R:c.R,G:c.G,B:c.B},samples:[c]};}
+                    else{current.count++;current.samples.push(c);current.color={R:current.samples.reduce((n,v)=>n+v.R,0)/current.samples.length,G:current.samples.reduce((n,v)=>n+v.G,0)/current.samples.length,B:current.samples.reduce((n,v)=>n+v.B,0)/current.samples.length};}
+                }
+                if(current)runs.push(current);
+                if(runs.length>1&&dist(runs[0].color,runs[runs.length-1].color)<34){const last=runs.pop(),first=runs.shift(),count=last.count+first.count;runs.unshift({count,color:{R:(last.color.R*last.count+first.color.R*first.count)/count,G:(last.color.G*last.count+first.color.G*first.count)/count,B:(last.color.B*last.count+first.color.B*first.count)/count}});}
+                const segments=runs.filter(x=>x.count>=5);
+                if(segments.length<2||segments.length>16)return {ok:false,reason:"unclear-segments",detected:segments.length};
+                const total=segments.reduce((n,x)=>n+x.count,0),result=segments.map((x,i)=>({key:"slice-"+(i+1),label:"Slice "+(i+1),percent:Math.round(x.count/total*1000)/10,color:"#"+[x.color.R,x.color.G,x.color.B].map(v=>Math.max(0,Math.min(255,Math.round(v))).toString(16).padStart(2,"0")).join("")}));
+                result[result.length-1].percent=Math.round((result[result.length-1].percent+100-result.reduce((n,x)=>n+x.percent,0))*10)/10;
+                return {ok:true,segments:result};
+            }catch(error){if(bitmap)bitmap.close();console.warn("Donut reconstruction failed",error);return {ok:false,reason:"image-analysis"};}
+        }
+        function renderRebuiltDonut(host,segments,centerText){
+            if(!host)return;
+            if(!Array.isArray(segments)||segments.length<2){host.innerHTML='<p class="text-[10px] text-[#7a6452] py-8">Chưa nhận diện được donut từ ảnh tháng này.</p>';return;}
+            const r=75,circ=2*Math.PI*r;let offset=0;
+            const circles=segments.map(seg=>{const len=circ*Math.max(0,Number(seg.percent)||0)/100,html='<circle cx="110" cy="110" r="75" fill="none" stroke="'+seg.color+'" stroke-width="30" stroke-dasharray="'+len+' '+Math.max(0,circ-len)+'" stroke-dashoffset="'+(-offset)+'" transform="rotate(-90 110 110)"/>';offset+=len;return html;}).join("");
+            const safeCenter=String(centerText||"").replace(/[<>&"]/g,"");
+            host.innerHTML='<svg viewBox="0 0 220 220" class="w-full max-w-[260px] max-h-64" role="img" aria-label="Reconstructed donut chart"><circle cx="110" cy="110" r="75" fill="none" stroke="#eadfd1" stroke-width="30"/>'+circles+'<text x="110" y="106" text-anchor="middle" font-size="14" font-weight="700" fill="#5c4738">'+safeCenter+'</text><text x="110" y="124" text-anchor="middle" font-size="9" fill="#7a6452">TOTAL</text></svg><div class="w-full grid grid-cols-2 gap-x-2 gap-y-1 mt-2 text-[9px] text-left">'+segments.map(seg=>'<div class="flex items-center gap-1 min-w-0"><i class="w-2 h-2 rounded-full shrink-0" style="background:'+seg.color+'"></i><span class="truncate">'+seg.label+'</span><b class="ml-auto">'+Number(seg.percent).toFixed(1)+'%</b></div>').join("")+'</div>';
+        }
         // ===== BẢNG KHUNG GIỜ DAY / PEAK / NIGHT =====
         const BILL_BANDS=[["day","Day","8am–11pm",0.3719],["peak","Peak","5–7pm",0.3968],["night","Night","11pm–8am",0.1954]];
         const _bbEl=id=>document.getElementById(id);
@@ -1299,75 +1343,24 @@
             if(t2)t2.textContent=te>0?"€"+te.toFixed(2):"–";
             if(warning){const total=totalInput&&totalInput.value!==""?Number(totalInput.value):null;warning.textContent=tk>0&&total!==null&&Math.abs(tk-total)>1?"Tổng 3 khung giờ ("+tk.toFixed(0)+" kWh) khác tổng kWh đã nhập ("+total+" kWh) — hãy kiểm tra lại.":"";}
         }
+        function showBillDonutOriginal(){
+            const img=_bbEl("bill-donut-original"),empty=_bbEl("bill-donut-original-empty");if(!img)return;
+            if(billImageUrls.breakdown){img.src=billImageUrls.breakdown;img.classList.remove("hidden");if(empty)empty.classList.add("hidden");}
+            else{img.classList.add("hidden");if(empty)empty.classList.remove("hidden");}
+        }
         function parseBillBands(text){
             const out={};
-            const fix=t=>String(t).replace(/[Oo](?=\d)/g,"0").replace(/[Il|](?=\d)/g,"1");
-            const num=t=>Number(fix(t).replace(/,/g,"").replace(",","."));
             String(text||"").split(/\n/).forEach(line=>{
                 if(/standing|levy|charge/i.test(line))return;
-                const match=line.match(/\b(day|peak|night)\b/i);if(!match)return;
-                const key=match[1].toLowerCase();if(out[key])return;
-                const clean=line.replace(/\b\d{1,2}\s*[-–—]\s*\d{1,2}\s*(?:am|pm)\b/gi," ")
-                    .replace(/\b\d{1,2}\s*(?:am|pm)\b\s*(?:[-–—to]+\s*\d{1,2}\s*(?:am|pm)\b)?/gi," ")
-                    .replace(/\b\d{1,2}:\d{2}\b/g," ");
-                const tokens=(clean.match(/[\dOoIl|]+(?:[.,]\d+)?/g)||[]).map(fix);
-                const pi=tokens.findIndex(t=>/^0[.,]\d{4}$/.test(t));if(pi<1)return;
-                const kwhToken=[...tokens.slice(0,pi)].reverse().find(t=>/^\d{2,5}(?:[.,]\d{1,2})?$/.test(t));if(!kwhToken)return;
-                const amountToken=tokens.slice(pi+1).find(t=>/^\d{1,5}[.,]\d{2}$/.test(t));
-                const kwh=num(kwhToken),price=num(tokens[pi]),amount=amountToken?num(amountToken):Math.round(kwh*price*100)/100;
-                if(Number.isFinite(kwh)&&Number.isFinite(price))out[key]={kwh,price,amount};
+                const m=line.match(/\b(day|peak|night)\b/i);if(!m)return;
+                if(!/\d{1,2}\s*[:.]?\s*\d{0,2}\s*[ap]m/i.test(line))return;
+                const key=m[1].toLowerCase();if(out[key])return;
+                const nums=line.replace(/\([^)]*\)?/g," ").match(/\d+(?:[.,]\d+)?/g)||[];
+                const pi=nums.findIndex(t=>/^0[.,]\d{4}$/.test(t));if(pi<1)return;
+                const num=t=>Number(String(t).replace(",","."));
+                const amount=nums.slice(pi+1).filter(t=>/^\d{1,4}[.,]\d{2}$/.test(t)).pop();
+                out[key]={kwh:num(nums[pi-1]),price:num(nums[pi]),amount:amount?num(amount):null};
             });
-            return out;
-        }
-        function billWordText(w){return String(w&&w.text||"").trim();}
-        function billWordX(w){return (Number(w.bbox.x0)+Number(w.bbox.x1))/2;}
-        function billWordY(w){return (Number(w.bbox.y0)+Number(w.bbox.y1))/2;}
-        function findBillColumnX(words,first,second){
-            const ws=(words||[]).filter(w=>w&&w.bbox&&w.text);
-            const combined=ws.find(w=>new RegExp("^"+first+"[\\s/_-]*"+second+"$","i").test(billWordText(w)));
-            if(combined)return billWordX(combined);
-            const a=ws.filter(w=>new RegExp("^"+first+"$","i").test(billWordText(w)));
-            const b=ws.filter(w=>new RegExp("^"+second+"$","i").test(billWordText(w)));
-            for(const x of a)for(const y of b){
-                const h=Math.max(5,x.bbox.y1-x.bbox.y0,y.bbox.y1-y.bbox.y0);
-                if(Math.abs(billWordY(x)-billWordY(y))<=h*2.2)return (billWordX(x)+billWordX(y))/2;
-            }
-            const single=ws.find(w=>new RegExp("^"+first+"$","i").test(billWordText(w)));
-            return single?billWordX(single):null;
-        }
-        function parseBillBandsFromColumn(words,W,H,columnX){
-            if(!Number.isFinite(columnX))return {};
-            const ws=(words||[]).filter(w=>w&&w.bbox&&w.text),out={};
-            const defaults={day:.3719,peak:.3968,night:.1954};
-            const clean=t=>String(t).replace(/[OoQ](?=\d)/g,"0").replace(/[Il|](?=\d)/g,"1").replace(/[Ss](?=\d)/g,"5");
-            for(const key of ["day","peak","night"]){
-                const label=ws.find(w=>new RegExp("^"+key+"$","i").test(billWordText(w)));
-                if(!label)continue;
-                const rowH=Math.max(7,label.bbox.y1-label.bbox.y0),cy=billWordY(label),tol=Math.max(rowH*2.4,H*.018);
-                const row=ws.filter(w=>Math.abs(billWordY(w)-cy)<=tol);
-                const corridor=W*.28;
-                const digitWords=row.map(w=>({w,t:clean(billWordText(w)).replace(/[.,]/g,"")})).filter(x=>/^\d{1,4}$/.test(x.t)&&Math.abs(billWordX(x.w)-columnX)<=corridor);
-                const candidates=digitWords.map(x=>({value:Number(x.t),x:billWordX(x.w),source:x.t}));
-                const ordered=digitWords.slice().sort((a,b)=>a.w.bbox.x0-b.w.bbox.x0);
-                for(let i=0;i<ordered.length;i++){
-                    let text=ordered[i].t,last=ordered[i].w.bbox.x1;
-                    for(let j=i+1;j<ordered.length&&j<i+4;j++){
-                        const next=ordered[j],gap=next.w.bbox.x0-last;
-                        if(gap>Math.max(rowH*.8,10))break;
-                        text+=next.t;last=next.w.bbox.x1;
-                        if(text.length>=2&&text.length<=5)candidates.push({value:Number(text),x:(ordered[i].w.bbox.x0+last)/2,source:text});
-                    }
-                }
-                const best=candidates.filter(c=>Number.isFinite(c.value)&&c.value>=10&&c.value<=99999)
-                    .sort((a,b)=>Math.abs(a.x-columnX)-Math.abs(b.x-columnX))[0];
-                if(!best)continue;
-                const kwh=best.value;
-                const rateWord=row.find(w=>/^0[.,]\d{4}$/.test(clean(billWordText(w)).replace(/[.,]/g,".")));
-                const amountWord=row.find(w=>/^\d{1,5}[.,]\d{2}$/.test(billWordText(w).replace(/,/g,".")));
-                const price=rateWord?Number(clean(rateWord.text).replace(",", ".")):defaults[key];
-                const amount=amountWord?Number(amountWord.text.replace(",", ".")):Math.round(kwh*price*100)/100;
-                if(Number.isFinite(price)&&price>0)out[key]={kwh,price,amount};
-            }
             return out;
         }
         function validBillBand(r){return !!r&&Number.isFinite(r.kwh)&&r.kwh>=0&&Number.isFinite(r.price)&&r.price>0&&r.amount!==null&&Number.isFinite(r.amount)&&Math.abs(r.kwh*r.price-r.amount)<=0.06;}
@@ -1375,10 +1368,10 @@
         function billBandsRect(words,W,H,above,below){
             above=above||4;below=below||6;
             const ws=(words||[]).filter(w=>w&&w.bbox&&w.text),yc=w=>(w.bbox.y0+w.bbox.y1)/2;
-            const day=ws.find(w=>/^day$/i.test(w.text.trim())&&ws.some(v=>v!==w&&/[ap]m/i.test(v.text)&&Math.abs(yc(v)-yc(w))<(w.bbox.y1-w.bbox.y0)));
+            const day=ws.find(w=>/^\(?day\)?$/i.test(w.text.trim())&&ws.some(v=>v!==w&&/[ap]m/i.test(v.text)&&Math.abs(yc(v)-yc(w))<(w.bbox.y1-w.bbox.y0)));
             if(!day)return null;
             const h=Math.max(10,day.bbox.y1-day.bbox.y0),y0=Math.max(0,Math.round(day.bbox.y0-above*h)),y1=Math.min(H,Math.round(day.bbox.y1+below*h));
-            return{x:0,y:y0,w:W,h:y1-y0};
+            return{x:0,y:y0,w:Math.round(W*0.72),h:y1-y0};
         }
         async function cropBillBandForOcr(file,rect,scale){
             const bmp=await createImageBitmap(file),canvas=document.createElement("canvas");
@@ -1395,20 +1388,13 @@
             BILL_BANDS.forEach(([key])=>{const rows=candidates.map(c=>c&&c[key]).filter(Boolean);const best=rows.find(validBillBand)||rows[0];if(best)out[key]=best;});
             return out;
         }
-        async function readBillBandsFromImage(worker,file,words,fullText,expectedTotal){
+        async function readBillBandsFromImage(worker,file,words,fullText){
             const candidates=[parseBillBands(fullText)];
-            const W=Math.max(1,...(words||[]).map(w=>w.bbox&&w.bbox.x1||0)),H=Math.max(1,...(words||[]).map(w=>w.bbox&&w.bbox.y1||0)),target=Number(expectedTotal);
-            const usageX=findBillColumnX(words,"Usage","Unit"),meterX=findBillColumnX(words,"Meter","Number");
-            const usageRows=parseBillBandsFromColumn(words,W,H,usageX),meterRows=parseBillBandsFromColumn(words,W,H,meterX);
-            const sumRows=o=>{const v=["day","peak","night"].map(k=>o[k]&&o[k].kwh);return v.every(Number.isFinite)?v.reduce((a,b)=>a+b,0):NaN;};
-            const matches=o=>{const sum=sumRows(o);if(!Number.isFinite(sum))return false;if(!Number.isFinite(target)||target<=0)return true;return Math.abs(sum-target)<=Math.max(2,target*.01);};
-            if(matches(usageRows))candidates.unshift(usageRows);
-            if(matches(meterRows))candidates.unshift(meterRows);
             if(scoreBillBands(mergeBillBands(candidates))<3){
                 try{
-                    const bmp=await createImageBitmap(file),iw=bmp.width,ih=bmp.height;bmp.close();
+                    const bmp=await createImageBitmap(file),W=bmp.width,H=bmp.height;bmp.close();
                     for(const [above,below,psms] of [[4.5,13,["4"]],[4,6,["4","6"]],[3,9,["4"]]]){
-                        const rect=billBandsRect(words,iw,ih,above,below);if(!rect)break;
+                        const rect=billBandsRect(words,W,H,above,below);if(!rect)break;
                         const crop=await cropBillBandForOcr(file,rect,3);
                         for(const psm of psms){await worker.setParameters({tessedit_pageseg_mode:psm});const result=await worker.recognize(crop);candidates.push(parseBillBands(result.data.text));}
                         if(scoreBillBands(mergeBillBands(candidates))>=3)break;
@@ -1427,50 +1413,46 @@
             updateBillBands();return{good:Object.keys(good).length,derived};
         }
         async function runBillOCR(){
-            const totalFile=billImageFiles.total,tableFile=billImageFiles.breakdown,status=_bbEl("bill-ocr-status"),button=_bbEl("bill-ocr-button");
-            if(!totalFile&&!tableFile){status.textContent="Chưa có ảnh hoá đơn";return;}
+            const files=[billImageFiles.total,billImageFiles.breakdown].filter(Boolean),status=_bbEl("bill-ocr-status"),button=_bbEl("bill-ocr-button");
+            if(!files.length){status.textContent="Chưa có ảnh để đọc";return;}
             if(!window.Tesseract){status.textContent="OCR chưa tải được — nhập tay nhé";alert("OCR chưa tải được. M vẫn có thể nhập tay.");return;}
-            button.disabled=true;button.textContent="⏳ Đang đọc 2 ảnh...";status.textContent="Đang xử lý ảnh A và B…";let worker=null;
+            button.disabled=true;button.textContent="⏳ Đang đọc ảnh...";status.textContent="Đang xử lý ảnh…";let worker=null;
             try{
-                worker=await Tesseract.createWorker("eng");
-                let parsed={},totalRaw="",tableRaw="",tableWords=[];
-                if(totalFile){
-                    const totalResult=await worker.recognize(totalFile);totalRaw=totalResult.data.text||"";
-                    parsed=parseBillOcrText(totalRaw);
-                    if(parsed.amount!==undefined)_bbEl("edit-bill-amount").value=parsed.amount.toFixed(2);
-                    if(parsed.start)_bbEl("edit-bill-start").value=parsed.start;
-                    if(parsed.end)_bbEl("edit-bill-end").value=parsed.end;
-                    if(parsed.month)_bbEl("edit-bill-month").value=parsed.month;else if(parsed.start){const d=new Date(parsed.start+"T12:00:00");_bbEl("edit-bill-month").value=d.toLocaleString("en",{month:"long"});if(!parsed.year)_bbEl("edit-bill-year").value=d.getFullYear();}
-                    if(parsed.year)_bbEl("edit-bill-year").value=parsed.year;
+                worker=await Tesseract.createWorker("eng");let totalResult=null,breakdownResult=null;
+                for(let i=0;i<files.length;i++){
+                    const result=await worker.recognize(files[i]),part=result.data.text||"";
+                    if(files[i]===billImageFiles.total)totalResult={file:files[i],text:part,words:result.data.words||[]};
+                    if(files[i]===billImageFiles.breakdown)breakdownResult={file:files[i],text:part,words:result.data.words||[]};
                 }
-                let bandResult={good:0,derived:null},found={};
-                if(tableFile){
-                    const tableResult=await worker.recognize(tableFile);tableRaw=tableResult.data.text||"";tableWords=tableResult.data.words||[];
-                    if(parsed.kwh===undefined){const tableParsed=parseBillOcrText(tableRaw);if(tableParsed.kwh!==undefined)parsed.kwh=tableParsed.kwh;}
-                    const expectedTotal=Number(_bbEl("edit-bill-kwh")&&_bbEl("edit-bill-kwh").value);
-                    found=await readBillBandsFromImage(worker,tableFile,tableWords,tableRaw,expectedTotal);
-                    bandResult=applyBillBands(found);
-                    const sum=BILL_BANDS.reduce((n,[key])=>n+(validBillBand(found[key])?found[key].kwh:0),0);
-                    if(bandResult.good===3&&sum>0&&parsed.kwh===undefined)parsed.kwh=sum;
-                }else{
-                    applyBillBands({});
+                window.currentBillDonutSegments=null;
+                if(breakdownResult){
+                    const detected=await detectDonutSegments(breakdownResult.file);
+                    if(detected.ok)window.currentBillDonutSegments=detected.segments;
                 }
-                const kwhInput=_bbEl("edit-bill-kwh");
-                if(parsed.kwh!==undefined&&Number.isFinite(Number(parsed.kwh))&&Number(parsed.kwh)>0)kwhInput.value=parsed.kwh;
-                const ocrText=_bbEl("bill-ocr-text"),ocrKwh=_bbEl("bill-ocr-kwh-result");
-                if(ocrText){ocrText.textContent=[totalRaw?"--- IMAGE A · TOTAL BILL ---\n"+totalRaw:"",tableRaw?"--- IMAGE B · DAY / PEAK / NIGHT ---\n"+tableRaw:""].filter(Boolean).join("\n\n")||"OCR không nhận diện được chữ.";ocrText.classList.remove("hidden");}
-                if(ocrKwh)ocrKwh.textContent="Total energy detected: "+(kwhInput&&kwhInput.value&&Number(kwhInput.value)>0?Number(kwhInput.value).toLocaleString()+" kWh":"— kWh");
-                updateBillBands();updateBillPerPerson();
+                // Image A: invoice dates, billing period, total amount, Usage Unit and Day/Peak/Night rows.
+                // Image B: energy-distribution image reading.
+                const parsed=parseBillOcrText(totalResult ? totalResult.text : "");                const parsed=parseBillOcrText(raw);
+                if(parsed.amount!==undefined)_bbEl("edit-bill-amount").value=parsed.amount.toFixed(2);
+                if(parsed.kwh!==undefined)_bbEl("edit-bill-kwh").value=parsed.kwh;
+                if(parsed.start)_bbEl("edit-bill-start").value=parsed.start;
+                if(parsed.end)_bbEl("edit-bill-end").value=parsed.end;
+                if(parsed.month)_bbEl("edit-bill-month").value=parsed.month;else if(parsed.start){const d=new Date(parsed.start+"T12:00:00");_bbEl("edit-bill-month").value=d.toLocaleString("en",{month:"long"});if(!parsed.year)_bbEl("edit-bill-year").value=d.getFullYear();}
+                if(parsed.year)_bbEl("edit-bill-year").value=parsed.year;
                 let bandMessage="";
-                if(!tableFile)bandMessage=" Chưa có ảnh B để đọc bảng Day/Peak/Night.";
-                else if(bandResult.good===3)bandMessage=" ✓ Đã đọc bảng Day/Peak/Night từ ảnh B.";
-                else if(bandResult.derived)bandMessage=" Một dòng được suy ra từ tổng kWh — kiểm tra lại nhé.";
-                else if(bandResult.good>0)bandMessage=" Đọc được một phần bảng ở ảnh B — kiểm tra và nhập nốt.";
-                else bandMessage=" Chưa đọc đủ 3 dòng ở ảnh B. Kiểm tra cột Usage Unit / Meter Number hoặc nhập tay.";
+                if(totalResult){
+                    const found=await readBillBandsFromImage(worker,totalResult.file,totalResult.words,totalResult.text),result=applyBillBands(found),sum=BILL_BANDS.reduce((n,[key])=>n+(validBillBand(found[key])?found[key].kwh:0),0),kwhInput=_bbEl("edit-bill-kwh");
+                    if(result.good===3&&kwhInput&&kwhInput.value==="")kwhInput.value=sum;
+                    updateBillBands();
+                    if(result.good===3)bandMessage=" ✓ Đọc được bảng Day/Peak/Night.";
+                    else if(result.derived)bandMessage=" Bảng khung giờ: dòng "+result.derived+" được suy ra từ tổng kWh — kiểm tra lại nhé.";
+                    else if(result.good>0)bandMessage=" Đọc được một phần bảng khung giờ — kiểm tra và nhập nốt.";
+                    else bandMessage=" Chưa đọc được bảng khung giờ. Cần ảnh trang chi tiết bill hoặc nhập tay 3 số kWh nhé.";
+                }
+                updateBillPerPerson();
                 const filled=[parsed.start,parsed.end,parsed.amount!==undefined,parsed.kwh!==undefined,parsed.month,parsed.year].filter(Boolean).length;
-                status.textContent=(totalFile?(filled?"Ảnh A: đã tự điền "+filled+" trường.":"Ảnh A: chưa tự điền được trường nào."):"Ảnh A chưa được tải.")+" "+bandMessage;
-            }catch(error){console.error(error);status.textContent="OCR gặp lỗi — vui lòng kiểm tra ảnh và nhập tay.";}
-            finally{if(worker)await worker.terminate();button.disabled=false;button.textContent="✨ Đọc lại 2 ảnh";}
+                status.textContent=(filled?"Đã tự điền "+filled+" trường.":"Chưa tự điền được trường nào.")+bandMessage;
+            }catch(error){console.error(error);status.textContent="OCR gặp lỗi — vui lòng nhập tay.";}
+            finally{if(worker)await worker.terminate();button.disabled=false;button.textContent="✨ Đọc lại ảnh";}
         }
         async function saveEditedBill(){
             const month=document.getElementById("edit-bill-month").value.trim(),year=Number(document.getElementById("edit-bill-year").value),amount=Number(document.getElementById("edit-bill-amount").value),kwh=Number(document.getElementById("edit-bill-kwh").value),start=document.getElementById("edit-bill-start").value,end=document.getElementById("edit-bill-end").value;
@@ -1479,10 +1461,11 @@
             const categories=[...document.querySelectorAll("[data-category-percent]")].map(x=>({key:x.dataset.categoryPercent,label:(document.querySelector('[data-category-label="'+x.dataset.categoryPercent+'"]')||{}).value||"",percent:x.value===""?null:Number(x.value)}));
             if(categories.some(c=>!c.label||(c.percent!==null&&(!Number.isFinite(c.percent)||c.percent<0||c.percent>100)))){alert("Kiểm tra tên nhóm và tỷ lệ (0–100%).");return;}
             const populated=categories.filter(c=>c.percent!==null),sum=populated.reduce((n,c)=>n+c.percent,0);
-            if(populated.length&&Math.abs(sum-100)>.11){alert("Nếu đã nhập EST, tổng tỷ lệ cần bằng 100%. Nếu chưa EST được, cứ để trống.");return;}
-            const id=month.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")+"-"+year,old=billingRecords.find(x=>x.id===id),bands=readBillBands().filter(b=>b.kwh!==null),record={id,month,year,bill:amount,kwh,startDate:start,endDate:end,categories:populated.length?categories.filter(c=>c.percent!==null):[],bands:bands.length?bands:(old?.bands||[]),savings:"€"+(kwh*.08).toFixed(2)+" cr"};
+            if(populated.length&&Math.abs(sum-100)>.11){alert("Nếu đã nhập EST, tổng tỷ lệ cần bằng 100%. Nếu chưa EST được, cứ để trống và lưu ảnh gốc.");return;}
+            let imageData="";if(billImageFiles.breakdown){try{const bitmap=await createImageBitmap(billImageFiles.breakdown),scale=Math.min(1,1200/Math.max(bitmap.width,bitmap.height)),canvas=document.createElement("canvas");canvas.width=Math.round(bitmap.width*scale);canvas.height=Math.round(bitmap.height*scale);canvas.getContext("2d").drawImage(bitmap,0,0,canvas.width,canvas.height);bitmap.close();imageData=canvas.toDataURL("image/jpeg",.9);}catch(e){console.warn("Could not compress original donut image",e);}}
+            const id=month.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")+"-"+year,old=billingRecords.find(x=>x.id===id),bands=readBillBands().filter(b=>b.kwh!==null),record={id,month,year,bill:amount,kwh,startDate:start,endDate:end,categories:populated.length?categories.filter(c=>c.percent!==null):[],donutSegments:billImageFiles.breakdown?(window.currentBillDonutSegments||[]):(old?.donutSegments||[]),bands:bands.length?bands:(old?.bands||[]),breakdownImageDataUrl:imageData||old?.breakdownImageDataUrl||"",savings:"€"+(kwh*.08).toFixed(2)+" cr"};
             const idx=billingRecords.findIndex(x=>x.id===id);if(idx>=0)billingRecords[idx]={...billingRecords[idx],...record};else billingRecords.push(record);
-            try{saveUserData();}catch(e){alert("Không đủ bộ nhớ để lưu hoá đơn. M thử xoá bớt dữ liệu cũ nhé.");return;}
+            try{saveUserData();}catch(e){alert("Không đủ bộ nhớ để lưu ảnh donut. M thử ảnh nhỏ hơn nhé.");return;}
             renderBillingListing();populateDashboardFilters();updateDashboardView();updateBillPerPerson();document.getElementById("upload-status-text").textContent="✓ Đã lưu hóa đơn và cập nhật Dashboard.";alert("💾 Đã lưu hóa đơn!");
         }
         function renderBillingListing() {
@@ -1550,24 +1533,24 @@
             document.getElementById('dash-stat-kwh').innerText = `${displayKwh} kWh`;
             document.getElementById('dash-stat-bill').innerText = `€${displayBill.toFixed(2)}`;
             document.getElementById('dash-stat-savings').innerText = `€${(displayKwh * 0.08).toFixed(2)} cr`;
-            const selectedKwhEl = document.getElementById('dashboard-selected-kwh');
-            if (selectedKwhEl) selectedKwhEl.innerText = `${displayKwh} kWh`;
+            const totalUsageEl = document.getElementById("dashboard-total-usage");
+            if (totalUsageEl) totalUsageEl.textContent = count ? displayKwh.toLocaleString() : "—";
             document.getElementById('dash-trend-info').innerText = monthVal === 'all' ? "Showing All-Months Average" : `Showing ${monthVal}`;
 
             renderDashboardColumnLineChart(filtered);
-            renderDashboardBandsTable(filtered, monthVal === "all");
         }
-        function renderDashboardBandsTable(records, aggregateAll) {
-            const body=_bbEl("dashboard-bands-body"),note=_bbEl("dashboard-bands-note");
+        function renderDashboardEnergyDonut(records, aggregateAll) {
+            const host=_bbEl("dashboard-donut-redraw"),body=_bbEl("dashboard-bands-body"),note=_bbEl("dashboard-donut-note");
             if(!body)return;
-            const recs=records||[];
+            const recs=records||[],one=recs.length===1?recs[0]:null;
+            if(host){if(one&&Array.isArray(one.donutSegments)&&one.donutSegments.length)renderRebuiltDonut(host,one.donutSegments,Number(one.kwh||0).toFixed(0)+" kWh");else host.innerHTML='<p class="text-[10px] text-[#7a6452] py-8 text-center">'+(aggregateAll||recs.length>1?"Chọn một tháng để xem donut đã vẽ lại.":"Tháng này chưa có dữ liệu donut được nhận diện.")+'</p>';}
             const totals={day:{kwh:0,eur:0},peak:{kwh:0,eur:0},night:{kwh:0,eur:0}};let has=false;
             recs.forEach(record=>(Array.isArray(record.bands)?record.bands:[]).forEach(band=>{if(!band||!totals[band.key]||!Number.isFinite(Number(band.kwh))||Number(band.kwh)<0)return;const kwh=Number(band.kwh),eur=Number.isFinite(Number(band.eur))?Number(band.eur):kwh*Number(band.price||0);totals[band.key].kwh+=kwh;totals[band.key].eur+=eur;has=true;}));
             if(!has){body.innerHTML='<tr><td colspan="5" class="py-3 text-center text-[#7a6452]">Chưa có bảng khung giờ cho lựa chọn này.</td></tr>';if(note)note.textContent="Lưu hoá đơn có bảng Day / Peak / Night để xem ở đây.";return;}
             const totalKwh=Object.values(totals).reduce((n,v)=>n+v.kwh,0),totalEur=Object.values(totals).reduce((n,v)=>n+v.eur,0);
             const row=(label,hint,value)=>'<tr class="border-t border-[#e3d6c6]"><td class="py-1.5 text-left font-bold">'+label+' <span class="font-normal text-[#7a6452]">'+hint+'</span></td><td>'+value.kwh.toFixed(0)+'</td><td>'+(totalKwh>0?(value.kwh/totalKwh*100).toFixed(1)+"%":"–")+'</td><td>€'+value.eur.toFixed(2)+'</td><td>'+(totalEur>0?(value.eur/totalEur*100).toFixed(1)+"%":"–")+'</td></tr>';
             body.innerHTML=BILL_BANDS.map(([key,label,hint])=>row(label,hint,totals[key])).join('')+'<tr class="border-t-2 border-[#5c4738] font-extrabold"><td class="py-1.5 text-left">Total</td><td>'+totalKwh.toFixed(0)+'</td><td>100%</td><td>€'+totalEur.toFixed(2)+'</td><td>100%</td></tr>';
-            const center=_bbEl("dashboard-selected-kwh");if(center)center.textContent=Math.round(totalKwh)+" kWh";
+            const center=_bbEl("donut-center-val");if(center)center.textContent=Math.round(totalKwh)+" kWh";
             if(note)note.textContent=aggregateAll||recs.length>1?"Nhiều tháng · cộng dồn kWh và € theo từng khung giờ":"Tháng đã chọn · bảng đọc từ hoá đơn";
         }
         // Combo chart: monthly bill as columns (€), energy usage as a line (kWh).
@@ -1610,8 +1593,10 @@
             const plotH = H - top - bottom;
             const maxBill = Math.max(1, ...records.map(r => Number(r.bill) || 0)) * 1.12;
             const maxKwh = Math.max(1, ...records.map(r => Number(r.kwh) || 0)) * 1.12;
-            const step = (W - left - right) / records.length;
-            const barW = Math.min(34, step * 0.48);
+            const plotW = W - left - right;
+            const step = records.length > 1 ? Math.min(46, plotW / (records.length - 1)) : 0;
+            const barW = Math.min(34, Math.max(20, step * 0.78 || 30));
+            const centerX = left + plotW / 2;
             const selected = new Set((activeRecords || []).map(r => r.id));
             const points = [];
             let bars = "";
@@ -1625,7 +1610,7 @@
             }
 
             records.forEach((r, i) => {
-                const cx = left + step * (i + 0.5);
+                const cx = records.length === 1 ? centerX : centerX + (i - (records.length - 1) / 2) * step;
                 const bill = Math.max(0, Number(r.bill) || 0);
                 const kwh = Math.max(0, Number(r.kwh) || 0);
                 const billY = top + plotH * (1 - bill / maxBill);
@@ -1633,7 +1618,7 @@
                 const opacity = selected.size && !selected.has(r.id) ? 0.35 : 1;
                 bars += '<rect x="' + (cx-barW/2).toFixed(1) + '" y="' + billY.toFixed(1) + '" width="' + barW.toFixed(1) + '" height="' + Math.max(0,top+plotH-billY).toFixed(1) + '" rx="5" fill="#e8b98f" opacity="' + opacity + '"><title>' + r.month + ': €' + bill.toFixed(2) + '</title></rect>';
                 points.push({x:cx,y:kwhY,kwh,opacity});
-                xLabels.innerHTML += '<span class="text-center flex-1 min-w-0 ' + (opacity < 1 ? 'opacity-40' : '') + '">' + String(r.month || '').substring(0,3) + '</span>';
+                xLabels.innerHTML += '<span class="text-center min-w-0 absolute -translate-x-1/2 ' + (opacity < 1 ? 'opacity-40' : '') + '" style="left:' + (cx / W * 100).toFixed(3) + '%">' + String(r.month || '').substring(0,3) + '</span>';
             });
 
             const linePoints = points.map(p => p.x.toFixed(1) + ',' + p.y.toFixed(1)).join(' ');
@@ -2128,16 +2113,10 @@ const reportTranslations = {
 "Manage bills, edit data, list history & view dashboard analytics":"Manage bills, edit data, review history & view dashboard analytics",
 "1. Upload & Edit Bill":"1. Upload & Edit Bill","2. Billing Listing":"2. Billing Listing","3. Dashboard":"3. Dashboard",
 "📷 Upload & đọc hoá đơn điện":"📷 Upload & Read Electricity Bill",
-"Tải 2 ảnh: ảnh A để đọc tổng hoá đơn; ảnh B để đọc bảng chi tiết Day / Peak / Night. Kiểm tra lại số OCR trước khi lưu.":"Upload two images: Image A for the bill total; Image B for the Day / Peak / Night table. Check OCR values before saving.",
-"Tổng điện năng bên trái · chi tiết từng khung giờ bên phải. M có thể sửa số nếu OCR nhận chưa đúng.":"Total usage on the left · tariff details on the right. You can correct any OCR values.",
-"Tổng kWh trên ảnh A":"Total kWh from Image A",
-"Đang xử lý ảnh A và B…":"Reading Image A and B…",
-"Ảnh A đã sẵn sàng. Bấm đọc OCR sau khi tải đủ hai ảnh.":"Image A is ready. Upload both images before running OCR.",
-"Ảnh B đã sẵn sàng. Bấm đọc OCR sau khi tải đủ hai ảnh.":"Image B is ready. Upload both images before running OCR.",
-"Tải 2 ảnh: ảnh A để đọc tổng hoá đơn; ảnh B để đọc bảng chi tiết Day / Peak / Night. Kiểm tra lại số OCR trước khi lưu.":"Upload two images: Image A for the bill total; Image B for the Day / Peak / Night table. Check OCR values before saving.",
-"🧾 Ảnh A · Tổng hoá đơn":"🧾 Image A · Bill Total","📋 Ảnh B · Bảng khung giờ":"📋 Image B · Tariff Table",
+"Tải hai ảnh: tổng hoá đơn và biểu đồ phân bổ. OCR chỉ hỗ trợ đọc thử; hãy kiểm tra số liệu trước khi lưu.":"Upload two images: bill total and energy breakdown. OCR provides an estimate; please verify all values before saving.",
+"🧾 Ảnh A · Tổng hoá đơn":"🧾 Image A · Bill Total","🍩 Ảnh B · Phân bổ điện năng":"🍩 Image B · Energy Breakdown",
 "📸 Chụp / chọn ảnh":"📸 Take Photo / Choose Image","🔎 Đọc ảnh bằng OCR":"🔎 Read Images with OCR",
-"Đang chờ ảnh":"Waiting for images","✨ Đọc 2 ảnh bằng OCR":"✨ Read Both Images with OCR",
+"Đang chờ ảnh":"Waiting for images","✨ Đọc thông tin từ ảnh đã tải":"✨ Read Information from Uploaded Images",
 "Kỳ hoá đơn / tháng":"Billing Period / Month","Năm":"Year","Ngày bắt đầu":"Start Date","Ngày kết thúc":"End Date","Tổng tiền (€)":"Total Bill (€)","Số người trong nhà":"People in Household","Tổng điện năng (kWh)":"Total Energy (kWh)",
 "Nhập theo bill":"Enter bill value","🍩 Phân bổ điện năng theo nhóm":"🍩 Energy Distribution by Category",
 "Rê chuột hoặc bấm vào từng phần của donut để xem điện năng ước tính theo nhóm.":"Hover over or select a donut segment to view the estimated energy use for that category.",
