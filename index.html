@@ -1188,7 +1188,7 @@
                 const usageLines=String(text||"").split(/\r?\n/).filter(line=>/(total|usage|consumption|electricity|energy used)/i.test(line)&&!/(meter|account|serial|rate|price|charge|standing)/i.test(line));
                 for(const line of usageLines){
                     const cleaned=line.replace(/\b\d{1,2}[\/.-]\d{1,2}[\/.-]\d{2,4}\b/g," ").replace(/[€$£]\s*\d[\d,.]*/g," ");
-                    const nums=[...cleaned.matchAll(/\b(\d{2,6}(?:[,.]\d{1,2})?)\b/g)].map(m=>Number(m[1].replace(",","."))).filter(n=>Number.isFinite(n)&&n>=10&&n<=100000);
+                    const nums=[...cleaned.matchAll(/\b(\d{2,6})\b/g)].map(m=>Number(m[1])).filter(n=>Number.isFinite(n)&&n>=10&&n<=100000);
                     if(nums.length){r.kwh=nums[nums.length-1];break;}
                 }
             }
@@ -1550,7 +1550,8 @@
             document.getElementById('dash-stat-kwh').innerText = `${displayKwh} kWh`;
             document.getElementById('dash-stat-bill').innerText = `€${displayBill.toFixed(2)}`;
             document.getElementById('dash-stat-savings').innerText = `€${(displayKwh * 0.08).toFixed(2)} cr`;
-            document.getElementById('donut-center-val').innerText = `${displayKwh} kWh`;
+            const selectedKwhEl = document.getElementById('dashboard-selected-kwh');
+            if (selectedKwhEl) selectedKwhEl.innerText = `${displayKwh} kWh`;
             document.getElementById('dash-trend-info').innerText = monthVal === 'all' ? "Showing All-Months Average" : `Showing ${monthVal}`;
 
             renderDashboardColumnLineChart(filtered);
