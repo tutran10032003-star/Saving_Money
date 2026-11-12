@@ -648,8 +648,8 @@
                         <div id="dashboard-category-legend" class="grid grid-cols-2 sm:grid-cols-4 gap-2 w-full text-[10px] font-bold text-[#4a3b32]"></div><p id="dashboard-donut-note" class="text-[10px] text-[#7a6452] text-center">Save a bill to show its estimated distribution or original chart.</p>
                     </div>
 
-            <!-- REMINDERS & TIPS -->
-            <div class="vintage-panel p-6 space-y-3">
+            <!-- DASHBOARD-ONLY REMINDERS -->
+            <div id="dashboard-only-reminders" class="hidden vintage-panel p-6 space-y-3">
                 <h3 class="font-bold text-[#4a3b32] text-sm flex items-center gap-2"><span>💡</span> Daily Reminders & Basic Rules:</h3>
                 <ul class="text-xs space-y-2 text-[#5c4738] font-medium">
                     <li class="bg-[#fffaf4] px-3 py-2.5 rounded-xl border border-[#5c4738]/30">💡 <strong>Turn off the lights:</strong> Remember to switch off room and hallway lights when not in use.</li>
@@ -1029,6 +1029,7 @@
                 renderBillingListing();
                 updateDashboardView();
             }
+            syncDashboardReminderVisibility();
         }
 
         function switchReportSubTab(subName) {
@@ -1052,6 +1053,16 @@
 
             if (subName === 'listing') renderBillingListing();
             if (subName === 'dashboard') updateDashboardView();
+            syncDashboardReminderVisibility();
+        }
+
+        function syncDashboardReminderVisibility() {
+            const reminders = document.getElementById('dashboard-only-reminders');
+            const reports = document.getElementById('tab-content-reports');
+            const dashboard = document.getElementById('report-subtab-dashboard');
+            if (!reminders || !reports || !dashboard) return;
+            const isDashboardActive = !reports.classList.contains('hidden') && !dashboard.classList.contains('hidden');
+            reminders.classList.toggle('hidden', !isDashboardActive);
         }
 
         const billCategoryDefaults=[["waterHeating","Water Heating",null],["cooking","Cooking",null],["entertainment","Entertainment",null],["laundry","Laundry",null],["refrigeration","Refrigeration",null],["alwaysOn","Always On",null],["lighting","Lighting",null],["other","Other",null]];
