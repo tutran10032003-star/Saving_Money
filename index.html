@@ -1161,10 +1161,11 @@
                 const {colors,valid}=best,bounds=[];for(let i=0;i<steps;i++){const p=(i+steps-1)%steps;if(valid[i]&&valid[p]&&dist(colors[i],colors[p])>27)bounds.push(i);}
                 if(bounds.length<2)return {ok:false,reason:"unclear-segments"};
                 const segments=bounds.map((start,i)=>({start,length:(bounds[(i+1)%bounds.length]-start+steps)%steps})).filter(x=>x.length>=5);
-                if(segments.length<2||segments.length>12)return {ok:false,reason:"unclear-segments",segments:segments.length};
+                if(segments.length<2||segments.length>8)return {ok:false,reason:"unclear-segments",segments:segments.length};
+                if(ordered.length!==segments.length)return {ok:false,reason:"labels-do-not-match-slices",detected:ordered.length,segments:segments.length};
                 const total=segments.reduce((n,x)=>n+x.length,0),shares=segments.map(x=>Math.round(x.length/total*1000)/10);shares[0]=Math.round((shares[0]+100-shares.reduce((n,v)=>n+v,0))*10)/10;
-                const result={};segments.forEach((x,i)=>{const key=ordered[i]?.key||"other";result[key]=(result[key]||0)+shares[i];});
-                return {ok:true,shares:result,detected:ordered.length,segments:segments.length,unmatched:segments.length>ordered.length};
+                const result={};segments.forEach((x,i)=>{result[ordered[i].key]=shares[i];});
+                return {ok:true,shares:result,detected:ordered.length,segments:segments.length,unmatched:false};
             }catch(e){if(bitmap)bitmap.close();console.warn("Donut estimation failed",e);return {ok:false,reason:"image-analysis"};}
         }
         async function runBillOCR(){
