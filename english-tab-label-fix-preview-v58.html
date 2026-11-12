@@ -1,0 +1,2308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>Eco-Buddy Home Manager ⚡☁️</title>
+
+    <!-- PWA CONFIGURATION -->
+    <link rel="manifest" href="/Saving_Money/manifest.json">
+    <meta name="theme-color" content="#fcf8f2">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Eco-Buddy">
+    <link rel="apple-touch-icon" href="/Saving_Money/icons/icon-192.png">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+#report-subtab-upload input[type="number"],#report-subtab-upload input[type="date"],#billing-listing-container,#dash-stat-kwh,#dash-stat-bill,#dash-stat-savings,#donut-center-val{font-family:inherit;font-variant-numeric:tabular-nums;font-feature-settings:"tnum";}
+        * { box-sizing: border-box; caret-color: transparent; }
+
+        html {
+            -webkit-text-size-adjust: 100%;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background-color: #fcf8f2;
+            color: #4a3b32;
+            min-height: 100vh;
+            min-height: 100dvh;
+            overflow-x: hidden;
+            padding-top: var(--header-height, 80px);
+        }
+
+        button, input, textarea, select { font-family: inherit; touch-action: manipulation; caret-color: auto; }
+        button { cursor: pointer; }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #f4ecdf; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb { background: #d8c7b0; border-radius: 3px; }
+
+        .vintage-panel {
+            background: linear-gradient(145deg, #fffdfa 0%, #f7f1e5 100%);
+            border: 2px solid #5c4738;
+            box-shadow: 4px 4px 0 #5c4738;
+            border-radius: 1.5rem;
+            width: 100%;
+            max-width: 780px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .vint-card {
+            background: #fffaf4;
+            border: 1.5px solid #5c4738;
+            border-radius: 1rem;
+            box-shadow: 2px 2px 0 #5c4738;
+        }
+
+        /* FIXED HEADER */
+        header {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            z-index: 10000 !important;
+            width: 100%;
+            background: rgba(255,253,250,.97);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 3px 10px rgba(92,71,56,.10);
+        }
+
+        .header-inner {
+            width: 100%;
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        /* 6 TABS NAVIGATION (TĂNG SIZE CHỮ TO RÕ HƠN NỮA) */
+        .nav-pills {
+            width: 100%;
+            max-width: 560px;
+            padding: 5px;
+            display: grid;
+            grid-template-columns: repeat(7, minmax(0, 1fr));
+            gap: 3px;
+            background: #f0e6d6;
+            border-radius: 30px;
+            border: 1px solid #e4d8c5;
+            flex-shrink: 0;
+        }
+
+        .nav-btn {
+            min-width: 0;
+            border: 2px solid transparent;
+            border-radius: 20px;
+            padding: 9px 2px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #4a3b32;
+            background: transparent;
+            transition: .2s;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .nav-btn.active {
+            background: #8c7355;
+            color: white;
+            border-color: #5c4738;
+            box-shadow: 2px 2px 0 #5c4738;
+        }
+
+        #tab-content-tracker,
+        #tab-content-reports,
+        #tab-content-tips,
+        #tab-content-chatbot,
+        #tab-content-checklist,
+        #tab-content-calendar {
+            scroll-margin-top: calc(var(--header-height, 80px) + 12px);
+        }
+
+        /* TIMER */
+        .timer-buttons-grid {
+            display: flex;
+            flex-wrap: nowrap;
+            gap: 8px;
+        }
+
+        .timer-buttons-grid button {
+            flex: 1;
+            min-height: 40px;
+        }
+
+        /* SAFETY CHAT */
+        .chat-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: rgba(252,248,242,.97);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+            padding-top: max(16px, env(safe-area-inset-top));
+            padding-bottom: max(16px, env(safe-area-inset-bottom));
+        }
+
+        .chat-overlay.hidden { display: none; }
+
+        .chat-window {
+            width: min(600px, 100%);
+            max-height: calc(100dvh - 32px);
+            overflow-y: auto;
+            overscroll-behavior: contain;
+            padding: 24px;
+            background: linear-gradient(145deg,#fffdfa,#f7f1e5);
+            border: 2px solid #5c4738;
+            border-radius: 26px;
+            box-shadow: 6px 6px 0 #5c4738;
+        }
+
+        .chat-bubble {
+            background: #f5ede2;
+            border: 1px solid #d8c7b0;
+            padding: 15px;
+            border-radius: 20px;
+            width: 100%;
+        }
+
+        .chat-scene {
+            background: #fffaf4;
+            border: 1.5px dashed #b9a487;
+            border-radius: 22px;
+            min-height: 100px;
+        }
+
+        .chat-choice {
+            width: 100%;
+            min-height: 46px;
+            padding: 12px;
+            background: #fffdfa;
+            border: 1.5px solid #8c7355;
+            border-radius: 15px;
+            text-align: left;
+            font-weight: 700;
+            font-size: 13px;
+            color: #4a3b32;
+            transition: background .2s, transform .15s;
+        }
+
+        .chat-choice:hover { background: #f0e6d6; }
+        .chat-choice:active { transform: scale(.98); }
+
+        /* MASCOT */
+        .eco-mascot {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: visible;
+            flex-shrink: 0;
+            transition: transform 0.3s ease;
+        }
+
+        .eco-character {
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+            animation: mascot-float 3s ease-in-out infinite;
+            transform-origin: center bottom;
+        }
+
+        .eco-character.level-1 .mascot-body-fill { fill: #fff9ed; }
+        .eco-character.level-2 .mascot-body-fill { fill: #eef7eb; }
+        .eco-character.level-3 .mascot-body-fill { fill: #fcf3df; }
+
+        @keyframes mascot-float {
+            0%,100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+        }
+
+        .vintage-scarf-icon {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .vintage-scarf-icon svg {
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+            animation: scarf-float 3s ease-in-out infinite;
+        }
+        @keyframes scarf-float {
+            0%, 100% { transform: translateY(0) rotate(-2deg); }
+            50% { transform: translateY(-3px) rotate(2deg); }
+        }
+
+        /* RESPONSIVE CHO ĐIỆN THOẠI: 4 NÚT THỜI GIAN THÀNH 2 HÀNG X 2 CỘT */
+        
+        @media (max-width: 640px) {
+            .header-inner {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 9px;
+                padding: 10px 12px;
+            }
+            .nav-pills { max-width: none; width: 100%; }
+            .nav-btn { font-size: 11px; padding: 8px 2px; }
+            main { padding-left: 12px !important; padding-right: 12px !important; padding-top: 16px !important; }
+            .timer-buttons-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); }
+            #custom-minutes { min-width: 0; width: 100%; }
+            .eco-mascot { width: 180px; height: 180px; }
+        }
+        @media (max-width:700px) { .header-inner{display:block;padding:10px 12px}.nav-pills{max-width:100%;display:flex;overflow-x:auto;gap:6px;scrollbar-width:none}.nav-pills::-webkit-scrollbar{display:none}.nav-btn{flex:0 0 auto;min-width:max-content;padding:10px 12px;font-size:13px}main{padding-left:12px!important;padding-right:12px!important}.vintage-panel{padding:16px!important;min-width:0}input,select,textarea{max-width:100%;min-width:0}#dashboard-col-chart{max-width:100%;overflow:visible} } 
+        /* English labels are longer; keep Baby Cloud and Cooking inside their desktop tabs */
+        @media (min-width: 901px) {
+            html[lang="en"] #tab-btn-chatbot,
+            html[lang="en"] #tab-btn-checklist {
+                font-size: 10px;
+                letter-spacing: -0.25px;
+                padding-left: 0;
+                padding-right: 0;
+            }
+        }
+
+        /* Keep the main navigation from squeezing tabs together on tablet widths */
+        @media (min-width: 701px) and (max-width: 900px) {
+            .header-inner {
+                display: flex;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 9px;
+                padding: 10px 12px;
+            }
+            .nav-pills {
+                width: 100%;
+                max-width: 100%;
+                display: flex;
+                flex-wrap: nowrap;
+                gap: 6px;
+                overflow-x: auto;
+                overflow-y: hidden;
+                scrollbar-width: none;
+                -webkit-overflow-scrolling: touch;
+            }
+            .nav-pills::-webkit-scrollbar { display: none; }
+            .nav-btn {
+                flex: 0 0 auto;
+                min-width: max-content;
+                padding: 9px 12px;
+                font-size: 12px;
+            }
+        }
+
+        /* Dashboard sizing and phone layout */
+        .dashboard-energy-layout { align-items: stretch; }
+        .dashboard-total-bill-card { min-height: 0; }
+        .dashboard-bands-scroll { min-width: 0; }
+        @media (max-width: 700px) {
+            #tab-content-reports .grid.grid-cols-3 { gap: 6px; }
+            #tab-content-reports #subtab-btn-upload,
+            #tab-content-reports #subtab-btn-listing,
+            #tab-content-reports #subtab-btn-dashboard {
+                min-width: 0; min-height: 46px; padding: 8px 4px;
+                font-size: 10px; line-height: 1.25; overflow-wrap: anywhere;
+            }
+            #report-subtab-dashboard { gap: 14px; }
+            #report-subtab-dashboard > .grid:first-child { gap: 8px; }
+            #report-subtab-dashboard > .grid:nth-child(2) { gap: 6px; }
+            #report-subtab-dashboard > .grid:nth-child(2) > div { min-width: 0; padding: 9px 7px; }
+            #report-subtab-dashboard > .grid:nth-child(2) > div p:first-child { min-height: 25px; font-size: 9px; line-height: 1.2; }
+            #dash-stat-kwh, #dash-stat-bill, #dash-stat-savings { font-size: 13px; overflow-wrap: anywhere; }
+            #report-subtab-dashboard .vint-card { min-width: 0; }
+            #report-subtab-dashboard .vint-card.p-4 { padding: 10px; }
+            #report-subtab-dashboard .vint-card.p-5 { padding: 12px; }
+            #report-subtab-dashboard .dashboard-energy-layout { grid-template-columns: minmax(0,1fr); }
+            #report-subtab-dashboard .dashboard-total-bill-card { min-height: 104px; padding: 12px; }
+            #dashboard-total-bill-value { font-size: 2rem; margin-top: 6px; }
+            #report-subtab-dashboard .dashboard-bands-scroll { width: 100%; overflow: hidden; }
+            #report-subtab-dashboard .dashboard-bands-scroll table { width: 100%; min-width: 0; table-layout: fixed; }
+            #report-subtab-dashboard .dashboard-bands-scroll th,
+            #report-subtab-dashboard .dashboard-bands-scroll td { padding-left: 2px; padding-right: 2px; overflow-wrap: anywhere; font-size: 8px; }
+            #report-subtab-upload .bill-bands-table th,
+            #report-subtab-upload .bill-bands-table td { padding-left: 1px; padding-right: 1px; font-size: 8px; line-height: 1.15; overflow-wrap: anywhere; }
+            #report-subtab-upload .bill-bands-table input { width: 100%; min-width: 0; padding: 4px 1px; font-size: 9px; }
+            #report-subtab-dashboard #dash-trend-info { max-width: 44%; white-space: normal; text-align: center; line-height: 1.2; }
+            #report-subtab-dashboard #dashboard-col-chart { min-width: 0; width: 100%; height: 224px; }
+            #report-subtab-dashboard #dashboard-chart-scroll { max-width: 100%; overflow: hidden; }
+            #report-subtab-dashboard #dashboard-euro-axis,
+            #report-subtab-dashboard #dashboard-kwh-axis { font-size: 9px; }
+            #report-subtab-dashboard #dashboard-x-labels { width: 100% !important; min-width: 0; font-size: 10px; }
+        }
+        @media (max-width: 380px) {
+            #report-subtab-dashboard .grid.grid-cols-\[auto_minmax\(0\,1fr\)_auto\] { gap: 4px; }
+            #report-subtab-dashboard #dashboard-euro-axis,
+            #report-subtab-dashboard #dashboard-kwh-axis { font-size: 8px; }
+            #report-subtab-dashboard > .grid:nth-child(2) > div p:first-child { font-size: 8px; }
+            #dash-stat-kwh, #dash-stat-bill, #dash-stat-savings { font-size: 12px; }
+        }
+
+    </style>
+</head>
+
+<body class="min-h-screen flex flex-col justify-between selection:bg-amber-200">
+
+    <!-- HEADER + 6 TABS (CHỈ GIỮ LẠI ĐỒNG HỒ REALTIME) -->
+    <header class="border-b-2 border-[#5c4738]">
+        <div class="header-inner">
+            <div class="flex items-center justify-between gap-3 mb-2 sm:mb-0">
+                <div class="flex items-center space-x-2.5">
+                    <span class="text-2xl">🌿</span>
+                    <div><h1 class="font-bold text-xs sm:text-base text-[#4a3b32] leading-tight tracking-tight whitespace-nowrap">Eco-Buddy Home Manager</h1><p class="text-xs text-[#7a6452] font-semibold mt-0.5">🕒 <span id="realtime-clock" class="text-[#5c4738] font-bold"></span></p></div>
+                </div>
+                <div class="relative shrink-0">
+                    <button type="button" id="language-toggle" onclick="toggleLanguageMenu()" aria-label="Choose language" aria-expanded="false" class="rounded-full border border-[#d8c7b0] bg-[#f7efe4] hover:bg-[#efe2d1] px-2.5 py-2 text-lg font-bold text-[#5c4738] shadow-sm" title="Choose language" aria-label="Choose language">🌍</button>
+                    <div id="language-menu" class="hidden absolute right-0 top-full mt-2 z-50 min-w-[150px] rounded-xl border-2 border-[#d8c7b0] bg-[#fffaf4] p-2 shadow-lg">
+                        <button type="button" onclick="setAppLanguage('en')" class="w-full rounded-lg px-3 py-2 text-left text-xs font-bold hover:bg-[#f1e6d8]">🇬🇧 English</button>
+                        <button type="button" onclick="setAppLanguage('vi')" class="w-full rounded-lg px-3 py-2 text-left text-xs font-bold hover:bg-[#f1e6d8]">🇻🇳 Tiếng Việt</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 6 TABS (TĂNG FONT CHỮ TO RÕ) -->
+            <nav class="nav-pills" aria-label="Main navigation">
+                <button onclick="switchTab('weather')" id="tab-btn-weather" class="nav-btn"><span data-lang-en="🌦️ Weather" data-lang-vi="🌦️ Thời tiết">🌦️ Weather</span></button>
+                <button onclick="switchTab('tracker')" id="tab-btn-tracker" class="nav-btn active"><span data-lang-en="⚡ Tariff" data-lang-vi="⚡ Giá điện">⚡ Tariff</span></button>
+                <button onclick="switchTab('reports')" id="tab-btn-reports" class="nav-btn"><span data-lang-en="📊 Reports" data-lang-vi="📊 Báo cáo">📊 Reports</span></button>
+                <button onclick="switchTab('tips')" id="tab-btn-tips" class="nav-btn"><span data-lang-en="💡 Tips" data-lang-vi="💡 Mẹo hay">💡 Tips</span></button>
+                <button onclick="switchTab('chatbot')" id="tab-btn-chatbot" class="nav-btn"><span data-lang-en="☁️ Bé Mây" data-lang-vi="☁️ Bé Mây">☁️ Bé Mây</span></button>
+                <button onclick="switchTab('checklist')" id="tab-btn-checklist" class="nav-btn"><span data-lang-en="🍳 Cooking" data-lang-vi="🍳 Nấu ăn">🍳 Cooking</span></button>
+                <button onclick="switchTab('calendar')" id="tab-btn-calendar" class="nav-btn"><span data-lang-en="📅 Calendar" data-lang-vi="📅 Lịch">📅 Calendar</span></button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- MAIN -->
+    <main class="max-w-4xl mx-auto px-4 py-6 flex-grow w-full space-y-6">
+
+        <!-- MASCOT CARD & LEVEL-UP (GIỮ CHÂN MASCOT GỐC) -->
+        <div id="mascot-global-card" class="vintage-panel p-6 flex flex-col items-center text-center">
+            <div class="w-full flex justify-between items-center px-2 mb-2 text-xs font-extrabold text-[#5c4738]">
+                <span id="mascot-level-badge" class="bg-[#f0e6d6] px-3 py-1 rounded-full border border-[#5c4738]">🌱 Level 1: Sprout</span>
+                <span id="mascot-xp-text" class="text-[#7a6452]">0 / 100 XP</span>
+            </div>
+            <div class="w-full bg-[#f0e6d6] h-2.5 rounded-full border border-[#5c4738] overflow-hidden mb-3">
+                <div id="mascot-xp-bar" class="bg-[#A8C7A0] h-full w-[0%] transition-all duration-500"></div>
+            </div>
+
+            <div class="relative mb-2 w-full flex justify-center">
+                <div class="eco-mascot">
+                    <svg id="main-mascot-svg" class="eco-character level-1" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+                        <ellipse cx="150" cy="269" rx="66" ry="8" fill="#b9a27b" opacity=".18"/>
+                        <!-- ĐÔI CHÂN GỐC CỦA BÉ MASCOT -->
+                        <path d="M116 220 Q105 239 107 252 Q110 261 134 257 L145 229" fill="#fff9ed" stroke="#75604d" stroke-width="5" stroke-linejoin="round"/>
+                        <ellipse cx="121" cy="257" rx="19" ry="10" fill="#fff9ed" stroke="#75604d" stroke-width="4"/>
+                        <path d="M174 222 Q188 239 185 252 Q182 262 159 257 L151 229" fill="#fff9ed" stroke="#75604d" stroke-width="5" stroke-linejoin="round"/>
+                        <ellipse cx="176" cy="257" rx="19" ry="10" fill="#fff9ed" stroke="#75604d" stroke-width="4"/>
+
+                        <!-- THÂN BÉ MÂY -->
+                        <path class="mascot-body-fill" d="M83 164 Q65 153 69 134 Q53 119 65 101 Q71 82 91 81 Q96 58 119 62 Q137 43 153 57 Q171 43 189 61 Q215 58 224 82 Q246 89 241 111 Q257 129 240 147 Q249 168 229 184 Q232 207 211 220 Q194 236 170 233 Q150 241 128 233 Q102 237 87 218 Q68 207 77 186 Q64 176 83 164 Z" stroke="#75604d" stroke-width="5" stroke-linejoin="round"/>
+
+                        <g>
+                            <path d="M145 57 Q108 45 103 23 Q134 17 151 46 Z" fill="#a3a875" stroke="#756b49" stroke-width="4"/>
+                            <path d="M151 48 Q171 13 198 25 Q194 52 158 62 Z" fill="#7d9368" stroke="#756b49" stroke-width="4"/>
+                        </g>
+
+                        <g id="mascot-face-group">
+                            <ellipse cx="105" cy="137" rx="13" ry="9" fill="#f5bca8"/>
+                            <ellipse cx="197" cy="137" rx="13" ry="9" fill="#f5bca8"/>
+                            <ellipse cx="128" cy="124" rx="5" ry="7" fill="#574b40"/>
+                            <ellipse cx="177" cy="124" rx="5" ry="7" fill="#574b40"/>
+                            <path id="mascot-mouth" d="M146 140 Q151 148 157 140" fill="none" stroke="#574b40" stroke-width="3.5" stroke-linecap="round"/>
+                        </g>
+
+                        <g>
+                            <path d="M78 159 Q113 173 151 158 Q190 173 226 154 L223 178 Q186 194 150 178 Q113 195 81 178 Z" fill="#8e9973" stroke="#6e7457" stroke-width="4"/>
+                            <path d="M204 175 Q224 190 214 217 L197 204 L193 187" fill="#9ca17a" stroke="#6e7457" stroke-width="4"/>
+                        </g>
+
+                        <g>
+                            <path d="M83 165 Q62 161 52 179 Q42 193 51 205 Q62 217 77 198 Q83 190 89 183" fill="#fff9ed" stroke="#75604d" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M220 163 Q244 158 249 136" fill="none" stroke="#75604d" stroke-width="18" stroke-linecap="round"/>
+                            <path d="M220 163 Q244 158 249 136" fill="none" stroke="#fff9ed" stroke-width="12" stroke-linecap="round"/>
+                            <ellipse cx="249" cy="136" rx="8" ry="7" fill="#fff9ed" stroke="#75604d" stroke-width="3"/>
+                        </g>
+                    </svg>
+                </div>
+
+                <div id="status-badge" class="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-[#A8C7A0] text-white text-[11px] font-extrabold px-4 py-1 rounded-full shadow border-2 border-[#5c4738] whitespace-nowrap">
+                    Normal Hours ☀️
+                </div>
+            </div>
+
+            <h3 class="font-bold text-[#4a3b32] text-base mt-2">Eco Buddy (Bé Mây)</h3>
+            <p class="text-[11px] text-[#7a6452] font-semibold italic mt-0.5">🌿 A little battery, leafy ears, and a friendly companion by your side.</p>
+            <p id="mascot-speech" class="text-xs text-[#5c4738] font-medium bg-[#f5ede2] p-3 rounded-2xl border-1.5 border-[#5c4738] w-full mt-3 leading-relaxed">"Let's save energy together! Complete daily tasks to level me up! 🤍"</p>
+        </div>
+
+        <!-- TAB 3: WEATHER & OUTFIT -->
+        <div id="tab-content-weather" class="hidden space-y-6">
+            <div class="vintage-panel p-5 space-y-4">
+                <div class="flex items-center justify-between gap-2 border-b-2 border-[#5c4738] pb-2.5">
+                    <div>
+                        <h3 class="font-bold text-[#4a3b32] text-base flex items-center gap-2">
+                            <span>🌦️</span> Thời Tiết Dublin & Gợi Ý Mặc Đồ
+                        </h3>
+                        <p class="text-xs text-[#7a6452] mt-0.5">Dữ liệu thực tế cập nhật liên tục.</p>
+                    </div>
+                    <button onclick="fetchWeatherData()" class="bg-[#f0e6d6] hover:bg-[#e4d8c5] text-[#4a3b32] text-xs font-bold px-3 py-2 rounded-xl border-1.5 border-[#5c4738] shadow-[2px_2px_0px_#5c4738] transition">
+                        🔄 Làm Mới
+                    </button>
+                </div>
+
+                <div id="weather-card-bg" class="bg-gradient-to-br from-[#8fa8be] to-[#6a849b] text-white p-5 rounded-2xl shadow-[3px_3px_0px_#5c4738] border-2 border-[#5c4738] flex items-center justify-between gap-3">
+                    <div class="space-y-1">
+                        <p id="weather-condition" class="text-sm font-extrabold">Đang tải thời tiết...</p>
+                        <p id="weather-temp" class="text-3xl font-black">--°C</p>
+                        <p id="weather-wind" class="text-[11px] text-[#e2ecf5] font-semibold">Gió: -- km/h</p>
+                    </div>
+                    <div id="weather-icon-lg" class="text-6xl drop-shadow-md">☁️</div>
+                </div>
+
+                <div class="bg-[#f5ede2] border-1.5 border-[#5c4738] p-4 rounded-2xl space-y-3 shadow-[2px_2px_0px_#5c4738]">
+                    <h4 class="font-bold text-[#4a3b32] text-xs sm:text-sm flex items-center gap-2">
+                        <span>👕</span> Gợi ý trang phục khi ra ngoài:
+                    </h4>
+                    <div class="grid grid-cols-1 gap-2.5">
+                        <div class="bg-white p-3 rounded-xl border-1.5 border-[#5c4738] text-xs text-[#4a3b32] flex items-center gap-2.5 shadow-sm">
+                            <div class="flex-shrink-0 w-9 h-9 flex items-center justify-center">
+                                <div class="vintage-scarf-icon" style="width:34px; height:34px;">
+                                    <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+                                        <defs>
+                                            <filter id="scarf-shadow"><feGaussianBlur stdDeviation="2"/></filter>
+                                        </defs>
+                                        <ellipse cx="59" cy="101" rx="35" ry="6" fill="#8ba9a6" opacity=".18" filter="url(#scarf-shadow)"/>
+                                        <path d="M24 29 Q35 17 49 25 Q62 31 76 23 Q91 16 99 29 L91 47 Q77 42 64 51 Q49 59 34 49 Q25 43 24 29 Z" fill="#b9d9d6" stroke="#668e89" stroke-width="3.2" stroke-linejoin="round"/>
+                                        <path d="M31 31 Q45 43 59 37 Q77 29 91 30" fill="none" stroke="#e5f0e9" stroke-width="3" stroke-linecap="round"/>
+                                        <path d="M72 44 Q83 39 94 47 Q102 56 94 70 L82 96 Q78 103 69 99 L60 94 Q55 90 61 80 L72 62 Q77 52 72 44 Z" fill="#a9ceca" stroke="#668e89" stroke-width="3.2" stroke-linejoin="round"/>
+                                        <path d="M78 53 Q86 59 88 67 M72 72 Q78 76 82 78 M67 86 Q73 91 78 91" fill="none" stroke="#e3f0e9" stroke-width="2.5" stroke-linecap="round"/>
+                                        <g fill="#f8f0dc" stroke="#b58f79" stroke-width="1">
+                                            <circle cx="43" cy="34" r="3"/><circle cx="40" cy="30" r="2.5"/><circle cx="46" cy="30" r="2.5"/><circle cx="40" cy="38" r="2.5"/><circle cx="46" cy="38" r="2.5"/>
+                                            <circle cx="80" cy="30" r="2.5"/><circle cx="77" cy="27" r="2"/><circle cx="83" cy="27" r="2"/><circle cx="77" cy="33" r="2"/><circle cx="83" cy="33" r="2"/>
+                                        </g>
+                                        <g fill="#d9b77d">
+                                            <circle cx="43" cy="34" r="1.8"/><circle cx="80" cy="30" r="1.5"/>
+                                        </g>
+                                        <g fill="#819f83">
+                                            <path d="M53 43 Q48 36 55 35 Q60 39 53 43Z"/><path d="M55 43 Q61 36 63 42 Q60 47 55 43Z"/><path d="M86 81 Q80 74 87 72 Q92 76 86 81Z"/>
+                                        </g>
+                                        <path d="M29 42 Q43 55 58 48" fill="none" stroke="#f5eee0" stroke-width="1.5" stroke-dasharray="2 3"/>
+                                    </svg>
+                                </div>
+                            </div> 
+                            <span id="outfit-text-1" class="font-medium">Khăn choàng cổ và găng tay ấm</span>
+                        </div>
+                        <div class="bg-white p-3 rounded-xl border-1.5 border-[#5c4738] text-xs text-[#4a3b32] flex items-center gap-2.5 shadow-sm">
+                            <div class="flex-shrink-0 w-9 h-9 flex items-center justify-center">
+                                <svg viewBox="0 0 100 100" width="34" height="34" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M31 30 Q22 7 50 7 Q78 7 69 30 L64 39 L36 39Z" fill="#C5D3B5" stroke="#75634F" stroke-width="2.2"/>
+                                    <path d="M37 24 Q50 15 63 24 Q59 34 50 34 Q41 34 37 24Z" fill="#82947A" stroke="#75634F" stroke-width="1.8"/>
+                                    <path d="M34 27 Q37 35 43 36 M66 27 Q63 35 57 36" fill="none" stroke="#F5EBD8" stroke-width="3" stroke-linecap="round"/>
+                                    <path d="M34 30 L23 35 Q13 40 10 54 L7 79 Q7 87 16 88 L84 88 Q93 87 93 79 L90 54 Q87 40 77 35 L66 30 Q50 40 34 30Z" fill="#A9BEA0" stroke="#75634F" stroke-width="2.2" stroke-linejoin="round"/>
+                                    <path d="M23 38 Q14 40 11 54 L5 76 Q4 84 13 87 Q21 89 25 78 L31 51Z" fill="#B7C9AB" stroke="#75634F" stroke-width="2.2"/>
+                                    <path d="M77 38 Q86 40 89 54 L95 76 Q96 84 87 87 Q79 89 75 78 L69 51Z" fill="#B7C9AB" stroke="#75634F" stroke-width="2.2"/>
+                                    <path d="M12 53 Q19 60 27 54 M9 68 Q17 75 24 69 M88 53 Q81 60 73 54 M91 68 Q83 75 76 69" fill="none" stroke="#829B7D" stroke-width="3" stroke-linecap="round"/>
+                                    <path d="M31 46 Q50 53 69 46 M29 62 Q50 69 71 62 M26 78 Q50 84 74 78" fill="none" stroke="#D4DFCB" stroke-width="3" stroke-linecap="round"/>
+                                    <path d="M50 35 L50 88" stroke="#75634F" stroke-width="2"/>
+                                    <circle cx="50" cy="44" r="1.5" fill="#F5EBD8"/>
+                                    <circle cx="50" cy="56" r="1.5" fill="#F5EBD8"/>
+                                    <circle cx="50" cy="68" r="1.5" fill="#F5EBD8"/>
+                                    <path d="M42 32 L42 50 M58 32 L58 50" stroke="#F5EBD8" stroke-width="2" stroke-linecap="round"/>
+                                    <circle cx="42" cy="52" r="3" fill="#F5EBD8"/>
+                                    <circle cx="58" cy="52" r="3" fill="#F5EBD8"/>
+                                    <path d="M29 60 L41 62 L37 75 L26 72Z M71 60 L59 62 L63 75 L74 72Z" fill="#C5D3B5" stroke="#75634F" stroke-width="1.8"/>
+                                    <path d="M7 79 Q15 85 24 80 L22 90 Q14 94 6 87Z M93 79 Q85 85 76 80 L78 90 Q86 94 94 87Z" fill="#C5D3B5" stroke="#75634F" stroke-width="1.8"/>
+                                    <path d="M23 87 Q50 94 77 87 L76 94 Q50 99 24 94Z" fill="#C5D3B5" stroke="#75634F" stroke-width="1.8"/>
+                                </svg>
+                            </div> 
+                            <span id="outfit-text-2" class="font-medium">Áo phao mùa đông (Xám/Xanh ấm áp)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- TAB 1: TARIFF & 3 ECO TASKS -->
+        <div id="tab-content-tracker" class="space-y-6">
+            <div class="vintage-panel p-6 space-y-4">
+                <h2 class="font-bold text-[#4a3b32] text-base flex items-center gap-2 border-b-2 border-[#5c4738] pb-2.5">
+                    <span>⚡</span> Daily Electricity Tariff (SST Saver+)
+                </h2>
+
+                <div class="space-y-3 text-xs sm:text-sm">
+                    <div class="vint-card p-3.5 flex items-start justify-between gap-3 bg-[#f2f7ec]">
+                        <div class="flex-1 min-w-0">
+                            <p class="font-extrabold text-[#3b4a32]">☀️ Day Rate</p>
+                            <p class="text-[#5c6a52] text-[11px] mt-0.5">08:00 - 17:00 & 19:00 - 23:00</p>
+                        </div>
+                        <span class="font-black text-[#3b4a32] bg-[#d9e8cc] px-2.5 py-1 rounded-xl border border-[#5c4738] whitespace-nowrap">€0.3719/kWh</span>
+                    </div>
+
+                    <div class="p-3.5 rounded-2xl bg-[#fbe8e6] border-2 border-[#5c4738] flex items-start justify-between gap-3 shadow-[2px_2px_0px_#5c4738]">
+                        <div class="flex-1 min-w-0">
+                            <p class="font-extrabold text-[#5c3232]">🔴 Peak Rate</p>
+                            <p class="text-[#7c4d4d] text-[11px] mt-0.5">17:00 - 19:00 (Limit high-energy appliances)</p>
+                        </div>
+                        <span class="font-black text-[#5c3232] bg-[#f5d0cd] px-2.5 py-1 rounded-xl border border-[#5c4738] whitespace-nowrap">€0.3968/kWh</span>
+                    </div>
+
+                    <div class="vint-card p-3.5 flex items-start justify-between gap-3 bg-[#eaf2f8]">
+                        <div class="flex-1 min-w-0">
+                            <p class="font-extrabold text-[#32455c]">🟢 Night Rate (Cheapest)</p>
+                            <p class="text-[#4e647d] text-[11px] mt-0.5">23:00 - 08:00</p>
+                        </div>
+                        <span class="font-black text-[#32455c] bg-[#cfe2f3] px-2.5 py-1 rounded-xl border border-[#5c4738] whitespace-nowrap">€0.1954/kWh</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3 DAILY ECO TASKS -->
+            <div class="vintage-panel p-6 space-y-3">
+                <h3 class="font-bold text-[#4a3b32] text-sm flex items-center justify-between">
+                    <span class="flex items-center gap-2"><span>🌱</span> Daily Eco Tasks (1 time/day)</span>
+                    <span id="eco-points-label" class="text-xs bg-[#8c7355] text-white px-2.5 py-1 rounded-xl">0 Points 🌱</span>
+                </h3>
+                <div class="space-y-2 text-xs" id="tasks-container">
+                    <div class="vint-card p-3 flex items-center justify-between gap-2 bg-white" id="task-card-0">
+                        <div>
+                            <p class="font-bold text-[#4a3b32]">Turn off lights when leaving rooms (+20 XP)</p>
+                            <p class="text-[10px] text-[#7a6452]">Check all rooms in the house.</p>
+                        </div>
+                        <button onclick="completeTask(0, 20)" id="task-btn-0" class="px-3 py-1.5 bg-[#A8C7A0] text-white font-bold rounded-xl border border-[#5c4738] hover:opacity-90 flex-shrink-0">Complete</button>
+                    </div>
+                    <div class="vint-card p-3 flex items-center justify-between gap-2 bg-white" id="task-card-1">
+                        <div>
+                            <p class="font-bold text-[#4a3b32]">Laundry during Night Saver hours (+30 XP)</p>
+                            <p class="text-[10px] text-[#7a6452]">Run washing machine after 23:00.</p>
+                        </div>
+                        <button onclick="completeTask(1, 30)" id="task-btn-1" class="px-3.5 py-1.5 bg-[#A8C7A0] text-white font-bold rounded-xl border border-[#5c4738] hover:opacity-90 flex-shrink-0">Complete</button>
+                    </div>
+                    <div class="vint-card p-3 flex items-center justify-between gap-2 bg-white" id="task-card-2">
+                        <div>
+                            <p class="font-bold text-[#4a3b32]">Put away dry dishes (+20 XP)</p>
+                            <p class="text-[10px] text-[#7a6452]">Keep the kitchen tidy and organized.</p>
+                        </div>
+                        <button onclick="completeTask(2, 20)" id="task-btn-2" class="px-3.5 py-1.5 bg-[#A8C7A0] text-white font-bold rounded-xl border border-[#5c4738] hover:opacity-90 flex-shrink-0">Complete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2: REPORTS (CHIA THÀNH 3 TAB CON: UPLOAD & EDIT, LISTING, DASHBOARD) -->
+        <div id="tab-content-reports" class="hidden space-y-6">
+            <div class="vintage-panel p-6 space-y-5">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b-2 border-[#5c4738] pb-3 gap-3">
+                    <div>
+                        <h2 class="font-bold text-[#4a3b32] text-base flex items-center gap-2"><span>📊</span> Energy Analytics & Reports</h2>
+                        <p class="text-[11px] text-[#7a6452] mt-0.5">Manage bills, edit data, list history & view dashboard analytics</p>
+                    </div>
+                </div>
+
+                <!-- 3 SUB-TABS CHO REPORTS -->
+                <div class="grid grid-cols-3 gap-2 text-xs">
+                    <button onclick="switchReportSubTab('upload')" id="subtab-btn-upload" class="p-2.5 bg-[#8c7355] text-white font-bold rounded-xl border border-[#5c4738]">1. Upload & Edit Bill</button>
+                    <button onclick="switchReportSubTab('listing')" id="subtab-btn-listing" class="p-2.5 bg-[#fffaf4] text-[#4a3b32] font-bold rounded-xl border border-[#5c4738]">2. Billing Listing</button>
+                    <button onclick="switchReportSubTab('dashboard')" id="subtab-btn-dashboard" class="p-2.5 bg-[#fffaf4] text-[#4a3b32] font-bold rounded-xl border border-[#5c4738]">3. Dashboard</button>
+                </div>
+
+                <!-- SUB-TAB 1: UPLOAD & EDIT BILL -->
+                <div id="report-subtab-upload" class="space-y-4 vint-card p-4 bg-white">
+                    <h3 class="font-bold text-sm text-[#5c4738]">📷 Upload & đọc hoá đơn điện</h3>
+                    <p class="text-[11px] text-[#7a6452]">Upload two images: the bill summary and the energy breakdown chart. OCR provides a draft only; check all values before saving.</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div class="vint-card p-3 bg-[#fffaf4] space-y-2"><b class="text-xs">🧾 Ảnh A · Tổng hoá đơn</b>
+                            <label class="block px-3 py-2 bg-[#8C735F] text-white rounded-xl text-xs text-center cursor-pointer">📸 Chụp / chọn ảnh<input type="file" id="bill-img-file" accept="image/*" capture="environment" class="hidden" onchange="previewUploadedBill(event,'total')"></label>
+                            <img id="bill-preview-img" alt="Bill preview" class="hidden max-h-40 w-full object-contain rounded-xl border">
+                        </div>
+                        <div class="vint-card p-3 bg-[#fffaf4] space-y-2"><b class="text-xs">🍩 Ảnh B · Phân bổ điện năng</b>
+                            <label class="block px-3 py-2 bg-[#8C735F] text-white rounded-xl text-xs text-center cursor-pointer">📸 Chụp / chọn ảnh<input type="file" id="bill-breakdown-file" accept="image/*" capture="environment" class="hidden" onchange="previewUploadedBill(event,'breakdown')"></label>
+                            <img id="bill-breakdown-preview" alt="Breakdown preview" class="hidden max-h-40 w-full object-contain rounded-xl border">
+                        </div>
+                    </div>
+                    <div class="rounded-xl bg-[#f5ede2] p-3 space-y-2"><div class="flex justify-between"><b class="text-xs">🔎 Đọc ảnh bằng OCR</b><span id="bill-ocr-status" class="text-[10px]">Đang chờ ảnh</span></div>
+                        <button type="button" id="bill-ocr-button" onclick="runBillOCR()" class="w-full py-2 bg-[#e8dac7] rounded-xl border text-xs font-bold">✨ Đọc thông tin từ ảnh đã tải</button>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-3 border-t text-xs">
+                        <label class="font-bold">Kỳ hoá đơn / tháng<select id="edit-bill-month" class="w-full px-3 py-2 rounded-xl border mt-1 bg-white"><option value="">Chọn tháng / Select month</option><option value="January">Tháng 1 · January</option><option value="February">Tháng 2 · February</option><option value="March">Tháng 3 · March</option><option value="April">Tháng 4 · April</option><option value="May">Tháng 5 · May</option><option value="June">Tháng 6 · June</option><option value="July">Tháng 7 · July</option><option value="August">Tháng 8 · August</option><option value="September">Tháng 9 · September</option><option value="October">Tháng 10 · October</option><option value="November">Tháng 11 · November</option><option value="December">Tháng 12 · December</option></select></label>
+                        <label class="font-bold">Năm<input id="edit-bill-year" type="number" placeholder="2026" min="2000" max="2100" class="w-full px-3 py-2 rounded-xl border mt-1"></label>
+                        <label class="font-bold">Ngày bắt đầu<input id="edit-bill-start" type="date" class="w-full px-3 py-2 rounded-xl border mt-1"></label>
+                        <label class="font-bold">Ngày kết thúc<input id="edit-bill-end" type="date" class="w-full px-3 py-2 rounded-xl border mt-1"></label>
+                        <div class="space-y-2"><label class="block font-bold">Tổng tiền (€)<input id="edit-bill-amount" type="number" min="0" step="0.01" placeholder="Nhập theo bill" oninput="updateBillPerPerson()" class="w-full px-3 py-2 rounded-xl border mt-1"></label><div class="flex items-center justify-between gap-3"><label for="bill-household-size" class="text-[11px] font-bold text-[#7a6452]">Số người trong nhà</label><input id="bill-household-size" type="number" min="1" max="50" step="1" value="4" oninput="updateBillPerPerson()" class="w-20 px-3 py-2 rounded-xl border text-center text-xs font-bold"></div><p id="bill-per-person-note" class="text-[10px] italic font-normal text-[#8c7355]">Ghi chú: chia đều cho 4 người · €— / người</p></div>
+                        <label class="font-bold">Tổng điện năng (kWh)<input id="edit-bill-kwh" type="number" min="0" step="0.01" placeholder="Nhập theo bill" class="w-full px-3 py-2 rounded-xl border mt-1"></label>
+                    </div>
+                    <div class="pt-3 border-t space-y-3">
+                        <div><b class="text-xs">🍩 Biểu đồ phân bổ gốc & bảng khung giờ</b><p class="text-[10px] text-[#7a6452] mt-1"></p></div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-start">
+                            <div class="rounded-xl border border-[#d8c7b0] bg-white p-5 text-center flex flex-col justify-center min-h-40">
+                                <p class="text-xs font-bold uppercase tracking-wider text-[#7a6452]">Total Energy (kWh)</p>
+                                <p id="bill-total-energy-readout" class="mt-3 text-4xl sm:text-5xl font-extrabold tabular-nums text-[#32455c]">—</p>
+                            </div>
+                            <div class="min-w-0 overflow-hidden bill-bands-table-wrap">
+                                <table class="w-full table-fixed text-[10px] tabular-nums text-right bill-bands-table">
+                                    <thead><tr class="text-[#7a6452]"><th class="text-left font-bold">Band</th><th class="font-bold">kWh</th><th class="font-bold">€/kWh</th><th class="font-bold">€</th><th class="font-bold">kWh %</th><th class="font-bold">€ %</th></tr></thead>
+                                    <tbody>
+                                        <tr class="border-t border-[#e3d6c6]"><td class="py-1 text-left font-bold">Day</td><td><input id="bb-kwh-day" type="number" min="0" step="any" oninput="updateBillBands()" class="w-14 px-1 py-1 rounded-lg border text-right"></td><td><input id="bb-price-day" type="number" min="0" step="any" value="0.3719" oninput="updateBillBands()" class="w-16 px-1 py-1 rounded-lg border text-right"></td><td id="bb-eur-day">–</td><td id="bb-pk-day">–</td><td id="bb-pe-day">–</td></tr>
+                                        <tr class="border-t border-[#e3d6c6]"><td class="py-1 text-left font-bold">Peak</td><td><input id="bb-kwh-peak" type="number" min="0" step="any" oninput="updateBillBands()" class="w-14 px-1 py-1 rounded-lg border text-right"></td><td><input id="bb-price-peak" type="number" min="0" step="any" value="0.3968" oninput="updateBillBands()" class="w-16 px-1 py-1 rounded-lg border text-right"></td><td id="bb-eur-peak">–</td><td id="bb-pk-peak">–</td><td id="bb-pe-peak">–</td></tr>
+                                        <tr class="border-t border-[#e3d6c6]"><td class="py-1 text-left font-bold">Night</td><td><input id="bb-kwh-night" type="number" min="0" step="any" oninput="updateBillBands()" class="w-14 px-1 py-1 rounded-lg border text-right"></td><td><input id="bb-price-night" type="number" min="0" step="any" value="0.1954" oninput="updateBillBands()" class="w-16 px-1 py-1 rounded-lg border text-right"></td><td id="bb-eur-night">–</td><td id="bb-pk-night">–</td><td id="bb-pe-night">–</td></tr>
+                                        <tr class="border-t-2 border-[#5c4738] font-extrabold"><td class="py-1 text-left">Total</td><td id="bb-total-kwh">–</td><td></td><td id="bb-total-eur">–</td><td>100%</td><td>100%</td></tr>
+                                    </tbody>
+                                </table>
+                                <p id="bb-warning" class="text-[10px] text-[#9c413b] mt-1"></p>
+                            </div>
+                        </div>
+                    </div>
+                    <p id="upload-status-text" class="text-[11px] font-bold text-[#7a6452]">Chưa lưu hoá đơn.</p>
+                    <button type="button" id="save-bill-button" onclick="saveEditedBill()" class="w-full py-3 bg-[#A8C7A0] text-white font-bold rounded-xl border text-xs">💾 Lưu hoá đơn & cập nhật Dashboard</button>
+                </div>
+
+                <!-- SUB-TAB 2: LISTING HISTORY (DẠNG KHUNG THẺ NỐI TIẾP NHƯ TARIFF) -->
+                <div id="report-subtab-listing" class="hidden space-y-3">
+                    <h3 class="font-bold text-xs text-[#5c4738]">📋 Historical Billing Listing</h3>
+                    <div id="billing-listing-container" class="space-y-3 text-xs">
+                        <!-- Render qua JS -->
+                    </div>
+                </div>
+
+                <!-- SUB-TAB 3: DASHBOARD (COLUMN + LINE CHO TỪNG THÁNG & DONUT CHART PHÂN BỔ) -->
+                <div id="report-subtab-dashboard" class="hidden space-y-5">
+                    <!-- SLIDE CARDS LỌC MONTH & YEAR -->
+                    <div class="grid grid-cols-2 gap-3 text-xs">
+                        <div class="vint-card p-3 bg-white space-y-1">
+                            <label class="font-bold text-[#7a6452]">📅 Filter by Month:</label>
+                            <select id="dash-filter-month" onchange="updateDashboardView()" class="w-full px-2.5 py-1.5 rounded-xl border border-[#5c4738] font-bold bg-[#f5ede2]">
+                                <option value="all">-- All Months (Average) --</option>
+                            </select>
+                        </div>
+                        <div class="vint-card p-3 bg-white space-y-1">
+                            <label class="font-bold text-[#7a6452]">📆 Filter by Year:</label>
+                            <select id="dash-filter-year" onchange="updateDashboardView()" class="w-full px-2.5 py-1.5 rounded-xl border border-[#5c4738] font-bold bg-[#f5ede2]">
+                                <option value="all">-- All Years --</option>
+                                <option value="2026">2026</option>
+                                <option value="2025">2025</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- SLIDE CARDS TỔNG QUAN -->
+                    <div class="grid grid-cols-3 gap-3 text-xs">
+                        <div class="vint-card p-3 bg-white space-y-1">
+                            <p class="text-[10px] font-bold text-[#7a6452]">Selected / Avg kWh</p>
+                            <p id="dash-stat-kwh" class="text-base font-black text-[#32455c]">0 kWh</p>
+                        </div>
+                        <div class="vint-card p-3 bg-white space-y-1">
+                            <p class="text-[10px] font-bold text-[#7a6452]">Selected / Avg Bill</p>
+                            <p id="dash-stat-bill" class="text-base font-black text-[#5c3232]">€0.00</p>
+                        </div>
+                        <div class="vint-card p-3 bg-white space-y-1">
+                            <p class="text-[10px] font-bold text-[#7a6452]">Estimated Savings</p>
+                            <p id="dash-stat-savings" class="text-base font-black text-[#3b4a32]">€45.00 cr</p>
+                        </div>
+                    </div>
+
+                    <!-- BIỂU ĐỒ CỘT (TIỀN ĐIỆN) KẾT HỢP LINE (KWH) -->
+                    <div class="vint-card p-4 bg-white space-y-3">
+                        <div class="flex items-center justify-between">
+                            <p class="text-xs font-bold text-[#5c4738]">📈 Bill (€ - Columns) & kWh Usage (Lines)</p>
+                            <span id="dash-trend-info" class="text-[10px] bg-[#f0e6d6] px-2.5 py-0.5 rounded-full font-bold text-[#5c4738]">Auto Average Calculated</span>
+                        </div>
+                        <div id="dashboard-chart-scroll" class="w-full overflow-hidden">
+                        <div class="grid grid-cols-[34px_minmax(0,1fr)_38px] gap-1 sm:gap-2 items-stretch min-w-0">
+                            <div id="dashboard-euro-axis" class="flex flex-col justify-between text-[9px] font-bold text-[#9b6844] py-2 text-right" aria-hidden="true"></div>
+                            <div id="dashboard-col-chart" class="min-w-0 h-64 relative">
+                                <!-- SVG combo chart: € bars + kWh line -->
+                            </div>
+                            <div id="dashboard-kwh-axis" class="flex flex-col justify-between text-[10px] font-bold text-[#64849b] py-2 text-left" aria-label="Usage axis in kilowatt-hours"></div>
+                        </div>
+                        </div>
+                        <div id="dashboard-x-labels" class="flex justify-around text-[10px] font-bold text-[#7a6452] px-2"></div>
+                        <div class="flex flex-wrap justify-center gap-x-5 gap-y-1 text-[10px] font-bold text-[#5c4738] pt-1">
+                            <span class="inline-flex items-center gap-1.5"><i class="w-3 h-3 rounded-sm bg-[#e8b98f] inline-block"></i> Bill (€)</span>
+                            <span class="inline-flex items-center gap-1.5"><i class="w-5 h-0.5 bg-[#789bb2] inline-block relative"><i class="absolute w-1.5 h-1.5 rounded-full bg-[#789bb2] -top-0.5 left-2"></i></i> Usage (kWh)</span>
+                        </div>
+                    </div>
+
+
+                    <div class="vint-card p-5 bg-[#fffaf4] space-y-4">
+                        <p class="text-xs font-bold text-[#5c4738] text-center">🍩 Energy Distribution · Original Chart & Time Bands</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-stretch dashboard-energy-layout">
+                            <div class="dashboard-total-bill-card rounded-xl border border-[#d8c7b0] bg-white p-3 min-h-0 h-full flex flex-col items-center justify-center text-center">
+                                <p id="dashboard-total-bill-label" class="text-xs font-bold uppercase tracking-wider text-[#7a6452]">Total Electricity Bill</p>
+                                <p id="dashboard-total-bill-value" class="mt-3 text-4xl sm:text-5xl font-extrabold tabular-nums text-[#32455c]">—</p>
+                            </div>
+                            <div class="min-w-0 overflow-hidden dashboard-bands-scroll">
+                                <p class="text-[10px] font-extrabold text-[#7a6452] uppercase tracking-wider text-center">Selected Usage: <span id="donut-center-val" class="text-[#32455c] tabular-nums">— kWh</span></p>
+                                <table class="w-full table-fixed text-[9px] tabular-nums text-right mt-1">
+                                    <thead><tr class="text-[#7a6452]"><th class="text-left font-bold">Band</th><th class="font-bold">kWh</th><th class="font-bold">kWh %</th><th class="font-bold">€</th><th class="font-bold">€ %</th></tr></thead>
+                                    <tbody id="dashboard-bands-body"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <p id="dashboard-donut-note" class="text-[10px] text-[#7a6452] text-center">Lưu hoá đơn có bảng Day / Peak / Night để xem ở đây.</p>
+                    </div>
+
+            <!-- DASHBOARD-ONLY REMINDERS -->
+            <div id="dashboard-only-reminders" class="hidden vintage-panel p-6 space-y-3">
+                <h3 class="font-bold text-[#4a3b32] text-sm flex items-center gap-2"><span>💡</span> Daily Reminders & Basic Rules:</h3>
+                <ul class="text-xs space-y-2 text-[#5c4738] font-medium">
+                    <li class="bg-[#fffaf4] px-3 py-2.5 rounded-xl border border-[#5c4738]/30">💡 <strong>Turn off the lights:</strong> Remember to switch off room and hallway lights when not in use.</li>
+                    <li class="bg-[#fffaf4] px-3 py-2.5 rounded-xl border border-[#5c4738]/30">🔒 <strong>Check the doors:</strong> Make sure the doors are locked and the kitchen door is closed.</li>
+                    <li class="bg-[#fffaf4] px-3 py-2.5 rounded-xl border border-[#5c4738]/30">🔌 <strong>Unplug devices:</strong> Unplug standby appliances (TV, microwave) when not in use.</li>
+                    <li class="bg-[#fffaf4] px-3 py-2.5 rounded-xl border border-[#5c4738]/30">🚿 <strong>Water heater:</strong> Remember to switch off the water heater after showering.</li>
+                </ul>
+            </div>
+                    </div>
+                    </div>
+                    <!-- REMINDERS & TIPS: DASHBOARD ONLY -->
+
+
+            </div>
+
+        </div>
+
+        <!-- TAB 3: SMART TIPS & FLASHCARDS -->
+        <div id="tab-content-tips" class="hidden space-y-6">
+            <div class="vintage-panel p-6 space-y-4">
+                <div class="flex items-center justify-between border-b-2 border-[#5c4738] pb-2.5">
+                    <div>
+                        <h2 class="font-bold text-[#4a3b32] text-base flex items-center gap-2"><span>💡</span> Smart Energy Tips & Weekly Flashcards</h2>
+                        <p class="text-[11px] text-[#7a6452] mt-0.5">Curated expert tips (3 rotating flashcards per week from our 40+ database)</p>
+                    </div>
+                    <span id="weekly-tip-badge" class="bg-[#A8C7A0] text-white text-[10px] font-bold px-2.5 py-1 rounded-full">Week 1 / 4</span>
+                </div>
+
+                <div id="weekly-flashcards-container" class="space-y-3"></div>
+            </div>
+        </div>
+
+        <!-- TAB 4: BÉ MÂY CHATBOT HUB -->
+        <div id="tab-content-chatbot" class="hidden space-y-6">
+            <div class="vintage-panel p-6 space-y-4">
+                <div class="vint-card p-3.5 bg-gradient-to-r from-[#f7f1e5] to-[#f0e6d6] flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-[#A8C7A0] text-white flex items-center justify-center font-black text-lg border border-[#5c4738]">☁️</div>
+                        <div>
+                            <h2 class="font-extrabold text-sm text-[#4a3b32]">Bé Mây ☁️</h2>
+                            <p class="text-[10px] text-[#7a6452]">Live Weekly Schedule · 10 Eco Questions per Week (40 Total Pool)</p>
+                        </div>
+                    </div>
+                    <span id="weekly-quiz-counter" class="bg-[#A8C7A0] text-white text-[10px] font-extrabold px-2.5 py-1 rounded-full border border-[#5c4738]">Week 1: Q 1/10</span>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2 text-xs">
+                    <button onclick="setChatMode('quiz')" id="mode-btn-quiz" class="p-2.5 bg-[#8c7355] text-white font-bold rounded-xl border border-[#5c4738]">🧠 Weekly Eco Quiz (10 Qs)</button>
+                    <button onclick="setChatMode('chat')" id="mode-btn-chat" class="p-2.5 bg-[#fffaf4] text-[#4a3b32] font-bold rounded-xl border border-[#5c4738]">💬 Ask Bé Mây</button>
+                </div>
+
+                <div class="vint-card p-4 bg-white space-y-3">
+                    <div id="chatbot-messages" class="space-y-2.5 max-h-96 overflow-y-auto pr-1 text-xs">
+                        <div class="bg-[#f5ede2] p-3 rounded-2xl border border-[#d8c7b0]">
+                            <p class="font-bold text-[#5c4738]">Bé Mây ☁️</p>
+                            <p class="mt-1 text-[#4a3b32]">Ahoy, traveller! Welcome to this week's 10-question eco challenge straight from our 40-question master pool. Let's test your knowledge!</p>
+                        </div>
+                    </div>
+
+                    <div id="chatbot-input-area" class="hidden flex gap-2 pt-2 border-t border-[#d8c7b0]">
+                        <input type="text" id="chat-input-text" placeholder="Type a message to Bé Mây..." class="flex-1 px-3 py-2 rounded-xl border border-[#5c4738] text-xs">
+                        <button onclick="sendUserMessage()" class="px-4 py-2 bg-[#A8C7A0] text-white font-bold rounded-xl border border-[#5c4738] text-xs">Send</button>
+                    </div>
+
+                    <div id="chatbot-quiz-area" class="space-y-2 pt-2 border-t border-[#d8c7b0]">
+                        <p id="quiz-question" class="text-xs font-bold text-[#5c4738]">Loading question...</p>
+                        <div id="quiz-options" class="grid grid-cols-1 gap-1.5"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 5: COOKING CHECKLIST -->
+        <div id="tab-content-checklist" class="hidden space-y-6">
+            <div class="vintage-panel p-6 space-y-4">
+                <h2 class="font-bold text-[#4a3b32] text-base flex items-center gap-2 border-b-2 border-[#5c4738] pb-2.5">
+                    <span>🍳</span> Cooking Timer & Kitchen Safety Checklist
+                </h2>
+
+                <div class="vint-card p-4 space-y-3 bg-white" id="timer-setup-box">
+                    <p class="text-xs font-bold text-[#4a3b32]">⏱️ Choose a cooking time or enter your own:</p>
+                    <div class="timer-buttons-grid">
+                        <button onclick="setTimerMinutes(15)" class="px-3.5 py-1.5 bg-[#f5ede2] hover:bg-[#e8dac7] text-[#4a3b32] rounded-xl text-xs font-bold border border-[#5c4738] transition">15 min</button>
+                        <button onclick="setTimerMinutes(30)" class="px-3.5 py-1.5 bg-[#f5ede2] hover:bg-[#e8dac7] text-[#4a3b32] rounded-xl text-xs font-bold border border-[#5c4738] transition">30 min</button>
+                        <button onclick="setTimerMinutes(45)" class="px-3.5 py-1.5 bg-[#f5ede2] hover:bg-[#e8dac7] text-[#4a3b32] rounded-xl text-xs font-bold border border-[#5c4738] transition">45 min</button>
+                        <button onclick="setTimerMinutes(60)" class="px-3.5 py-1.5 bg-[#f5ede2] hover:bg-[#e8dac7] text-[#4a3b32] rounded-xl text-xs font-bold border border-[#5c4738] transition">60 min</button>
+                    </div>
+
+                    <div class="flex items-center gap-2 pt-1">
+                        <input type="number" id="custom-minutes" placeholder="Enter custom minutes..." min="1" max="180" class="flex-1 px-3 py-2 rounded-xl border-1.5 border-[#5c4738] text-xs bg-[#fffaf4]">
+                        <button onclick="startCustomTimer()" class="px-4 py-2 bg-[#A8C7A0] text-white text-xs font-bold rounded-xl border-1.5 border-[#5c4738] shadow-[2px_2px_0px_#5c4738] transition whitespace-nowrap">Start</button>
+                    </div>
+                </div>
+
+                <div id="timer-display-box" class="hidden p-4 rounded-2xl bg-[#f5ede2] border-1.5 border-[#5c4738] text-center space-y-3 shadow-[2px_2px_0px_#5c4738]">
+                    <div>
+                        <p class="text-xs font-bold text-[#5c3232]">⏳ Cooking countdown...</p>
+                        <p id="countdown-text" class="text-3xl font-black text-[#4a3b32] mt-1">00:00</p>
+                    </div>
+
+                    <div class="bg-white p-3 rounded-xl border border-[#5c4738]/40 flex items-center justify-between gap-2 text-xs">
+                        <span class="font-bold text-[#4a3b32] flex items-center gap-1.5">🚪 Have you closed the kitchen door?</span>
+                        <input type="checkbox" id="kitchen-door-checkbox" class="w-4 h-4 accent-[#8c7355] cursor-pointer">
+                    </div>
+
+                    <button onclick="stopTimer()" class="px-3 py-2 bg-[#fbe8e6] hover:bg-[#f5d0cd] text-[#5c3232] rounded-lg text-xs font-bold border border-[#5c4738]">Cancel Timer</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 6: CALENDAR (CÓ NHẮC ĐÓNG TIỀN NHÀ NGÀY 1 & PHÂN BIỆT ĐỔ RÁC) -->
+        <div id="tab-content-calendar" class="hidden space-y-6">
+            <div class="vintage-panel p-6 space-y-4">
+                <div class="flex items-center justify-between border-b-2 border-[#5c4738] pb-2.5 gap-2">
+                    <h2 class="font-bold text-[#4a3b32] text-base flex items-center gap-2"><span>📅</span> Home & Waste Schedule</h2>
+                    <div class="flex items-center gap-2 flex-shrink-0">
+                        <button onclick="changeCalendarMonth(-1)" class="px-2.5 py-1 bg-[#f0e6d6] rounded-lg border border-[#5c4738] text-xs font-bold">◀</button>
+                        <span id="calendar-month-label" class="text-xs font-extrabold text-[#5c4738] min-w-[100px] text-center">Month...</span>
+                        <button onclick="changeCalendarMonth(1)" class="px-2.5 py-1 bg-[#f0e6d6] rounded-lg border border-[#5c4738] text-xs font-bold">▶</button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-7 gap-1 text-center text-[11px] font-extrabold text-[#7a6452] mb-2">
+                    <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+                </div>
+
+                <div id="calendar-days" class="grid grid-cols-7 gap-1.5"></div>
+
+                <!-- CHÚ THÍCH MÀU SẮC LỊCH -->
+                <div class="vint-card p-3 bg-white space-y-1.5 text-xs">
+                    <p class="font-bold text-[#5c4738]">🗓️ Schedule Notes</p><div class="grid grid-cols-1 sm:grid-cols-2 gap-2"><div class="flex items-center gap-2 min-w-0"><span class="w-3 h-3 rounded-full bg-[#d9534f] inline-block shrink-0"></span><span>♻️ Waste Collection · Every Tuesday</span></div><div class="flex items-center gap-2 min-w-0"><span class="w-3 h-3 rounded-full bg-[#bc6c25] inline-block shrink-0"></span><span>🏡 Rent Payment · 1st of each month</span></div></div><p class="text-[10px] text-[#8c7355]">✦ marks a day when both are due.</p>
+                </div>
+
+                <div class="vint-card p-3 bg-[#fff5f0] text-center">
+                    <p id="next-trash-reminder" class="text-xs font-bold text-[#9c413b]">Next schedule reminder...</p>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- SAFETY CHAT -->
+    <section id="safety-chat-overlay" class="chat-overlay hidden" role="dialog" aria-modal="true">
+        <div class="chat-window">
+            <div class="flex justify-between items-center border-b-2 border-[#d8c7b0] pb-3 gap-2">
+                <div>
+                    <p class="text-xs font-bold text-[#8c7355]">ECO-BUDDY HOME MANAGER V2</p>
+                    <h2 class="text-lg font-extrabold">Let's check the kitchen together!</h2>
+                </div>
+                <button onclick="closeSafetyChat()" class="rounded-full border border-[#8c7355] px-3 py-2 font-bold flex-shrink-0">✕</button>
+            </div>
+
+            <div class="flex flex-col items-center py-3 gap-2">
+                <div id="chat-mascot" class="eco-mascot" style="width:140px;height:140px;"></div>
+                <div class="chat-bubble">
+                    <p class="font-extrabold text-sm mb-0.5 text-[#5c4738]">Eco Buddy ☁️</p>
+                    <p id="chat-question" class="text-sm font-medium text-[#4a3b32]">Time's up! Let's check the kitchen together!</p>
+                </div>
+            </div>
+
+            <div id="chat-scene" class="chat-scene text-center text-5xl py-3 flex items-center justify-center shadow-inner">🔥</div>
+
+            <div class="bg-[#f5ede2] rounded-2xl p-3.5 mb-3 mt-3 border border-[#d8c7b0]">
+                <p id="chat-action-title" class="font-extrabold text-sm mb-0.5 text-[#5c4738]">Turn off the cooker</p>
+                <p id="chat-action-hint" class="text-xs text-[#7a6452] font-medium"></p>
+            </div>
+
+            <div id="chat-actions" class="space-y-2"></div>
+            <p id="chat-progress" class="text-xs text-[#8c7355] text-center font-bold mt-3">Step 1 / 5</p>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="text-center py-5 text-xs text-[#7a6452] font-medium border-t-2 border-[#5c4738] bg-[#f7f1e5] mt-4">
+        Eco-Buddy Home Manager V2 · Vintage Pastel Edition 🌿🤍
+    </footer>
+
+    <!-- OCR ENGINE -->
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+    <script src="./quiz-data.js"></script>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        let currentXP = 0;
+        let currentPoints = 0;
+        let completedTasks = [false, false, false];
+
+        // KHO 40 CÂU HỎI QUIZ (GIỚI HẠN 1 TUẦN 10 CÂU)
+        const ecoQuizPool = window.ecoQuizPool || [];
+
+
+        const weeklyTipsPool = [
+            [
+                { title: "🚿 Shower & Water Heating", tag: "High Impact", text: "Don't let the water run too long while taking showers. Heating water is one of the most energy-intensive activities in your home." },
+                { title: "🌙 Night Saver Shifting", tag: "Money Saver", text: "Run your washing machine and dishwasher strictly after 23:00 to take advantage of the cheap Night Rate (€0.1954/kWh)." },
+                { title: "🔌 Phantom Load & Standby", tag: "Easy Habit", text: "Unplug phone chargers, microwaves, and TVs when not in use. Standby power accounts for up to 10% of household electricity bills." }
+            ],
+            [
+                { title: "🍳 Lids on Cooking Pots", tag: "Kitchen Saver", text: "Always put lids on pots when boiling water. It traps heat and cooks food up to 30% faster, saving significant energy." },
+                { title: "🌡️ Refrigerator Optimization", tag: "Appliance Care", text: "Keep your fridge set at 3-5°C and freezer at -18°C. Avoid keeping the door open for too long so cold air doesn't escape." },
+                { title: "💡 Daylight Harvesting", tag: "Lighting", text: "Make the most of natural daylight during the day instead of turning on ceiling lights in rooms you're working in." }
+            ],
+            [
+                { title: "👕 Eco Laundry Temperatures", tag: "Laundry Tip", text: "Wash your clothes at 30°C instead of 60°C whenever possible. Modern detergents work brilliantly and save 60% washer energy." },
+                { title: "☀️ Smart Thermal Zoning", tag: "Heating / Cooling", text: "Close doors to unoccupied rooms to keep conditioned air concentrated where you actually spend your time." },
+                { title: "🧊 Natural Fridge Defrosting", tag: "Kitchen Habit", text: "Move frozen items to the fridge compartment the night before to defrost. It uses zero electricity and cools your fridge naturally." }
+            ],
+            [
+                { title: "📺 Smart Power Strips", tag: "Electronics", text: "Plug your entertainment center (TV, console, soundbar) into a master switch power strip to cut all standby power effortlessly." },
+                { title: "🫖 Kettle Water Management", tag: "Kitchen Habit", text: "Only boil as much water as you actually need in your kettle rather than filling it to the maximum every single time." },
+                { title: "🧹 Air Filter Maintenance", tag: "HVAC Care", text: "Clean dust and filters from ventilation and cooker hoods regularly to ensure peak airflow efficiency and lower energy drain." }
+            ]
+        ];
+
+        // HISTORICAL BILLING DATA STORE (CÓ SẴN THÁNG 9, 10, 11)
+        let billingRecords = [
+            { id: "september-2026", month: "September", year: 2026, bill: 123.00, kwh: 390, savings: "€65.20 cr" },
+            { id: "october-2026", month: "October", year: 2026, bill: 240.00, kwh: 750, savings: "€42.50 cr" },
+            { id: "november-2026", month: "November", year: 2026, bill: 221.73, kwh: 706, savings: "€57.91 cr" }
+        ];
+
+        let currentQuizIndex = 0;
+        let currentWeek = 1;
+
+        function loadUserData() {
+            const savedXP = localStorage.getItem("eco_buddy_xp");
+            const savedPoints = localStorage.getItem("eco_buddy_points");
+            const savedDate = localStorage.getItem("eco_buddy_date");
+            const savedTasks = localStorage.getItem("eco_buddy_tasks");
+            const savedBills = localStorage.getItem("eco_buddy_bills");
+
+            if (savedBills) {
+                try { billingRecords = JSON.parse(savedBills); } catch(e) {}
+            }
+
+            const todayStr = new Date().toDateString();
+            if (savedDate === todayStr) {
+                if (savedXP) currentXP = parseInt(savedXP);
+                if (savedPoints) currentPoints = parseInt(savedPoints);
+                if (savedTasks) completedTasks = JSON.parse(savedTasks);
+            } else {
+                localStorage.setItem("eco_buddy_date", todayStr);
+                completedTasks = [false, false, false];
+                localStorage.setItem("eco_buddy_tasks", JSON.stringify(completedTasks));
+                if (savedXP) currentXP = parseInt(savedXP);
+                if (savedPoints) currentPoints = parseInt(savedPoints);
+            }
+            updateMascotLevel();
+            renderTasksUI();
+            initWeeklyContent();
+        }
+
+        function saveUserData() {
+            localStorage.setItem("eco_buddy_xp", currentXP);
+            localStorage.setItem("eco_buddy_points", currentPoints);
+            localStorage.setItem("eco_buddy_tasks", JSON.stringify(completedTasks));
+            localStorage.setItem("eco_buddy_bills", JSON.stringify(billingRecords));
+            localStorage.setItem("eco_buddy_date", new Date().toDateString());
+        }
+
+        function updateHeaderHeight() {
+            const header = document.querySelector("header");
+            if (!header) return;
+            const height = header.offsetHeight;
+            document.documentElement.style.setProperty("--header-height", height + "px");
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            updateHeaderHeight();
+            initAppLanguage();
+            loadUserData();
+            startRealtimeClock();
+            checkTariffStatus();
+            renderCalendar();
+            renderBillCategoryEditor();
+            renderBillingListing();
+            populateDashboardFilters();
+            updateDashboardView();
+            setInterval(checkTariffStatus, 30000);
+
+            if ("ResizeObserver" in window) {
+                const header = document.querySelector("header");
+                if (header) {
+                    const headerObserver = new ResizeObserver(() => updateHeaderHeight());
+                    headerObserver.observe(header);
+                }
+            }
+            fetchWeatherData();
+            setInterval(fetchWeatherData, 600000);
+        });
+
+        const appLanguageText={en:{"tab-btn-weather":"🌦️ Weather","tab-btn-tracker":"⚡ Tariff","tab-btn-reports":"📊 Reports","tab-btn-tips":"💡 Tips","tab-btn-chatbot":"☁️ Bé Mây","tab-btn-checklist":"🍳 Cooking","tab-btn-calendar":"📅 Calendar"},vi:{"tab-btn-weather":"🌦️ Thời tiết","tab-btn-tracker":"⚡ Giá điện","tab-btn-reports":"📊 Báo cáo","tab-btn-tips":"💡 Mẹo hay","tab-btn-chatbot":"☁️ Bé Mây","tab-btn-checklist":"🍳 Nấu ăn","tab-btn-calendar":"📅 Lịch"}};
+        function toggleLanguageMenu(){const menu=document.getElementById("language-menu"),button=document.getElementById("language-toggle");if(!menu)return;menu.classList.toggle("hidden");button?.setAttribute("aria-expanded",String(!menu.classList.contains("hidden")));}
+        function setAppLanguage(language){const lang=language==="vi"?"vi":"en";document.documentElement.lang=lang;localStorage.setItem("eco_buddy_language",lang);const languageCurrent=document.getElementById("language-current");if(languageCurrent)languageCurrent.textContent=lang.toUpperCase();Object.entries(appLanguageText[lang]).forEach(([id,label])=>{const el=document.getElementById(id);if(el)el.textContent=label;});document.getElementById("language-menu")?.classList.add("hidden");document.getElementById("language-toggle")?.setAttribute("aria-expanded","false");}
+        function initAppLanguage(){setAppLanguage(localStorage.getItem("eco_buddy_language")||"en");}
+        window.addEventListener("resize", updateHeaderHeight);
+        window.addEventListener("orientationchange", () => setTimeout(updateHeaderHeight, 150));
+
+        function startRealtimeClock() {
+            function updateClock() {
+                const now = new Date();
+                const clockEl = document.getElementById('realtime-clock');
+                if (clockEl) clockEl.innerText = now.toLocaleTimeString();
+            }
+            updateClock();
+            setInterval(updateClock, 1000);
+        }
+
+        function switchTab(tabName) {
+            const tabs = ['weather', 'tracker', 'reports', 'tips', 'chatbot', 'checklist', 'calendar'];
+            tabs.forEach(t => {
+                const el = document.getElementById(`tab-content-${t}`);
+                const btn = document.getElementById(`tab-btn-${t}`);
+                if (el) el.classList.add('hidden');
+                if (btn) btn.classList.remove('active');
+            });
+
+            const targetEl = document.getElementById(`tab-content-${tabName}`);
+            const targetBtn = document.getElementById(`tab-btn-${tabName}`);
+            if (targetEl) targetEl.classList.remove('hidden');
+            if (targetBtn) targetBtn.classList.add('active');
+
+            const mascotGlobalCard = document.getElementById('mascot-global-card');
+            if (mascotGlobalCard) {
+                if (tabName === 'tracker') {
+                    mascotGlobalCard.classList.remove('hidden');
+                } else {
+                    mascotGlobalCard.classList.add('hidden');
+                }
+            }
+
+            if (tabName === 'weather') fetchWeatherData();
+            if (tabName === 'calendar') renderCalendar();
+            if (tabName === 'reports') {
+                renderBillingListing();
+                updateDashboardView();
+            }
+            syncDashboardReminderVisibility();
+        }
+
+        function switchReportSubTab(subName) {
+            ['upload', 'listing', 'dashboard'].forEach(s => {
+                const el = document.getElementById(`report-subtab-${s}`);
+                const btn = document.getElementById(`subtab-btn-${s}`);
+                if (el) el.classList.add('hidden');
+                if (btn) {
+                    btn.classList.remove('bg-[#8c7355]', 'text-white');
+                    btn.classList.add('bg-[#fffaf4]', 'text-[#4a3b32]');
+                }
+            });
+
+            const targetEl = document.getElementById(`report-subtab-${subName}`);
+            const targetBtn = document.getElementById(`subtab-btn-${subName}`);
+            if (targetEl) targetEl.classList.remove('hidden');
+            if (targetBtn) {
+                targetBtn.classList.remove('bg-[#fffaf4]', 'text-[#4a3b32]');
+                targetBtn.classList.add('bg-[#8c7355]', 'text-white');
+            }
+
+            if (subName === 'listing') renderBillingListing();
+            if (subName === 'dashboard') updateDashboardView();
+            syncDashboardReminderVisibility();
+        }
+
+        function syncDashboardReminderVisibility() {
+            const reminders = document.getElementById('dashboard-only-reminders');
+            const reports = document.getElementById('tab-content-reports');
+            const dashboard = document.getElementById('report-subtab-dashboard');
+            if (!reminders || !reports || !dashboard) return;
+            const isDashboardActive = !reports.classList.contains('hidden') && !dashboard.classList.contains('hidden');
+            reminders.classList.toggle('hidden', !isDashboardActive);
+        }
+
+        const billCategoryDefaults=[["waterHeating","Water Heating",null],["cooking","Cooking",null],["entertainment","Entertainment",null],["laundry","Laundry",null],["refrigeration","Refrigeration",null],["alwaysOn","Always On",null],["lighting","Lighting",null],["other","Other",null]];
+        const billCategoryColors=["#A8C7A0","#EAD58E","#E9B0AA","#A9BDC0","#BCA996","#A9CBD8","#C1D4B1","#D9C6AE"];
+        let billImageFiles={total:null,breakdown:null},billImageUrls={total:"",breakdown:""},activeBillCategory=0;
+        function getBillCategoryValues(){
+            return [...document.querySelectorAll("[data-category-percent]")].map((x,i)=>({
+                key:x.dataset.categoryPercent,
+                label:(document.querySelector('[data-category-label="'+x.dataset.categoryPercent+'"]')||{}).value||("Category "+(i+1)),
+                percent:Math.max(0,Number(x.value)||0),
+                color:billCategoryColors[i%billCategoryColors.length]
+            }));
+        }
+        function renderBillCategoryEditor(items){
+            const host=document.getElementById("bill-category-editor");if(!host)return;
+            const data=items&&items.length?items:billCategoryDefaults.map(x=>({key:x[0],label:x[1],percent:x[2]}));
+            host.innerHTML=data.map((c,i)=>'<div class="rounded-xl border border-[#e3d6c6] bg-[#fffaf4] px-2 py-1.5 min-w-0"><div class="flex items-center gap-1.5 min-w-0"><span class="w-2.5 h-2.5 rounded-full shrink-0" style="background:'+billCategoryColors[i%billCategoryColors.length]+'"></span><input aria-label="Category name" data-category-label="'+(c.key||("category"+i))+'" value="'+String(c.label||"").replace(/&/g,"&amp;").replace(/"/g,"&quot;")+'" class="min-w-0 w-full bg-transparent outline-none text-[10px] font-bold"></div><label class="flex items-center gap-1 mt-1 text-[9px] text-[#8c7355]"><input aria-label="Estimated percentage" data-category-percent="'+(c.key||("category"+i))+'" type="number" min="0" max="100" step="0.1" value="'+(c.percent===undefined||c.percent===null?"":(Number(c.percent)||0))+'" oninput="updateBillCategoryTotals()" class="w-full min-w-0 px-1.5 py-1 rounded-lg border border-[#d8c7b0] text-[10px] bg-white"><span>% est.</span></label></div>').join("");
+            updateBillCategoryTotals();
+        }
+        function showBillCategorySummary(){
+            const cats=getBillCategoryValues(),totalPercent=cats.reduce((n,c)=>n+c.percent,0),totalKwh=Number(document.getElementById("edit-bill-kwh")?.value),validKwh=Number.isFinite(totalKwh)&&totalKwh>=0&&document.getElementById("edit-bill-kwh").value!=="";
+            const detail=document.getElementById("bill-category-detail"),center=document.getElementById("bill-donut-center-kwh"),label=document.getElementById("bill-donut-center-label");
+            if(detail)detail.innerHTML='<div class="font-extrabold text-[#5c4738]">Tổng phân bổ điện năng</div><div class="mt-1 text-[#7a6452]">'+totalPercent.toFixed(1)+'% phân bổ · <strong class="text-[#5c4738]">'+(validKwh?totalKwh.toFixed(1)+" kWh total":"Nhập tổng kWh để xem ước tính")+'</strong></div>';
+            if(center)center.textContent=validKwh?totalKwh.toFixed(1):"—";
+            if(label)label.textContent="Total usage";
+            document.querySelectorAll("#bill-category-donut circle[data-segment]").forEach(circle=>{circle.style.opacity="1";circle.style.strokeWidth="31";});
+            activeBillCategory=-1;
+        }
+        function selectBillCategory(index){
+            const cats=getBillCategoryValues(),cat=cats[index];if(!cat)return;
+            const totalKwh=Number(document.getElementById("edit-bill-kwh")?.value),estimated=Number.isFinite(totalKwh)&&totalKwh>=0&&document.getElementById("edit-bill-kwh").value!==""?totalKwh*cat.percent/100:null;
+            activeBillCategory=index;
+            const detail=document.getElementById("bill-category-detail");
+            if(detail)detail.innerHTML='<div class="flex items-center gap-2 font-extrabold text-[#5c4738]"><span class="w-3 h-3 rounded-full" style="background:'+cat.color+'"></span>'+cat.label+'</div><div class="mt-1 text-[#7a6452]">'+cat.percent.toFixed(1)+'% of total · <strong class="text-[#5c4738]">'+(estimated===null?"Enter total kWh":estimated.toFixed(1)+" kWh estimated")+'</strong></div>';
+            const center=document.getElementById("bill-donut-center-kwh"),label=document.getElementById("bill-donut-center-label");
+            if(center)center.textContent=estimated===null?"—":estimated.toFixed(1);
+            if(label)label.textContent=cat.label;
+            document.querySelectorAll("#bill-category-donut circle[data-segment]").forEach((circle,i)=>{circle.style.opacity=i===index?"1":"0.62";circle.style.strokeWidth=i===index?"35":"31";});
+        }
+        function renderBillDonut(){
+            const svg=document.getElementById("bill-category-donut");if(!svg)return;
+            const cats=getBillCategoryValues(),total=cats.reduce((n,c)=>n+c.percent,0),r=76,circ=2*Math.PI*r;
+            let offset=0;
+            svg.innerHTML='<circle cx="110" cy="110" r="'+r+'" fill="none" stroke="#eadfD1" stroke-width="31"></circle>';
+            svg.onmouseleave=showBillCategorySummary;
+            cats.forEach((cat,i)=>{
+                const length=total>0?circ*cat.percent/100:0;
+                const circle=document.createElementNS("http://www.w3.org/2000/svg","circle");
+                circle.setAttribute("cx","110");circle.setAttribute("cy","110");circle.setAttribute("r",String(r));circle.setAttribute("fill","none");
+                circle.setAttribute("stroke",cat.color);circle.setAttribute("stroke-width","31");circle.setAttribute("stroke-dasharray",length+" "+Math.max(0,circ-length));circle.setAttribute("stroke-dashoffset",String(-offset));circle.setAttribute("transform","rotate(-90 110 110)");circle.setAttribute("stroke-linecap","butt");circle.setAttribute("data-segment",String(i));circle.style.cursor="pointer";circle.style.transition="stroke-width .15s,opacity .15s";
+                circle.addEventListener("mouseenter",()=>selectBillCategory(i));circle.addEventListener("click",()=>selectBillCategory(i));svg.appendChild(circle);offset+=length;
+            });
+            showBillCategorySummary();
+        }
+        function updateBillPerPerson(){const amount=Number(document.getElementById("edit-bill-amount")?.value),countInput=document.getElementById("bill-household-size"),count=Math.max(1,Math.min(50,Math.floor(Number(countInput?.value)||1))),note=document.getElementById("bill-per-person-note");if(countInput&&Number(countInput.value)!==count)countInput.value=count;if(note)note.textContent="Ghi chú: chia đều cho "+count+" người · "+(Number.isFinite(amount)&&amount>=0&&document.getElementById("edit-bill-amount").value!==""?"€"+(amount/count).toFixed(2):"€—")+" / người";}
+        function updateBillCategoryTotals(){
+            const inputs=[...document.querySelectorAll("[data-category-percent]")],hasValues=inputs.some(input=>input.value.trim()!=="");
+            const cats=getBillCategoryValues(),total=cats.reduce((n,c)=>n+c.percent,0),t=document.getElementById("bill-category-total"),w=document.getElementById("bill-category-warning");
+            if(t)t.textContent=hasValues?total.toFixed(1)+"%":"—";
+            if(w)w.textContent=!hasValues?"Chưa có ước tính — hãy tải ảnh phân bổ rõ nét rồi chạy OCR.":(Math.abs(total-100)<0.11?"✓ Tổng phân bổ bằng 100%.":"Tỷ lệ phân bổ phải bằng 100%.");
+            renderBillDonut();
+        }
+        function previewUploadedBill(event,type){
+            type=type||"total";const file=event.target.files&&event.target.files[0];if(!file)return;if(!file.type.startsWith("image/")){alert("Please choose an image.");return;}
+            billImageFiles[type]=file;if(billImageUrls[type])URL.revokeObjectURL(billImageUrls[type]);billImageUrls[type]=URL.createObjectURL(file);
+            const p=document.getElementById(type==="total"?"bill-preview-img":"bill-breakdown-preview");
+            if(p){p.src=billImageUrls[type];p.classList.remove("hidden");}
+            if(type==="breakdown"){
+                window.currentBillDonutSegments=null;
+                detectDonutSegments(file).then(detected=>{
+                    if(detected.ok)window.currentBillDonutSegments=detected.segments;
+                    else console.warn("Image B energy distribution recognition:",detected.reason||"not detected");
+                }).catch(error=>console.warn("Image B reading failed",error));
+            }
+            document.getElementById("upload-status-text").textContent="Ảnh đã sẵn sàng. Bấm đọc OCR hoặc nhập tay rồi lưu.";document.getElementById("bill-ocr-status").textContent="Có ảnh mới — cần đọc lại";if(type==="breakdown"){showBillDonutOriginal();document.querySelectorAll("[data-category-percent]").forEach(input=>input.value="");updateBillCategoryTotals();}
+        }
+        function parseBillDateParts(text){
+            const months={jan:1,feb:2,mar:3,apr:4,may:5,jun:6,jul:7,aug:8,sep:9,oct:10,nov:11,dec:12};
+            const out=[];
+            const re=/\b(\d{1,2})\s+([A-Za-z]{3,9})\.?,?\s+(20\d{2}|\d{2})\b|\b(\d{1,2})[\/.-](\d{1,2})[\/.-](20\d{2}|\d{2})\b/g;
+            for(const m of text.matchAll(re)){
+                let day,month,year;
+                if(m[1]){day=Number(m[1]);month=months[m[2].slice(0,3).toLowerCase()];year=Number(m[3]);}
+                else{day=Number(m[4]);month=Number(m[5]);year=Number(m[6]);}
+                if(year<100)year+=2000;
+                if(month>=1&&month<=12&&day>=1&&day<=31)out.push({iso:year+"-"+String(month).padStart(2,"0")+"-"+String(day).padStart(2,"0"),day,month,year});
+            }
+            return out;
+        }
+        function parseBillOcrText(text){
+            const r={};
+            const periodMatch=text.match(/billing\s*period([\s\S]{0,180})/i);
+            if(periodMatch){
+                const dates=parseBillDateParts(periodMatch[1]);
+                if(dates.length>=2){r.start=dates[0].iso;r.end=dates[1].iso;}
+            }
+            const moneyMatches=[...text.matchAll(/(?:€\s*|EUR\s*)(\d{1,5}(?:[,.]\d{2})?)/gi),...text.matchAll(/(?:total\s*(?:amount|due|bill)|amount\s*due)\s*[:：]?\s*€?\s*(\d{1,5}(?:[,.]\d{2})?)/gi)];
+            if(moneyMatches.length){const vals=moneyMatches.map(m=>Number(m[1].replace(",","."))).filter(Number.isFinite);if(vals.length)r.amount=vals[vals.length-1];}
+            const usageUnitMatch=text.match(/usage\s*unit\s*[:：]?\s*(\d{1,6}(?:[,.]\d{1,2})?)/i);
+            const kwhMatch=text.match(/(?:total\s*(?:consumption|usage|electricity|energy)?\s*[:：]?\s*)(\d{1,6}(?:[,.]\d{1,2})?)\s*kwh\b|(\d{1,6}(?:[,.]\d{1,2})?)\s*kwh\b/i);
+            const kwhValue=usageUnitMatch&&usageUnitMatch[1]?usageUnitMatch[1]:(kwhMatch&&(kwhMatch[1]||kwhMatch[2]));
+            if(kwhValue)r.kwh=Number(kwhValue.replace(",","."));
+            const issueMatch=text.match(/date\s*of\s*issue\s*[:：]?\s*(\d{1,2}\s+[A-Za-z]{3,9}\.?,?\s+(?:20\d{2}|\d{2})|\d{1,2}[\/.-]\d{1,2}[\/.-](?:20\d{2}|\d{2}))/i);
+            if(issueMatch){const issue=parseBillDateParts(issueMatch[1])[0];if(issue){r.issueDate=issue.iso;if(!r.start&&!r.end){r.month=new Date(issue.iso+"T12:00:00").toLocaleString("en",{month:"long"});r.year=issue.year;}}}
+            const periodAnchor=r.start||r.end;if(periodAnchor){const d=new Date(periodAnchor+"T12:00:00");r.month=d.toLocaleString("en",{month:"long"});r.year=d.getFullYear();}
+            return r;
+        }
+        async function estimateBillCategoryShares(file,ocrText,words){
+            if(!file)return {ok:false,reason:"missing-image"};
+            const categories=[["waterHeating",["waterheating","waterheater"]],["cooking",["cooking"]],["entertainment",["entertainment"]],["laundry",["laundry"]],["refrigeration",["refrigeration"]],["alwaysOn",["alwayson","alwaysonload"]],["lighting",["lighting"]],["other",["other"]]];
+            const normalized=String(ocrText||"").toLowerCase().replace(/[^a-z]/g,"");
+            const ordered=categories.map(([key,aliases])=>({key,position:Math.min(...aliases.map(x=>normalized.indexOf(x)).filter(x=>x>=0))})).filter(x=>Number.isFinite(x.position)).sort((a,b)=>a.position-b.position);
+            let bitmap=null;
+            try{
+                bitmap=await createImageBitmap(file);
+                const canvas=document.createElement("canvas"),scale=Math.min(1,1400/Math.max(bitmap.width,bitmap.height));
+                const w=Math.max(1,Math.round(bitmap.width*scale)),h=Math.max(1,Math.round(bitmap.height*scale));
+                canvas.width=w;canvas.height=h;
+                const ctx=canvas.getContext("2d",{willReadFrequently:true});
+                if(!ctx)return {ok:false,reason:"canvas"};
+                ctx.drawImage(bitmap,0,0,w,h);
+                const pixels=ctx.getImageData(0,0,w,h).data,minDim=Math.min(w,h);
+                let cx=w/2,cy=h/2;
+                const centerWords=(words||[]).filter(x=>/usage|consumption|kwh|total/i.test(x.text||"")&&x.bbox);
+                if(centerWords.length){
+                    const pts=centerWords.map(x=>({x:(x.bbox.x0+x.bbox.x1)/2*scale,y:(x.bbox.y0+x.bbox.y1)/2*scale}));
+                    cx=pts.reduce((n,p)=>n+p.x,0)/pts.length;cy=pts.reduce((n,p)=>n+p.y,0)/pts.length;
+                }
+                const rgbAt=(deg,r)=>{
+                    const a=(deg-90)*Math.PI/180,values=[];
+                    for(const ro of [-.025,0,.025]){
+                        const x=Math.round(cx+Math.cos(a)*r*(1+ro)),y=Math.round(cy+Math.sin(a)*r*(1+ro));
+                        if(x<0||y<0||x>=w||y>=h)continue;
+                        const k=(y*w+x)*4,R=pixels[k],G=pixels[k+1],B=pixels[k+2];
+                        values.push({R,G,B,light:(R+G+B)/3,chroma:Math.max(R,G,B)-Math.min(R,G,B)});
+                    }
+                    if(!values.length)return null;
+                    values.sort((a,b)=>b.chroma-a.chroma);
+                    return values[0];
+                };
+                const colorDistance=(a,b)=>!a||!b?999:Math.hypot(a.R-b.R,a.G-b.G,a.B-b.B);
+                let best=null;
+                const samples=360;
+                for(let radius=minDim*.13;radius<=minDim*.46;radius+=Math.max(1,minDim*.003)){
+                    const colors=Array.from({length:samples},(_,i)=>rgbAt(i,radius));
+                    const valid=colors.map(c=>!!c&&c.light<249&&(c.chroma>7||c.light<205));
+                    const coverage=valid.filter(Boolean).length/samples;
+                    if(coverage<.30)continue;
+                    let transitions=0,contrast=0;
+                    for(let i=0;i<samples;i++){
+                        const j=(i+1)%samples;
+                        if(valid[i]&&valid[j]){
+                            const d=colorDistance(colors[i],colors[j]);
+                            if(d>30){transitions++;contrast+=d;}
+                        }
+                    }
+                    const segmentCount=transitions;
+                    if(segmentCount<2||segmentCount>8)continue;
+                    const score=coverage*2+Math.min(contrast/(transitions||1),100)/100;
+                    if(!best||score>best.score)best={colors,valid,score,segmentCount};
+                }
+                bitmap.close();bitmap=null;
+                if(!best)return {ok:false,reason:"ring-not-found"};
+                const {colors,valid}=best,boundaries=[];
+                for(let i=0;i<samples;i++){
+                    const prev=(i+samples-1)%samples;
+                    if(valid[i]&&valid[prev]&&colorDistance(colors[i],colors[prev])>30)boundaries.push(i);
+                }
+                if(boundaries.length<4)return {ok:false,reason:"unclear-segments"};
+                const segments=boundaries.map((from,i)=>({from,to:boundaries[(i+1)%boundaries.length],length:(boundaries[(i+1)%boundaries.length]-from+samples)%samples})).filter(x=>x.length>=3);
+                if(segments.length<2||segments.length>8)return {ok:false,reason:"unclear-segments"};
+                if(ordered.length!==segments.length)return {ok:false,reason:"labels-do-not-match-slices",detected:ordered.length,segments:segments.length};
+                const total=segments.reduce((n,x)=>n+x.length,0);
+                const shares=segments.map(x=>Math.round(x.length/total*1000)/10);
+                shares[shares.length-1]=Math.round((shares[shares.length-1]+100-shares.reduce((n,v)=>n+v,0))*10)/10;
+                const result={};
+                segments.forEach((segment,i)=>{result[ordered[i].key]=shares[i];});
+                return {ok:true,shares:result,detected:ordered.length,segments:segments.length,unmatched:false};
+            }catch(e){
+                if(bitmap)bitmap.close();
+                console.warn("Donut estimation failed",e);
+                return {ok:false,reason:"image-analysis"};
+            }
+        }
+
+        // Generic donut reconstruction: no fixed categories or reference image.
+        async function detectDonutSegments(file){
+            if(!file)return {ok:false,reason:"missing-image"};
+            let bitmap=null;
+            try{
+                bitmap=await createImageBitmap(file);
+                const scale=Math.min(1,1200/Math.max(bitmap.width,bitmap.height)),w=Math.max(1,Math.round(bitmap.width*scale)),h=Math.max(1,Math.round(bitmap.height*scale));
+                const canvas=document.createElement("canvas");canvas.width=w;canvas.height=h;
+                const ctx=canvas.getContext("2d",{willReadFrequently:true});if(!ctx)return {ok:false,reason:"canvas"};
+                ctx.drawImage(bitmap,0,0,w,h);bitmap.close();bitmap=null;
+                const data=ctx.getImageData(0,0,w,h).data,minDim=Math.min(w,h),N=720;
+                const read=(cx,cy,r,i)=>{
+                    const a=(i/N)*Math.PI*2-Math.PI/2,samples=[];
+                    for(const off of [-.035,-.017,0,.017,.035]){
+                        const x=Math.round(cx+Math.cos(a)*r*(1+off)),y=Math.round(cy+Math.sin(a)*r*(1+off));
+                        if(x<0||y<0||x>=w||y>=h)continue;
+                        const p=(y*w+x)*4,R=data[p],G=data[p+1],B=data[p+2],light=(R+G+B)/3,chroma=Math.max(R,G,B)-Math.min(R,G,B);
+                        if(light<248&&chroma>7)samples.push({R,G,B});
+                    }
+                    if(!samples.length)return null;samples.sort((a,b)=>(Math.max(b.R,b.G,b.B)-Math.min(b.R,b.G,b.B))-(Math.max(a.R,a.G,a.B)-Math.min(a.R,a.G,a.B)));return samples[0];
+                };
+                const dist=(a,b)=>!a||!b?999:Math.hypot(a.R-b.R,a.G-b.G,a.B-b.B);
+                let best=null;
+                for(const fx of [.38,.44,.5,.56,.62])for(const fy of [.38,.44,.5,.56,.62]){
+                    const cx=w*fx,cy=h*fy;
+                    for(let rf=.14;rf<=.43;rf+=.012){
+                        const r=minDim*rf,colors=Array.from({length:N},(_,i)=>read(cx,cy,r,i)),valid=colors.map(Boolean),coverage=valid.filter(Boolean).length/N;
+                        if(coverage<.28)continue;
+                        let changes=0,strength=0;
+                        for(let i=0;i<N;i++){const j=(i+1)%N;if(valid[i]&&valid[j]){const d=dist(colors[i],colors[j]);if(d>34){changes++;strength+=d;}}}
+                        if(changes<2||changes>32)continue;
+                        const score=coverage*2+Math.min(strength/Math.max(1,changes),120)/120;
+                        if(!best||score>best.score)best={colors,score};
+                    }
+                }
+                if(!best)return {ok:false,reason:"ring-not-found"};
+                const runs=[];let current=null;
+                for(let i=0;i<N;i++){
+                    const c=best.colors[i];
+                    if(!c){if(current){runs.push(current);current=null;}continue;}
+                    if(!current||dist(current.color,c)>34){if(current)runs.push(current);current={count:1,color:{R:c.R,G:c.G,B:c.B},samples:[c]};}
+                    else{current.count++;current.samples.push(c);current.color={R:current.samples.reduce((n,v)=>n+v.R,0)/current.samples.length,G:current.samples.reduce((n,v)=>n+v.G,0)/current.samples.length,B:current.samples.reduce((n,v)=>n+v.B,0)/current.samples.length};}
+                }
+                if(current)runs.push(current);
+                if(runs.length>1&&dist(runs[0].color,runs[runs.length-1].color)<34){const last=runs.pop(),first=runs.shift(),count=last.count+first.count;runs.unshift({count,color:{R:(last.color.R*last.count+first.color.R*first.count)/count,G:(last.color.G*last.count+first.color.G*first.count)/count,B:(last.color.B*last.count+first.color.B*first.count)/count}});}
+                const segments=runs.filter(x=>x.count>=5);
+                if(segments.length<2||segments.length>16)return {ok:false,reason:"unclear-segments",detected:segments.length};
+                const total=segments.reduce((n,x)=>n+x.count,0),result=segments.map((x,i)=>({key:"slice-"+(i+1),label:"Slice "+(i+1),percent:Math.round(x.count/total*1000)/10,color:"#"+[x.color.R,x.color.G,x.color.B].map(v=>Math.max(0,Math.min(255,Math.round(v))).toString(16).padStart(2,"0")).join("")}));
+                result[result.length-1].percent=Math.round((result[result.length-1].percent+100-result.reduce((n,x)=>n+x.percent,0))*10)/10;
+                return {ok:true,segments:result};
+            }catch(error){if(bitmap)bitmap.close();console.warn("Donut reconstruction failed",error);return {ok:false,reason:"image-analysis"};}
+        }
+        function renderRebuiltDonut(host,segments,centerText){
+            if(!host)return;
+            if(!Array.isArray(segments)||segments.length<2){host.innerHTML='<p class="text-[10px] text-[#7a6452] py-8">Chưa nhận diện được donut từ ảnh tháng này.</p>';return;}
+            const r=75,circ=2*Math.PI*r;let offset=0;
+            const circles=segments.map(seg=>{const len=circ*Math.max(0,Number(seg.percent)||0)/100,html='<circle cx="110" cy="110" r="75" fill="none" stroke="'+seg.color+'" stroke-width="30" stroke-dasharray="'+len+' '+Math.max(0,circ-len)+'" stroke-dashoffset="'+(-offset)+'" transform="rotate(-90 110 110)"/>';offset+=len;return html;}).join("");
+            const safeCenter=String(centerText||"").replace(/[<>&"]/g,"");
+            host.innerHTML='<svg viewBox="0 0 220 220" class="w-full max-w-[260px] max-h-64" role="img" aria-label="Reconstructed donut chart"><circle cx="110" cy="110" r="75" fill="none" stroke="#eadfd1" stroke-width="30"/>'+circles+'<text x="110" y="106" text-anchor="middle" font-size="14" font-weight="700" fill="#5c4738">'+safeCenter+'</text><text x="110" y="124" text-anchor="middle" font-size="9" fill="#7a6452">TOTAL</text></svg><div class="w-full grid grid-cols-2 gap-x-2 gap-y-1 mt-2 text-[9px] text-left">'+segments.map(seg=>'<div class="flex items-center gap-1 min-w-0"><i class="w-2 h-2 rounded-full shrink-0" style="background:'+seg.color+'"></i><span class="truncate">'+seg.label+'</span><b class="ml-auto">'+Number(seg.percent).toFixed(1)+'%</b></div>').join("")+'</div>';
+        }
+        // ===== BẢNG KHUNG GIỜ DAY / PEAK / NIGHT =====
+        const BILL_BANDS=[["day","Day","8am–11pm",0.3719],["peak","Peak","5–7pm",0.3968],["night","Night","11pm–8am",0.1954]];
+        const _bbEl=id=>document.getElementById(id);
+        function readBillBands(){
+            return BILL_BANDS.map(([key,label,,defaultPrice])=>{
+                const k=_bbEl("bb-kwh-"+key),p=_bbEl("bb-price-"+key);
+                const kwh=k&&k.value!==""?Number(k.value):null,price=p&&p.value!==""?Number(p.value):defaultPrice;
+                return{key,label,kwh:kwh!==null&&Number.isFinite(kwh)?kwh:null,price:Number.isFinite(price)?price:defaultPrice,eur:kwh!==null&&Number.isFinite(kwh)?Math.round(kwh*price*100)/100:null};
+            });
+        }
+        function updateBillBands(){
+            const rows=readBillBands(),tk=rows.reduce((n,r)=>n+(r.kwh||0),0),te=rows.reduce((n,r)=>n+(r.eur||0),0);
+            rows.forEach(r=>{
+                const set=(id,v)=>{const e=_bbEl(id);if(e)e.textContent=v;};
+                set("bb-eur-"+r.key,r.eur===null?"–":"€"+r.eur.toFixed(2));
+                set("bb-pk-"+r.key,r.kwh!==null&&tk>0?(r.kwh/tk*100).toFixed(1)+"%":"–");
+                set("bb-pe-"+r.key,r.eur!==null&&te>0?(r.eur/te*100).toFixed(1)+"%":"–");
+            });
+            const t1=_bbEl("bb-total-kwh"),t2=_bbEl("bb-total-eur"),warning=_bbEl("bb-warning"),totalInput=_bbEl("edit-bill-kwh");
+            const saveButton=_bbEl("save-bill-button");
+            if(saveButton){saveButton.disabled=false;saveButton.classList.remove("opacity-50","cursor-not-allowed");}
+            if(t1)t1.textContent=tk>0?tk.toFixed(0):"–";
+            if(t2)t2.textContent=te>0?"€"+te.toFixed(2):"–";
+            if(warning){const total=totalInput&&totalInput.value!==""?Number(totalInput.value):null,complete=rows.every(r=>r.kwh!==null&&Number.isFinite(r.kwh)&&r.kwh>=0);warning.textContent=complete&&tk>0&&total!==null&&Math.abs(tk-total)>1?"Tổng 3 khung giờ ("+tk.toFixed(0)+" kWh) khác tổng kWh đã nhập ("+total+" kWh) — hãy kiểm tra lại.":"";}
+        }
+        function showBillDonutOriginal(){
+            const img=_bbEl("bill-donut-original"),empty=_bbEl("bill-donut-original-empty");if(!img)return;
+            if(billImageUrls.breakdown){img.src=billImageUrls.breakdown;img.classList.remove("hidden");if(empty)empty.classList.add("hidden");}
+            else{img.classList.add("hidden");if(empty)empty.classList.remove("hidden");}
+        }
+        function parseBillBands(text){
+            const out={};
+            String(text||"").split(/\n/).forEach(line=>{
+                if(/standing|levy|charge/i.test(line))return;
+                const m=line.match(/\b(day|peak|night)\b/i);if(!m)return;
+                if(!/\d{1,2}\s*[:.]?\s*\d{0,2}\s*[ap]m/i.test(line))return;
+                const key=m[1].toLowerCase();if(out[key])return;
+                const nums=line.replace(/\([^)]*\)?/g," ").match(/\d+(?:[.,]\d+)?/g)||[];
+                const pi=nums.findIndex(t=>/^0[.,]\d{4}$/.test(t));if(pi<1)return;
+                const num=t=>Number(String(t).replace(",","."));
+                const amount=nums.slice(pi+1).filter(t=>/^\d{1,4}[.,]\d{2}$/.test(t)).pop();
+                out[key]={kwh:num(nums[pi-1]),price:num(nums[pi]),amount:amount?num(amount):null};
+            });
+            return out;
+        }
+        function validBillBand(r){return !!r&&Number.isFinite(r.kwh)&&r.kwh>=0&&Number.isFinite(r.price)&&r.price>0&&r.amount!==null&&Number.isFinite(r.amount)&&Math.abs(r.kwh*r.price-r.amount)<=0.06;}
+        function scoreBillBands(o){return Object.values(o||{}).filter(validBillBand).length;}
+        function billBandsRect(words,W,H,above,below){
+            above=above||4;below=below||6;
+            const ws=(words||[]).filter(w=>w&&w.bbox&&w.text),yc=w=>(w.bbox.y0+w.bbox.y1)/2;
+            const day=ws.find(w=>/^\(?day\)?$/i.test(w.text.trim())&&ws.some(v=>v!==w&&/[ap]m/i.test(v.text)&&Math.abs(yc(v)-yc(w))<(w.bbox.y1-w.bbox.y0)));
+            if(!day)return null;
+            const h=Math.max(10,day.bbox.y1-day.bbox.y0),y0=Math.max(0,Math.round(day.bbox.y0-above*h)),y1=Math.min(H,Math.round(day.bbox.y1+below*h));
+            return{x:0,y:y0,w:Math.round(W*0.72),h:y1-y0};
+        }
+        async function cropBillBandForOcr(file,rect,scale){
+            const bmp=await createImageBitmap(file),canvas=document.createElement("canvas");
+            canvas.width=Math.max(1,Math.round(rect.w*scale));canvas.height=Math.max(1,Math.round(rect.h*scale));
+            const ctx=canvas.getContext("2d",{willReadFrequently:true});ctx.imageSmoothingQuality="high";
+            ctx.drawImage(bmp,rect.x,rect.y,rect.w,rect.h,0,0,canvas.width,canvas.height);bmp.close();
+            const image=ctx.getImageData(0,0,canvas.width,canvas.height),d=image.data;let lo=255,hi=0;
+            for(let i=0;i<d.length;i+=4){const gray=d[i]*.299+d[i+1]*.587+d[i+2]*.114;d[i]=d[i+1]=d[i+2]=gray;lo=Math.min(lo,gray);hi=Math.max(hi,gray);}
+            const span=Math.max(1,hi-lo);for(let i=0;i<d.length;i+=4){const v=Math.max(0,Math.min(255,(d[i]-lo)*255/span));d[i]=d[i+1]=d[i+2]=v;}
+            ctx.putImageData(image,0,0);return canvas;
+        }
+        function mergeBillBands(candidates){
+            const out={};
+            BILL_BANDS.forEach(([key])=>{const rows=candidates.map(c=>c&&c[key]).filter(Boolean);const best=rows.find(validBillBand)||rows[0];if(best)out[key]=best;});
+            return out;
+        }
+        async function readBillBandsFromImage(worker,file,words,fullText){
+            const candidates=[parseBillBands(fullText)];
+            if(scoreBillBands(mergeBillBands(candidates))<3){
+                try{
+                    const bmp=await createImageBitmap(file),W=bmp.width,H=bmp.height;bmp.close();
+                    for(const [above,below,psms] of [[4.5,13,["4"]],[4,6,["4","6"]],[3,9,["4"]]]){
+                        const rect=billBandsRect(words,W,H,above,below);if(!rect)break;
+                        const crop=await cropBillBandForOcr(file,rect,3);
+                        for(const psm of psms){await worker.setParameters({tessedit_pageseg_mode:psm});const result=await worker.recognize(crop);candidates.push(parseBillBands(result.data.text));}
+                        if(scoreBillBands(mergeBillBands(candidates))>=3)break;
+                    }
+                }catch(error){console.warn("Band crop OCR failed",error);}
+            }
+            return mergeBillBands(candidates);
+        }
+        function applyBillBands(found){
+            const totalInput=_bbEl("edit-bill-kwh"),total=totalInput&&totalInput.value!==""?Number(totalInput.value):null;
+            const good={},bad=[],values={};
+            BILL_BANDS.forEach(([key,,,defaultPrice])=>{const row=found&&found[key];if(validBillBand(row))good[key]=row;else bad.push(key);values[key]={kwh:good[key]?good[key].kwh:null,price:good[key]?good[key].price:defaultPrice};});
+            let derived=null;
+            if(bad.length===1&&total!==null&&Number.isFinite(total)){const rest=Object.keys(good).reduce((n,key)=>n+good[key].kwh,0),missing=Math.round((total-rest)*100)/100;if(missing>=0){values[bad[0]].kwh=missing;derived=bad[0];}}
+            BILL_BANDS.forEach(([key])=>{const k=_bbEl("bb-kwh-"+key),p=_bbEl("bb-price-"+key);if(k)k.value=values[key].kwh===null?"":values[key].kwh;if(p)p.value=values[key].price;});
+            updateBillBands();return{good:Object.keys(good).length,derived};
+        }
+        async function runBillOCR(){
+            const files=[billImageFiles.total,billImageFiles.breakdown].filter(Boolean),status=_bbEl("bill-ocr-status"),button=_bbEl("bill-ocr-button");
+            if(!files.length){status.textContent="Chưa có ảnh để đọc";return;}
+            if(!window.Tesseract){status.textContent="OCR chưa tải được — nhập tay nhé";alert("OCR chưa tải được. M vẫn có thể nhập tay.");return;}
+            button.disabled=true;button.textContent="⏳ Đang đọc ảnh...";status.textContent="Đang xử lý ảnh…";let worker=null;
+            try{
+                worker=await Tesseract.createWorker("eng");let raw="",totalResult=null,breakdownResult=null;
+                for(let i=0;i<files.length;i++){
+                    const result=await worker.recognize(files[i]),part=result.data.text||"";
+                    raw+="\n--- "+(files[i]===billImageFiles.total?"TOTAL BILL":"ENERGY BREAKDOWN")+" ---\n"+part+"\n";
+                    if(files[i]===billImageFiles.total)totalResult={file:files[i],text:part,words:result.data.words||[]};
+                    if(files[i]===billImageFiles.breakdown)breakdownResult={file:files[i],text:part,words:result.data.words||[]};
+                }
+                window.currentBillDonutSegments=null;
+                if(breakdownResult){
+                    const detected=await detectDonutSegments(breakdownResult.file);
+                    if(detected.ok)window.currentBillDonutSegments=detected.segments;
+                    else console.warn("Image B distribution reading:",detected.reason||"not detected");
+                }
+                const parsed=parseBillOcrText(raw);
+                const imageBParsed=breakdownResult?parseBillOcrText(breakdownResult.text):{};
+                const imageAParsed=totalResult?parseBillOcrText(totalResult.text):{};
+                const totalEnergyKwh=imageBParsed.kwh!==undefined?imageBParsed.kwh:(imageAParsed.kwh!==undefined?imageAParsed.kwh:parsed.kwh);
+                if(parsed.amount!==undefined)_bbEl("edit-bill-amount").value=parsed.amount.toFixed(2);
+                if(totalEnergyKwh!==undefined){
+                    _bbEl("edit-bill-kwh").value=totalEnergyKwh;
+                    const readout=_bbEl("bill-total-energy-readout");if(readout)readout.textContent=Number(totalEnergyKwh).toLocaleString();
+                }
+                if(parsed.start)_bbEl("edit-bill-start").value=parsed.start;
+                if(parsed.end)_bbEl("edit-bill-end").value=parsed.end;
+                if(parsed.month)_bbEl("edit-bill-month").value=parsed.month;else if(parsed.start){const d=new Date(parsed.start+"T12:00:00");_bbEl("edit-bill-month").value=d.toLocaleString("en",{month:"long"});if(!parsed.year)_bbEl("edit-bill-year").value=d.getFullYear();}
+                if(parsed.year)_bbEl("edit-bill-year").value=parsed.year;
+                let bandMessage="";
+                if(totalResult){
+                    const found=await readBillBandsFromImage(worker,totalResult.file,totalResult.words,totalResult.text),result=applyBillBands(found),sum=BILL_BANDS.reduce((n,[key])=>n+(validBillBand(found[key])?found[key].kwh:0),0),kwhInput=_bbEl("edit-bill-kwh");
+                    if(result.good===3&&kwhInput&&kwhInput.value==="")kwhInput.value=sum;
+                    updateBillBands();
+                    if(result.good===3)bandMessage=" ✓ Đọc được bảng Day/Peak/Night.";
+                    else if(result.derived)bandMessage=" Bảng khung giờ: dòng "+result.derived+" được suy ra từ tổng kWh — kiểm tra lại nhé.";
+                    else if(result.good>0)bandMessage=" Đọc được một phần bảng khung giờ — kiểm tra và nhập nốt.";
+                    else bandMessage=" Chưa đọc được bảng khung giờ. Cần ảnh trang chi tiết bill hoặc nhập tay 3 số kWh nhé.";
+                }
+                updateBillPerPerson();
+                const filled=[parsed.start,parsed.end,parsed.amount!==undefined,parsed.kwh!==undefined,parsed.month,parsed.year].filter(Boolean).length;
+                status.textContent=(filled?"Đã tự điền "+filled+" trường.":"Chưa tự điền được trường nào.")+bandMessage;
+            }catch(error){console.error(error);status.textContent="OCR gặp lỗi — vui lòng nhập tay.";}
+            finally{if(worker)await worker.terminate();button.disabled=false;button.textContent="✨ Đọc lại ảnh";}
+        }
+        async function saveEditedBill(){
+            const month=document.getElementById("edit-bill-month").value.trim(),year=Number(document.getElementById("edit-bill-year").value),amount=Number(document.getElementById("edit-bill-amount").value),kwh=Number(document.getElementById("edit-bill-kwh").value),start=document.getElementById("edit-bill-start").value,end=document.getElementById("edit-bill-end").value;
+            const bandRows=readBillBands();
+            const suppliedBands=bandRows.filter(r=>r.kwh!==null&&Number.isFinite(r.kwh)&&r.kwh>=0);
+            const bandsComplete=suppliedBands.length===3;
+            if(!month||!Number.isInteger(year)||year<2000||year>2100||document.getElementById("edit-bill-amount").value===""||!Number.isFinite(amount)||amount<0||document.getElementById("edit-bill-kwh").value===""||!Number.isFinite(kwh)||kwh<0){alert("Nhập tháng, năm, tổng tiền và tổng kWh hợp lệ trước khi lưu nhé.");return;}
+            if(start&&end&&start>end){alert("Ngày bắt đầu không thể sau ngày kết thúc.");return;}
+            const categories=[...document.querySelectorAll("[data-category-percent]")].map(x=>({key:x.dataset.categoryPercent,label:(document.querySelector('[data-category-label="'+x.dataset.categoryPercent+'"]')||{}).value||"",percent:x.value===""?null:Number(x.value)}));
+            if(categories.some(c=>!c.label||(c.percent!==null&&(!Number.isFinite(c.percent)||c.percent<0||c.percent>100)))){alert("Kiểm tra tên nhóm và tỷ lệ (0–100%).");return;}
+            const populated=categories.filter(c=>c.percent!==null),sum=populated.reduce((n,c)=>n+c.percent,0);
+            if(populated.length&&Math.abs(sum-100)>.11){alert("Nếu đã nhập EST, tổng tỷ lệ cần bằng 100%. Nếu chưa EST được, cứ để trống và lưu ảnh gốc.");return;}
+            let imageData="";if(billImageFiles.breakdown){try{const bitmap=await createImageBitmap(billImageFiles.breakdown),scale=Math.min(1,1200/Math.max(bitmap.width,bitmap.height)),canvas=document.createElement("canvas");canvas.width=Math.round(bitmap.width*scale);canvas.height=Math.round(bitmap.height*scale);canvas.getContext("2d").drawImage(bitmap,0,0,canvas.width,canvas.height);bitmap.close();imageData=canvas.toDataURL("image/jpeg",.9);}catch(e){console.warn("Could not compress original donut image",e);}}
+            const id=month.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")+"-"+year;
+            const old=billingRecords.find(x=>x.id===id || (start&&end&&x.startDate===start&&x.endDate===end));
+            const isVi=localStorage.getItem("eco_buddy_language")==="vi";
+            if(!bandsComplete){
+                const missingPrompt=isVi
+                    ? "Thiếu dữ liệu Day / Peak / Night. Vẫn lưu chứ? Các khung thiếu sẽ để trống."
+                    : "Day / Peak / Night data is missing. Save anyway? Missing values will stay blank.";
+                if(!confirm(missingPrompt))return;
+            }
+            if(old){
+                const duplicatePrompt=isVi
+                    ? "Hóa đơn "+old.month+" "+old.year+" đã tồn tại.\nOK: Thay thế hóa đơn cũ · Hủy: Xem hóa đơn cũ."
+                    : "A bill for "+old.month+" "+old.year+" already exists.\nOK: Replace the existing bill · Cancel: Review the existing bill.";
+                if(!confirm(duplicatePrompt)){
+                    switchReportSubTab("listing");
+                    renderBillingListing();
+                    const existingCard=[...document.querySelectorAll("#billing-listing-container .vint-card")].find(el=>el.textContent.includes(old.month+" "+old.year));
+                    if(existingCard){existingCard.scrollIntoView({behavior:"smooth",block:"center"});existingCard.classList.add("ring-2","ring-[#8c7355]");setTimeout(()=>existingCard.classList.remove("ring-2","ring-[#8c7355]"),2200);}
+                    return;
+                }
+            }
+            const newBands=readBillBands().filter(b=>b.kwh!==null);
+            const mergedBands=BILL_BANDS.map(([key])=>newBands.find(b=>b.key===key)||((old?.bands||[]).find(b=>b.key===key))||null).filter(Boolean);
+            const record={id,month,year,bill:amount,kwh,startDate:start,endDate:end,categories:populated.length?categories.filter(c=>c.percent!==null):[],donutSegments:billImageFiles.breakdown?(window.currentBillDonutSegments||[]):(old?.donutSegments||[]),bands:mergedBands,breakdownImageDataUrl:imageData||old?.breakdownImageDataUrl||"",savings:"€"+(kwh*.08).toFixed(2)+" cr"};
+            const idx=billingRecords.findIndex(x=>x.id===old?.id);if(idx>=0)billingRecords[idx]={...billingRecords[idx],...record};else billingRecords.push(record);
+            try{saveUserData();}catch(e){alert("Không đủ bộ nhớ để lưu ảnh donut. M thử ảnh nhỏ hơn nhé.");return;}
+            renderBillingListing();populateDashboardFilters();updateDashboardView();updateBillPerPerson();document.getElementById("upload-status-text").textContent="✓ Đã lưu hóa đơn và cập nhật Dashboard.";alert("💾 Đã lưu hóa đơn!");
+        }
+        function renderBillingListing() {
+            const container = document.getElementById('billing-listing-container');
+            if (!container) return;
+            container.innerHTML = "";
+
+            billingRecords.forEach(r => {
+                container.innerHTML += `
+                    <div class="vint-card p-3.5 flex items-center justify-between gap-3 bg-white">
+                        <div>
+                            <p class="font-extrabold text-[#5c4738]">${r.month} ${r.year}</p>
+                            <p class="text-[10px] text-[#7a6452] mt-0.5">Usage: <strong>${r.kwh} kWh</strong> · Savings: ${r.savings}</p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="font-black text-[#5c3232] bg-[#f5d0cd] px-3 py-1.5 rounded-xl border border-[#5c4738]">€${r.bill.toFixed(2)}</span>
+                            <button onclick="deleteBillRecord('${r.id}')" class="px-2 py-1 bg-[#fbe8e6] text-[#5c3232] rounded-lg font-bold text-[10px] border border-[#5c4738]">Delete</button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function deleteBillRecord(id) {
+            billingRecords = billingRecords.filter(r => r.id !== id);
+            saveUserData();
+            renderBillingListing();
+            populateDashboardFilters();
+            updateDashboardView();
+        }
+
+        function populateDashboardFilters() {
+            const monthSelect = document.getElementById('dash-filter-month');
+            if (!monthSelect) return;
+            monthSelect.innerHTML = `<option value="all">-- All Months (Average) --</option>`;
+            billingRecords.forEach(r => {
+                monthSelect.innerHTML += `<option value="${r.id}">${r.month} ${r.year}</option>`;
+            });
+        }
+
+        // DASHBOARD CẬP NHẬT THEO THÁNG HOẶC TÍNH AVERAGE TOÀN BỘ KHI KHÔNG CHỌN GÌ
+        function updateDashboardView() {
+            const monthVal = document.getElementById('dash-filter-month').value;
+            const yearVal = document.getElementById('dash-filter-year').value;
+
+            let filtered = billingRecords;
+            if (monthVal !== 'all') {
+                filtered = billingRecords.filter(r => r.id === monthVal);
+            }
+            if (yearVal !== 'all') {
+                filtered = filtered.filter(r => r.year.toString() === yearVal);
+            }
+
+            let displayKwh = 0;
+            let displayBill = 0;
+            let count = filtered.length;
+
+            if (count > 0) {
+                const totalK = filtered.reduce((acc, curr) => acc + curr.kwh, 0);
+                const totalB = filtered.reduce((acc, curr) => acc + curr.bill, 0);
+                displayKwh = Math.round(totalK / count);
+                displayBill = totalB / count;
+            }
+
+            document.getElementById('dash-stat-kwh').innerText = `${displayKwh} kWh`;
+            document.getElementById('dash-stat-bill').innerText = `€${displayBill.toFixed(2)}`;
+            document.getElementById('dash-stat-savings').innerText = `€${(displayKwh * 0.08).toFixed(2)} cr`;
+            document.getElementById('donut-center-val').innerText = `${displayKwh} kWh`;
+            document.getElementById('dash-trend-info').innerText = monthVal === 'all' ? "Showing All-Months Average" : `Showing ${monthVal}`;
+
+            renderDashboardColumnLineChart(filtered);
+            renderDashboardEnergyDonut(filtered, monthVal === "all");
+        }
+        function renderDashboardEnergyDonut(records, aggregateAll) {
+            const body=_bbEl("dashboard-bands-body"),note=_bbEl("dashboard-donut-note");
+            const recs=records||[];
+            const totalBill=recs.reduce((sum,record)=>sum+(Number(record.bill)||0),0);
+            const billValue=_bbEl("dashboard-total-bill-value"),billLabel=_bbEl("dashboard-total-bill-label");
+            if(billValue)billValue.textContent=recs.length?"€"+totalBill.toFixed(2):"—";
+            if(billLabel)billLabel.textContent="Total Electricity Bill · "+recs.length+" "+(recs.length===1?"month":"months");
+            if(!body)return;
+            const totals={day:{kwh:0,eur:0,count:0},peak:{kwh:0,eur:0,count:0},night:{kwh:0,eur:0,count:0}};
+            let has=false,completeBills=0;
+            recs.forEach(record=>{
+                const bands=Array.isArray(record.bands)?record.bands:[];
+                const present=new Set();
+                bands.forEach(band=>{
+                    if(!band||!totals[band.key]||band.kwh===null||band.kwh===undefined||!Number.isFinite(Number(band.kwh))||Number(band.kwh)<0)return;
+                    const kwh=Number(band.kwh),eur=Number.isFinite(Number(band.eur))?Number(band.eur):kwh*Number(band.price||0);
+                    totals[band.key].kwh+=kwh;totals[band.key].eur+=eur;totals[band.key].count++;present.add(band.key);has=true;
+                });
+                if(["day","peak","night"].every(key=>present.has(key))) completeBills++;
+            });
+            if(!has){body.innerHTML='<tr><td colspan="5" class="py-3 text-center text-[#7a6452]">No time-of-use data for this selection.</td></tr>';if(note)note.textContent="No time-band data for this selection.";return;}
+            const totalKwh=Object.values(totals).reduce((n,v)=>n+v.kwh,0),totalEur=Object.values(totals).reduce((n,v)=>n+v.eur,0);
+            const row=(label,hint,value)=>'<tr class="border-t border-[#e3d6c6]"><td class="py-1.5 text-left font-bold">'+label+'</td><td>'+(value.count?value.kwh.toFixed(0):"—")+'</td><td>'+(value.count&&totalKwh>0?(value.kwh/totalKwh*100).toFixed(1)+"%":"—")+'</td><td>'+(value.count?"€"+value.eur.toFixed(2):"—")+'</td><td>'+(value.count&&totalEur>0?(value.eur/totalEur*100).toFixed(1)+"%":"—")+'</td></tr>';
+            body.innerHTML=BILL_BANDS.map(([key,label,hint])=>row(label,hint,totals[key])).join('')+'<tr class="border-t-2 border-[#5c4738] font-extrabold"><td class="py-1.5 text-left">Observed total</td><td>'+totalKwh.toFixed(0)+'</td><td>100%</td><td>€'+totalEur.toFixed(2)+'</td><td>100%</td></tr>';
+            const center=_bbEl("donut-center-val");if(center)center.textContent=Math.round(totalKwh)+" kWh";
+            if(note){
+                const coverage=completeBills===recs.length?"Complete data · "+completeBills+"/"+recs.length+" bills": "Partial data · complete breakdowns "+completeBills+"/"+recs.length+" bills";
+                note.textContent=(aggregateAll||recs.length>1?"Combined time-of-use totals":"Selected bill · time-of-use data")+" · "+coverage;
+            }
+        }
+        // Combo chart: monthly bill as columns (€), energy usage as a line (kWh).
+        function renderDashboardColumnLineChart(activeRecords) {
+            const chartContainer = document.getElementById('dashboard-col-chart');
+            const xLabels = document.getElementById('dashboard-x-labels');
+            const euroAxis = document.getElementById('dashboard-euro-axis');
+            const kwhAxis = document.getElementById('dashboard-kwh-axis');
+            if (!chartContainer || !xLabels) return;
+
+            chartContainer.innerHTML = "";
+            xLabels.innerHTML = "";
+            // Always plot bills in calendar order (year, then month), never upload/save order.
+            const monthNumber = (value) => {
+                const raw = String(value || "").trim().toLowerCase();
+                const numeric = raw.match(/(?:^|\\D)(1[0-2]|0?[1-9])(?:\\D|$)/);
+                if (numeric) return Number(numeric[1]);
+                const names = ["january","february","march","april","may","june","july","august","september","october","november","december"];
+                const viNames = ["tháng 1","tháng 2","tháng 3","tháng 4","tháng 5","tháng 6","tháng 7","tháng 8","tháng 9","tháng 10","tháng 11","tháng 12"];
+                let index = names.findIndex(name => raw.includes(name));
+                if (index < 0) index = names.findIndex(name => name.slice(0, 3) === raw || raw.includes(name.slice(0, 3)));
+                if (index < 0) index = viNames.findIndex(name => raw.includes(name));
+                return index + 1;
+            };
+            const records = [...(billingRecords || [])].sort((a, b) => {
+                const yearDiff = (Number(a.year) || 0) - (Number(b.year) || 0);
+                if (yearDiff) return yearDiff;
+                const monthDiff = monthNumber(a.month) - monthNumber(b.month);
+                if (monthDiff) return monthDiff;
+                return String(a.startDate || "").localeCompare(String(b.startDate || ""));
+            });
+            if (!records.length) {
+                chartContainer.innerHTML = '<div class="h-full flex items-center justify-center text-[11px] text-[#9a8775]">Save monthly bills to see the trend.</div>';
+                if (euroAxis) euroAxis.innerHTML = "";
+                if (kwhAxis) kwhAxis.innerHTML = "";
+                return;
+            }
+
+            const isPhoneChart = window.matchMedia && window.matchMedia("(max-width: 700px)").matches;
+            const W = isPhoneChart ? Math.max(420, Math.round(chartContainer.clientWidth || 420)) : 760;
+            const H = isPhoneChart ? 224 : 208, left = 12, right = 12, top = 14, bottom = 22;
+            const plotH = H - top - bottom;
+            const maxBill = Math.max(1, ...records.map(r => Number(r.bill) || 0)) * 1.12;
+            const maxKwh = Math.max(1, ...records.map(r => Number(r.kwh) || 0)) * 1.12;
+            const availableWidth = W - left - right;
+            const step = Math.min(84, availableWidth / records.length);
+            const groupWidth = step * records.length;
+            const groupLeft = (W - groupWidth) / 2;
+            const barW = isPhoneChart ? Math.min(40, step * 0.60) : Math.min(78, step * 0.93);
+            xLabels.style.width = isPhoneChart ? "100%" : Math.min(availableWidth, Math.max(120, groupWidth)) + "px";
+            xLabels.style.marginLeft = "auto";
+            xLabels.style.marginRight = "auto";
+            const selected = new Set((activeRecords || []).map(r => r.id));
+            const points = [];
+            let bars = "";
+            let grid = "";
+
+            for (let tick = 0; tick <= 4; tick++) {
+                const y = top + plotH * tick / 4;
+                const euro = maxBill * (1 - tick / 4);
+                const kwh = maxKwh * (1 - tick / 4);
+                grid += '<line x1="' + left + '" y1="' + y.toFixed(1) + '" x2="' + (W-right) + '" y2="' + y.toFixed(1) + '" stroke="#eee5da" stroke-width="1" stroke-dasharray="3 4"/>';
+            }
+
+            records.forEach((r, i) => {
+                const cx = groupLeft + step * (i + 0.5);
+                const bill = Math.max(0, Number(r.bill) || 0);
+                const kwh = Math.max(0, Number(r.kwh) || 0);
+                const billY = top + plotH * (1 - bill / maxBill);
+                const kwhY = top + plotH * (1 - kwh / maxKwh);
+                const opacity = selected.size && !selected.has(r.id) ? 0.35 : 1;
+                bars += '<rect x="' + (cx-barW/2).toFixed(1) + '" y="' + billY.toFixed(1) + '" width="' + barW.toFixed(1) + '" height="' + Math.max(0,top+plotH-billY).toFixed(1) + '" rx="5" fill="#e8b98f" opacity="' + opacity + '"><title>' + r.month + ': €' + bill.toFixed(2) + '</title></rect>';
+                points.push({x:cx,y:kwhY,kwh,opacity});
+                xLabels.innerHTML += '<span class="text-center flex-1 min-w-0 ' + (opacity < 1 ? 'opacity-40' : '') + '">' + String(r.month || '').substring(0,3) + '</span>';
+            });
+
+            const linePoints = points.map(p => p.x.toFixed(1) + ',' + p.y.toFixed(1)).join(' ');
+            const markers = points.map(p => '<circle cx="' + p.x.toFixed(1) + '" cy="' + p.y.toFixed(1) + '" r="4" fill="#789bb2" stroke="#fffaf4" stroke-width="2" opacity="' + p.opacity + '"><title>' + p.kwh.toLocaleString() + ' kWh</title></circle>').join('');
+            chartContainer.innerHTML = '<svg viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="none" class="w-full h-full overflow-visible" role="img" aria-label="Combo chart: monthly electricity bill in euro columns and electricity usage in kWh line">' + grid + bars + '<polyline points="' + linePoints + '" fill="none" stroke="#789bb2" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>' + markers + '</svg>';
+
+            if (euroAxis) euroAxis.innerHTML = [maxBill, maxBill*.75, maxBill*.5, maxBill*.25, 0].map(v => '<span>€' + Math.round(v) + '</span>').join('');
+            if (kwhAxis) kwhAxis.innerHTML = [maxKwh, maxKwh*.75, maxKwh*.5, maxKwh*.25, 0].map(v => '<span>' + Math.round(v) + '</span>').join('');
+        }
+
+        function initWeeklyContent() {
+            const now = new Date();
+            const startOfYear = new Date(now.getFullYear(), 0, 1);
+            const weekNumber = Math.ceil((((now - startOfYear) / 86400000) + startOfYear.getDay() + 1) / 7);
+            currentWeek = ((weekNumber - 1) % 4) + 1;
+
+            const tipsContainer = document.getElementById('weekly-flashcards-container');
+            const tipBadge = document.getElementById('weekly-tip-badge');
+            if (tipBadge) tipBadge.innerText = `Week ${currentWeek} / 4`;
+            if (tipsContainer) {
+                tipsContainer.innerHTML = "";
+                const weekTips = weeklyTipsPool[currentWeek - 1];
+                weekTips.forEach(tip => {
+                    tipsContainer.innerHTML += `
+                        <div class="vint-card p-4 bg-[#f5ede2] border-l-4 border-l-[#8c7355] space-y-2 shadow-sm">
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs font-black text-[#5c4738]">${tip.title}</span>
+                                <span class="text-[10px] bg-[#A8C7A0] text-white px-2 py-0.5 rounded-full font-bold">${tip.tag}</span>
+                            </div>
+                            <p class="text-xs font-bold text-[#4a3b32]">"${tip.text}"</p>
+                            <div class="flex justify-end gap-2 pt-1">
+                                <button onclick="rateTip(true)" class="px-2.5 py-1 bg-white hover:bg-[#f0e6d6] text-[#4a3b32] rounded-lg text-[11px] font-bold border border-[#5c4738]">👍 Helpful (+10 pts)</button>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            currentQuizIndex = (currentWeek - 1) * 10;
+            loadWeeklyQuizQuestion();
+        }
+
+        function getQuizLanguage() {
+            return localStorage.getItem('eco_buddy_language') === 'vi' ? 'vi' : 'en';
+        }
+
+        function loadWeeklyQuizQuestion() {
+            const startIdx = (currentWeek - 1) * 10;
+            const endIdx = startIdx + 10;
+            const weekQuestions = ecoQuizPool.slice(startIdx, endIdx);
+
+            const relativeIndex = (currentQuizIndex - startIdx) % 10;
+            const item = weekQuestions[relativeIndex];
+            const lang = getQuizLanguage();
+
+            const qEl = document.getElementById('quiz-question');
+            const optsEl = document.getElementById('quiz-options');
+            const counterEl = document.getElementById('weekly-quiz-counter');
+            if (!qEl || !optsEl || !item) return;
+
+            if (counterEl) counterEl.innerText = (lang === 'vi' ? `Tuần ${currentWeek}: Câu ${relativeIndex + 1}/10` : `Week ${currentWeek}: Q ${relativeIndex + 1}/10`);
+            qEl.innerText = (lang === 'vi' ? `Câu hỏi ${relativeIndex + 1}/10: ` : `Question ${relativeIndex + 1}/10: `) + item.q[lang];
+            optsEl.innerHTML = "";
+            item.options[lang].forEach((optText, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "chat-choice text-xs py-2";
+                btn.innerText = optText;
+                btn.onclick = () => answerQuiz(idx, weekQuestions, startIdx);
+                optsEl.appendChild(btn);
+            });
+        }
+
+        function answerQuiz(optionIndex, weekQuestions, startIdx) {
+            const relativeIndex = (currentQuizIndex - startIdx) % 10;
+            const item = weekQuestions[relativeIndex];
+            const lang = getQuizLanguage();
+            const msgs = document.getElementById('chatbot-messages');
+            const selectedOption = item.options[lang][optionIndex];
+
+            msgs.innerHTML += `
+                <div class="bg-[#eaf2f8] p-3 rounded-2xl border border-[#b9d0e8] text-right">
+                    <p class="font-bold text-[#32455c]">${lang === 'vi' ? 'Bạn' : 'You'}</p>
+                    <p class="mt-1 text-[#4a3b32]">${selectedOption}</p>
+                </div>
+            `;
+
+            if (optionIndex === item.correct) {
+                msgs.innerHTML += `
+                    <div class="bg-[#f5ede2] p-3 rounded-2xl border border-[#d8c7b0]">
+                        <p class="font-bold text-[#5c4738]">Bé Mây ☁️</p>
+                        <p class="mt-1 text-[#4a3b32]">${item.explain[lang]} ${lang === 'vi' ? 'Bạn nhận được +15 XP!' : 'You earned +15 XP!'} 💚</p>
+                    </div>
+                `;
+                currentXP += 15;
+                saveUserData();
+                updateMascotLevel();
+            } else {
+                msgs.innerHTML += `
+                    <div class="bg-[#f5ede2] p-3 rounded-2xl border border-[#d8c7b0]">
+                        <p class="font-bold text-[#5c4738]">Bé Mây ☁️</p>
+                        <p class="mt-1 text-[#4a3b32]">${lang === 'vi' ? 'Chưa chính xác! Hãy xem lại các mẹo của tuần này để tìm hiểu thêm nhé.' : "Not quite right! Review this week's tips to learn more."}</p>
+                    </div>
+                `;
+            }
+            msgs.scrollTop = msgs.scrollHeight;
+
+            currentQuizIndex++;
+            if (currentQuizIndex >= startIdx + 10) {
+                currentQuizIndex = startIdx;
+            }
+            setTimeout(loadWeeklyQuizQuestion, 1500);
+        }
+
+        function completeTask(index, xpReward) {
+            if (completedTasks[index]) return;
+            completedTasks[index] = true;
+            currentXP += xpReward;
+            currentPoints += Math.floor(xpReward / 2);
+
+            saveUserData();
+            updateMascotLevel();
+            renderTasksUI();
+            document.getElementById('mascot-speech').innerText = `🎉 Awesome! You earned +${xpReward} XP and +${Math.floor(xpReward / 2)} Eco Points!`;
+        }
+
+        function renderTasksUI() {
+            for (let i = 0; i < completedTasks.length; i++) {
+                const btn = document.getElementById(`task-btn-${i}`);
+                if (!btn) continue;
+                if (completedTasks[i]) {
+                    btn.innerText = "Done ✓";
+                    btn.disabled = true;
+                    btn.classList.add('bg-gray-400');
+                    btn.classList.remove('bg-[#A8C7A0]');
+                } else {
+                    btn.innerText = "Complete";
+                    btn.disabled = false;
+                    btn.classList.remove('bg-gray-400');
+                    btn.classList.add('bg-[#A8C7A0]');
+                }
+            }
+        }
+
+        function updateMascotLevel() {
+            let level = 1;
+            let title = "Sprout";
+            let maxXP = 100;
+
+            if (currentXP >= 100 && currentXP < 250) {
+                level = 2; title = "Green Sprout"; maxXP = 250;
+            } else if (currentXP >= 250) {
+                level = 3; title = "Eco Master 🌿"; maxXP = 500;
+            }
+
+            const percent = Math.min(100, (currentXP / maxXP) * 100);
+            const xpBar = document.getElementById('mascot-xp-bar');
+            const xpText = document.getElementById('mascot-xp-text');
+            const levelBadge = document.getElementById('mascot-level-badge');
+            const pointsLabel = document.getElementById('eco-points-label');
+            const mascotSvg = document.getElementById('main-mascot-svg');
+
+            if (xpBar) xpBar.style.width = percent + '%';
+            if (xpText) xpText.innerText = `${currentXP} / ${maxXP} XP`;
+            if (levelBadge) levelBadge.innerText = `🌱 Level ${level}: ${title}`;
+            if (pointsLabel) pointsLabel.innerText = `${currentPoints} Points 🌱`;
+            if (mascotSvg) mascotSvg.className = `eco-character level-${level}`;
+        }
+
+        function rateTip(isHelpful) {
+            if (isHelpful) {
+                currentPoints += 10;
+                saveUserData();
+                updateMascotLevel();
+                alert("Thank you for your feedback! +10 Eco Points added! 💚");
+            } else {
+                alert("Thanks! We'll show you better tips next time.");
+            }
+        }
+
+        let chatMode = 'quiz';
+        function setChatMode(mode) {
+            chatMode = mode;
+            const btnQuiz = document.getElementById('mode-btn-quiz');
+            const btnChat = document.getElementById('mode-btn-chat');
+            const quizArea = document.getElementById('chatbot-quiz-area');
+            const inputArea = document.getElementById('chatbot-input-area');
+
+            if (mode === 'quiz') {
+                btnQuiz.className = "p-2.5 bg-[#8c7355] text-white font-bold rounded-xl border border-[#5c4738]";
+                btnChat.className = "p-2.5 bg-[#fffaf4] text-[#4a3b32] font-bold rounded-xl border border-[#5c4738]";
+                quizArea.classList.remove('hidden');
+                inputArea.classList.add('hidden');
+            } else {
+                btnChat.className = "p-2.5 bg-[#8c7355] text-white font-bold rounded-xl border border-[#5c4738]";
+                btnQuiz.className = "p-2.5 bg-[#fffaf4] text-[#4a3b32] font-bold rounded-xl border border-[#5c4738]";
+                quizArea.classList.add('hidden');
+                inputArea.classList.remove('hidden');
+            }
+        }
+
+        function sendUserMessage() {
+            const input = document.getElementById('chat-input-text');
+            const text = input.value.trim();
+            if (!text) return;
+
+            const msgs = document.getElementById('chatbot-messages');
+            msgs.innerHTML += `
+                <div class="bg-[#eaf2f8] p-3 rounded-2xl border border-[#b9d0e8] text-right">
+                    <p class="font-bold text-[#32455c]">You</p>
+                    <p class="mt-1 text-[#4a3b32]">${text}</p>
+                </div>
+            `;
+            input.value = "";
+
+            setTimeout(() => {
+                let reply = "That's wonderful! Let's save energy together to protect our environment! 🌿";
+                const lower = text.toLowerCase();
+                if (lower.includes('hi') || lower.includes('hello')) {
+                    reply = "Hello! I'm Bé Mây, your friendly eco assistant. How can I help you today? ☁️";
+                } else if (lower.includes('save') || lower.includes('bill')) {
+                    reply = "To save on your electricity bill, remember to run your laundry during Night Saver hours (after 23:00) and turn off standby appliances! ⚡";
+                } else if (lower.includes('weather')) {
+                    reply = "Dublin weather can be chilly! Make sure to check the Weather tab before heading out. 🌦️";
+                }
+
+                msgs.innerHTML += `
+                    <div class="bg-[#f5ede2] p-3 rounded-2xl border border-[#d8c7b0]">
+                        <p class="font-bold text-[#5c4738]">Bé Mây ☁️</p>
+                        <p class="mt-1 text-[#4a3b32]">${reply}</p>
+                    </div>
+                `;
+                msgs.scrollTop = msgs.scrollHeight;
+            }, 600);
+        }
+
+        function checkTariffStatus() {
+            const now = new Date();
+            const hour = now.getHours();
+            const badge = document.getElementById('status-badge');
+            const speech = document.getElementById('mascot-speech');
+
+            if (hour >= 17 && hour < 19) {
+                badge.className = "absolute -bottom-2 left-1/2 -translate-x-1/2 bg-[#bc6c25] text-white text-[11px] font-extrabold px-4 py-1 rounded-full shadow border-2 border-[#5c4738] whitespace-nowrap animate-pulse";
+                badge.innerText = "🔴 Peak Hours!";
+                if (speech) speech.innerText = "⚠️ It's peak time! Try to avoid using high-energy appliances.";
+            } else if (hour >= 23 || hour < 8) {
+                badge.className = "absolute -bottom-2 left-1/2 -translate-x-1/2 bg-[#A8C7A0] text-white text-[11px] font-extrabold px-4 py-1 rounded-full shadow border-2 border-[#5c4738] whitespace-nowrap";
+                badge.innerText = "🟢 Night Saver ON";
+                if (speech) speech.innerText = "🌙 It's the cheapest rate period. A great time to do your laundry!";
+            } else {
+                badge.className = "absolute -bottom-2 left-1/2 -translate-x-1/2 bg-[#d4a373] text-white text-[11px] font-extrabold px-4 py-1 rounded-full shadow border-2 border-[#5c4738] whitespace-nowrap";
+                badge.innerText = "Normal Hours ☀️";
+            }
+        }
+
+        // CALENDAR VỚI NHẮC ĐÓNG TIỀN NHÀ (MỒNG 1) VÀ ĐỔ RÁC (THỨ BA)
+        let calendarCursor = new Date();
+        function renderCalendar() {
+            const year = calendarCursor.getFullYear();
+            const month = calendarCursor.getMonth();
+            const label = document.getElementById("calendar-month-label");
+            const grid = document.getElementById("calendar-days");
+            if (!label || !grid) return;
+
+            label.textContent = new Intl.DateTimeFormat((localStorage.getItem("eco_buddy_language")||"en")==="vi" ? "vi-VN" : "en-IE", { month: "long", year: "numeric" }).format(calendarCursor);
+            grid.innerHTML = "";
+
+            const firstDay = new Date(year, month, 1);
+            const offset = (firstDay.getDay() + 6) % 7;
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+            for (let i = 0; i < offset; i++) {
+                grid.appendChild(document.createElement("div"));
+            }
+
+            const today = new Date();
+            for (let day = 1; day <= daysInMonth; day++) {
+                const date = new Date(year, month, day);
+                const isTuesday = date.getDay() === 2;
+                const isFirstOfMonth = (day === 1);
+                const isToday = date.toDateString() === today.toDateString();
+
+                const cell = document.createElement("div");
+
+                let bgClass = "bg-[#f5ede2] text-[#4a3b32]";
+                let badgeIcon = "";
+
+                if (isTuesday && isFirstOfMonth) {
+                    bgClass = "bg-[#E9A8A8] text-white shadow-sm"; // Trùng ngày: Tím
+                    badgeIcon = '<span class="text-[8px] leading-none">✦</span>';
+                } else if (isTuesday) {
+                    bgClass = "bg-[#d9534f] text-white shadow-sm"; // Đổ rác: Đỏ
+                    badgeIcon = '<span class="text-[8px] leading-none">♻️</span>';
+                } else if (isFirstOfMonth) {
+                    bgClass = "bg-[#bc6c25] text-white shadow-sm"; // Đóng tiền nhà: Cam
+                    badgeIcon = '<span class="text-[8px] leading-none">⌂</span>';
+                }
+
+                cell.className = `h-10 rounded-xl flex flex-col items-center justify-center text-xs font-bold relative border border-[#5c4738]/20 ${bgClass} ${isToday ? " ring-2 ring-[#87a96b] ring-offset-1" : ""}`;
+                cell.innerHTML = `<span>${day}</span>${badgeIcon}`;
+                grid.appendChild(cell);
+            }
+
+            const reminder = document.getElementById("next-trash-reminder");
+            if (reminder) {
+                reminder.innerHTML = `🗓️ <strong>Home & Waste:</strong> Rent is due on the 1st (⌂); waste collection is every Tuesday (♻️).`;
+            }
+        }
+
+        function changeCalendarMonth(delta) {
+            calendarCursor = new Date(calendarCursor.getFullYear(), calendarCursor.getMonth() + delta, 1);
+            renderCalendar();
+        }
+
+        let countdownInterval = null;
+        function setTimerMinutes(mins) { document.getElementById('custom-minutes').value = mins; }
+
+        function startCustomTimer() {
+            const minsInput = document.getElementById('custom-minutes').value.trim();
+            const mins = Number(minsInput);
+            if (!Number.isInteger(mins) || mins < 1 || mins > 180) {
+                alert("Please enter a number of minutes between 1 and 180.");
+                return;
+            }
+
+            const totalSecs = mins * 60;
+            const checkbox = document.getElementById('kitchen-door-checkbox');
+            if (checkbox) checkbox.checked = false;
+
+            clearInterval(countdownInterval);
+            let remaining = totalSecs;
+            const displayBox = document.getElementById('timer-display-box');
+            const textEl = document.getElementById('countdown-text');
+            displayBox.classList.remove('hidden');
+
+            function updateCountdown() {
+                const m = Math.floor(remaining / 60);
+                const s = remaining % 60;
+                textEl.innerText = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+
+                if (remaining <= 0) {
+                    clearInterval(countdownInterval);
+                    countdownInterval = null;
+                    displayBox.classList.add('hidden');
+                    openSafetyChat();
+                    return;
+                }
+                remaining--;
+            }
+
+            updateCountdown();
+            countdownInterval = setInterval(updateCountdown, 1000);
+        }
+
+        function stopTimer() {
+            clearInterval(countdownInterval);
+            countdownInterval = null;
+            document.getElementById('timer-display-box').classList.add('hidden');
+        }
+
+        const safetySteps = [
+            { title: "Turn off the cooker", question: "Have you turned off the cooker?", hint: "Make sure the cooker knobs are turned to the OFF position.", scene: "🔥", yes: "Wonderful!", no: "Let's check the cooker knobs!" },
+            { title: "Turn off the cooker hood", question: "Have you turned off the cooker hood?", hint: "Make sure the cooker hood fan is switched off.", scene: "🌀", yes: "Great job!", no: "Switch off the cooker hood!" },
+            { title: "Turn off the oven", question: "Have you turned off the oven?", hint: "Check power display.", scene: "🎛️", yes: "Well done!", no: "Check the oven!" },
+            { title: "Turn off the kitchen lights", question: "Have you turned off the kitchen lights?", hint: "Switch off unused lights.", scene: "💡", yes: "Energy saved!", no: "Turn off lights!" },
+            { title: "Wipe the cooker", question: "Have you cleaned the cooker surface?", hint: "Wipe with a damp cloth.", scene: "🧽", yes: "Sparkling clean!", no: "Clean up!" }
+        ];
+
+        let safetyStepIndex = 0;
+
+        function syncChatMascot() {
+            const original = document.getElementById("main-mascot-svg");
+            const container = document.getElementById("chat-mascot");
+            if (!original || !container) return;
+            container.innerHTML = original.outerHTML;
+            const cloned = container.querySelector("svg");
+            if (cloned) cloned.removeAttribute("id");
+        }
+
+        function openSafetyChat() {
+            safetyStepIndex = 0;
+            syncChatMascot();
+            document.getElementById("safety-chat-overlay").classList.remove("hidden");
+            document.body.style.overflow = "hidden";
+            renderSafetyStep();
+        }
+
+        function closeSafetyChat() {
+            document.getElementById("safety-chat-overlay").classList.add("hidden");
+            document.body.style.overflow = "";
+        }
+
+        function renderSafetyStep() {
+            const question = document.getElementById("chat-question");
+            const scene = document.getElementById("chat-scene");
+            const actions = document.getElementById("chat-actions");
+
+            if (safetyStepIndex >= safetySteps.length) {
+                question.textContent = "All done! You earned +30 XP for keeping the kitchen safe! 💚";
+                scene.textContent = "🌱✨💚";
+                document.getElementById("chat-action-title").textContent = "Safety check completed!";
+                document.getElementById("chat-action-hint").textContent = "Eco Buddy is so proud of you!";
+                actions.innerHTML = `<button class="chat-choice text-center" onclick="finishSafetyCheckAndReward()">💚 Done! Collect XP reward</button>`;
+                document.getElementById("chat-progress").textContent = "5 / 5 · Completed";
+                return;
+            }
+
+            const step = safetySteps[safetyStepIndex];
+            question.textContent = step.question;
+            scene.textContent = step.scene;
+            document.getElementById("chat-action-title").textContent = step.title;
+            document.getElementById("chat-action-hint").textContent = step.hint;
+            document.getElementById("chat-progress").textContent = `Step ${safetyStepIndex + 1} / 5`;
+
+            actions.innerHTML = `
+                <button class="chat-choice" onclick="answerSafetyStep(true)">☑️ Yes, I've done it!</button>
+                <button class="chat-choice" onclick="answerSafetyStep(false)">⏳ Not yet, I'll do it now</button>
+            `;
+        }
+
+        function answerSafetyStep(done) {
+            const step = safetySteps[safetyStepIndex];
+            if (!step) return;
+
+            if (!done) {
+                document.getElementById("chat-question").textContent = step.no;
+                document.getElementById("chat-actions").innerHTML = `
+                    <button class="chat-choice" onclick="answerSafetyStep(true)">💚 I've done it! Let's continue.</button>
+                    <button class="chat-choice" onclick="closeSafetyChat()">I'll do it later</button>
+                `;
+                return;
+            }
+
+            document.getElementById("chat-question").textContent = step.yes;
+            setTimeout(() => {
+                safetyStepIndex++;
+                renderSafetyStep();
+            }, 1100);
+        }
+
+        function finishSafetyCheckAndReward() {
+            currentXP += 30;
+            currentPoints += 15;
+            saveUserData();
+            updateMascotLevel();
+            closeSafetyChat();
+        }
+        async function fetchWeatherData() {
+            const weatherCondition = document.getElementById('weather-condition');
+            const weatherTemp = document.getElementById('weather-temp');
+            const weatherWind = document.getElementById('weather-wind');
+            const weatherIcon = document.getElementById('weather-icon-lg');
+
+            try {
+                const lat = 53.3498;
+                const lon = -6.2603;
+                const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,precipitation,weather_code,wind_speed_10m&timezone=Europe/Dublin`);
+                const data = await res.json();
+                
+                if (data && data.current) {
+                    const temp = data.current.temperature_2m;
+                    const precip = data.current.precipitation;
+                    const wind = data.current.wind_speed_10m;
+                    const wcode = data.current.weather_code;
+
+                    let condition = "Trời quang đãng";
+                    let icon = "☀️";
+
+                    if (precip > 0 || (wcode >= 50 && wcode < 68)) {
+                        condition = "Trời có mưa nhẹ";
+                        icon = "🌧️";
+                    } else if (temp < 8) {
+                        condition = "Trời rất lạnh";
+                        icon = "❄️";
+                    } else if (temp <= 15) {
+                        condition = "Trời se lạnh, lộng gió";
+                        icon = "⛅";
+                    } else if (temp > 20) {
+                        condition = "Trời ấm áp, dễ chịu";
+                        icon = "☀️";
+                    }
+
+                    weatherCondition.innerText = condition;
+                    weatherTemp.innerText = `${Math.round(temp)}°C`;
+                    weatherWind.innerText = `Gió: ${Math.round(wind)} km/h`;
+                    weatherIcon.innerText = icon;
+                }
+            } catch (err) {
+                console.error("Lỗi thời tiết:", err);
+                weatherCondition.innerText = "Lỗi tải thời tiết";
+            }
+        }
+    </script>
+
+<script>
+(function(){
+const languagePairs = [
+["🍩 Energy Distribution · Original Chart & Time Bands","🍩 Phân Bổ Điện Năng · Biểu Đồ Gốc & Khung Giờ"],
+["Eco-Buddy Home Manager","Quản lý Nhà Eco-Buddy"],
+["🌦️ Weather","🌦️ Thời tiết"],["⚡ Tariff","⚡ Giá điện"],["📊 Reports","📊 Báo cáo"],["💡 Tips","💡 Mẹo hay"],["🍳 Cooking","🍳 Nấu ăn"],["📅 Calendar","📅 Lịch"],
+["🌱 Level 1: Sprout","🌱 Cấp 1: Mầm non"],["Normal Hours ☀️","Giờ bình thường ☀️"],["Eco Buddy (Bé Mây)","Bạn đồng hành Eco (Bé Mây)"],["A little battery, leafy ears, and a friendly companion by your side.","Một người bạn nhỏ với chiếc pin xinh và đôi tai lá luôn đồng hành cùng bạn."],["Let's save energy together! Complete daily tasks to level me up! 🤍","Cùng tiết kiệm điện nhé! Hoàn thành nhiệm vụ mỗi ngày để giúp tớ lên cấp! 🤍"],
+["Dublin Weather & Outfit Suggestions","Thời tiết Dublin & gợi ý trang phục"],
+["Dublin Weather & Outfit Suggestions","Thời Tiết Dublin & Gợi Ý Mặc Đồ"],
+["Live weather data, updated regularly.","Dữ liệu thực tế cập nhật liên tục."],
+["🔄 Refresh","🔄 Làm Mới"],
+["Winter puffer jacket (warm grey/blue)","Áo phao mùa đông (Xám/Xanh ấm áp)"],
+["Bill not saved yet.","Chưa lưu hoá đơn."],
+["Baby Cloud","Bé Mây"],["Live weather data, updated regularly.","Dữ liệu thời tiết được cập nhật liên tục."],["🔄 Refresh","🔄 Làm mới"],["Đang tải thời tiết...","Đang tải thời tiết..."],["Wind:","Gió:"],["Outfit suggestions for going out:","Gợi ý trang phục khi ra ngoài:"],["Warm scarf and gloves","Khăn choàng cổ và găng tay ấm"],["Winter puffer jacket (warm grey/blue)","Áo phao mùa đông (xám/xanh ấm áp)"],
+["Daily Electricity Tariff (SST Saver+)","Giá điện hôm nay (SST Saver+)"],["☀️ Day Rate","☀️ Giá giờ ngày"],["🔴 Peak Rate","🔴 Giá giờ cao điểm"],["🟢 Night Rate (Cheapest)","🟢 Giá giờ đêm (rẻ nhất)"],["Limit high-energy appliances","Hạn chế sử dụng thiết bị tiêu thụ nhiều điện"],["Daily Eco Tasks (1 time/day)","Nhiệm vụ xanh mỗi ngày (1 lần/ngày)"],["Points","Điểm"],["Turn off lights when leaving rooms (+20 XP)","Tắt đèn khi rời khỏi phòng (+20 XP)"],["Check all rooms in the house.","Kiểm tra tất cả các phòng trong nhà."],["Complete","Hoàn thành"],["Laundry during Night Saver hours (+30 XP)","Giặt đồ trong giờ điện đêm (+30 XP)"],["Run washing machine after 23:00.","Chạy máy giặt sau 23:00."],["Put away dry dishes (+20 XP)","Cất bát đĩa đã khô (+20 XP)"],["Keep the kitchen tidy and organized.","Giữ nhà bếp gọn gàng, ngăn nắp."],
+["Energy Analytics & Reports","Phân tích & báo cáo năng lượng"],["Manage bills, edit data, list history & view dashboard analytics","Quản lý hóa đơn, chỉnh sửa dữ liệu, xem lịch sử và phân tích tổng quan"],["1. Upload & Edit Bill","1. Tải lên & chỉnh sửa hóa đơn"],["2. Billing Listing","2. Danh sách hóa đơn"],["3. Dashboard","3. Tổng quan"],["📷 Upload & đọc hoá đơn điện","📷 Tải lên & đọc hóa đơn điện"],["Upload two images: the bill summary and the energy breakdown chart. OCR provides a draft only; check all values before saving.","Tải lên hai ảnh: hóa đơn tổng và biểu đồ phân bổ. OCR chỉ hỗ trợ đọc thử; hãy kiểm tra số liệu trước khi lưu."],["🧾 Ảnh A · Tổng hoá đơn","🧾 Ảnh A · Tổng hóa đơn"],["🍩 Ảnh B · Phân bổ điện năng","🍩 Ảnh B · Phân bổ điện năng"],["📸 Chụp / chọn ảnh","📸 Chụp / chọn ảnh"],["🔎 Đọc ảnh bằng OCR","🔎 Đọc ảnh bằng OCR"],["Waiting for images","Đang chờ ảnh"],["✨ Read information from uploaded images","✨ Đọc thông tin từ ảnh đã tải"],["Billing period / month","Kỳ hoá đơn / tháng"],["Choose month","Chọn tháng"],["Year","Năm"],["Start date","Ngày bắt đầu"],["End date","Ngày kết thúc"],["Total bill (€)","Tổng tiền (€)"],["People in household","Số người trong nhà"],["Note: split equally between","Ghi chú: chia đều cho"],["people","người"],["/ person","/ người"],["Total energy (kWh)","Tổng điện năng (kWh)"],["Enter bill value","Nhập theo bill"],["🍩 Original distribution chart & time-of-use table","🍩 Biểu đồ phân bổ gốc & bảng khung giờ"],["Total Energy (kWh)","Tổng điện năng (kWh)"],["Time band","Khung giờ"],["Day","Ngày"],["Peak","Cao điểm"],["Night","Đêm"],["8am–11pm","8:00–23:00"],["5–7pm","17:00–19:00"],["11pm–8am","23:00–8:00"],["Total","Tổng"],["Bill not saved yet.","Chưa lưu hóa đơn."],["💾 Save bill & update dashboard","💾 Lưu hoá đơn & cập nhật Dashboard"],["📋 Historical Billing Listing","📋 Lịch sử hóa đơn"],["📅 Filter by Month:","📅 Lọc theo tháng:"],["-- All Months (Average) --","-- Tất cả các tháng (trung bình) --"],["📆 Filter by Year:","📆 Lọc theo năm:"],["-- All Years --","-- Tất cả các năm --"],["Selected / Avg kWh","kWh đã chọn / trung bình"],["Selected / Avg Bill","Tiền điện đã chọn / trung bình"],["Estimated Savings","Tiền tiết kiệm ước tính"],["📈 Bill (€ - Columns) & kWh Usage (Lines)","📈 Tiền điện (€ - cột) & điện năng (đường)"],["Auto Average Calculated","Tự động tính trung bình"],["Bill (€)","Tiền điện (€)"],["Usage (kWh)","Điện năng (kWh)"],["🍩 Energy Distribution · original chart & time bands","🍩 Phân bổ điện năng · biểu đồ gốc & khung giờ"],["Total Electricity Bill","Tổng tiền điện"],["Selected Usage:","Điện năng đã chọn:"],["Save a bill with Day / Peak / Night data to view it here.","Lưu hóa đơn có bảng Ngày / Cao điểm / Đêm để xem tại đây."],["Daily Reminders & Basic Rules:","Nhắc nhở hằng ngày & quy tắc cơ bản:"],["Turn off the lights:","Tắt đèn:"],["Remember to switch off room and hallway lights when not in use.","Nhớ tắt đèn phòng và hành lang khi không sử dụng."],["Check the doors:","Kiểm tra cửa:"],["Make sure the doors are locked and the kitchen door is closed.","Đảm bảo cửa đã khóa và cửa bếp đã đóng."],["Unplug devices:","Rút phích cắm thiết bị:"],["Unplug standby appliances (TV, microwave) when not in use.","Rút phích cắm các thiết bị ở chế độ chờ (TV, lò vi sóng) khi không sử dụng."],["Water heater:","Máy nước nóng:"],["Remember to switch off the water heater after showering.","Nhớ tắt máy nước nóng sau khi tắm."],
+["Smart Energy Tips & Weekly Flashcards","Mẹo tiết kiệm điện & thẻ kiến thức hằng tuần"],["Curated expert tips (3 rotating flashcards per week from our 40+ database)","Mẹo được chọn lọc (3 thẻ luân phiên mỗi tuần từ hơn 40 mẹo)"],["Bé Mây ☁️","Bé Mây ☁️"],["Live Weekly Schedule · 10 Eco Questions per Week (40 Total Pool)","Lịch hằng tuần · 10 câu hỏi xanh mỗi tuần (tổng cộng 40 câu)"],["🧠 Weekly Eco Quiz (10 Qs)","🧠 Đố vui sống xanh hằng tuần (10 câu)"],["💬 Ask Bé Mây","💬 Hỏi Bé Mây"],["Ahoy, traveller! Welcome to this week's 10-question eco challenge straight from our 40-question master pool. Let's test your knowledge!","Xin chào! Chào mừng bạn đến với thử thách sống xanh gồm 10 câu hỏi tuần này. Cùng kiểm tra kiến thức nhé!"],["Send","Gửi"],["Loading question...","Đang tải câu hỏi..."],
+["Cooking Timer & Kitchen Safety Checklist","Hẹn giờ nấu ăn & danh sách an toàn nhà bếp"],["⏱️ Choose a cooking time or enter your own:","⏱️ Chọn thời gian nấu hoặc tự nhập:"],["Start","Bắt đầu"],["⏳ Cooking countdown...","⏳ Đang đếm ngược thời gian nấu..."],["🚪 Have you closed the kitchen door?","🚪 Bạn đã đóng cửa bếp chưa?"],["Cancel Timer","Hủy hẹn giờ"],["Home & Waste Schedule","Lịch sinh hoạt & thu gom rác"],["Month...","Tháng..."],["Mon","T2"],["Tue","T3"],["Wed","T4"],["Thu","T5"],["Fri","T6"],["Sat","T7"],["Sun","CN"],["🗓️ Schedule Notes","🗓️ Ghi chú lịch"],["♻️ Waste Collection · Every Tuesday","♻️ Thu gom rác · Thứ Ba hằng tuần"],["🏡 Rent Payment · 1st of each month","🏡 Đóng tiền nhà · Ngày 1 hằng tháng"],["✦ marks a day when both are due.","✦ đánh dấu ngày có cả hai lịch."],["Next schedule reminder...","Nhắc lịch tiếp theo..."],["Let's check the kitchen together!","Cùng kiểm tra nhà bếp nhé!"],["Eco Buddy ☁️","Bạn đồng hành Eco ☁️"],["Time's up! Let's check the kitchen together!","Hết giờ! Cùng kiểm tra nhà bếp nhé!"],
+["Turn off the cooker","Tắt bếp"],["Have you turned off the cooker?","Bạn đã tắt bếp chưa?"],["Make sure the cooker knobs are turned to the OFF position.","Đảm bảo các núm bếp đã được xoay về vị trí TẮT."],["Wonderful!","Tuyệt vời!"],["Let's check the cooker knobs!","Hãy kiểm tra các núm bếp nhé!"],["Turn off the cooker hood","Tắt máy hút mùi"],["Have you turned off the cooker hood?","Bạn đã tắt máy hút mùi chưa?"],["Make sure the cooker hood fan is switched off.","Đảm bảo quạt máy hút mùi đã tắt."],["Great job!","Làm tốt lắm!"],["Switch off the cooker hood!","Hãy tắt máy hút mùi nhé!"],["Turn off the oven","Tắt lò nướng"],["Have you turned off the oven?","Bạn đã tắt lò nướng chưa?"],["Check power display.","Kiểm tra màn hình nguồn điện."],["Well done!","Giỏi lắm!"],["Check the oven!","Hãy kiểm tra lò nướng nhé!"],["Turn off the kitchen lights","Tắt đèn bếp"],["Have you turned off the kitchen lights?","Bạn đã tắt đèn bếp chưa?"],["Switch off unused lights.","Tắt những đèn không sử dụng."],["Energy saved!","Đã tiết kiệm điện!"],["Turn off lights!","Hãy tắt đèn nhé!"],["Wipe the cooker","Lau bếp"],["Have you cleaned the cooker surface?","Bạn đã lau sạch mặt bếp chưa?"],["Wipe with a damp cloth.","Lau bằng khăn ẩm."],["Sparkling clean!","Sạch bong rồi!"],["Clean up!","Hãy dọn sạch nhé!"],["All done! You earned +30 XP for keeping the kitchen safe! 💚","Hoàn tất! Bạn nhận được +30 XP vì giữ nhà bếp an toàn! 💚"],["Safety check completed!","Đã hoàn thành kiểm tra an toàn!"],["Eco Buddy is so proud of you!","Bé Mây rất tự hào về bạn!"],["💚 Done! Collect XP reward","💚 Xong! Nhận thưởng XP"],["Completed","Đã hoàn thành"],["Yes, I've done it!","Rồi, mình đã làm xong!"],["Not yet, I'll do it now","Chưa, mình sẽ làm ngay"],["💚 I've done it! Let's continue.","💚 Mình làm xong rồi! Tiếp tục nhé."],["I'll do it later","Để mình làm sau"],["Please choose an image.","Vui lòng chọn một hình ảnh."],["Image reading failed","Đọc ảnh thất bại"],["No information found","Không tìm thấy thông tin"],["No images selected","Chưa chọn ảnh"],["OCR could not load — please enter values manually.","Không tải được OCR — vui lòng nhập thông tin thủ công."],["Processing images…","Đang xử lý ảnh…"],["Reading images...","Đang đọc ảnh..."],["No estimate yet — upload a clear breakdown image and run OCR.","Chưa có ước tính — hãy tải ảnh phân bổ rõ nét rồi chạy OCR."],["Distribution must add up to 100%.","Tổng tỷ lệ phân bổ phải bằng 100%."],["OCR error — please enter values manually.","Lỗi OCR — vui lòng nhập thông tin thủ công."],["Images ready. Run OCR or enter the values manually, then save.","Ảnh đã sẵn sàng. Chạy OCR hoặc nhập thông tin thủ công rồi lưu."],["Delete","Xóa"],["Usage:","Điện năng:"],["Savings:","Tiết kiệm:"],["Category name","Tên danh mục"],["Estimated percentage","Tỷ lệ ước tính"],["Total usage","Tổng điện năng"],["Enter total kWh","Nhập tổng kWh"],["Enter bill value","Nhập số tiền hóa đơn"],["Showing All-Months Average","Đang hiển thị mức trung bình tất cả các tháng"],["No estimate yet. Save a bill with all 8 category percentages to display its distribution.","Chưa có ước tính. Hãy lưu hóa đơn với đủ tỷ lệ của 8 nhóm để hiển thị phân bổ."],["Save a bill with an estimated breakdown to show all 8 categories.","Lưu hóa đơn có phân bổ ước tính để hiển thị đủ 8 nhóm."],["All months · kWh-weighted category distribution","Tất cả tháng · phân bổ nhóm theo tỷ trọng kWh"],["Selected bill · estimated from its uploaded breakdown","Hóa đơn đã chọn · ước tính từ ảnh phân bổ đã tải lên"],
+["🚿 Shower & Water Heating","🚿 Tắm & làm nóng nước"],["High Impact","Tác động lớn"],["Don't let the water run too long while taking showers. Heating water is one of the most energy-intensive activities in your home.","Không để nước chảy quá lâu khi tắm. Làm nóng nước là một trong những hoạt động tiêu thụ nhiều điện nhất trong nhà."],["🌙 Night Saver Shifting","🌙 Chuyển sang giờ điện đêm"],["Money Saver","Tiết kiệm chi phí"],["Run your washing machine and dishwasher strictly after 23:00 to take advantage of the cheap Night Rate (€0.1954/kWh).","Chạy máy giặt và máy rửa bát sau 23:00 để tận dụng giá điện đêm thấp (€0.1954/kWh)."],["🔌 Phantom Load & Standby","🔌 Điện năng chờ"],["Easy Habit","Thói quen dễ thực hiện"],["Unplug phone chargers, microwaves, and TVs when not in use. Standby power accounts for up to 10% of household electricity bills.","Rút sạc điện thoại, lò vi sóng và TV khi không sử dụng. Điện năng chờ có thể chiếm tới 10% hóa đơn điện gia đình."],["🍳 Lids on Cooking Pots","🍳 Đậy nắp nồi khi nấu"],["Kitchen Saver","Mẹo tiết kiệm trong bếp"],["Always put lids on pots when boiling water. It traps heat and cooks food up to 30% faster, saving significant energy.","Luôn đậy nắp nồi khi đun nước. Nắp giữ nhiệt và giúp nấu nhanh hơn tới 30%, nhờ đó tiết kiệm điện đáng kể."],["🌡️ Refrigerator Optimization","🌡️ Tối ưu tủ lạnh"],["Appliance Care","Chăm sóc thiết bị"],["Keep your fridge set at 3-5°C and freezer at -18°C. Avoid keeping the door open for too long so cold air doesn't escape.","Đặt tủ lạnh ở 3–5°C và ngăn đông ở -18°C. Tránh mở cửa quá lâu để không thất thoát hơi lạnh."],["💡 Daylight Harvesting","💡 Tận dụng ánh sáng tự nhiên"],["Lighting","Chiếu sáng"],["Make the most of natural daylight during the day instead of turning on ceiling lights in rooms you're working in.","Tận dụng ánh sáng tự nhiên ban ngày thay vì bật đèn trần trong phòng đang sử dụng."],["👕 Eco Laundry Temperatures","👕 Giặt đồ ở nhiệt độ tiết kiệm"],["Laundry Tip","Mẹo giặt giũ"],["Wash your clothes at 30°C instead of 60°C whenever possible. Modern detergents work brilliantly and save 60% washer energy.","Nếu có thể, hãy giặt quần áo ở 30°C thay vì 60°C. Nước giặt hiện đại vẫn hoạt động tốt và có thể tiết kiệm 60% điện máy giặt."],["☀️ Smart Thermal Zoning","☀️ Điều chỉnh nhiệt theo khu vực"],["Heating / Cooling","Sưởi ấm / Làm mát"],["Close doors to unoccupied rooms to keep conditioned air concentrated where you actually spend your time.","Đóng cửa những phòng không sử dụng để giữ khí nóng hoặc mát ở nơi bạn sinh hoạt."],["🧊 Natural Fridge Defrosting","🧊 Rã đông tự nhiên trong tủ lạnh"],["Kitchen Habit","Thói quen trong bếp"],["Move frozen items to the fridge compartment the night before to defrost. It uses zero electricity and cools your fridge naturally.","Chuyển thực phẩm đông lạnh xuống ngăn mát từ tối hôm trước để rã đông. Cách này không tốn thêm điện và còn giúp làm mát tự nhiên."],["📺 Smart Power Strips","📺 Ổ cắm điện có công tắc"],["Electronics","Thiết bị điện tử"],["Plug your entertainment center (TV, console, soundbar) into a master switch power strip to cut all standby power effortlessly.","Cắm TV, máy chơi game và loa vào ổ cắm có công tắc tổng để dễ dàng ngắt điện chờ."],["🫖 Kettle Water Management","🫖 Đun lượng nước vừa đủ"],["Only boil as much water as you actually need in your kettle rather than filling it to the maximum every single time.","Chỉ đun lượng nước bạn cần thay vì luôn đổ đầy ấm."],["🧹 Air Filter Maintenance","🧹 Vệ sinh bộ lọc không khí"],["👍 Helpful (+10 pts)","👍 Hữu ích (+10 điểm)"],["Showing All-Months Average","Đang hiển thị trung bình tất cả các tháng"],["Multiple months · combined kWh and € by time band","Nhiều tháng · cộng dồn kWh và € theo từng khung giờ"],["Selected month · table read from bill","Tháng đã chọn · bảng đọc từ hoá đơn"],["No time-of-use data for this selection.","Chưa có bảng khung giờ cho lựa chọn này."],["Home & Waste:","Nhà cửa & rác thải:"],["Rent is due on the 1st","Tiền nhà đến hạn vào ngày 1"],["waste collection is every Tuesday","thu gom rác vào mỗi thứ Ba"],["Category","Danh mục"],["estimated","ước tính"],["Total Share","Tổng tỷ lệ"],["Please check the total percentage.","Vui lòng kiểm tra tổng tỷ lệ."],["Please enter a valid month, year, total bill and total kWh before saving.","Vui lòng nhập tháng, năm, tổng tiền và tổng kWh hợp lệ trước khi lưu."],["The start date cannot be later than the end date.","Ngày bắt đầu không thể sau ngày kết thúc."],["Check category names and percentages (0–100%).","Kiểm tra tên nhóm và tỷ lệ (0–100%)."],["No category estimate yet.","Chưa có ước tính phân bổ."],["Estimated percentage","Tỷ lệ ước tính"],["Image reading failed","Đọc ảnh thất bại"],["No information found","Không tìm thấy thông tin"],["Please choose an image.","Vui lòng chọn ảnh."],["HVAC Care","Bảo dưỡng hệ thống thông gió"],["Clean dust and filters from ventilation and cooker hoods regularly to ensure peak airflow efficiency and lower energy drain.","Thường xuyên làm sạch bụi và bộ lọc của hệ thống thông gió, máy hút mùi để luồng khí lưu thông tốt và giảm tiêu thụ điện."],
+['🍩 Energy Distribution · Original Chart & Time Bands','🍩 Phân Bổ Điện Năng · Biểu Đồ Gốc & Khung Giờ'],['🍩 Original Chart & Time Bands','🍩 Biểu đồ phân bổ gốc & bảng khung giờ'],['Please choose an image.','Vui lòng chọn ảnh.'],['OCR could not load. You can still enter the values manually.','OCR chưa tải được. M vẫn có thể nhập tay.'],['Please enter a valid month, year, total bill and total kWh before saving.','Nhập tháng, năm, tổng tiền và tổng kWh hợp lệ trước khi lưu nhé.'],['The start date cannot be later than the end date.','Ngày bắt đầu không thể sau ngày kết thúc.'],['Check category names and percentages (0–100%).','Kiểm tra tên nhóm và tỷ lệ (0–100%).'],['If you entered estimates, the total percentage must equal 100%. If you cannot estimate them yet, leave them blank and save the original image.','Nếu đã nhập EST, tổng tỷ lệ cần bằng 100%. Nếu chưa EST được, cứ để trống và lưu ảnh gốc.'],['Not enough storage to save the donut image. Please try a smaller image.','Không đủ bộ nhớ để lưu ảnh donut. M thử ảnh nhỏ hơn nhé.'],['💾 Bill saved!','💾 Đã lưu hóa đơn!'],['Thank you for your feedback! +10 Eco Points added! 💚','Cảm ơn bạn đã phản hồi! Đã cộng +10 Điểm Eco! 💚'],['Thanks! We\'ll show you better tips next time.','Cảm ơn bạn! Lần sau chúng tôi sẽ gợi ý mẹo phù hợp hơn.'],['Please enter a number of minutes between 1 and 180.','Vui lòng nhập số phút từ 1 đến 180.'],["Band","Khung"],["kWh %","kWh %"],["€ %","€ %"],["No time-band data for this selection.","Chưa có dữ liệu khung giờ cho lựa chọn này."],["Partial data · complete breakdowns ","Dữ liệu chưa đầy đủ · hóa đơn có đủ bảng phân bổ "],
+["Complete data · ","Dữ liệu đầy đủ · "],
+["Combined time-of-use totals","Tổng cộng theo khung giờ"],
+["Selected bill · time-of-use data","Hóa đơn đã chọn · dữ liệu khung giờ"],
+["Observed total","Tổng số liệu đã ghi nhận"],
+["No time-of-use data for this selection.","Không có dữ liệu khung giờ cho lựa chọn này."],
+];
+const lang = () => localStorage.getItem("eco_buddy_language") === "vi" ? "vi" : "en";
+function translateText(value, target){
+ let out=String(value);
+ const ordered=languagePairs.slice().sort((a,b)=>Math.max(b[0].length,b[1].length)-Math.max(a[0].length,a[1].length));
+ for(const pair of ordered){
+  const from=target==="vi"?pair[0]:pair[1], to=target==="vi"?pair[1]:pair[0];
+  if(from && from!==to) out=out.split(from).join(to);
+ }
+ if(target==="vi"){
+  out=out.replace(/Week (\d+) \/ 4/g,"Tuần $1 / 4").replace(/Week (\d+): Q (\d+)\/(\d+)/g,"Tuần $1: Câu $2/$3").replace(/Question (\d+)\/(\d+):/g,"Câu hỏi $1/$2:").replace(/Step (\d+) \/ 5/g,"Bước $1 / 5").replace(/(\d+) min/g,"$1 phút").replace(/(\d+) months?/g,"$1 tháng").replace(/(\d+) fields?/g,"$1 trường");
+ } else {
+  out=out.replace(/Tuần (\d+) \/ 4/g,"Week $1 / 4").replace(/Tuần (\d+): Câu (\d+)\/(\d+)/g,"Week $1: Q $2/$3").replace(/Câu hỏi (\d+)\/(\d+):/g,"Question $1/$2:").replace(/Bước (\d+) \/ 5/g,"Step $1 / 5").replace(/(\d+) phút/g,"$1 min").replace(/(\d+) tháng/g,"$1 months").replace(/(\d+) trường/g,"$1 fields");
+ }
+ return out;
+}
+const nativeAlert=window.alert.bind(window);
+const nativeConfirm=window.confirm.bind(window);
+window.alert=function(message){return nativeAlert(translateText(message,lang()));};
+window.confirm=function(message){return nativeConfirm(translateText(message,lang()));};
+function applyAppLanguage(){
+ const target=lang();
+ document.documentElement.lang=target;
+ const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);
+ let node;
+ while((node=walker.nextNode())){
+  const next=translateText(node.nodeValue,target);
+  if(next!==node.nodeValue)node.nodeValue=next;
+ }
+ document.querySelectorAll("[placeholder],[aria-label],[title],[alt]").forEach(el=>{
+  for(const attr of ["placeholder","aria-label","title","alt"]){
+   if(el.hasAttribute(attr)){const old=el.getAttribute(attr),next=translateText(old,target);if(next!==old)el.setAttribute(attr,next);}
+  }
+ });
+}
+window.applyAppLanguage=applyAppLanguage;
+const originalSetLanguage=window.setAppLanguage;
+window.setAppLanguage=function(language){
+ if(typeof originalSetLanguage==="function")originalSetLanguage(language);
+ applyAppLanguage();
+ if(typeof renderCalendar==="function")renderCalendar();
+ if(typeof initWeeklyContent==="function")initWeeklyContent();
+ if(typeof loadWeeklyQuizQuestion==="function")loadWeeklyQuizQuestion();
+ if(typeof renderBillingListing==="function")renderBillingListing();
+ if(typeof populateDashboardFilters==="function")populateDashboardFilters();
+ if(typeof updateDashboardView==="function")updateDashboardView();
+};
+document.addEventListener("DOMContentLoaded",()=>{
+ applyAppLanguage();
+ const observer=new MutationObserver(()=>applyAppLanguage());
+ observer.observe(document.body,{childList:true,subtree:true,characterData:true});
+});
+})();
+</script>
+
+</body>
+</html>
