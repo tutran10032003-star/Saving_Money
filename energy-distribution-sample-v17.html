@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Eco-Buddy · Energy estimate sample</title>
+<style>
+:root{--ink:#5c4738;--paper:#fbf7f0;--panel:#fffdf9;--sage:#a8c7a0;--butter:#ead58e;--rose:#e9b0aa;--slate:#a9bdc0;--brown:#bca996;--sky:#a9cbd8;--mint:#c1d4b1;--sand:#d9c6ae}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.45 system-ui,-apple-system,Segoe UI,sans-serif}.wrap{max-width:900px;margin:auto;padding:24px}.top{display:flex;align-items:center;justify-content:space-between;gap:12px}.eyebrow{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#927e69;font-weight:800}h1{font-size:26px;margin:4px 0 0}.select{background:#fff;border:1px solid #d8c9b7;border-radius:12px;padding:11px 14px;color:var(--ink);font:inherit}.card{margin-top:20px;background:var(--panel);border:1px solid #dfd2c2;border-radius:22px;padding:22px;box-shadow:0 8px 24px #5c47380d}.meta{display:flex;gap:10px;flex-wrap:wrap;color:#806f5d;font-size:13px}.pill{background:#f3ece2;border-radius:99px;padding:6px 10px}.main{display:grid;grid-template-columns:minmax(240px,1fr) minmax(240px,1fr);align-items:center;gap:24px;margin-top:14px}.donutbox{position:relative;width:min(100%,340px);margin:auto;aspect-ratio:1}.donutbox svg{width:100%;height:100%;transform:rotate(-90deg)}.seg{cursor:pointer;transition:opacity .15s,stroke-width .15s}.seg:hover{opacity:.82;stroke-width:34}.center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;text-align:center}.center b{font-size:14px;color:#8b735b}.center strong{font-size:28px;color:#47382d}.center small{font-size:11px;color:#988571}.legend{display:grid;grid-template-columns:1fr 1fr;gap:9px}.item{border:1px solid #e3d8ca;background:#fff;border-radius:12px;padding:10px;display:flex;align-items:center;gap:9px;font-size:13px}.swatch{width:13px;height:13px;border-radius:50%;flex:none}.item span:last-child{margin-left:auto;color:#8a7967;font-weight:700}.note{margin-top:18px;padding:12px 14px;background:#f5eee5;border-radius:12px;font-size:12px;color:#796954}.detail{margin-top:14px;min-height:58px;padding:12px 14px;border:1px solid #e1d5c6;border-radius:12px;font-size:13px}.detail b{font-size:14px}.foot{font-size:11px;color:#94836f;margin-top:12px}@media(max-width:650px){.wrap{padding:16px}.main{grid-template-columns:1fr}.donutbox{max-width:300px}.legend{gap:7px}.item{padding:9px 7px;font-size:12px}h1{font-size:22px}}
+</style></head><body><div class="wrap"><div class="top"><div><div class="eyebrow">Eco-Buddy · Bill Upload concept</div><h1>Estimated energy distribution</h1></div><select class="select" id="month"><option value="sep">06 Sep – 06 Oct 2026</option><option value="oct">06 Oct – 06 Nov 2026</option></select></div>
+<div class="card"><div class="meta"><span class="pill" id="period">06 Sep – 06 Oct 2026</span><span class="pill">Estimated from uploaded donut image</span></div><div class="main"><div class="donutbox"><svg viewBox="0 0 240 240" id="chart" aria-label="Estimated energy distribution donut"></svg><div class="center"><b id="centerLabel">Total usage</b><strong id="centerValue">355 kWh</strong><small id="centerSub">Hover or tap a segment</small></div></div><div><div class="eyebrow" style="margin-bottom:10px">Categories · fixed pastel colours</div><div class="legend" id="legend"></div><div class="detail" id="detail">The centre shows total usage. Hover or tap a segment to see its estimated share and kWh.</div></div></div><div class="note">This is a visual estimate based on the segment sizes in your sample image. The source image does not print exact percentages, so values are approximate and can be edited after OCR review.</div><div class="foot">Demo only · no bill data is changed or saved.</div></div></div>
+<script>
+const cats=[
+{key:'water',name:'Water Heating',color:'#a8c7a0'},
+{key:'cooking',name:'Cooking',color:'#ead58e'},
+{key:'entertainment',name:'Entertainment',color:'#e9b0aa'},
+{key:'laundry',name:'Laundry',color:'#a9bdc0'},
+{key:'refrigeration',name:'Refrigeration',color:'#bca996'},
+{key:'always',name:'Always On',color:'#a9cbd8'},
+{key:'lighting',name:'Lighting',color:'#c1d4b1'},
+{key:'other',name:'Other',color:'#d9c6ae'}
+];
+const samples={
+sep:{period:'06 Sep – 06 Oct 2026',total:355,values:{water:38,cooking:18,entertainment:13,laundry:10,refrigeration:8,always:6,lighting:5,other:2}},
+oct:{period:'06 Oct – 06 Nov 2026',total:706,values:{other:38,water:19,cooking:13,entertainment:10,laundry:8,refrigeration:6,lighting:4,always:2}}
+};
+let active=null;
+function render(){
+ const key=document.getElementById('month').value,d=samples[key],svg=document.getElementById('chart');document.getElementById('period').textContent=d.period;svg.innerHTML='';
+ let offset=0;const radius=82,circ=2*Math.PI*radius;
+ const track=document.createElementNS('http://www.w3.org/2000/svg','circle');track.setAttribute('cx',120);track.setAttribute('cy',120);track.setAttribute('r',radius);track.setAttribute('fill','none');track.setAttribute('stroke','#eee5da');track.setAttribute('stroke-width',29);svg.append(track);
+ cats.forEach(c=>{const pct=d.values[c.key]||0;if(!pct)return;const len=circ*pct/100;const el=document.createElementNS('http://www.w3.org/2000/svg','circle');el.setAttribute('cx',120);el.setAttribute('cy',120);el.setAttribute('r',radius);el.setAttribute('fill','none');el.setAttribute('stroke',c.color);el.setAttribute('stroke-width',29);el.setAttribute('stroke-dasharray',len+' '+(circ-len));el.setAttribute('stroke-dashoffset',-offset);el.setAttribute('stroke-linecap','butt');el.classList.add('seg');el.addEventListener('mouseenter',()=>show(c,d));el.addEventListener('click',()=>show(c,d));svg.append(el);offset+=len;});
+ document.getElementById('centerLabel').textContent='Total usage';document.getElementById('centerValue').textContent=d.total+' kWh';document.getElementById('centerSub').textContent='Hover or tap a segment';
+ document.getElementById('legend').innerHTML=cats.map(c=>d.values[c.key]?'<div class="item"><i class="swatch" style="background:'+c.color+'"></i>'+c.name+'<span>'+d.values[c.key]+'%</span></div>':'').join('');
+ document.getElementById('detail').textContent='The centre shows total usage. Hover or tap a segment to see its estimated share and kWh.';
+ svg.onmouseleave=()=>{document.getElementById('centerLabel').textContent='Total usage';document.getElementById('centerValue').textContent=d.total+' kWh';document.getElementById('centerSub').textContent='Hover or tap a segment';};
+}
+function show(c,d){const p=d.values[c.key]||0,k=(d.total*p/100).toFixed(1);document.getElementById('centerLabel').textContent=c.name;document.getElementById('centerValue').textContent=k+' kWh';document.getElementById('centerSub').textContent=p+'% estimated';document.getElementById('detail').innerHTML='<b>'+c.name+'</b><br>'+p+'% of this month · '+k+' kWh estimated';}
+document.getElementById('month').addEventListener('change',render);render();
+</script></body></html>
