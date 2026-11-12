@@ -1163,7 +1163,7 @@
                 const segments=bounds.map((start,i)=>({start,length:(bounds[(i+1)%bounds.length]-start+steps)%steps})).filter(x=>x.length>=5);
                 if(segments.length<2||segments.length>12)return {ok:false,reason:"unclear-segments",segments:segments.length};
                 const total=segments.reduce((n,x)=>n+x.length,0),shares=segments.map(x=>Math.round(x.length/total*1000)/10);shares[0]=Math.round((shares[0]+100-shares.reduce((n,v)=>n+v,0))*10)/10;
-                const result={};segments.forEach((x,i)=>{result[ordered[i]?.key||("unmatched"+(i+1))]=shares[i];});
+                const result={};segments.forEach((x,i)=>{const key=ordered[i]?.key||"other";result[key]=(result[key]||0)+shares[i];});
                 return {ok:true,shares:result,detected:ordered.length,segments:segments.length,unmatched:segments.length>ordered.length};
             }catch(e){if(bitmap)bitmap.close();console.warn("Donut estimation failed",e);return {ok:false,reason:"image-analysis"};}
         }
@@ -1214,7 +1214,7 @@
             if(categories.some(c=>!c.label||(c.percent!==null&&(!Number.isFinite(c.percent)||c.percent<0||c.percent>100)))){alert("Kiểm tra tên nhóm và tỷ lệ (0–100%).");return;}
             const populated=categories.filter(c=>c.percent!==null),sum=populated.reduce((n,c)=>n+c.percent,0);
             if(populated.length&&Math.abs(sum-100)>.11){alert("Nếu đã nhập EST, tổng tỷ lệ cần bằng 100%. Nếu chưa EST được, cứ để trống và lưu ảnh gốc.");return;}
-            let imageData="";if(billImageFiles.breakdown){try{imageData=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(String(reader.result||""));reader.onerror=reject;reader.readAsDataURL(billImageFiles.breakdown);});}catch(e){console.warn(e);}}
+            let imageData="";if(billImageFiles.breakdown){try{const bitmap=await createImageBitmap(billImageFiles.breakdown),scale=Math.min(1,1200/Math.max(bitmap.width,bitmap.height)),canvas=document.createElement("canvas");canvas.width=Math.round(bitmap.width*scale);canvas.height=Math.round(bitmap.height*scale);canvas.getContext("2d").drawImage(bitmap,0,0,canvas.width,canvas.height);bitmap.close();imageData=canvas.toDataURL("image/jpeg",.9);}catch(e){console.warn("Could not compress original donut image",e);}}
             const id=month.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")+"-"+year,old=billingRecords.find(x=>x.id===id),record={id,month,year,bill:amount,kwh,startDate:start,endDate:end,categories:populated.length?categories.filter(c=>c.percent!==null):[],breakdownImageDataUrl:imageData||old?.breakdownImageDataUrl||"",savings:"€"+(kwh*.08).toFixed(2)+" cr"};
             const idx=billingRecords.findIndex(x=>x.id===id);if(idx>=0)billingRecords[idx]={...billingRecords[idx],...record};else billingRecords.push(record);
             try{saveUserData();}catch(e){alert("Không đủ bộ nhớ để lưu ảnh donut. M thử ảnh nhỏ hơn nhé.");return;}
