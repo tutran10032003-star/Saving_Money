@@ -1,671 +1,1373 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Eco-Buddy Home Manager V2 ⚡☁️</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Eco-Buddy Home Manager V2 ⚡☁️</title>
 
-<link rel="manifest" href="/Saving_Money/manifest.json">
-<meta name="theme-color" content="#fcf8f2">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Eco-Buddy">
-<link rel="apple-touch-icon" href="/Saving_Money/icons/icon-192.png">
+    <!-- PWA CONFIGURATION -->
+    <link rel="manifest" href="/Saving_Money/manifest.json">
+    <meta name="theme-color" content="#fcf8f2">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Eco-Buddy">
+    <link rel="apple-touch-icon" href="/Saving_Money/icons/icon-192.png">
 
-<script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
 
-<style>
-*{box-sizing:border-box}
-html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;overflow-x:hidden}
-body{font-family:'Quicksand',sans-serif;background:#fcf8f2;color:#4a3b32;min-height:100vh;min-height:100dvh;padding-top:var(--header-height,75px);overflow-x:hidden}
-button,input,select{font-family:inherit}button{cursor:pointer}
-header{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(255,253,250,.97);backdrop-filter:blur(12px);box-shadow:0 3px 10px #5c47381a}
-.header-inner{max-width:768px;margin:auto;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px}
-.nav-pills{width:100%;max-width:440px;padding:5px;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:3px;background:#f0e6d6;border-radius:30px;border:1px solid #e4d8c5}
-.nav-btn{min-width:0;border:2px solid transparent;border-radius:20px;padding:8px 1px;font-size:10px;font-weight:700;color:#4a3b32;background:transparent;white-space:nowrap}
-.nav-btn.active{background:#8c7355;color:white;border-color:#5c4738;box-shadow:2px 2px 0 #5c4738}
-.vintage-panel{background:linear-gradient(145deg,#fffdfa,#f7f1e5);border:2px solid #5c4738;box-shadow:4px 4px 0 #5c4738;border-radius:1.5rem}
-.vint-card{background:#fffaf4;border:1.5px solid #5c4738;border-radius:1rem;box-shadow:2px 2px 0 #5c4738}
-.chat-overlay{position:fixed;inset:0;z-index:2000;background:#fcf8f2f7;display:flex;justify-content:center;align-items:center;padding:12px}
-.chat-overlay.hidden{display:none}
-.chat-window{width:min(560px,100%);max-height:calc(100dvh - 24px);overflow-y:auto;padding:20px;background:linear-gradient(145deg,#fffdfa,#f7f1e5);border:2px solid #5c4738;border-radius:25px;box-shadow:6px 6px 0 #5c4738}
-.chat-bubble{background:#f5ede2;border:1px solid #d8c7b0;padding:13px;border-radius:18px;width:100%}
-.chat-choice{width:100%;min-height:44px;padding:11px;background:#fffdfa;border:1.5px solid #8c7355;border-radius:14px;text-align:left;font-weight:700;font-size:13px;color:#4a3b32}
-.chat-choice:hover{background:#f0e6d6}
-.chat-scene{background:#fffaf4;border:1.5px dashed #b9a487;border-radius:18px;min-height:75px}
-.eco-mascot{width:180px;height:180px;margin:auto;display:flex;align-items:center;justify-content:center;font-size:105px;animation:float 3s ease-in-out infinite}
-@keyframes float{50%{transform:translateY(-7px)}}
-input[type=number],input[type=text]{min-width:0}
-@media(max-width:640px){
-.header-inner{flex-direction:column;align-items:stretch;gap:8px;padding:8px 12px}
-.nav-pills{max-width:none}
-.nav-btn{font-size:9px;padding:8px 0}
-main{padding-left:12px!important;padding-right:12px!important}
-.chat-window{padding:15px}
-}
-</style>
+    <style>
+        * { box-sizing: border-box; }
+
+        html {
+            -webkit-text-size-adjust: 100%;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background-color: #fcf8f2;
+            color: #4a3b32;
+            min-height: 100vh;
+            min-height: 100dvh;
+            overflow-x: hidden;
+            padding-top: var(--header-height, 75px);
+        }
+
+        button, input, textarea { font-family: inherit; touch-action: manipulation; }
+        button { cursor: pointer; }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #f4ecdf; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb { background: #d8c7b0; border-radius: 3px; }
+
+        .vintage-panel {
+            background: linear-gradient(145deg, #fffdfa 0%, #f7f1e5 100%);
+            border: 2px solid #5c4738;
+            box-shadow: 4px 4px 0 #5c4738;
+            border-radius: 1.5rem;
+        }
+
+        .vint-card {
+            background: #fffaf4;
+            border: 1.5px solid #5c4738;
+            border-radius: 1rem;
+            box-shadow: 2px 2px 0 #5c4738;
+        }
+
+        /* FIXED HEADER */
+        header {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            z-index: 10000 !important;
+            width: 100%;
+            background: rgba(255,253,250,.97);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 3px 10px rgba(92,71,56,.10);
+        }
+
+        .header-inner {
+            width: 100%;
+            max-width: 768px;
+            margin: 0 auto;
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        /* 5 TABS NGANG HÀNG */
+        .nav-pills {
+            width: 100%;
+            max-width: 440px;
+            padding: 5px;
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: 3px;
+            background: #f0e6d6;
+            border-radius: 30px;
+            border: 1px solid #e4d8c5;
+            flex-shrink: 0;
+        }
+
+        .nav-btn {
+            min-width: 0;
+            border: 2px solid transparent;
+            border-radius: 20px;
+            padding: 8px 1px;
+            font-size: 10px;
+            font-weight: 700;
+            color: #4a3b32;
+            background: transparent;
+            transition: .2s;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .nav-btn.active {
+            background: #8c7355;
+            color: white;
+            border-color: #5c4738;
+            box-shadow: 2px 2px 0 #5c4738;
+        }
+
+        #tab-content-tracker,
+        #tab-content-reports,
+        #tab-content-chatbot,
+        #tab-content-checklist,
+        #tab-content-calendar {
+            scroll-margin-top: calc(var(--header-height, 75px) + 12px);
+        }
+
+        /* TIMER */
+        .timer-buttons-grid {
+            display: flex;
+            flex-wrap: nowrap;
+            gap: 8px;
+        }
+
+        .timer-buttons-grid button {
+            flex: 1;
+            min-height: 40px;
+        }
+
+        /* SAFETY CHAT */
+        .chat-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: rgba(252,248,242,.97);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+            padding-top: max(16px, env(safe-area-inset-top));
+            padding-bottom: max(16px, env(safe-area-inset-bottom));
+        }
+
+        .chat-overlay.hidden { display: none; }
+
+        .chat-window {
+            width: min(560px, 100%);
+            max-height: calc(100dvh - 32px);
+            overflow-y: auto;
+            overscroll-behavior: contain;
+            padding: 22px;
+            background: linear-gradient(145deg,#fffdfa,#f7f1e5);
+            border: 2px solid #5c4738;
+            border-radius: 26px;
+            box-shadow: 6px 6px 0 #5c4738;
+        }
+
+        .chat-bubble {
+            background: #f5ede2;
+            border: 1px solid #d8c7b0;
+            padding: 15px;
+            border-radius: 20px;
+            width: 100%;
+        }
+
+        .chat-scene {
+            background: #fffaf4;
+            border: 1.5px dashed #b9a487;
+            border-radius: 22px;
+            min-height: 100px;
+        }
+
+        .chat-choice {
+            width: 100%;
+            min-height: 46px;
+            padding: 12px;
+            background: #fffdfa;
+            border: 1.5px solid #8c7355;
+            border-radius: 15px;
+            text-align: left;
+            font-weight: 700;
+            font-size: 13px;
+            color: #4a3b32;
+            transition: background .2s, transform .15s;
+        }
+
+        .chat-choice:hover { background: #f0e6d6; }
+        .chat-choice:active { transform: scale(.98); }
+
+        /* MASCOT */
+        .eco-mascot {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: visible;
+            flex-shrink: 0;
+        }
+
+        .eco-character {
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+            animation: mascot-float 3s ease-in-out infinite;
+            transform-origin: center bottom;
+        }
+
+        .mascot-leaves {
+            transform-box: view-box;
+            transform-origin: 150px 60px;
+            animation: mascot-leaves 3s ease-in-out infinite;
+        }
+
+        .mascot-arm-right {
+            transform-box: view-box;
+            transform-origin: 220px 163px;
+            animation: mascot-wave 2.8s ease-in-out infinite;
+            will-change: transform;
+        }
+
+        .mascot-arm-left {
+            transform-box: view-box;
+            transform-origin: 83px 175px;
+            animation: mascot-hand 3s ease-in-out infinite;
+            will-change: transform;
+        }
+
+        .mascot-sparkle { animation: mascot-twinkle 1.8s ease-in-out infinite; }
+
+        .mascot-battery {
+            animation: mascot-breathe 3s ease-in-out infinite;
+            transform-origin: center;
+        }
+
+        @keyframes mascot-float {
+            0%,100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+        }
+
+        @keyframes mascot-leaves {
+            0%,100% { transform: rotate(0); }
+            50% { transform: rotate(5deg); }
+        }
+
+        @keyframes mascot-wave {
+            0%,100% { transform: rotate(0); }
+            50% { transform: rotate(-7deg); }
+        }
+
+        @keyframes mascot-hand {
+            0%,100% { transform: rotate(0); }
+            50% { transform: rotate(-3deg); }
+        }
+
+        @keyframes mascot-twinkle {
+            0%,100% { opacity: .45; }
+            50% { opacity: 1; }
+        }
+
+        @keyframes mascot-breathe {
+            0%,100% { transform: translateY(0); }
+            50% { transform: translateY(2px); }
+        }
+
+        .eco-character.pose-happy .mascot-arm-left {
+            animation: arm-cheer-left .6s ease-in-out infinite alternate;
+        }
+
+        .eco-character.pose-happy .mascot-arm-right {
+            animation: arm-cheer-right .6s ease-in-out infinite alternate;
+        }
+
+        .eco-character.pose-wait { animation: mascot-wait 1.2s ease-in-out infinite; }
+        .eco-character.pose-dance { animation: mascot-dance .55s ease-in-out infinite; }
+
+        .eco-character.pose-stove .mascot-arm-right {
+            animation: stove-check .65s ease-in-out infinite alternate;
+        }
+
+        .eco-character.pose-stove { animation: mascot-check 1.2s ease-in-out infinite; }
+
+        @keyframes stove-check {
+            from { transform: rotate(0); }
+            to { transform: rotate(-22deg); }
+        }
+
+        .eco-character.pose-oven .mascot-arm-right {
+            animation: oven-check .65s ease-in-out infinite alternate;
+        }
+
+        @keyframes oven-check {
+            from { transform: rotate(-12deg); }
+            to { transform: rotate(18deg); }
+        }
+
+        .eco-character.pose-light .mascot-arm-left {
+            animation: light-left .6s ease-in-out infinite alternate;
+        }
+
+        .eco-character.pose-light .mascot-arm-right {
+            animation: light-right .6s ease-in-out infinite alternate;
+        }
+
+        @keyframes light-left {
+            from { transform: rotate(0); }
+            to { transform: rotate(-38deg); }
+        }
+
+        @keyframes light-right {
+            from { transform: rotate(0); }
+            to { transform: rotate(30deg); }
+        }
+
+        .eco-character.pose-wipe .mascot-arm-left {
+            animation: wipe-left .45s ease-in-out infinite alternate;
+        }
+
+        .eco-character.pose-wipe .mascot-arm-right {
+            animation: wipe-right .45s ease-in-out infinite alternate;
+        }
+
+        @keyframes wipe-left {
+            from { transform: rotate(-22deg) translateX(-2px); }
+            to { transform: rotate(22deg) translateX(5px); }
+        }
+
+        @keyframes wipe-right {
+            from { transform: rotate(20deg) translateX(2px); }
+            to { transform: rotate(-20deg) translateX(-5px); }
+        }
+
+        @keyframes arm-cheer-left {
+            from { transform: rotate(0); }
+            to { transform: rotate(-18deg); }
+        }
+
+        @keyframes arm-cheer-right {
+            from { transform: rotate(0); }
+            to { transform: rotate(15deg); }
+        }
+
+        @keyframes mascot-check {
+            0%,100% { transform: translateY(0) rotate(0); }
+            50% { transform: translateY(-4px) rotate(-3deg); }
+        }
+
+        @keyframes mascot-wait {
+            0%,100% { transform: translateY(0) rotate(0); }
+            50% { transform: translateY(3px) rotate(2deg); }
+        }
+
+        @keyframes mascot-dance {
+            0%,100% { transform: translateY(0) rotate(0); }
+            25% { transform: translateY(-9px) rotate(-5deg); }
+            75% { transform: translateY(-9px) rotate(5deg); }
+        }
+
+        /* MOBILE */
+        @media (max-width: 640px) {
+            .header-inner {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 9px;
+                padding: 9px 12px;
+            }
+
+            .nav-pills {
+                max-width: none;
+                width: 100%;
+            }
+
+            .nav-btn {
+                font-size: 9px;
+                padding: 8px 1px;
+            }
+
+            main {
+                padding-left: 12px !important;
+                padding-right: 12px !important;
+                padding-top: 16px !important;
+            }
+
+            .timer-buttons-grid {
+                display: grid;
+                grid-template-columns: repeat(2,minmax(0,1fr));
+            }
+
+            #custom-minutes {
+                min-width: 0;
+                width: 100%;
+            }
+
+            .chat-overlay {
+                align-items: center;
+                padding: 10px;
+                padding-top: max(10px,env(safe-area-inset-top));
+                padding-bottom: max(10px,env(safe-area-inset-bottom));
+            }
+
+            .chat-window {
+                max-height: calc(100dvh - 20px);
+                padding: 16px;
+                border-radius: 22px;
+            }
+
+            .chat-scene { min-height: 80px; }
+
+            .eco-mascot {
+                width: 180px;
+                height: 180px;
+            }
+
+            #chat-mascot.eco-mascot {
+                width: 130px !important;
+                height: 130px !important;
+            }
+
+            footer {
+                padding-left: 12px;
+                padding-right: 12px;
+            }
+        }
+    </style>
 </head>
 
-<body class="min-h-screen flex flex-col justify-between">
+<body class="min-h-screen flex flex-col justify-between selection:bg-amber-200">
 
-<header class="border-b-2 border-[#5c4738]">
- <div class="header-inner">
-  <div class="flex items-center gap-2.5">
-   <span class="text-2xl">🌿</span>
-   <div>
-    <h1 class="font-bold text-base">Eco-Buddy Home Manager <span class="text-[10px] bg-[#8c7355] text-white px-2 py-0.5 rounded-full">V2</span></h1>
-    <p class="text-[11px] text-[#7a6452] font-medium">Live Tariff & Weather ⚡ <span id="realtime-clock"></span></p>
-   </div>
-  </div>
-  <nav class="nav-pills">
-   <button onclick="switchTab('tracker')" id="tab-btn-tracker" class="nav-btn active">⚡ Tariff</button>
-   <button onclick="switchTab('reports')" id="tab-btn-reports" class="nav-btn">📊 Reports</button>
-   <button onclick="switchTab('weather')" id="tab-btn-weather" class="nav-btn">🌦️ Weather</button>
-   <button onclick="switchTab('checklist')" id="tab-btn-checklist" class="nav-btn">🍳 Cooking</button>
-   <button onclick="switchTab('calendar')" id="tab-btn-calendar" class="nav-btn">📅 Calendar</button>
-  </nav>
- </div>
-</header>
+    <!-- HEADER + NAVIGATION -->
+    <header class="border-b-2 border-[#5c4738]">
+        <div class="header-inner">
+            <div class="flex items-center space-x-2.5">
+                <span class="text-2xl">🌿</span>
+                <div>
+                    <h1 class="font-bold text-base text-[#4a3b32] leading-tight">Eco-Buddy Home Manager <span class="text-[10px] bg-[#8c7355] text-white px-2 py-0.5 rounded-full">V2</span></h1>
+                    <p class="text-[11px] text-[#7a6452] font-medium">
+                        Live Tariff & Weather ⚡
+                        <span id="realtime-clock" class="text-[#5c4738] font-bold"></span>
+                    </p>
+                </div>
+            </div>
 
-<main class="max-w-xl mx-auto px-4 py-6 flex-grow w-full space-y-6">
+            <!-- 5 TABS -->
+            <nav class="nav-pills" aria-label="Main navigation">
+                <button onclick="switchTab('tracker')" id="tab-btn-tracker" class="nav-btn active">⚡ Tariff</button>
+                <button onclick="switchTab('reports')" id="tab-btn-reports" class="nav-btn">📊 Reports</button>
+                <button onclick="switchTab('chatbot')" id="tab-btn-chatbot" class="nav-btn">☁️ Bé Mây</button>
+                <button onclick="switchTab('checklist')" id="tab-btn-checklist" class="nav-btn">🍳 Cooking</button>
+                <button onclick="switchTab('calendar')" id="tab-btn-calendar" class="nav-btn">📅 Calendar</button>
+            </nav>
+        </div>
+    </header>
 
-<!-- MASCOT + LEVEL -->
-<section class="vintage-panel p-5 text-center">
- <div class="flex justify-between items-center text-xs font-extrabold mb-2">
-  <span id="mascot-level-badge" class="bg-[#f0e6d6] px-3 py-1 rounded-full border border-[#5c4738]">🌱 Level 1: Sprout</span>
-  <span id="mascot-xp-text">0 / 100 XP</span>
- </div>
- <div class="w-full bg-[#f0e6d6] h-2.5 rounded-full border border-[#5c4738] overflow-hidden mb-3">
-  <div id="mascot-xp-bar" class="bg-[#87a96b] h-full" style="width:0%"></div>
- </div>
- <div class="eco-mascot" id="main-mascot">☁️</div>
- <div id="status-badge" class="inline-block bg-[#87a96b] text-white text-[11px] font-extrabold px-4 py-1 rounded-full border-2 border-[#5c4738]">Normal Hours ☀️</div>
- <h3 class="font-bold mt-3">Eco Buddy</h3>
- <p class="text-[11px] text-[#7a6452] italic">🌿 A little battery, leafy ears, and a friendly companion by your side.</p>
- <p id="mascot-speech" class="text-xs bg-[#f5ede2] p-3 rounded-2xl border border-[#5c4738] w-full mt-3">"Let's save energy together! Complete daily tasks to level me up! 🤍"</p>
- <button onclick="openBuddyChat()" class="mt-3 w-full bg-[#8c7355] text-white font-bold text-sm py-3 rounded-xl border-2 border-[#5c4738] shadow-[2px_2px_0_#5c4738]">☁️ Chat with Bé Mây</button>
-</section>
+    <!-- MAIN -->
+    <main class="max-w-xl mx-auto px-4 py-6 flex-grow w-full space-y-6">
 
-<!-- TRACKER -->
-<section id="tab-content-tracker" class="space-y-6">
- <div class="vintage-panel p-5 space-y-4">
-  <h2 class="font-bold text-base border-b-2 border-[#5c4738] pb-2">⚡ Daily Electricity Tariff (SST Saver+)</h2>
-  <div class="space-y-3 text-xs">
-   <div class="vint-card p-3.5 flex justify-between gap-2 bg-[#f2f7ec]">
-    <div><b>☀️ Day Rate</b><p class="text-[11px] mt-1">08:00 - 17:00 & 19:00 - 23:00</p></div>
-    <b class="bg-[#d9e8cc] px-2.5 py-1 rounded-xl border border-[#5c4738] whitespace-nowrap">€0.3719/kWh</b>
-   </div>
-   <div class="vint-card p-3.5 flex justify-between gap-2 bg-[#fbe8e6]">
-    <div><b>🔴 Peak Rate</b><p class="text-[11px] mt-1">17:00 - 19:00 · Limit high-energy appliances</p></div>
-    <b class="bg-[#f5d0cd] px-2.5 py-1 rounded-xl border border-[#5c4738] whitespace-nowrap">€0.3968/kWh</b>
-   </div>
-   <div class="vint-card p-3.5 flex justify-between gap-2 bg-[#eaf2f8]">
-    <div><b>🟢 Night Rate (Cheapest)</b><p class="text-[11px] mt-1">23:00 - 08:00</p></div>
-    <b class="bg-[#cfe2f3] px-2.5 py-1 rounded-xl border border-[#5c4738] whitespace-nowrap">€0.1954/kWh</b>
-   </div>
-  </div>
- </div>
+        <!-- MASCOT CARD & LEVEL-UP -->
+        <div class="vintage-panel p-5 flex flex-col items-center text-center">
+            <div class="w-full flex justify-between items-center px-2 mb-2 text-xs font-extrabold text-[#5c4738]">
+                <span id="mascot-level-badge" class="bg-[#f0e6d6] px-3 py-1 rounded-full border border-[#5c4738]">🌱 Level 1: Sprout</span>
+                <span id="mascot-xp-text" class="text-[#7a6452]">0 / 100 XP</span>
+            </div>
+            <div class="w-full bg-[#f0e6d6] h-2.5 rounded-full border border-[#5c4738] overflow-hidden mb-3">
+                <div id="mascot-xp-bar" class="bg-[#87a96b] h-full w-[0%] transition-all duration-500"></div>
+            </div>
 
- <!-- DAILY TASKS -->
- <div class="vintage-panel p-5 space-y-3">
-  <h3 class="font-bold text-sm flex justify-between items-center gap-2">
-   <span>🌱 Daily Eco Tasks</span>
-   <span id="eco-points-label" class="text-xs bg-[#8c7355] text-white px-2.5 py-1 rounded-xl">0 Points 🌱</span>
-  </h3>
-  <p class="text-[10px] text-[#7a6452]">Complete these little habits to earn XP. Each task can be claimed once per day.</p>
-  <div id="daily-task-list" class="space-y-2 text-xs">
-   <div class="vint-card p-3 flex items-center justify-between gap-2">
-    <div><b>Turn off lights when leaving rooms (+20 XP)</b><p class="text-[10px]">Check all rooms in the house.</p></div>
-    <button data-task="lights" onclick="completeTask('lights',20,this)" class="task-button px-3 py-2 bg-[#87a96b] text-white font-bold rounded-xl border border-[#5c4738]">Complete</button>
-   </div>
-   <div class="vint-card p-3 flex items-center justify-between gap-2">
-    <div><b>Laundry during Night Saver hours (+30 XP)</b><p class="text-[10px]">Run washing machine after 23:00.</p></div>
-    <button data-task="laundry" onclick="completeTask('laundry',30,this)" class="task-button px-3 py-2 bg-[#87a96b] text-white font-bold rounded-xl border border-[#5c4738]">Complete</button>
-   </div>
-   <div class="vint-card p-3 flex items-center justify-between gap-2">
-    <div><b>Put away dry dishes (+20 XP)</b><p class="text-[10px]">Put away clean, completely dry dishes.</p></div>
-    <button data-task="dishes" onclick="completeTask('dishes',20,this)" class="task-button px-3 py-2 bg-[#87a96b] text-white font-bold rounded-xl border border-[#5c4738]">Complete</button>
-   </div>
-  </div>
-  <p id="daily-task-date" class="text-[10px] text-[#7a6452] text-right"></p>
- </div>
+            <div class="relative mb-2 w-full flex justify-center">
+                <div class="eco-mascot">
+                    <svg id="main-mascot-svg" class="eco-character" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <filter id="ecoShadow"><feGaussianBlur stdDeviation="3"/></filter>
+                        </defs>
+                        <ellipse cx="150" cy="269" rx="66" ry="8" fill="#b9a27b" opacity=".18"/>
+                        <g class="mascot-legs">
+                            <path d="M116 220 Q105 239 107 252 Q110 261 134 257 L145 229" fill="#fff9ed" stroke="#75604d" stroke-width="5" stroke-linejoin="round"/>
+                            <ellipse cx="121" cy="257" rx="19" ry="10" fill="#fff9ed" stroke="#75604d" stroke-width="4"/>
+                            <path d="M174 222 Q188 239 185 252 Q182 262 159 257 L151 229" fill="#fff9ed" stroke="#75604d" stroke-width="5" stroke-linejoin="round"/>
+                            <ellipse cx="176" cy="257" rx="19" ry="10" fill="#fff9ed" stroke="#75604d" stroke-width="4"/>
+                        </g>
+                        <path d="M83 164 Q65 153 69 134 Q53 119 65 101 Q71 82 91 81 Q96 58 119 62 Q137 43 153 57 Q171 43 189 61 Q215 58 224 82 Q246 89 241 111 Q257 129 240 147 Q249 168 229 184 Q232 207 211 220 Q194 236 170 233 Q150 241 128 233 Q102 237 87 218 Q68 207 77 186 Q64 176 83 164 Z" fill="#fff9ed" stroke="#75604d" stroke-width="5" stroke-linejoin="round"/>
+                        <g class="mascot-leaves">
+                            <path d="M145 57 Q108 45 103 23 Q134 17 151 46 Z" fill="#a3a875" stroke="#756b49" stroke-width="4"/>
+                            <path d="M151 48 Q171 13 198 25 Q194 52 158 62 Z" fill="#7d9368" stroke="#756b49" stroke-width="4"/>
+                            <path d="M111 29 Q130 37 145 51" fill="none" stroke="#6e8056" stroke-width="2"/>
+                            <path d="M190 30 Q172 41 158 54" fill="none" stroke="#6e8056" stroke-width="2"/>
+                        </g>
+                        <ellipse cx="105" cy="137" rx="13" ry="9" fill="#f5bca8"/>
+                        <ellipse cx="197" cy="137" rx="13" ry="9" fill="#f5bca8"/>
+                        <ellipse cx="128" cy="124" rx="5" ry="7" fill="#574b40"/>
+                        <ellipse cx="177" cy="124" rx="5" ry="7" fill="#574b40"/>
+                        <path d="M146 140 Q151 148 157 140" fill="none" stroke="#574b40" stroke-width="3.5" stroke-linecap="round"/>
+                        <g class="mascot-scarf">
+                            <path d="M78 159 Q113 173 151 158 Q190 173 226 154 L223 178 Q186 194 150 178 Q113 195 81 178 Z" fill="#8e9973" stroke="#6e7457" stroke-width="4"/>
+                            <path d="M94 165 L107 183 M119 168 L132 186 M157 165 L170 184 M190 163 L204 179" stroke="#c3bd91" stroke-width="3" opacity=".8"/>
+                            <path d="M204 175 Q224 190 214 217 L197 204 L193 187" fill="#9ca17a" stroke="#6e7457" stroke-width="4"/>
+                        </g>
+                        <g class="mascot-arm-left">
+                            <path d="M83 165 Q62 161 52 179 Q42 193 51 205 Q62 217 77 198 Q83 190 89 183" fill="#fff9ed" stroke="#75604d" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </g>
+                        <g class="mascot-arm-right">
+                            <path d="M220 163 Q244 158 249 136" fill="none" stroke="#75604d" stroke-width="18" stroke-linecap="round"/>
+                            <path d="M220 163 Q244 158 249 136" fill="none" stroke="#fff9ed" stroke-width="12" stroke-linecap="round"/>
+                            <ellipse cx="249" cy="136" rx="8" ry="7" fill="#fff9ed" stroke="#75604d" stroke-width="3"/>
+                            <path d="M249 136 Q258 132 263 124 Q270 116 264 108 Q260 103 258 99" fill="none" stroke="#75604d" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M249 136 Q258 132 263 124 Q270 116 264 108 Q260 103 258 99" fill="none" stroke="#b7a78b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <g transform="translate(227 67) rotate(13 25 40)">
+                                <rect x="12" y="24" width="42" height="49" rx="12" fill="#b7a78b" stroke="#75604d" stroke-width="4"/>
+                                <rect x="19" y="3" width="7" height="28" rx="3" fill="#75604d"/>
+                                <rect x="41" y="3" width="7" height="28" rx="3" fill="#75604d"/>
+                                <path d="M32 39 L24 52 L32 52 L27 64 L43 47 L34 47 Z" fill="#f6d36d"/>
+                            </g>
+                        </g>
+                        <g class="mascot-battery">
+                            <path d="M95 181 Q120 174 141 182 L143 224 Q119 238 96 222 Z" fill="#a4a981" stroke="#6e7457" stroke-width="4"/>
+                            <rect x="108" y="192" width="28" height="27" rx="6" fill="#e8e3c9" stroke="#72805f" stroke-width="3"/>
+                            <path d="M122 197 L116 207 L122 207 L118 215 L130 203 L124 203 Z" fill="#e7b947"/>
+                        </g>
+                        <g>
+                            <rect x="157" y="191" width="36" height="29" rx="7" fill="#e8e0c7" stroke="#8b8b66" stroke-width="3"/>
+                            <rect x="169" y="187" width="12" height="6" rx="3" fill="#a4a981"/>
+                            <path d="M174 197 L168 207 L176 207 L172 215 L183 203 L177 203 Z" fill="#d7ad4e"/>
+                        </g>
+                        <path d="M69 116 Q60 109 66 102" stroke="#d4b66d" stroke-width="4" fill="none" stroke-linecap="round"/>
+                        <path d="M236 98 Q245 89 251 99" stroke="#d4b66d" stroke-width="4" fill="none" stroke-linecap="round"/>
+                        <g class="mascot-sparkle" fill="#d9b85f">
+                            <path d="M48 76 L52 87 L63 91 L52 95 L48 106 L44 95 L33 91 L44 87 Z"/>
+                            <path d="M263 174 L266 182 L274 185 L266 188 L263 196 L260 188 L252 185 L260 182 Z"/>
+                        </g>
+                    </svg>
+                </div>
 
- <div class="vintage-panel p-5 space-y-3">
-  <h3 class="font-bold text-sm">💡 Daily Reminders & Eco Tips</h3>
-  <ul class="text-xs space-y-2 font-medium">
-   <li class="bg-[#fffaf4] p-3 rounded-xl border border-[#5c4738]/30">💡 <b>Turn off the lights:</b> Switch off room and hallway lights when not in use.</li>
-   <li class="bg-[#fffaf4] p-3 rounded-xl border border-[#5c4738]/30">🔒 <b>Check the doors:</b> Make sure the doors are locked and the kitchen door is closed.</li>
-   <li class="bg-[#fffaf4] p-3 rounded-xl border border-[#5c4738]/30">🔌 <b>Unplug devices:</b> Unplug standby appliances when not in use.</li>
-   <li class="bg-[#fffaf4] p-3 rounded-xl border border-[#5c4738]/30">🚿 <b>Water heater:</b> Switch off the water heater after showering.</li>
-  </ul>
- </div>
-</section>
+                <div id="status-badge" class="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-[#87a96b] text-white text-[11px] font-extrabold px-4 py-1 rounded-full shadow border-2 border-[#5c4738] whitespace-nowrap">
+                    Normal Hours ☀️
+                </div>
+            </div>
 
-<!-- REPORTS -->
-<section id="tab-content-reports" class="hidden space-y-6">
- <div class="vintage-panel p-5 space-y-4">
-  <h2 class="font-bold text-base border-b-2 border-[#5c4738] pb-2">📊 Energy Reports & Comparison</h2>
-  <p class="text-xs text-[#7a6452]">Enter the total kWh and total cost shown on your electricity bills.</p>
-  <div class="grid grid-cols-2 gap-3">
-   <div class="vint-card p-3 bg-white space-y-2">
-    <b class="text-xs">Last Month</b>
-    <label class="block text-[11px]">Electricity (kWh)</label>
-    <input type="number" min="0" id="prev-kwh" value="650" oninput="updateReportChart()" class="w-full px-2 py-2 rounded-lg border text-xs">
-    <label class="block text-[11px]">Bill (€)</label>
-    <input type="number" min="0" step=".01" id="bill-prev" value="240" oninput="updateReportChart()" class="w-full px-2 py-2 rounded-lg border text-xs">
-   </div>
-   <div class="vint-card p-3 bg-white space-y-2">
-    <b class="text-xs">This Month</b>
-    <label class="block text-[11px]">Electricity (kWh)</label>
-    <input type="number" min="0" id="curr-kwh" value="600" oninput="updateReportChart()" class="w-full px-2 py-2 rounded-lg border text-xs">
-    <label class="block text-[11px]">Bill (€)</label>
-    <input type="number" min="0" step=".01" id="bill-curr" value="221.73" oninput="updateReportChart()" class="w-full px-2 py-2 rounded-lg border text-xs">
-   </div>
-  </div>
-  <div class="vint-card p-4 bg-[#f5ede2] space-y-3">
-   <h3 class="font-bold text-sm">💶 Monthly Bill Comparison</h3>
-   <div class="flex justify-around items-end h-40 border-b-2 border-[#5c4738] px-4">
-    <div class="w-20 flex flex-col items-center gap-1">
-     <span id="chart-val-prev" class="text-xs font-bold">€240.00</span>
-     <div id="bar-prev" class="w-full bg-[#d8c7b0] rounded-t-xl" style="height:120px"></div>
-     <span class="text-[10px] font-bold">Last Month</span>
-    </div>
-    <div class="w-20 flex flex-col items-center gap-1">
-     <span id="chart-val-curr" class="text-xs font-bold">€221.73</span>
-     <div id="bar-curr" class="w-full bg-[#87a96b] rounded-t-xl" style="height:110px"></div>
-     <span class="text-[10px] font-bold">This Month</span>
-    </div>
-   </div>
-   <p id="report-summary" class="text-center text-xs font-extrabold pt-2"></p>
-  </div>
-  <div class="vint-card p-4 space-y-3">
-   <h3 class="font-bold text-sm">⚡ Electricity Usage Comparison</h3>
-   <div class="flex justify-around items-end h-36 border-b-2 border-[#5c4738] px-4">
-    <div class="w-20 flex flex-col items-center gap-1">
-     <span id="kwh-val-prev" class="text-xs font-bold">650 kWh</span>
-     <div id="kwh-bar-prev" class="w-full bg-[#d8c7b0] rounded-t-xl" style="height:110px"></div>
-     <span class="text-[10px] font-bold">Last Month</span>
-    </div>
-    <div class="w-20 flex flex-col items-center gap-1">
-     <span id="kwh-val-curr" class="text-xs font-bold">600 kWh</span>
-     <div id="kwh-bar-curr" class="w-full bg-[#87a96b] rounded-t-xl" style="height:100px"></div>
-     <span class="text-[10px] font-bold">This Month</span>
-    </div>
-   </div>
-   <p id="kwh-summary" class="text-center text-xs font-extrabold"></p>
-  </div>
-  <button onclick="saveReport()" class="w-full bg-[#8c7355] text-white font-bold py-3 rounded-xl border-2 border-[#5c4738]">💾 Save this month's report</button>
-  <p id="report-saved" class="text-center text-xs text-[#587449]"></p>
- </div>
-</section>
+            <h3 class="font-bold text-[#4a3b32] text-base mt-2">Eco Buddy</h3>
+            <p class="text-[11px] text-[#7a6452] font-semibold italic mt-0.5">🌿 A little battery, leafy ears, and a friendly companion by your side.</p>
+            <p id="mascot-speech" class="text-xs text-[#5c4738] font-medium bg-[#f5ede2] p-3 rounded-2xl border-1.5 border-[#5c4738] w-full mt-3 leading-relaxed">"Let's save energy together! Complete daily tasks to level me up! 🤍"</p>
+        </div>
 
-<!-- WEATHER -->
-<section id="tab-content-weather" class="hidden space-y-6">
- <div class="vintage-panel p-5 space-y-4">
-  <div class="flex justify-between items-center gap-2 border-b-2 border-[#5c4738] pb-3">
-   <div><h2 class="font-bold text-base">🌦️ Dublin Weather</h2><p class="text-xs text-[#7a6452]">Live weather and outfit suggestions.</p></div>
-   <button onclick="fetchWeatherData()" class="bg-[#f0e6d6] px-3 py-2 rounded-xl border border-[#5c4738] text-xs font-bold">🔄 Refresh</button>
-  </div>
-  <div class="bg-gradient-to-br from-[#8fa8be] to-[#6a849b] text-white p-5 rounded-2xl border-2 border-[#5c4738] flex justify-between items-center">
-   <div><p id="weather-condition" class="font-bold text-sm">Loading weather...</p><p id="weather-temp" class="text-3xl font-black">--°C</p><p id="weather-wind" class="text-xs">Wind: -- km/h</p></div>
-   <div id="weather-icon-lg" class="text-6xl">☁️</div>
-  </div>
-  <div class="vint-card p-4 space-y-3">
-   <h3 class="font-bold text-sm">👕 What to Wear Outdoors</h3>
-   <p class="text-xs">🧣 <span id="outfit-text-1">A warm scarf and gloves</span></p>
-   <p class="text-xs">🧥 <span id="outfit-text-2">A warm winter jacket</span></p>
-  </div>
- </div>
-</section>
+        <!-- TAB 1: TARIFF & 3 ECO TASKS -->
+        <div id="tab-content-tracker" class="space-y-6">
+            <div class="vintage-panel p-5 space-y-4">
+                <h2 class="font-bold text-[#4a3b32] text-base flex items-center gap-2 border-b-2 border-[#5c4738] pb-2.5">
+                    <span>⚡</span> Daily Electricity Tariff (SST Saver+)
+                </h2>
 
-<!-- COOKING -->
-<section id="tab-content-checklist" class="hidden space-y-6">
- <div class="vintage-panel p-5 space-y-4">
-  <h2 class="font-bold text-base border-b-2 border-[#5c4738] pb-2">🍳 Cooking Timer & Kitchen Safety Checklist</h2>
-  <div class="vint-card p-4 space-y-3">
-   <p class="text-xs font-bold">⏱️ Choose a cooking time:</p>
-   <div class="grid grid-cols-4 gap-2">
-    <button onclick="setTimerMinutes(15)" class="p-2 bg-[#f5ede2] rounded-xl border text-xs font-bold">15 min</button>
-    <button onclick="setTimerMinutes(30)" class="p-2 bg-[#f5ede2] rounded-xl border text-xs font-bold">30 min</button>
-    <button onclick="setTimerMinutes(45)" class="p-2 bg-[#f5ede2] rounded-xl border text-xs font-bold">45 min</button>
-    <button onclick="setTimerMinutes(60)" class="p-2 bg-[#f5ede2] rounded-xl border text-xs font-bold">60 min</button>
-   </div>
-   <div class="flex gap-2">
-    <input type="number" id="custom-minutes" min="1" max="180" placeholder="Custom minutes" class="flex-1 px-3 py-2 rounded-xl border text-xs">
-    <button onclick="startCustomTimer()" class="px-4 py-2 bg-[#8c7355] text-white text-xs font-bold rounded-xl">Start</button>
-   </div>
-  </div>
-  <div id="timer-display-box" class="hidden p-4 rounded-2xl bg-[#f5ede2] border text-center space-y-3">
-   <p class="text-xs font-bold">⏳ Cooking countdown...</p>
-   <p id="countdown-text" class="text-3xl font-black">00:00</p>
-   <label class="block bg-white p-3 rounded-xl text-xs font-bold"><input type="checkbox" id="kitchen-door-checkbox"> 🚪 Have you closed the kitchen door?</label>
-   <button onclick="stopTimer()" class="px-3 py-2 bg-[#fbe8e6] rounded-lg text-xs font-bold border">Cancel Timer</button>
-  </div>
- </div>
-</section>
+                <div class="space-y-3 text-xs sm:text-sm">
+                    <div class="vint-card p-3.5 flex items-start justify-between gap-3 bg-[#f2f7ec]">
+                        <div class="flex-1 min-w-0">
+                            <p class="font-extrabold text-[#3b4a32]">☀️ Day Rate</p>
+                            <p class="text-[#5c6a52] text-[11px] mt-0.5">08:00 - 17:00 & 19:00 - 23:00</p>
+                        </div>
+                        <span class="font-black text-[#3b4a32] bg-[#d9e8cc] px-2.5 py-1 rounded-xl border border-[#5c4738] whitespace-nowrap">€0.3719/kWh</span>
+                    </div>
 
-<!-- CALENDAR -->
-<section id="tab-content-calendar" class="hidden space-y-6">
- <div class="vintage-panel p-5 space-y-4">
-  <div class="flex items-center justify-between border-b-2 border-[#5c4738] pb-3 gap-2">
-   <h2 class="font-bold text-base">📅 Waste Collection</h2>
-   <div class="flex items-center gap-2">
-    <button onclick="changeCalendarMonth(-1)" class="px-2 py-1 bg-[#f0e6d6] rounded border">◀</button>
-    <span id="calendar-month-label" class="text-xs font-bold min-w-24 text-center"></span>
-    <button onclick="changeCalendarMonth(1)" class="px-2 py-1 bg-[#f0e6d6] rounded border">▶</button>
-   </div>
-  </div>
-  <div class="grid grid-cols-7 gap-1 text-center text-[11px] font-bold"><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span></div>
-  <div id="calendar-days" class="grid grid-cols-7 gap-1.5"></div>
-  <div class="vint-card p-3 bg-[#fff5f0] text-center"><p id="next-trash-reminder" class="text-xs font-bold text-[#9c413b]"></p></div>
- </div>
-</section>
+                    <div class="p-3.5 rounded-2xl bg-[#fbe8e6] border-2 border-[#5c4738] flex items-start justify-between gap-3 shadow-[2px_2px_0px_#5c4738]">
+                        <div class="flex-1 min-w-0">
+                            <p class="font-extrabold text-[#5c3232]">🔴 Peak Rate</p>
+                            <p class="text-[#7c4d4d] text-[11px] mt-0.5">17:00 - 19:00 (Limit high-energy appliances)</p>
+                        </div>
+                        <span class="font-black text-[#5c3232] bg-[#f5d0cd] px-2.5 py-1 rounded-xl border border-[#5c4738] whitespace-nowrap">€0.3968/kWh</span>
+                    </div>
 
-</main>
+                    <div class="vint-card p-3.5 flex items-start justify-between gap-3 bg-[#eaf2f8]">
+                        <div class="flex-1 min-w-0">
+                            <p class="font-extrabold text-[#32455c]">🟢 Night Rate (Cheapest)</p>
+                            <p class="text-[#4e647d] text-[11px] mt-0.5">23:00 - 08:00</p>
+                        </div>
+                        <span class="font-black text-[#32455c] bg-[#cfe2f3] px-2.5 py-1 rounded-xl border border-[#5c4738] whitespace-nowrap">€0.1954/kWh</span>
+                    </div>
+                </div>
+            </div>
 
-<footer class="text-center py-5 text-xs text-[#7a6452] border-t-2 border-[#5c4738] bg-[#f7f1e5] mt-4">Eco-Buddy Home Manager V2 · Vintage Pastel Edition 🌿🤍</footer>
+            <!-- 3 DAILY ECO TASKS (BAO GỒM PUT AWAY DRY DISHES) -->
+            <div class="vintage-panel p-5 space-y-3">
+                <h3 class="font-bold text-[#4a3b32] text-sm flex items-center justify-between">
+                    <span class="flex items-center gap-2"><span>🌱</span> Daily Eco Tasks (1 time/day)</span>
+                    <span id="eco-points-label" class="text-xs bg-[#8c7355] text-white px-2.5 py-1 rounded-xl">0 Points 🌱</span>
+                </h3>
+                <div class="space-y-2 text-xs" id="tasks-container">
+                    <div class="vint-card p-3 flex items-center justify-between gap-2 bg-white" id="task-card-0">
+                        <div>
+                            <p class="font-bold text-[#4a3b32]">Turn off lights when leaving rooms (+20 XP)</p>
+                            <p class="text-[10px] text-[#7a6452]">Check all rooms in the house.</p>
+                        </div>
+                        <button onclick="completeTask(0, 20)" id="task-btn-0" class="px-3 py-1.5 bg-[#87a96b] text-white font-bold rounded-xl border border-[#5c4738] hover:opacity-90 flex-shrink-0">Complete</button>
+                    </div>
+                    <div class="vint-card p-3 flex items-center justify-between gap-2 bg-white" id="task-card-1">
+                        <div>
+                            <p class="font-bold text-[#4a3b32]">Laundry during Night Saver hours (+30 XP)</p>
+                            <p class="text-[10px] text-[#7a6452]">Run washing machine after 23:00.</p>
+                        </div>
+                        <button onclick="completeTask(1, 30)" id="task-btn-1" class="px-3 py-1.5 bg-[#87a96b] text-white font-bold rounded-xl border border-[#5c4738] hover:opacity-90 flex-shrink-0">Complete</button>
+                    </div>
+                    <div class="vint-card p-3 flex items-center justify-between gap-2 bg-white" id="task-card-2">
+                        <div>
+                            <p class="font-bold text-[#4a3b32]">Put away dry dishes (+20 XP)</p>
+                            <p class="text-[10px] text-[#7a6452]">Keep the kitchen tidy and organized.</p>
+                        </div>
+                        <button onclick="completeTask(2, 20)" id="task-btn-2" class="px-3 py-1.5 bg-[#87a96b] text-white font-bold rounded-xl border border-[#5c4738] hover:opacity-90 flex-shrink-0">Complete</button>
+                    </div>
+                </div>
+            </div>
 
-<!-- KITCHEN SAFETY CHAT -->
-<section id="safety-chat-overlay" class="chat-overlay hidden" role="dialog" aria-modal="true">
- <div class="chat-window">
-  <div class="flex justify-between items-center border-b-2 border-[#d8c7b0] pb-3">
-   <div><p class="text-xs font-bold text-[#8c7355]">ECO-BUDDY HOME MANAGER</p><h2 class="text-lg font-extrabold">Let's check the kitchen together!</h2></div>
-   <button onclick="closeSafetyChat()" class="border rounded-full px-3 py-2 font-bold">✕</button>
-  </div>
-  <div class="flex flex-col items-center py-3 gap-2">
-   <div class="text-6xl">☁️</div>
-   <div class="chat-bubble"><b class="text-sm">Eco Buddy ☁️</b><p id="chat-question" class="text-sm mt-1">Time's up! Let's check the kitchen together!</p></div>
-  </div>
-  <div id="chat-scene" class="chat-scene text-center text-5xl py-4">🔥</div>
-  <div class="bg-[#f5ede2] rounded-2xl p-3.5 my-3 border">
-   <p id="chat-action-title" class="font-extrabold text-sm">Turn off the cooker</p>
-   <p id="chat-action-hint" class="text-xs text-[#7a6452]"></p>
-  </div>
-  <div id="chat-actions" class="space-y-2"></div>
-  <p id="chat-progress" class="text-xs text-[#8c7355] text-center font-bold mt-3">Step 1 / 5</p>
- </div>
-</section>
+            <!-- REMINDERS & TIPS -->
+            <div class="vintage-panel p-5 space-y-3">
+                <h3 class="font-bold text-[#4a3b32] text-sm flex items-center gap-2"><span>💡</span> Daily Reminders & Eco Tips:</h3>
+                <ul class="text-xs space-y-2 text-[#5c4738] font-medium">
+                    <li class="bg-[#fffaf4] px-3 py-2.5 rounded-xl border border-[#5c4738]/30">💡 <strong>Turn off the lights:</strong> Remember to switch off room and hallway lights when not in use.</li>
+                    <li class="bg-[#fffaf4] px-3 py-2.5 rounded-xl border border-[#5c4738]/30">🔒 <strong>Check the doors:</strong> Make sure the doors are locked and the kitchen door is closed.</li>
+                    <li class="bg-[#fffaf4] px-3 py-2.5 rounded-xl border border-[#5c4738]/30">🔌 <strong>Unplug devices:</strong> Unplug standby appliances (TV, microwave) when not in use.</li>
+                    <li class="bg-[#fffaf4] px-3 py-2.5 rounded-xl border border-[#5c4738]/30">🚿 <strong>Water heater:</strong> Remember to switch off the water heater after showering.</li>
+                </ul>
+            </div>
+        </div>
 
-<!-- BÉ MÂY CHATBOT -->
-<section id="buddy-chat-overlay" class="chat-overlay hidden" role="dialog" aria-modal="true">
- <div class="chat-window flex flex-col" style="height:min(720px,calc(100dvh - 24px))">
-  <div class="flex justify-between items-center border-b-2 border-[#d8c7b0] pb-3 gap-2">
-   <div><p class="text-xs font-bold text-[#8c7355]">YOUR LITTLE GREEN COMPANION</p><h2 class="text-lg font-extrabold">☁️ Chat with Bé Mây</h2></div>
-   <button onclick="closeBuddyChat()" class="border rounded-full px-3 py-2 font-bold">✕</button>
-  </div>
-  <div class="flex flex-wrap gap-2 py-3">
-   <button onclick="setChatMode('quiz')" class="px-3 py-2 rounded-xl bg-[#e5eddc] border text-xs font-bold">🧠 Quiz</button>
-   <button onclick="setChatMode('daily')" class="px-3 py-2 rounded-xl bg-[#f5ede2] border text-xs font-bold">🌱 Daily Questions</button>
-   <button onclick="setChatMode('ask')" class="px-3 py-2 rounded-xl bg-[#eaf2f8] border text-xs font-bold">💬 Ask Bé Mây</button>
-   <button onclick="setChatMode('free')" class="px-3 py-2 rounded-xl bg-[#fbe8e6] border text-xs font-bold">🤍 Free Chat</button>
-  </div>
-  <div id="buddy-messages" class="flex-1 overflow-y-auto space-y-3 py-2 min-h-0">
-   <div class="chat-bubble"><b class="text-sm">Bé Mây ☁️</b><p class="text-sm mt-1">Hi there! I'm Bé Mây. What would you like to learn today?</p></div>
-  </div>
-  <div id="buddy-choices" class="space-y-2 mb-3"></div>
-  <form onsubmit="sendBuddyMessage(event)" class="flex gap-2">
-   <input id="buddy-input" type="text" placeholder="Talk to Bé Mây..." class="flex-1 min-w-0 px-3 py-3 rounded-xl border border-[#8c7355] text-sm">
-   <button class="px-4 py-2 bg-[#8c7355] text-white font-bold rounded-xl border-2 border-[#5c4738]">Send</button>
-  </form>
-  <p class="text-[10px] text-[#7a6452] mt-2">Bé Mây uses a small built-in answer library and keyword matching, not a live AI service.</p>
- </div>
-</section>
+        <!-- TAB 2: ENERGY REPORTS (SO SÁNH kWh & TIỀN ĐIỆN) -->
+        <div id="tab-content-reports" class="hidden space-y-6">
+            <div class="vintage-panel p-5 space-y-4">
+                <h2 class="font-bold text-[#4a3b32] text-base flex items-center gap-2 border-b-2 border-[#5c4738] pb-2.5">
+                    <span>📊</span> Bill Reports & Comparison (kWh & €)
+                </h2>
+                <p class="text-xs text-[#7a6452]">Enter total kWh and bill amount for last month and this month to compare:</p>
+                
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="vint-card p-3 bg-white space-y-2">
+                        <p class="text-xs font-extrabold text-[#5c4738] border-b pb-1">Last Month</p>
+                        <div>
+                            <label class="text-[10px] font-bold text-[#7a6452]">Total kWh:</label>
+                            <input type="number" id="kwh-prev" value="750" oninput="updateReportChart()" class="w-full px-2 py-1.5 rounded-lg border border-[#5c4738] text-xs font-bold">
+                        </div>
+                        <div>
+                            <label class="text-[10px] font-bold text-[#7a6452]">Total Bill (€):</label>
+                            <input type="number" id="bill-prev" value="240" oninput="updateReportChart()" class="w-full px-2 py-1.5 rounded-lg border border-[#5c4738] text-xs font-bold">
+                        </div>
+                    </div>
+                    <div class="vint-card p-3 bg-white space-y-2">
+                        <p class="text-xs font-extrabold text-[#5c4738] border-b pb-1">This Month</p>
+                        <div>
+                            <label class="text-[10px] font-bold text-[#7a6452]">Total kWh:</label>
+                            <input type="number" id="kwh-curr" value="706" oninput="updateReportChart()" class="w-full px-2 py-1.5 rounded-lg border border-[#5c4738] text-xs font-bold">
+                        </div>
+                        <div>
+                            <label class="text-[10px] font-bold text-[#7a6452]">Total Bill (€):</label>
+                            <input type="number" id="bill-curr" value="221.73" oninput="updateReportChart()" class="w-full px-2 py-1.5 rounded-lg border border-[#5c4738] text-xs font-bold">
+                        </div>
+                    </div>
+                </div>
 
-<script>
-/* STORAGE + XP */
-const STORAGE_KEY="ecoBuddy_v2_data";
-const todayKey=()=>new Date().toLocaleDateString("en-CA");
-let appData={xp:0,points:0,taskClaims:{},safetyClaims:{}};
+                <!-- Biểu đồ so sánh trực quan -->
+                <div class="vint-card p-4 bg-[#f5ede2] space-y-3">
+                    <p class="text-xs font-bold text-center text-[#5c4738]">Comparison Chart (€)</p>
+                    <div class="flex justify-between items-end h-40 pt-6 px-8 border-b-2 border-[#5c4738]">
+                        <div class="w-16 flex flex-col items-center gap-1">
+                            <span id="chart-val-prev" class="text-xs font-bold">€240</span>
+                            <div id="bar-prev" class="w-full bg-[#d8c7b0] rounded-t-xl transition-all duration-500" style="height: 120px;"></div>
+                            <span class="text-[11px] font-bold mt-1">Last Month</span>
+                        </div>
+                        <div class="w-16 flex flex-col items-center gap-1">
+                            <span id="chart-val-curr" class="text-xs font-bold">€221.73</span>
+                            <div id="bar-curr" class="w-full bg-[#87a96b] rounded-t-xl transition-all duration-500" style="height: 110px;"></div>
+                            <span class="text-[11px] font-bold mt-1">This Month</span>
+                        </div>
+                    </div>
+                    <div id="report-summary" class="text-center text-xs font-extrabold text-[#3b4a32] pt-2">
+                        🎉 Wonderful! You saved €18.27 and 44 kWh compared to last month!
+                    </div>
+                </div>
+            </div>
+        </div>
 
-function loadData(){
- try{
-  const saved=JSON.parse(localStorage.getItem(STORAGE_KEY)||"{}");
-  appData={...appData,...saved};
- }catch(e){console.warn("Could not load saved progress",e)}
-}
-function saveData(){localStorage.setItem(STORAGE_KEY,JSON.stringify(appData))}
-function levelInfo(xp){
- if(xp<100)return{level:1,title:"Sprout",next:100,base:0};
- if(xp<250)return{level:2,title:"Green Sprout",next:250,base:100};
- if(xp<500)return{level:3,title:"Eco Gardener",next:500,base:250};
- if(xp<850)return{level:4,title:"Eco Hero",next:850,base:500};
- return{level:5,title:"Eco Master 🌿",next:1000,base:850};
-}
-function updateMascotLevel(){
- const info=levelInfo(appData.xp);
- const progress=Math.min(100,((appData.xp-info.base)/(info.next-info.base))*100);
- document.getElementById("mascot-xp-bar").style.width=progress+"%";
- document.getElementById("mascot-xp-text").textContent=`${appData.xp} / ${info.next} XP`;
- document.getElementById("mascot-level-badge").textContent=`🌱 Level ${info.level}: ${info.title}`;
- document.getElementById("eco-points-label").textContent=`${appData.points} Points 🌱`;
-}
-function awardXP(xp,points=Math.floor(xp/2)){
- appData.xp+=xp;appData.points+=points;saveData();updateMascotLevel();
- document.getElementById("mascot-speech").textContent=`🎉 Awesome! You earned +${xp} XP and +${points} Eco Points!`;
-}
-function completeTask(task,xp,button){
- const day=todayKey();
- if(appData.taskClaims[day]?.includes(task)){button.disabled=true;button.textContent="Done ✓";return}
- if(!appData.taskClaims[day])appData.taskClaims[day]=[];
- appData.taskClaims[day].push(task);
- awardXP(xp);
- button.disabled=true;button.textContent="Done ✓";
- button.classList.remove("bg-[#87a96b]");button.classList.add("bg-gray-400");
- saveData();
-}
-function renderDailyTasks(){
- const claims=appData.taskClaims[todayKey()]||[];
- document.querySelectorAll(".task-button").forEach(btn=>{
-  const done=claims.includes(btn.dataset.task);
-  btn.disabled=done;btn.textContent=done?"Done ✓":"Complete";
-  if(done){btn.classList.remove("bg-[#87a96b]");btn.classList.add("bg-gray-400")}
- });
- document.getElementById("daily-task-date").textContent="Progress for "+new Date().toLocaleDateString("en-IE");
-}
+        <!-- TAB 3: BÉ MÂY CHATBOT & INTERACTIVE -->
+        <div id="tab-content-chatbot" class="hidden space-y-6">
+            <div class="vintage-panel p-5 space-y-4">
+                <h2 class="font-bold text-[#4a3b32] text-base flex items-center gap-2 border-b-2 border-[#5c4738] pb-2.5">
+                    <span>☁️</span> Bé Mây Interactive Hub
+                </h2>
+                <p class="text-xs text-[#7a6452]">Chat with Bé Mây, take eco quizzes, or ask daily questions offline!</p>
 
-/* INITIAL SETUP */
-function updateHeaderHeight(){
- const header=document.querySelector("header");
- if(header)document.documentElement.style.setProperty("--header-height",header.offsetHeight+"px");
-}
-window.addEventListener("DOMContentLoaded",()=>{
- loadData();updateMascotLevel();renderDailyTasks();updateHeaderHeight();
- startRealtimeClock();checkTariffStatus();fetchWeatherData();renderCalendar();updateReportChart();
- setInterval(checkTariffStatus,30000);
- setInterval(fetchWeatherData,600000);
-});
-window.addEventListener("resize",updateHeaderHeight);
-window.addEventListener("orientationchange",()=>setTimeout(updateHeaderHeight,150));
+                <div class="grid grid-cols-2 gap-2 text-xs">
+                    <button onclick="setChatMode('quiz')" id="mode-btn-quiz" class="p-2.5 bg-[#8c7355] text-white font-bold rounded-xl border border-[#5c4738]">🧠 Eco Quiz</button>
+                    <button onclick="setChatMode('chat')" id="mode-btn-chat" class="p-2.5 bg-[#fffaf4] text-[#4a3b32] font-bold rounded-xl border border-[#5c4738]">💬 Ask Bé Mây</button>
+                </div>
 
-/* PWA */
-if("serviceWorker" in navigator){
- window.addEventListener("load",()=>{
-  navigator.serviceWorker.register("/Saving_Money/sw.js")
-   .then(()=>console.log("Eco-Buddy PWA ready!"))
-   .catch(err=>console.error("PWA error:",err));
- });
-}
+                <!-- Chat Display Box -->
+                <div class="vint-card p-4 bg-white space-y-3">
+                    <div id="chatbot-messages" class="space-y-2.5 max-h-60 overflow-y-auto pr-1 text-xs">
+                        <div class="bg-[#f5ede2] p-3 rounded-2xl border border-[#d8c7b0]">
+                            <p class="font-bold text-[#5c4738]">Bé Mây ☁️</p>
+                            <p class="mt-1 text-[#4a3b32]">Hi there! Ready for today's eco question or want to chat with me?</p>
+                        </div>
+                    </div>
 
-/* CLOCK + TARIFF */
-function startRealtimeClock(){
- const update=()=>document.getElementById("realtime-clock").textContent="| 🕒 "+new Date().toLocaleTimeString();
- update();setInterval(update,1000);
-}
-function checkTariffStatus(){
- const hour=new Date().getHours(),badge=document.getElementById("status-badge"),speech=document.getElementById("mascot-speech");
- if(hour>=17&&hour<19){
-  badge.textContent="🔴 Peak Hours!";badge.style.background="#bc6c25";
-  speech.textContent="⚠️ It's peak time! Try to avoid using high-energy appliances.";
- }else if(hour>=23||hour<8){
-  badge.textContent="🟢 Night Saver ON";badge.style.background="#87a96b";
-  speech.textContent="🌙 It's the cheapest rate period. A great time to do your laundry!";
- }else{
-  badge.textContent="Normal Hours ☀️";badge.style.background="#d4a373";
- }
-}
+                    <!-- Input / Action area -->
+                    <div id="chatbot-input-area" class="hidden flex gap-2 pt-2 border-t border-[#d8c7b0]">
+                        <input type="text" id="chat-input-text" placeholder="Type a message to Bé Mây..." class="flex-1 px-3 py-2 rounded-xl border border-[#5c4738] text-xs">
+                        <button onclick="sendUserMessage()" class="px-4 py-2 bg-[#8c7355] text-white font-bold rounded-xl border border-[#5c4738] text-xs">Send</button>
+                    </div>
 
-/* TABS */
-function switchTab(name){
- ["tracker","reports","weather","checklist","calendar"].forEach(tab=>{
-  document.getElementById("tab-content-"+tab).classList.toggle("hidden",tab!==name);
-  document.getElementById("tab-btn-"+tab).classList.toggle("active",tab===name);
- });
- if(name==="calendar")renderCalendar();
- if(name==="reports")updateReportChart();
-}
+                    <div id="chatbot-quiz-area" class="space-y-2 pt-2 border-t border-[#d8c7b0]">
+                        <p id="quiz-question" class="text-xs font-bold text-[#5c4738]">Question: Which appliance consumes the most standby power?</p>
+                        <div id="quiz-options" class="grid grid-cols-1 gap-1.5">
+                            <button onclick="answerQuiz(0)" class="chat-choice text-xs py-2">A. Microwave / TV</button>
+                            <button onclick="answerQuiz(1)" class="chat-choice text-xs py-2">B. LED Light bulb</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-/* REPORTS */
-function numericValue(id){return Math.max(0,Number(document.getElementById(id).value)||0)}
-function updateReportChart(){
- const prev=numericValue("bill-prev"),curr=numericValue("bill-curr");
- const prevK=numericValue("prev-kwh"),currK=numericValue("curr-kwh");
- document.getElementById("chart-val-prev").textContent="€"+prev.toFixed(2);
- document.getElementById("chart-val-curr").textContent="€"+curr.toFixed(2);
- const maxBill=Math.max(prev,curr,1);
- document.getElementById("bar-prev").style.height=Math.max(5,prev/maxBill*120)+"px";
- document.getElementById("bar-curr").style.height=Math.max(5,curr/maxBill*120)+"px";
- const diff=prev-curr;
- document.getElementById("report-summary").textContent=diff>0?`🎉 You saved €${diff.toFixed(2)} compared with last month!`:diff<0?`⚠️ Your bill is €${Math.abs(diff).toFixed(2)} higher this month.`:"⚖️ Both monthly bills are equal.";
- document.getElementById("kwh-val-prev").textContent=prevK+" kWh";
- document.getElementById("kwh-val-curr").textContent=currK+" kWh";
- const maxK=Math.max(prevK,currK,1);
- document.getElementById("kwh-bar-prev").style.height=Math.max(5,prevK/maxK*110)+"px";
- document.getElementById("kwh-bar-curr").style.height=Math.max(5,currK/maxK*110)+"px";
- const kdiff=prevK-currK;
- document.getElementById("kwh-summary").textContent=kdiff>0?`🌿 You used ${kdiff.toFixed(1)} kWh less electricity this month.`:kdiff<0?`⚡ You used ${Math.abs(kdiff).toFixed(1)} kWh more electricity this month.`:"Your electricity usage is unchanged.";
-}
-function saveReport(){
- const record={date:todayKey(),prevKwh:numericValue("prev-kwh"),currKwh:numericValue("curr-kwh"),prevBill:numericValue("bill-prev"),currBill:numericValue("bill-curr")};
- localStorage.setItem("ecoBuddy_latest_report",JSON.stringify(record));
- document.getElementById("report-saved").textContent="✓ Your report has been saved on this device.";
-}
+        <!-- TAB 4: COOKING CHECKLIST -->
+        <div id="tab-content-checklist" class="hidden space-y-6">
+            <div class="vintage-panel p-5 space-y-4">
+                <h2 class="font-bold text-[#4a3b32] text-base flex items-center gap-2 border-b-2 border-[#5c4738] pb-2.5">
+                    <span>🍳</span> Cooking Timer & Kitchen Safety Checklist
+                </h2>
 
-/* CALENDAR */
-let calendarCursor=new Date();
-function renderCalendar(){
- const year=calendarCursor.getFullYear(),month=calendarCursor.getMonth();
- document.getElementById("calendar-month-label").textContent=new Intl.DateTimeFormat("en-IE",{month:"short",year:"numeric"}).format(calendarCursor);
- const grid=document.getElementById("calendar-days");grid.innerHTML="";
- const offset=(new Date(year,month,1).getDay()+6)%7,days=new Date(year,month+1,0).getDate();
- for(let i=0;i<offset;i++)grid.appendChild(document.createElement("div"));
- const today=new Date();
- for(let d=1;d<=days;d++){
-  const date=new Date(year,month,d),tue=date.getDay()===2,istoday=date.toDateString()===today.toDateString();
-  const cell=document.createElement("div");
-  cell.className="h-10 rounded-xl flex flex-col items-center justify-center text-xs font-bold border "+(tue?"bg-[#d9534f] text-white":"bg-[#f5ede2]")+(istoday?" ring-2 ring-[#87a96b]":"");
-  cell.innerHTML=`<span>${d}</span>${tue?'<span class="text-[8px]">🗑️</span>':""}`;
-  grid.appendChild(cell);
- }
- const next=new Date();next.setHours(0,0,0,0);
- do{next.setDate(next.getDate()+1)}while(next.getDay()!==2);
- document.getElementById("next-trash-reminder").textContent="Next waste collection: Tuesday, "+next.toLocaleDateString("en-IE");
-}
-function changeCalendarMonth(delta){calendarCursor=new Date(calendarCursor.getFullYear(),calendarCursor.getMonth()+delta,1);renderCalendar()}
+                <div class="vint-card p-4 space-y-3 bg-white" id="timer-setup-box">
+                    <p class="text-xs font-bold text-[#4a3b32]">⏱️ Choose a cooking time or enter your own:</p>
 
-/* COOKING TIMER */
-let countdownInterval=null;
-function setTimerMinutes(mins){document.getElementById("custom-minutes").value=mins}
-function startCustomTimer(){
- const mins=Number(document.getElementById("custom-minutes").value);
- if(!Number.isInteger(mins)||mins<1||mins>180){alert("Please enter a number of minutes between 1 and 180.");return}
- clearInterval(countdownInterval);
- let remaining=mins*60;
- document.getElementById("kitchen-door-checkbox").checked=false;
- document.getElementById("timer-display-box").classList.remove("hidden");
- function tick(){
-  document.getElementById("countdown-text").textContent=String(Math.floor(remaining/60)).padStart(2,"0")+":"+String(remaining%60).padStart(2,"0");
-  if(remaining<=0){clearInterval(countdownInterval);countdownInterval=null;document.getElementById("timer-display-box").classList.add("hidden");openSafetyChat();return}
-  remaining--;
- }
- tick();countdownInterval=setInterval(tick,1000);
-}
-function stopTimer(){clearInterval(countdownInterval);countdownInterval=null;document.getElementById("timer-display-box").classList.add("hidden")}
+                    <div class="timer-buttons-grid">
+                        <button onclick="setTimerMinutes(15)" class="px-3.5 py-1.5 bg-[#f5ede2] hover:bg-[#e8dac7] text-[#4a3b32] rounded-xl text-xs font-bold border border-[#5c4738] transition">15 min</button>
+                        <button onclick="setTimerMinutes(30)" class="px-3.5 py-1.5 bg-[#f5ede2] hover:bg-[#e8dac7] text-[#4a3b32] rounded-xl text-xs font-bold border border-[#5c4738] transition">30 min</button>
+                        <button onclick="setTimerMinutes(45)" class="px-3.5 py-1.5 bg-[#f5ede2] hover:bg-[#e8dac7] text-[#4a3b32] rounded-xl text-xs font-bold border border-[#5c4738] transition">45 min</button>
+                        <button onclick="setTimerMinutes(60)" class="px-3.5 py-1.5 bg-[#f5ede2] hover:bg-[#e8dac7] text-[#4a3b32] rounded-xl text-xs font-bold border border-[#5c4738] transition">60 min</button>
+                    </div>
 
-/* ORIGINAL 5-STEP KITCHEN SAFETY CHAT */
-const safetySteps=[
- {title:"Turn off the cooker",question:"Have you turned off the cooker?",hint:"Make sure the cooker knobs are turned to the OFF position.",scene:"🔥",yes:"Wonderful! Eco Buddy is so happy!",no:"Let's check the cooker knobs together!"},
- {title:"Turn off the cooker hood",question:"Have you turned off the cooker hood?",hint:"Make sure the cooker hood is switched off and fan stopped.",scene:"🌬️",yes:"The cooker hood is off. Great job!",no:"Let's check and switch off the cooker hood!"},
- {title:"Turn off the oven",question:"Have you turned off the oven?",hint:"Check the power button and display to make sure the oven is off.",scene:"🎛️",yes:"The oven is off. Well done!",no:"I'll wait while you check the oven!"},
- {title:"Turn off the kitchen lights",question:"Have you turned off the kitchen lights?",hint:"Make sure all unused kitchen lights are switched off.",scene:"💡",yes:"Your home has saved even more energy!",no:"Let's go and turn off the lights!"},
- {title:"Wipe the cooker",question:"Have you cleaned the cooker surface?",hint:"Wait until the cooker has cooled down, then wipe with a damp cloth.",scene:"🧽",yes:"A sparkling clean cooker! Eco Buddy is proud of you!",no:"Let's clean up the kitchen together!"}
-];
-let safetyStepIndex=0,safetyRewardClaimed=false;
-function openSafetyChat(){
- safetyStepIndex=0;safetyRewardClaimed=false;
- document.getElementById("safety-chat-overlay").classList.remove("hidden");
- document.body.style.overflow="hidden";renderSafetyStep();
-}
-function closeSafetyChat(){
- document.getElementById("safety-chat-overlay").classList.add("hidden");
- document.body.style.overflow="";
-}
-function renderSafetyStep(){
- const question=document.getElementById("chat-question"),actions=document.getElementById("chat-actions");
- if(safetyStepIndex>=safetySteps.length){
-  question.textContent="All done! You earned +30 XP for keeping the kitchen safe! 💚";
-  document.getElementById("chat-scene").textContent="🌱✨💚";
-  document.getElementById("chat-action-title").textContent="Safety check completed!";
-  document.getElementById("chat-action-hint").textContent="Eco Buddy is so proud of you!";
-  document.getElementById("chat-progress").textContent="5 / 5 · Completed";
-  if(!safetyRewardClaimed){
-   safetyRewardClaimed=true;awardXP(30);
-  }
-  actions.innerHTML='<button class="chat-choice text-center" onclick="closeSafetyChat()">💚 Done! Close checklist</button>';
-  return;
- }
- const step=safetySteps[safetyStepIndex];
- question.textContent=step.question;
- document.getElementById("chat-scene").textContent=step.scene;
- document.getElementById("chat-action-title").textContent=step.title;
- document.getElementById("chat-action-hint").textContent=step.hint;
- document.getElementById("chat-progress").textContent=`Step ${safetyStepIndex+1} / 5`;
- actions.innerHTML='<button class="chat-choice" onclick="answerSafetyStep(true)">☑️ Yes, I\\'ve done it!</button><button class="chat-choice" onclick="answerSafetyStep(false)">⏳ Not yet, I\\'ll do it now</button>';
-}
-function answerSafetyStep(done){
- const step=safetySteps[safetyStepIndex];if(!step)return;
- if(!done){
-  document.getElementById("chat-question").textContent=step.no;
-  document.getElementById("chat-actions").innerHTML='<button class="chat-choice" onclick="answerSafetyStep(true)">💚 I\\'ve done it! Let\\'s continue.</button><button class="chat-choice" onclick="closeSafetyChat()">I\\'ll do it later</button>';
-  return;
- }
- document.getElementById("chat-question").textContent=step.yes;
- document.getElementById("chat-actions").innerHTML="";
- setTimeout(()=>{safetyStepIndex++;renderSafetyStep()},1100);
-}
+                    <div class="flex items-center gap-2 pt-1">
+                        <input type="number" id="custom-minutes" placeholder="Enter custom minutes..." min="1" max="180" class="flex-1 px-3 py-2 rounded-xl border-1.5 border-[#5c4738] text-xs bg-[#fffaf4]">
+                        <button onclick="startCustomTimer()" class="px-4 py-2 bg-[#8c7355] text-white text-xs font-bold rounded-xl border-1.5 border-[#5c4738] shadow-[2px_2px_0px_#5c4738] transition whitespace-nowrap">Start</button>
+                    </div>
+                </div>
 
-/* WEATHER */
-async function fetchWeatherData(){
- const conditionEl=document.getElementById("weather-condition");
- try{
-  const res=await fetch("https://api.open-meteo.com/v1/forecast?latitude=53.3498&longitude=-6.2603&current=temperature_2m,precipitation,weather_code,wind_speed_10m&timezone=Europe%2FDublin");
-  if(!res.ok)throw new Error("Weather unavailable");
-  const data=await res.json(),c=data.current,temp=c.temperature_2m,wind=c.wind_speed_10m,code=c.weather_code;
-  let condition="Clear skies",icon="☀️";
-  if(c.precipitation>0||code>=51&&code<=67){condition="Light rain";icon="🌧️"}
-  else if(code>=71&&code<=77){condition="Snow";icon="❄️"}
-  else if(code>=80){condition="Rain showers";icon="🌦️"}
-  else if(temp<8){condition="Very cold";icon="❄️"}
-  else if(temp<=15){condition="Cool and breezy";icon="⛅"}
-  else if(temp>20){condition="Warm and pleasant";icon="☀️"}
-  conditionEl.textContent=condition;
-  document.getElementById("weather-temp").textContent=Math.round(temp)+"°C";
-  document.getElementById("weather-wind").textContent="Wind: "+Math.round(wind)+" km/h";
-  document.getElementById("weather-icon-lg").textContent=icon;
-  document.getElementById("outfit-text-1").textContent=temp<8?"A scarf, gloves and a warm hat":temp<=15?"A scarf and a light jacket":"A light scarf or long-sleeved top";
-  document.getElementById("outfit-text-2").textContent=temp<8?"A thick puffer jacket and thermal layers":temp<=15?"A warm jacket or cardigan":"A lightweight, breathable jacket";
- }catch(e){conditionEl.textContent="Unable to load weather";console.error(e)}
-}
+                <div id="timer-display-box" class="hidden p-4 rounded-2xl bg-[#f5ede2] border-1.5 border-[#5c4738] text-center space-y-3 shadow-[2px_2px_0px_#5c4738]">
+                    <div>
+                        <p class="text-xs font-bold text-[#5c3232]">⏳ Cooking countdown...</p>
+                        <p id="countdown-text" class="text-3xl font-black text-[#4a3b32] mt-1">00:00</p>
+                    </div>
 
-/* BÉ MÂY CHATBOT - LOCAL KNOWLEDGE BASE */
-let buddyMode="free",quizIndex=0,dailyIndex=0,chatXPClaimed={};
-const quizQuestions=[
- {q:"Which time is the cheapest electricity period on your tariff?",opts:["17:00–19:00","23:00–08:00","08:00–17:00"],a:1,ex:"Night Saver runs from 23:00 to 08:00."},
- {q:"What should you do when leaving an empty room?",opts:["Leave the lights on","Turn off unnecessary lights","Turn on more lights"],a:1,ex:"Switching off unused lights saves electricity."},
- {q:"When is the peak electricity period?",opts:["17:00–19:00","23:00–08:00","08:00–10:00"],a:0,ex:"Try to limit high-energy appliances during peak hours."},
- {q:"What should you do before wiping a cooker?",opts:["Wipe it while hot","Wait until it has cooled down","Pour cold water on it"],a:1,ex:"Always let the cooker cool before cleaning it."},
- {q:"Which habit can reduce standby electricity use?",opts:["Unplug unused devices where safe","Keep every device on","Leave the TV on standby all day"],a:0,ex:"Switch off or unplug devices when appropriate and safe."}
-];
-const dailyQuestions=[
- {q:"You are leaving your bedroom for the day. What is a good energy-saving habit?",opts:["Turn off the lights","Leave every light on","Turn on the heater"],a:0,ex:"Turn off lights when rooms are not in use."},
- {q:"It is 18:00 and you want to run the washing machine. What should you consider?",opts:["It is peak time; wait if practical","It is the cheapest time","Use more appliances now"],a:0,ex:"Your tariff's peak period is 17:00–19:00."},
- {q:"You have finished cooking. What should you check?",opts:["Cooker, hood, oven and kitchen lights","Only the fridge","Nothing"],a:0,ex:"Use the five-step Kitchen Safety Checklist."},
- {q:"A pan is still hot. Should you wipe the cooker now?",opts:["Yes, immediately","No, wait until it cools","Pour water on it"],a:1,ex:"Wait until the cooking surface has cooled down."}
-];
-function openBuddyChat(){
- document.getElementById("buddy-chat-overlay").classList.remove("hidden");
- document.body.style.overflow="hidden";
-}
-function closeBuddyChat(){
- document.getElementById("buddy-chat-overlay").classList.add("hidden");
- document.body.style.overflow="";
-}
-function addBuddyMessage(message,who="buddy"){
- const area=document.getElementById("buddy-messages"),bubble=document.createElement("div");
- bubble.className="chat-bubble "+(who==="user"?"ml-auto":"");
- bubble.style.maxWidth="90%";
- bubble.style.background=who==="user"?"#e5eddc":"#f5ede2";
- const name=document.createElement("b");name.className="text-xs";name.textContent=who==="user"?"You":"Bé Mây ☁️";
- const p=document.createElement("p");p.className="text-sm mt-1";p.textContent=message;
- bubble.append(name,p);area.appendChild(bubble);area.scrollTop=area.scrollHeight;
-}
-function setChatMode(mode){
- buddyMode=mode;
- const choices=document.getElementById("buddy-choices");choices.innerHTML="";
- if(mode==="quiz"){addBuddyMessage("Let's play an energy-saving quiz! Choose an answer to earn XP.");showQuestion("quiz")}
- else if(mode==="daily"){addBuddyMessage("Here is today's eco scenario. What would you do?");showQuestion("daily")}
- else if(mode==="ask"){addBuddyMessage("Ask me about electricity saving, tariff times, kitchen safety or eco habits. I'll try my best!")}
- else{addBuddyMessage("Let's chat! You can say hello, tell me how your day is going, or ask for a little encouragement. 🤍")}
-}
-function showQuestion(type){
- const list=type==="quiz"?quizQuestions:dailyQuestions;
- let index=type==="quiz"?quizIndex:dailyIndex;
- if(index>=list.length){
-  if(type==="quiz")quizIndex=0;else dailyIndex=0;
-  addBuddyMessage("That's all the questions for now! You can play again whenever you like. 🌱");
-  return;
- }
- const item=list[index];addBuddyMessage(item.q);
- const choices=document.getElementById("buddy-choices");choices.innerHTML="";
- item.opts.forEach((option,i)=>{
-  const btn=document.createElement("button");btn.className="chat-choice";btn.textContent=String.fromCharCode(65+i)+". "+option;
-  btn.onclick=()=>answerBuddyQuestion(type,i);
-  choices.appendChild(btn);
- });
-}
-function answerBuddyQuestion(type,answer){
- const list=type==="quiz"?quizQuestions:dailyQuestions;
- const index=type==="quiz"?quizIndex:dailyIndex,item=list[index];
- document.getElementById("buddy-choices").innerHTML="";
- if(answer===item.a){
-  addBuddyMessage("Correct! "+item.ex+" 🌟");
-  const claimKey=type+"-"+index;
-  const today=todayKey();
-  if(!chatXPClaimed[today])chatXPClaimed[today]=[];
-  if(!chatXPClaimed[today].includes(claimKey)){
-   chatXPClaimed[today].push(claimKey);awardXP(10,5);
-   addBuddyMessage("You earned +10 XP and +5 Eco Points!");
-   localStorage.setItem("ecoBuddy_chat_claims",JSON.stringify(chatXPClaimed));
-  }else addBuddyMessage("You've already earned XP for this question today. Keep practising!");
- }else addBuddyMessage("Not quite! "+item.ex+" Keep learning, you've got this. 🤍");
- if(type==="quiz")quizIndex++;else dailyIndex++;
- setTimeout(()=>showQuestion(type),700);
-}
-function getBuddyAnswer(text){
- const q=text.toLowerCase();
- if(/hello|hi|hey|good morning|good evening/.test(q))return"Hello, lovely human! ☁️ Ready to make your home a little greener today?";
- if(/thank|thanks/.test(q))return"You're always welcome! I'm happy to help. 🌿";
- if(/bye|goodbye|see you/.test(q))return"See you later! Remember, little habits make a big difference. 🤍";
- if(/tariff|price|rate|electricity time|cheap|cheapest|night saver/.test(q))return"Your Night Saver rate is the cheapest at €0.1954/kWh from 23:00 to 08:00. Day Rate is €0.3719/kWh, and Peak Rate is €0.3968/kWh from 17:00 to 19:00.";
- if(/peak/.test(q))return"Peak Rate is from 17:00 to 19:00. If practical, try to avoid running high-energy appliances during this period.";
- if(/light|lights|lamp/.test(q))return"Switch off lights when leaving a room. Natural daylight is a lovely free alternative when available!";
- if(/laundry|washing machine|wash clothes/.test(q))return"Your Night Saver period is 23:00–08:00. If it suits your routine, run the washing machine during those hours.";
- if(/dish|dishes|plate|washing up/.test(q))return"Let clean dishes dry completely, then put them away. You can also claim the Daily Eco Task for +20 XP once each day!";
- if(/cooker|stove|hob/.test(q))return"After cooking, check that all cooker knobs are OFF. Let the surface cool before wiping it.";
- if(/oven/.test(q))return"Check the oven controls and display to make sure it is switched off after cooking.";
- if(/hood|extractor|fan/.test(q))return"Remember to switch off the cooker hood when you have finished and the fan has stopped.";
- if(/kitchen|safety|safe/.test(q))return"Your Kitchen Safety Checklist has five steps: turn off the cooker, cooker hood, oven and kitchen lights, then wipe the cooker after it has cooled.";
- if(/standby|unplug|plug|device|tv|microwave/.test(q))return"Unplug or switch off suitable devices when not in use, as long as it is safe and practical. Avoid unplugging appliances that need to remain powered.";
- if(/water heater|shower|hot water/.test(q))return"Remember to switch off the water heater after showering if that is how your household system is designed to be used.";
- if(/weather|cold|rain|wear|clothes/.test(q))return"Check the Weather tab for live Dublin conditions and outfit suggestions before heading outdoors.";
- if(/xp|level|point|points|reward/.test(q))return"You earn XP by completing Daily Eco Tasks and answering quiz questions correctly. Your progress is saved on this device.";
- if(/save energy|energy saving|save electricity|reduce bill/.test(q))return"Try switching off unused lights, using Night Saver hours for laundry, avoiding high-energy appliances at peak time and switching off suitable standby devices.";
- return"I'm still learning! I can help with your electricity tariff, energy-saving habits, daily tasks and kitchen safety. Try asking me about one of those topics. 🌱";
-}
-function sendBuddyMessage(event){
- event.preventDefault();
- const input=document.getElementById("buddy-input"),message=input.value.trim();
- if(!message)return;
- addBuddyMessage(message,"user");input.value="";
- const choices=document.getElementById("buddy-choices");choices.innerHTML="";
- setTimeout(()=>{
-  if(buddyMode==="quiz"||buddyMode==="daily"){
-   addBuddyMessage("Choose one of the answer options above to continue the question. 😊");
-  }else addBuddyMessage(getBuddyAnswer(message));
- },350);
-}
-try{chatXPClaimed=JSON.parse(localStorage.getItem("ecoBuddy_chat_claims")||"{}")}catch(e){chatXPClaimed={}}
-</script>
+                    <div class="bg-white p-3 rounded-xl border border-[#5c4738]/40 flex items-center justify-between gap-2 text-xs">
+                        <span class="font-bold text-[#4a3b32] flex items-center gap-1.5">🚪 Have you closed the kitchen door?</span>
+                        <input type="checkbox" id="kitchen-door-checkbox" class="w-4 h-4 accent-[#8c7355] cursor-pointer">
+                    </div>
+
+                    <button onclick="stopTimer()" class="px-3 py-2 bg-[#fbe8e6] hover:bg-[#f5d0cd] text-[#5c3232] rounded-lg text-xs font-bold border border-[#5c4738]">Cancel Timer</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 5: CALENDAR -->
+        <div id="tab-content-calendar" class="hidden space-y-6">
+            <div class="vintage-panel p-5 space-y-4">
+                <div class="flex items-center justify-between border-b-2 border-[#5c4738] pb-2.5 gap-2">
+                    <h2 class="font-bold text-[#4a3b32] text-base flex items-center gap-2"><span>📅</span> Waste Collection & Chores</h2>
+                    <div class="flex items-center gap-2 flex-shrink-0">
+                        <button onclick="changeCalendarMonth(-1)" class="px-2.5 py-1 bg-[#f0e6d6] rounded-lg border border-[#5c4738] text-xs font-bold">◀</button>
+                        <span id="calendar-month-label" class="text-xs font-extrabold text-[#5c4738] min-w-[100px] text-center">Month...</span>
+                        <button onclick="changeCalendarMonth(1)" class="px-2.5 py-1 bg-[#f0e6d6] rounded-lg border border-[#5c4738] text-xs font-bold">▶</button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-7 gap-1 text-center text-[11px] font-extrabold text-[#7a6452] mb-2">
+                    <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+                </div>
+
+                <div id="calendar-days" class="grid grid-cols-7 gap-1.5"></div>
+
+                <div class="vint-card p-3 bg-[#fff5f0] text-center">
+                    <p id="next-trash-reminder" class="text-xs font-bold text-[#9c413b]">Calculating the next waste collection day...</p>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- SAFETY CHAT (5-STEP CHECKLIST - CHỈ CỘNG 1 LẦN +30 XP) -->
+    <section id="safety-chat-overlay" class="chat-overlay hidden" role="dialog" aria-modal="true">
+        <div class="chat-window">
+            <div class="flex justify-between items-center border-b-2 border-[#d8c7b0] pb-3 gap-2">
+                <div>
+                    <p class="text-xs font-bold text-[#8c7355]">ECO-BUDDY HOME MANAGER V2</p>
+                    <h2 class="text-lg font-extrabold">Let's check the kitchen together!</h2>
+                </div>
+                <button onclick="closeSafetyChat()" class="rounded-full border border-[#8c7355] px-3 py-2 font-bold flex-shrink-0">✕</button>
+            </div>
+
+            <div class="flex flex-col items-center py-3 gap-2">
+                <div id="chat-mascot" class="eco-mascot" style="width:140px;height:140px;"></div>
+                <div class="chat-bubble">
+                    <p class="font-extrabold text-sm mb-0.5 text-[#5c4738]">Eco Buddy ☁️</p>
+                    <p id="chat-question" class="text-sm font-medium text-[#4a3b32]">Time's up! Let's check the kitchen together!</p>
+                </div>
+            </div>
+
+            <div id="chat-scene" class="chat-scene text-center text-5xl py-3 flex items-center justify-center shadow-inner">🔥</div>
+
+            <div class="bg-[#f5ede2] rounded-2xl p-3.5 mb-3 mt-3 border border-[#d8c7b0]">
+                <p id="chat-action-title" class="font-extrabold text-sm mb-0.5 text-[#5c4738]">Turn off the cooker</p>
+                <p id="chat-action-hint" class="text-xs text-[#7a6452] font-medium"></p>
+            </div>
+
+            <div id="chat-actions" class="space-y-2"></div>
+            <p id="chat-progress" class="text-xs text-[#8c7355] text-center font-bold mt-3">Step 1 / 5</p>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="text-center py-5 text-xs text-[#7a6452] font-medium border-t-2 border-[#5c4738] bg-[#f7f1e5] mt-4">
+        Eco-Buddy Home Manager V2 · Vintage Pastel Edition 🌿🤍
+    </footer>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        let currentXP = 0;
+        let currentPoints = 0;
+        let completedTasks = [false, false, false];
+        let lastTaskDate = "";
+
+        // LOCALSTORAGE LOAD ON STARTUP
+        function loadUserData() {
+            const savedXP = localStorage.getItem("eco_buddy_xp");
+            const savedPoints = localStorage.getItem("eco_buddy_points");
+            const savedDate = localStorage.getItem("eco_buddy_date");
+            const savedTasks = localStorage.getItem("eco_buddy_tasks");
+
+            const todayStr = new Date().toDateString();
+            if (savedDate === todayStr) {
+                if (savedXP) currentXP = parseInt(savedXP);
+                if (savedPoints) currentPoints = parseInt(savedPoints);
+                if (savedTasks) completedTasks = JSON.parse(savedTasks);
+            } else {
+                // Reset daily tasks for new day
+                localStorage.setItem("eco_buddy_date", todayStr);
+                completedTasks = [false, false, false];
+                localStorage.setItem("eco_buddy_tasks", JSON.stringify(completedTasks));
+                if (savedXP) currentXP = parseInt(savedXP);
+                if (savedPoints) currentPoints = parseInt(savedPoints);
+            }
+            updateMascotLevel();
+            renderTasksUI();
+        }
+
+        function saveUserData() {
+            localStorage.setItem("eco_buddy_xp", currentXP);
+            localStorage.setItem("eco_buddy_points", currentPoints);
+            localStorage.setItem("eco_buddy_tasks", JSON.stringify(completedTasks));
+            localStorage.setItem("eco_buddy_date", new Date().toDateString());
+        }
+
+        function updateHeaderHeight() {
+            const header = document.querySelector("header");
+            if (!header) return;
+            const height = header.offsetHeight;
+            document.documentElement.style.setProperty("--header-height", height + "px");
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            updateHeaderHeight();
+            loadUserData();
+            startRealtimeClock();
+            checkTariffStatus();
+            renderCalendar();
+            updateReportChart();
+
+            setInterval(checkTariffStatus, 30000);
+
+            if ("ResizeObserver" in window) {
+                const header = document.querySelector("header");
+                if (header) {
+                    const headerObserver = new ResizeObserver(() => updateHeaderHeight());
+                    headerObserver.observe(header);
+                }
+            }
+        });
+
+        window.addEventListener("resize", updateHeaderHeight);
+        window.addEventListener("orientationchange", () => setTimeout(updateHeaderHeight, 150));
+
+        /* PWA */
+        if ("serviceWorker" in navigator) {
+            window.addEventListener("load", () => {
+                navigator.serviceWorker.register("/Saving_Money/sw.js")
+                    .then(() => console.log("Eco-Buddy PWA ready!"))
+                    .catch(error => console.error("PWA error:", error));
+            });
+        }
+
+        /* CLOCK */
+        function startRealtimeClock() {
+            function updateClock() {
+                const now = new Date();
+                const clockEl = document.getElementById('realtime-clock');
+                if (clockEl) clockEl.innerText = `| 🕒 ${now.toLocaleTimeString()}`;
+            }
+            updateClock();
+            setInterval(updateClock, 1000);
+        }
+
+        /* TAB SWITCHING */
+        function switchTab(tabName) {
+            const tabs = ['tracker', 'reports', 'chatbot', 'checklist', 'calendar'];
+            tabs.forEach(t => {
+                const el = document.getElementById(`tab-content-${t}`);
+                const btn = document.getElementById(`tab-btn-${t}`);
+                if (el) el.classList.add('hidden');
+                if (btn) btn.classList.remove('active');
+            });
+
+            const targetEl = document.getElementById(`tab-content-${tabName}`);
+            const targetBtn = document.getElementById(`tab-btn-${tabName}`);
+            if (targetEl) targetEl.classList.remove('hidden');
+            if (targetBtn) targetBtn.classList.add('active');
+
+            if (tabName === 'calendar') renderCalendar();
+            if (tabName === 'reports') updateReportChart();
+        }
+
+        /* DAILY TASKS & XP */
+        function completeTask(index, xpReward) {
+            if (completedTasks[index]) return;
+            completedTasks[index] = true;
+            currentXP += xpReward;
+            currentPoints += Math.floor(xpReward / 2);
+
+            saveUserData();
+            updateMascotLevel();
+            renderTasksUI();
+            document.getElementById('mascot-speech').innerText = `🎉 Awesome! You earned +${xpReward} XP and +${Math.floor(xpReward / 2)} Eco Points!`;
+        }
+
+        function renderTasksUI() {
+            for (let i = 0; i < completedTasks.length; i++) {
+                const btn = document.getElementById(`task-btn-${i}`);
+                if (!btn) continue;
+                if (completedTasks[i]) {
+                    btn.innerText = "Done ✓";
+                    btn.disabled = true;
+                    btn.classList.add('bg-gray-400');
+                    btn.classList.remove('bg-[#87a96b]');
+                } else {
+                    btn.innerText = "Complete";
+                    btn.disabled = false;
+                    btn.classList.remove('bg-gray-400');
+                    btn.classList.add('bg-[#87a96b]');
+                }
+            }
+        }
+
+        function updateMascotLevel() {
+            let level = 1;
+            let title = "Sprout";
+            let maxXP = 100;
+
+            if (currentXP >= 100 && currentXP < 250) {
+                level = 2; title = "Green Sprout"; maxXP = 250;
+            } else if (currentXP >= 250) {
+                level = 3; title = "Eco Master 🌿"; maxXP = 500;
+            }
+
+            const percent = Math.min(100, (currentXP / maxXP) * 100);
+            const xpBar = document.getElementById('mascot-xp-bar');
+            const xpText = document.getElementById('mascot-xp-text');
+            const levelBadge = document.getElementById('mascot-level-badge');
+            const pointsLabel = document.getElementById('eco-points-label');
+
+            if (xpBar) xpBar.style.width = percent + '%';
+            if (xpText) xpText.innerText = `${currentXP} / ${maxXP} XP`;
+            if (levelBadge) levelBadge.innerText = `🌱 Level ${level}: ${title}`;
+            if (pointsLabel) pointsLabel.innerText = `${currentPoints} Points 🌱`;
+        }
+
+        /* ENERGY REPORTS COMPARISON (KWH & €) */
+        function updateReportChart() {
+            const prevBill = parseFloat(document.getElementById('bill-prev').value) || 0;
+            const currBill = parseFloat(document.getElementById('bill-curr').value) || 0;
+            const prevKwh = parseFloat(document.getElementById('kwh-prev').value) || 0;
+            const currKwh = parseFloat(document.getElementById('kwh-curr').value) || 0;
+
+            document.getElementById('chart-val-prev').innerText = `€${prevBill.toFixed(2)}`;
+            document.getElementById('chart-val-curr').innerText = `€${currBill.toFixed(2)}`;
+
+            const maxVal = Math.max(prevBill, currBill, 10);
+            const heightPrev = Math.max(30, (prevBill / maxVal) * 120);
+            const heightCurr = Math.max(30, (currBill / maxVal) * 120);
+
+            document.getElementById('bar-prev').style.height = heightPrev + 'px';
+            document.getElementById('bar-curr').style.height = heightCurr + 'px';
+
+            const diffBill = prevBill - currBill;
+            const diffKwh = prevKwh - currKwh;
+            const summary = document.getElementById('report-summary');
+
+            if (diffBill > 0) {
+                summary.innerHTML = `🎉 Wonderful! You saved <span class="text-green-700">€${diffBill.toFixed(2)}</span> and <span class="text-green-700">${diffKwh} kWh</span> compared to last month!`;
+            } else if (diffBill < 0) {
+                summary.innerHTML = `⚠️ This month is <span class="text-red-700">€${Math.abs(diffBill).toFixed(2)}</span> higher than last month. Let's save more!`;
+            } else {
+                summary.innerHTML = `⚖️ Electricity bills for both months are equal.`;
+            }
+        }
+
+        /* BÉ MÂY CHATBOT & QUIZ OFFLINE */
+        let chatMode = 'quiz';
+        function setChatMode(mode) {
+            chatMode = mode;
+            const btnQuiz = document.getElementById('mode-btn-quiz');
+            const btnChat = document.getElementById('mode-btn-chat');
+            const quizArea = document.getElementById('chatbot-quiz-area');
+            const inputArea = document.getElementById('chatbot-input-area');
+
+            if (mode === 'quiz') {
+                btnQuiz.className = "p-2.5 bg-[#8c7355] text-white font-bold rounded-xl border border-[#5c4738]";
+                btnChat.className = "p-2.5 bg-[#fffaf4] text-[#4a3b32] font-bold rounded-xl border border-[#5c4738]";
+                quizArea.classList.remove('hidden');
+                inputArea.classList.add('hidden');
+            } else {
+                btnChat.className = "p-2.5 bg-[#8c7355] text-white font-bold rounded-xl border border-[#5c4738]";
+                btnQuiz.className = "p-2.5 bg-[#fffaf4] text-[#4a3b32] font-bold rounded-xl border border-[#5c4738]";
+                quizArea.classList.add('hidden');
+                inputArea.classList.remove('hidden');
+            }
+        }
+
+        function answerQuiz(optionIndex) {
+            const msgs = document.getElementById('chatbot-messages');
+            const quizQ = document.getElementById('quiz-question');
+            const quizOpts = document.getElementById('quiz-options');
+
+            msgs.innerHTML += `
+                <div class="bg-[#eaf2f8] p-3 rounded-2xl border border-[#b9d0e8] text-right">
+                    <p class="font-bold text-[#32455c]">You</p>
+                    <p class="mt-1 text-[#4a3b32]">Option ${optionIndex === 0 ? 'A' : 'B'}</p>
+                </div>
+            `;
+
+            if (optionIndex === 0) {
+                msgs.innerHTML += `
+                    <div class="bg-[#f5ede2] p-3 rounded-2xl border border-[#d8c7b0]">
+                        <p class="font-bold text-[#5c4738]">Bé Mây ☁️</p>
+                        <p class="mt-1 text-[#4a3b32]">Correct! Microwaves and TVs consume continuous standby power. You earned +15 XP! 💚</p>
+                    </div>
+                `;
+                currentXP += 15;
+                saveUserData();
+                updateMascotLevel();
+            } else {
+                msgs.innerHTML += `
+                    <div class="bg-[#f5ede2] p-3 rounded-2xl border border-[#d8c7b0]">
+                        <p class="font-bold text-[#5c4738]">Bé Mây ☁️</p>
+                        <p class="mt-1 text-[#4a3b32]">Not quite! LED lights consume very little energy compared to standby electronics.</p>
+                    </div>
+                `;
+            }
+            msgs.scrollTop = msgs.scrollHeight;
+        }
+
+        function sendUserMessage() {
+            const input = document.getElementById('chat-input-text');
+            const text = input.value.trim();
+            if (!text) return;
+
+            const msgs = document.getElementById('chatbot-messages');
+            msgs.innerHTML += `
+                <div class="bg-[#eaf2f8] p-3 rounded-2xl border border-[#b9d0e8] text-right">
+                    <p class="font-bold text-[#32455c]">You</p>
+                    <p class="mt-1 text-[#4a3b32]">${text}</p>
+                </div>
+            `;
+            input.value = "";
+
+            setTimeout(() => {
+                let reply = "That's wonderful! Let's save energy together to protect our environment! 🌿";
+                const lower = text.toLowerCase();
+                if (lower.includes('hi') || lower.includes('hello')) {
+                    reply = "Hello! I'm Bé Mây, your friendly eco assistant. How can I help you today? ☁️";
+                } else if (lower.includes('save') || lower.includes('bill')) {
+                    reply = "To save on your electricity bill, remember to run your laundry during Night Saver hours (after 23:00) and turn off standby appliances! ⚡";
+                } else if (lower.includes('weather')) {
+                    reply = "Dublin weather can be chilly! Make sure to check the Weather tab before heading out. 🌦️";
+                }
+
+                msgs.innerHTML += `
+                    <div class="bg-[#f5ede2] p-3 rounded-2xl border border-[#d8c7b0]">
+                        <p class="font-bold text-[#5c4738]">Bé Mây ☁️</p>
+                        <p class="mt-1 text-[#4a3b32]">${reply}</p>
+                    </div>
+                `;
+                msgs.scrollTop = msgs.scrollHeight;
+            }, 600);
+        }
+
+        /* ELECTRICITY TARIFF STATUS */
+        function checkTariffStatus() {
+            const now = new Date();
+            const hour = now.getHours();
+            const badge = document.getElementById('status-badge');
+            const speech = document.getElementById('mascot-speech');
+
+            if (hour >= 17 && hour < 19) {
+                badge.className = "absolute -bottom-2 left-1/2 -translate-x-1/2 bg-[#bc6c25] text-white text-[11px] font-extrabold px-4 py-1 rounded-full shadow border-2 border-[#5c4738] whitespace-nowrap animate-pulse";
+                badge.innerText = "🔴 Peak Hours!";
+                if (speech) speech.innerText = "⚠️ It's peak time! Try to avoid using high-energy appliances.";
+            } else if (hour >= 23 || hour < 8) {
+                badge.className = "absolute -bottom-2 left-1/2 -translate-x-1/2 bg-[#87a96b] text-white text-[11px] font-extrabold px-4 py-1 rounded-full shadow border-2 border-[#5c4738] whitespace-nowrap";
+                badge.innerText = "🟢 Night Saver ON";
+                if (speech) speech.innerText = "🌙 It's the cheapest rate period. A great time to do your laundry!";
+            } else {
+                badge.className = "absolute -bottom-2 left-1/2 -translate-x-1/2 bg-[#d4a373] text-white text-[11px] font-extrabold px-4 py-1 rounded-full shadow border-2 border-[#5c4738] whitespace-nowrap";
+                badge.innerText = "Normal Hours ☀️";
+            }
+        }
+
+        /* CALENDAR */
+        let calendarCursor = new Date();
+        function renderCalendar() {
+            const year = calendarCursor.getFullYear();
+            const month = calendarCursor.getMonth();
+            const label = document.getElementById("calendar-month-label");
+            const grid = document.getElementById("calendar-days");
+            if (!label || !grid) return;
+
+            label.textContent = new Intl.DateTimeFormat("en-IE", { month: "long", year: "numeric" }).format(calendarCursor);
+            grid.innerHTML = "";
+
+            const firstDay = new Date(year, month, 1);
+            const offset = (firstDay.getDay() + 6) % 7;
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+            for (let i = 0; i < offset; i++) {
+                grid.appendChild(document.createElement("div"));
+            }
+
+            const today = new Date();
+            for (let day = 1; day <= daysInMonth; day++) {
+                const date = new Date(year, month, day);
+                const isTuesday = date.getDay() === 2;
+                const isToday = date.toDateString() === today.toDateString();
+                const cell = document.createElement("div");
+
+                cell.className = "h-10 rounded-xl flex flex-col items-center justify-center text-xs font-bold relative border border-[#5c4738]/20 " +
+                    (isTuesday ? "bg-[#d9534f] text-white shadow-sm" : "bg-[#f5ede2] text-[#4a3b32]") +
+                    (isToday ? " ring-2 ring-[#87a96b] ring-offset-1" : "");
+
+                cell.innerHTML = `<span>${day}</span>${isTuesday ? '<span class="text-[8px]">🗑️</span>' : ""}`;
+                cell.title = isTuesday ? "Tuesday - Waste collection day" : isToday ? "Today" : "";
+                grid.appendChild(cell);
+            }
+
+            const next = new Date();
+            next.setHours(0, 0, 0, 0);
+            do { next.setDate(next.getDate() + 1); } while (next.getDay() !== 2);
+
+            const reminder = document.getElementById("next-trash-reminder");
+            if (reminder) reminder.textContent = `Next waste collection reminder: Tuesday, ${next.toLocaleDateString("en-IE")}`;
+        }
+
+        function changeCalendarMonth(delta) {
+            calendarCursor = new Date(calendarCursor.getFullYear(), calendarCursor.getMonth() + delta, 1);
+            renderCalendar();
+        }
+
+        /* COOKING TIMER */
+        let countdownInterval = null;
+        function setTimerMinutes(mins) { document.getElementById('custom-minutes').value = mins; }
+
+        function startCustomTimer() {
+            const minsInput = document.getElementById('custom-minutes').value.trim();
+            const mins = Number(minsInput);
+            if (!Number.isInteger(mins) || mins < 1 || mins > 180) {
+                alert("Please enter a number of minutes between 1 and 180.");
+                return;
+            }
+
+            const totalSecs = mins * 60;
+            const checkbox = document.getElementById('kitchen-door-checkbox');
+            if (checkbox) checkbox.checked = false;
+
+            clearInterval(countdownInterval);
+            let remaining = totalSecs;
+            const displayBox = document.getElementById('timer-display-box');
+            const textEl = document.getElementById('countdown-text');
+            displayBox.classList.remove('hidden');
+
+            function updateCountdown() {
+                const m = Math.floor(remaining / 60);
+                const s = remaining % 60;
+                textEl.innerText = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+
+                if (remaining <= 0) {
+                    clearInterval(countdownInterval);
+                    countdownInterval = null;
+                    displayBox.classList.add('hidden');
+                    openSafetyChat();
+                    return;
+                }
+                remaining--;
+            }
+
+            updateCountdown();
+            countdownInterval = setInterval(updateCountdown, 1000);
+        }
+
+        function stopTimer() {
+            clearInterval(countdownInterval);
+            countdownInterval = null;
+            document.getElementById('timer-display-box').classList.add('hidden');
+        }
+
+        /* SAFETY CHAT - 5 STEPS (CHỈ CỘNG 1 LẦN +30 XP VÀO CUỐI) */
+        const safetySteps = [
+            {
+                title: "Turn off the cooker",
+                question: "Have you turned off the cooker?",
+                hint: "Make sure the cooker knobs are turned to the OFF position.",
+                scene: "🔥",
+                yes: "Wonderful! Eco Buddy is so happy!",
+                no: "Let's check the cooker knobs together!"
+            },
+            {
+                title: "Turn off the cooker hood",
+                question: "Have you turned off the cooker hood?",
+                hint: "Make sure the cooker hood is switched off and fan stopped.",
+                scene: "🌬️",
+                yes: "The cooker hood is off. Great job!",
+                no: "Let's check and switch off the cooker hood!"
+            },
+            {
+                title: "Turn off the oven",
+                question: "Have you turned off the oven?",
+                hint: "Check the power button and display to make sure the oven is off.",
+                scene: "🎛️",
+                yes: "The oven is off. Well done!",
+                no: "I'll wait while you check the oven!"
+            },
+            {
+                title: "Turn off the kitchen lights",
+                question: "Have you turned off the kitchen lights?",
+                hint: "Make sure all unused kitchen lights are switched off.",
+                scene: "💡",
+                yes: "Your home has saved even more energy!",
+                no: "Let's go and turn off the lights!"
+            },
+            {
+                title: "Wipe the cooker",
+                question: "Have you cleaned the cooker surface?",
+                hint: "Wait until the cooker has cooled down, then wipe with a damp cloth.",
+                scene: "🧽",
+                yes: "A sparkling clean cooker! Eco Buddy is proud of you!",
+                no: "Let's clean up the kitchen together!"
+            }
+        ];
+
+        let safetyStepIndex = 0;
+
+        function syncChatMascot() {
+            const original = document.getElementById("main-mascot-svg");
+            const container = document.getElementById("chat-mascot");
+            if (!original || !container) return;
+
+            container.innerHTML = original.outerHTML;
+            const cloned = container.querySelector("svg");
+            if (cloned) {
+                cloned.removeAttribute("id");
+                cloned.classList.remove("pose-happy","pose-check","pose-wait","pose-dance","pose-stove","pose-oven","pose-light","pose-wipe");
+            }
+        }
+
+        function setMascotPose(pose) {
+            const container = document.getElementById("chat-mascot");
+            const mascot = container?.querySelector(".eco-character");
+            if (!mascot) return;
+
+            mascot.classList.remove("pose-happy","pose-check","pose-wait","pose-dance","pose-stove","pose-oven","pose-light","pose-wipe");
+            void mascot.offsetWidth;
+            if (pose) mascot.classList.add("pose-" + pose);
+        }
+
+        function openSafetyChat() {
+            safetyStepIndex = 0;
+            syncChatMascot();
+            document.getElementById("safety-chat-overlay").classList.remove("hidden");
+            document.body.style.overflow = "hidden";
+            renderSafetyStep();
+        }
+
+        function closeSafetyChat() {
+            document.getElementById("safety-chat-overlay").classList.add("hidden");
+            document.body.style.overflow = "";
+        }
+
+        function renderSafetyStep() {
+            const question = document.getElementById("chat-question");
+            const scene = document.getElementById("chat-scene");
+            const actions = document.getElementById("chat-actions");
+
+            if (safetyStepIndex >= safetySteps.length) {
+                setMascotPose("dance");
+                question.textContent = "All done! You earned +30 XP for keeping the kitchen safe! 💚";
+                scene.textContent = "🌱✨💚";
+
+                document.getElementById("chat-action-title").textContent = "Safety check completed!";
+                document.getElementById("chat-action-hint").textContent = "Eco Buddy is so proud of you!";
+
+                actions.innerHTML = `
+                    <button class="chat-choice text-center" onclick="finishSafetyCheckAndReward()">
+                        💚 Done! Collect XP reward
+                    </button>
+                `;
+                document.getElementById("chat-progress").textContent = "5 / 5 · Completed";
+                return;
+            }
+
+            const step = safetySteps[safetyStepIndex];
+            const poses = ["stove", "wind", "oven", "light", "wipe"];
+
+            setMascotPose(poses[safetyStepIndex]);
+            question.textContent = step.question;
+            scene.textContent = step.scene;
+
+            document.getElementById("chat-action-title").textContent = step.title;
+            document.getElementById("chat-action-hint").textContent = step.hint;
+            document.getElementById("chat-progress").textContent = `Step ${safetyStepIndex + 1} / 5`;
+
+            actions.innerHTML = `
+                <button class="chat-choice" onclick="answerSafetyStep(true)">☑️ Yes, I've done it!</button>
+                <button class="chat-choice" onclick="answerSafetyStep(false)">⏳ Not yet, I'll do it now</button>
+            `;
+        }
+
+        function answerSafetyStep(done) {
+            const step = safetySteps[safetyStepIndex];
+            if (!step) return;
+
+            if (!done) {
+                setMascotPose("wait");
+                document.getElementById("chat-question").textContent = step.no;
+                document.getElementById("chat-actions").innerHTML = `
+                    <button class="chat-choice" onclick="answerSafetyStep(true)">💚 I've done it! Let's continue.</button>
+                    <button class="chat-choice" onclick="closeSafetyChat()">I'll do it later</button>
+                `;
+                return;
+            }
+
+            setMascotPose("happy");
+            document.getElementById("chat-question").textContent = step.yes;
+            setTimeout(() => {
+                safetyStepIndex++;
+                renderSafetyStep();
+            }, 1100);
+        }
+
+        function finishSafetyCheckAndReward() {
+            currentXP += 30;
+            currentPoints += 15;
+            saveUserData();
+            updateMascotLevel();
+            closeSafetyChat();
+        }
+    </script>
 </body>
 </html>
