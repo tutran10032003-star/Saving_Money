@@ -1431,7 +1431,7 @@
                 }
                 // Image A: invoice dates, billing period, total amount, Usage Unit and Day/Peak/Night rows.
                 // Image B: energy-distribution image reading.
-                const parsed=parseBillOcrText(totalResult ? totalResult.text : "");                const parsed=parseBillOcrText(raw);
+                const parsed=parseBillOcrText(totalResult ? totalResult.text : "");
                 if(parsed.amount!==undefined)_bbEl("edit-bill-amount").value=parsed.amount.toFixed(2);
                 if(parsed.kwh!==undefined)_bbEl("edit-bill-kwh").value=parsed.kwh;
                 if(parsed.start)_bbEl("edit-bill-start").value=parsed.start;
