@@ -14,6 +14,7 @@
     <link rel="apple-touch-icon" href="/Saving_Money/icons/icon-192.png">
 
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
 
     <style>
@@ -456,21 +457,24 @@
                     <h3 class="font-bold text-xs text-[#5c4738]">📷 Upload Bill Image & Adjust Data</h3>
                     <div class="flex flex-col sm:flex-row items-center gap-3">
                         <label class="w-full sm:w-auto px-4 py-2 bg-[#8c7355] text-white font-bold rounded-xl border border-[#5c4738] text-xs cursor-pointer text-center shadow">
-                            <span>Browse & Upload Bill Image</span>
-                            <input type="file" id="bill-img-file" accept="image/*" class="hidden" onchange="previewUploadedBill(event)">
+                            <span>📄 Image 2 — Bill amount & dates</span>
+                            <input type="file" id="bill-img-file" accept="image/*" capture="environment" class="hidden" onchange="previewUploadedBill(event)">
                         </label>
                         <span id="upload-status-text" class="text-xs font-bold text-[#7a6452]">No bill uploaded yet.</span>
                     </div>
 
-                    <div id="bill-preview-container" class="hidden">
-                        <img id="bill-preview-img" src="" alt="Bill preview" class="max-h-40 rounded-xl border border-[#5c4738] object-contain">
-                    </div>
+                    <div id="bill-preview-container" class="hidden"><p class="text-xs font-bold mb-1">Bill image</p><img id="bill-preview-img" src="" alt="Bill preview" class="max-h-40 rounded-xl border border-[#5c4738] object-contain"></div>
+                    <label class="block w-full px-4 py-3 bg-[#eaf2f8] rounded-xl border border-[#5c4738] text-center text-xs font-bold cursor-pointer">🧩 Image 1 — Energy breakdown donut
+                      <input type="file" id="bill-breakdown-file" accept="image/*" capture="environment" class="hidden" onchange="previewBreakdownImage(event)"></label>
+                    <div id="breakdown-preview-container" class="hidden"><img id="breakdown-preview-img" alt="Energy breakdown preview" class="max-h-40 rounded-xl border border-[#5c4738] object-contain"></div>
+                    <button type="button" onclick="runBillOCR()" class="w-full px-4 py-2 rounded-xl bg-[#dce9d5] border border-[#5c4738] font-bold text-xs">🔎 Read bill text (OCR) — review results</button>
+                    <p id="bill-ocr-status" class="text-xs text-[#7a6452]">OCR is a helper; always check extracted values.</p>
 
                     <!-- FORM CHỈNH SỬA THÔNG TIN BILL TRƯỚC KHI SAVE -->
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-[#d8c7b0] text-xs">
                         <div>
                             <label class="font-bold text-[#7a6452]">Month / Period Name:</label>
-                            <input type="text" id="edit-bill-month" value="September 2026" class="w-full px-3 py-2 rounded-xl border border-[#5c4738] font-bold mt-1">
+                            <input type="text" id="edit-bill-month" value="" class="w-full px-3 py-2 rounded-xl border border-[#5c4738] font-bold mt-1">
                         </div>
                         <div>
                             <label class="font-bold text-[#7a6452]">Year:</label>
@@ -478,11 +482,11 @@
                         </div>
                         <div>
                             <label class="font-bold text-[#7a6452]">Total Bill Amount (€):</label>
-                            <input type="number" id="edit-bill-amount" value="123.00" step="0.01" class="w-full px-3 py-2 rounded-xl border border-[#5c4738] font-bold mt-1">
+                            <input type="number" id="edit-bill-amount" value="" step="0.01" class="w-full px-3 py-2 rounded-xl border border-[#5c4738] font-bold mt-1">
                         </div>
                         <div>
                             <label class="font-bold text-[#7a6452]">Total kWh Usage:</label>
-                            <input type="number" id="edit-bill-kwh" value="410" class="w-full px-3 py-2 rounded-xl border border-[#5c4738] font-bold mt-1">
+                            <input type="number" id="edit-bill-kwh" value="" class="w-full px-3 py-2 rounded-xl border border-[#5c4738] font-bold mt-1">
                         </div>
                     </div>
 
@@ -493,7 +497,7 @@
                     </div>
                     <div class="border-t pt-3 space-y-2">
                       <p class="font-bold">Energy breakdown from image 1</p>
-                      <p class="text-xs text-[#7a6452]">Enter the percentages shown on the donut chart. OCR may not reliably read chart slices, so please verify these values.</p>
+                      <p class="text-xs text-[#7a6452]">Enter the percentages shown on image 1. Chart slices are not reliably OCR-readable; these fields must be checked manually.</p>
                       <div id="bill-category-fields" class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                         <label class="text-xs">Water heating (%)<input type="number" min="0" max="100" step="0.1" data-category="Water heating" class="bill-category w-full p-2 rounded-lg border mt-1" placeholder="0"></label><label class="text-xs">Lighting (%)<input type="number" min="0" max="100" step="0.1" data-category="Lighting" class="bill-category w-full p-2 rounded-lg border mt-1" placeholder="0"></label><label class="text-xs">Cooking (%)<input type="number" min="0" max="100" step="0.1" data-category="Cooking" class="bill-category w-full p-2 rounded-lg border mt-1" placeholder="0"></label><label class="text-xs">Laundry (%)<input type="number" min="0" max="100" step="0.1" data-category="Laundry" class="bill-category w-full p-2 rounded-lg border mt-1" placeholder="0"></label><label class="text-xs">Appliances (%)<input type="number" min="0" max="100" step="0.1" data-category="Appliances" class="bill-category w-full p-2 rounded-lg border mt-1" placeholder="0"></label><label class="text-xs">Other (%)<input type="number" min="0" max="100" step="0.1" data-category="Other" class="bill-category w-full p-2 rounded-lg border mt-1" placeholder="0"></label>
                       </div>
@@ -564,15 +568,7 @@
                         <p class="text-xs font-bold text-[#5c4738]">🍩 Breakdown Donut Chart (Based on Bill Scan / Est. Avg)</p>
                         
                         <div class="relative w-56 h-56 flex items-center justify-center">
-                            <svg class="w-full h-full transform -rotate-90" viewBox="0 0 200 200">
-                                <circle cx="100" cy="100" r="70" fill="transparent" stroke="#87a96b" stroke-width="26" stroke-dasharray="439.8" stroke-dashoffset="0"></circle>
-                                <circle cx="100" cy="100" r="70" fill="transparent" stroke="#0096c7" stroke-width="26" stroke-dasharray="439.8" stroke-dashoffset="-154"></circle>
-                                <circle cx="100" cy="100" r="70" fill="transparent" stroke="#6a0dad" stroke-width="26" stroke-dasharray="439.8" stroke-dashoffset="-264"></circle>
-                                <circle cx="100" cy="100" r="70" fill="transparent" stroke="#8c7355" stroke-width="26" stroke-dasharray="439.8" stroke-dashoffset="-330"></circle>
-                                <circle cx="100" cy="100" r="70" fill="transparent" stroke="#38b000" stroke-width="26" stroke-dasharray="439.8" stroke-dashoffset="-374"></circle>
-                                <circle cx="100" cy="100" r="70" fill="transparent" stroke="#48cae4" stroke-width="26" stroke-dasharray="439.8" stroke-dashoffset="-409"></circle>
-                                <circle cx="100" cy="100" r="70" fill="transparent" stroke="#32455c" stroke-width="26" stroke-dasharray="439.8" stroke-dashoffset="-427"></circle>
-                            </svg>
+                            <div id="dynamic-breakdown-donut" class="w-48 h-48 rounded-full border-[22px] border-[#e8dfd2] flex items-center justify-center" style="background:conic-gradient(#87a96b 0 100%)"><span class="sr-only">Energy breakdown chart</span></div>
 
                             <div class="absolute flex flex-col items-center justify-center text-center">
                                 <span class="text-[10px] font-extrabold text-[#7a6452] uppercase tracking-wider">Active Total</span>
@@ -580,16 +576,8 @@
                             </div>
                         </div>
 
-                        <!-- CHÚ THÍCH CÁC CATEGORY -->
-                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 w-full text-[11px] font-bold text-[#4a3b32]">
-                            <div class="vint-card p-2 bg-white flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#0096c7] flex-shrink-0"></span> Other (25%)</div>
-                            <div class="vint-card p-2 bg-white flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#87a96b] flex-shrink-0"></span> Water Heating (35%)</div>
-                            <div class="vint-card p-2 bg-white flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#6a0dad] flex-shrink-0"></span> Cooking (15%)</div>
-                            <div class="vint-card p-2 bg-white flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#8c7355] flex-shrink-0"></span> Laundry (10%)</div>
-                            <div class="vint-card p-2 bg-white flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#38b000] flex-shrink-0"></span> Lighting (8%)</div>
-                            <div class="vint-card p-2 bg-white flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#48cae4] flex-shrink-0"></span> Refrigeration (4%)</div>
-                            <div class="vint-card p-2 bg-white flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#32455c] flex-shrink-0"></span> Always On (3%)</div>
-                        </div>
+                        <div id="dynamic-breakdown-legend" class="grid grid-cols-2 sm:grid-cols-3 gap-2 w-full text-xs font-bold"></div>
+                    </div>
                     </div>
                 </div>
             </div>
@@ -1050,7 +1038,7 @@
                     <div class="vint-card p-3.5 flex items-center justify-between gap-3 bg-white">
                         <div>
                             <p class="font-extrabold text-[#5c4738]">${r.month} ${r.year}</p>
-                            <p class="text-[10px] text-[#7a6452] mt-0.5">Usage: <strong>${r.kwh} kWh</strong> · Savings: ${r.savings}</p>
+                            <p class="text-[10px] text-[#7a6452] mt-0.5">Usage: <strong>${r.kwh} kWh</strong> · ${r.startDate||'Period not entered'} → ${r.endDate||'—'}</p>
                         </div>
                         <div class="flex items-center gap-2">
                             <span class="font-black text-[#5c3232] bg-[#f5d0cd] px-3 py-1.5 rounded-xl border border-[#5c4738]">€${r.bill.toFixed(2)}</span>
@@ -1071,11 +1059,11 @@
 
         function populateDashboardFilters() {
             const monthSelect = document.getElementById('dash-filter-month');
+            const yearSelect = document.getElementById('dash-filter-year');
             if (!monthSelect) return;
-            monthSelect.innerHTML = `<option value="all">-- All Months (Average) --</option>`;
-            billingRecords.forEach(r => {
-                monthSelect.innerHTML += `<option value="${r.id}">${r.month} ${r.year}</option>`;
-            });
+            monthSelect.innerHTML = `<option value="all">-- All Months --</option>`;
+            billingRecords.forEach(r => { monthSelect.innerHTML += `<option value="${r.id}">${r.month} ${r.year}</option>`; });
+            if(yearSelect){const keep=yearSelect.value;yearSelect.innerHTML='<option value="all">-- All Years --</option>'+[...new Set(billingRecords.map(r=>r.year))].sort((a,b)=>b-a).map(y=>'<option value="'+y+'">'+y+'</option>').join('');yearSelect.value=keep||'all';}
         }
 
         // DASHBOARD CẬP NHẬT THEO THÁNG HOẶC TÍNH AVERAGE TOÀN BỘ KHI KHÔNG CHỌN GÌ
@@ -1113,29 +1101,19 @@
 
         // BIỂU ĐỒ CỘT (€) KẾT HỢP LINE (kWh)
         function renderDashboardColumnLineChart(activeRecords) {
-            const chartContainer = document.getElementById('dashboard-col-chart');
-            const xLabels = document.getElementById('dashboard-x-labels');
-            if (!chartContainer || !xLabels) return;
-
-            chartContainer.innerHTML = "";
-            xLabels.innerHTML = "";
-
-            const maxBill = Math.max(...billingRecords.map(r => r.bill), 300);
-
-            billingRecords.forEach(r => {
-                const isSelected = activeRecords.some(ar => ar.id === r.id);
-                const heightPercent = Math.max(25, (r.bill / maxBill) * 110);
-
-                chartContainer.innerHTML += `
-                    <div class="flex flex-col items-center gap-1 transition-all ${isSelected ? 'opacity-100 scale-105' : 'opacity-40'}">
-                        <span class="text-[10px] font-bold text-[#5c3232]">€${r.bill.toFixed(0)}</span>
-                        <div class="w-9 bg-gradient-to-t from-[#bc6c25] to-[#f4a261] rounded-t-lg shadow" style="height: ${heightPercent}px;"></div>
-                        <span class="text-[9px] font-bold text-[#32455c] bg-[#cfe2f3] px-1 rounded">${r.kwh}kWh</span>
-                    </div>
-                `;
-
-                xLabels.innerHTML += `<span class="text-center font-bold ${isSelected ? 'text-[#32455c] underline' : 'text-[#7a6452]'}">${r.month.substring(0,3)}</span>`;
-            });
+            const host=document.getElementById('dashboard-col-chart'), labels=document.getElementById('dashboard-x-labels');
+            if(!host||!labels)return;
+            const rows=[...activeRecords].sort((a,b)=>(a.year-b.year)||String(a.month).localeCompare(String(b.month)));
+            host.innerHTML='';labels.innerHTML='';
+            if(!rows.length){host.innerHTML='<p class="text-xs text-[#7a6452]">No saved bills for this filter yet.</p>';return;}
+            const maxBill=Math.max(...rows.map(r=>Number(r.bill)||0),1), maxKwh=Math.max(...rows.map(r=>Number(r.kwh)||0),1);
+            host.style.position='relative';host.style.height='190px';
+            host.innerHTML='<div class="absolute inset-0 flex items-end justify-around gap-2 px-2">'+rows.map(r=>'<div class="flex-1 h-full flex flex-col justify-end items-center gap-1 min-w-0"><span class="text-[10px] font-bold">€'+Number(r.bill).toFixed(0)+'</span><div class="w-8 max-w-full rounded-t-lg bg-gradient-to-t from-[#bc6c25] to-[#f4a261]" style="height:'+Math.max(8,(r.bill/maxBill)*105)+'px"></div><span class="text-[9px] font-bold">'+r.kwh+' kWh</span></div>').join('')+'</div>';
+            const pts=rows.map((r,i)=>({x:(i+.5)/rows.length*100,y:88-(Number(r.kwh)/maxKwh)*55}));
+            const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('viewBox','0 0 100 100');svg.setAttribute('preserveAspectRatio','none');svg.style.cssText='position:absolute;inset:18px 0 24px;width:100%;height:145px;pointer-events:none;overflow:visible';
+            const path=document.createElementNS(svg.namespaceURI,'polyline');path.setAttribute('points',pts.map(p=>p.x+','+p.y).join(' '));path.setAttribute('fill','none');path.setAttribute('stroke','#32455c');path.setAttribute('stroke-width','1.5');path.setAttribute('vector-effect','non-scaling-stroke');svg.appendChild(path);
+            pts.forEach(p=>{const c=document.createElementNS(svg.namespaceURI,'circle');c.setAttribute('cx',p.x);c.setAttribute('cy',p.y);c.setAttribute('r','1.8');c.setAttribute('fill','#32455c');svg.appendChild(c);});host.appendChild(svg);
+            labels.innerHTML=rows.map(r=>'<span class="text-center text-[10px] font-bold">'+String(r.month).slice(0,3)+' '+r.year+'</span>').join('');
         }
 
         function initWeeklyContent() {
@@ -1569,6 +1547,42 @@
             closeSafetyChat();
         }
 
+
+        function previewBreakdownImage(event){const f=event.target.files&&event.target.files[0];if(!f)return;const rd=new FileReader();rd.onload=e=>{document.getElementById('breakdown-preview-img').src=e.target.result;document.getElementById('breakdown-preview-container').classList.remove('hidden');};rd.readAsDataURL(f);}
+        async function runBillOCR(){
+          const file=document.getElementById('bill-img-file').files[0];const status=document.getElementById('bill-ocr-status');
+          if(!file){status.textContent='Choose image 2 (the bill amount/date page) first.';return;}
+          if(!window.Tesseract){status.textContent='OCR library did not load. You can still enter the values manually.';return;}
+          status.textContent='Reading image… this may take a little while.';
+          try{
+            const result=await Tesseract.recognize(file,'eng');const text=result.data.text||'';
+            const amountMatches=[...text.matchAll(/(?:€|EUR)\s*([0-9]{1,4}(?:[.,][0-9]{2})?)/gi)].map(m=>m[1].replace(',','.'));
+            const kwhMatch=text.match(/([0-9]+(?:[.,][0-9]+)?)\s*kWh/i);
+            const dates=[...text.matchAll(/\b(\d{1,2})[\/-](\d{1,2})[\/-](\d{2,4})\b/g)].map(m=>{const y=m[3].length===2?'20'+m[3]:m[3];return y+'-'+m[2].padStart(2,'0')+'-'+m[1].padStart(2,'0');});
+            if(amountMatches.length)document.getElementById('edit-bill-amount').value=amountMatches[amountMatches.length-1];
+            if(kwhMatch)document.getElementById('edit-bill-kwh').value=kwhMatch[1].replace(',','.');
+            if(dates[0])document.getElementById('bill-period-start').value=dates[0];
+            if(dates[1])document.getElementById('bill-period-end').value=dates[1];
+            status.textContent='OCR finished. Review every value; extracted text is not guaranteed correct. '+(result.data.confidence||0).toFixed(0)+'% recognition confidence.';
+          }catch(e){status.textContent='OCR could not read this image. Enter the values manually.';}
+        }
+        function updateDashboardView(){
+          const monthVal=document.getElementById('dash-filter-month')?.value||'all',yearVal=document.getElementById('dash-filter-year')?.value||'all';
+          let filtered=billingRecords.filter(r=>(monthVal==='all'||r.id===monthVal)&&(yearVal==='all'||String(r.year)===yearVal));
+          const totalK=filtered.reduce((a,r)=>a+(Number(r.kwh)||0),0),totalB=filtered.reduce((a,r)=>a+(Number(r.bill)||0),0);
+          const avgK=filtered.length?Math.round(totalK/filtered.length):0,avgB=filtered.length?totalB/filtered.length:0;
+          document.getElementById('dash-stat-kwh').textContent=avgK+' kWh';document.getElementById('dash-stat-bill').textContent='€'+avgB.toFixed(2);document.getElementById('dash-stat-savings').textContent='€'+(avgK*.08).toFixed(2)+' est.';
+          document.getElementById('donut-center-val').textContent=totalK+' kWh';
+          document.getElementById('dash-trend-info').textContent=filtered.length+' saved month(s)';
+          renderDashboardColumnLineChart(filtered);
+          const averages=getCategoryAverages(filtered), entries=Object.entries(averages).filter(([,v])=>v>0);
+          const colors=['#87a96b','#0096c7','#6a0dad','#8c7355','#38b000','#48cae4','#32455c'];
+          const donut=document.getElementById('dynamic-breakdown-donut'),legend=document.getElementById('dynamic-breakdown-legend');
+          if(!entries.length){donut.style.background='conic-gradient(#e8dfd2 0 100%)';legend.innerHTML='<p class="text-xs text-[#7a6452]">No category breakdown saved yet. Add percentages from the donut image when uploading a bill.</p>';return;}
+          let angle=0;const stops=entries.map(([name,value],i)=>{const start=angle;angle+=value;return colors[i%colors.length]+' '+start+'% '+angle+'%';});
+          donut.style.background='conic-gradient('+stops.join(',')+')';
+          legend.innerHTML=entries.map(([name,value],i)=>'<div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full flex-shrink-0" style="background:'+colors[i%colors.length]+'"></span><span>'+name+': '+value.toFixed(1)+'% ('+(totalK*value/100).toFixed(1)+' kWh)</span></div>').join('');
+        }
         // === ECO-BUDDY ENHANCEMENTS (safe additions; original mascot SVG is untouched) ===
         async function loadDublinWeather() {
           const card=document.getElementById('weather-card'); if(!card) return;
