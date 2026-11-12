@@ -1,0 +1,1606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>Eco-Buddy Home Manager V2 ⚡☁️</title>
+
+    <!-- PWA CONFIGURATION -->
+    <link rel="manifest" href="/Saving_Money/manifest.json">
+    <meta name="theme-color" content="#fcf8f2">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Eco-Buddy">
+    <link rel="apple-touch-icon" href="/Saving_Money/icons/icon-192.png">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * { box-sizing: border-box; caret-color: transparent; }
+
+        html {
+            -webkit-text-size-adjust: 100%;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background-color: #fcf8f2;
+            color: #4a3b32;
+            min-height: 100vh;
+            min-height: 100dvh;
+            overflow-x: hidden;
+            padding-top: var(--header-height, 80px);
+        }
+
+        button, input, textarea, select { font-family: inherit; touch-action: manipulation; caret-color: auto; }
+        button { cursor: pointer; }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #f4ecdf; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb { background: #d8c7b0; border-radius: 3px; }
+
+        .vintage-panel {
+            background: linear-gradient(145deg, #fffdfa 0%, #f7f1e5 100%);
+            border: 2px solid #5c4738;
+            box-shadow: 4px 4px 0 #5c4738;
+            border-radius: 1.5rem;
+            width: 100%;
+            max-width: 780px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .vint-card {
+            background: #fffaf4;
+            border: 1.5px solid #5c4738;
+            border-radius: 1rem;
+            box-shadow: 2px 2px 0 #5c4738;
+        }
+
+        /* FIXED HEADER */
+        header {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            z-index: 10000 !important;
+            width: 100%;
+            background: rgba(255,253,250,.97);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 3px 10px rgba(92,71,56,.10);
+        }
+
+        .header-inner {
+            width: 100%;
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        /* 6 TABS NAVIGATION (TĂNG SIZE CHỮ TO RÕ HƠN NỮA) */
+        .nav-pills {
+            width: 100%;
+            max-width: 560px;
+            padding: 5px;
+            display: grid;
+            grid-template-columns: repeat(7, minmax(0, 1fr));
+            gap: 3px;
+            background: #f0e6d6;
+            border-radius: 30px;
+            border: 1px solid #e4d8c5;
+            flex-shrink: 0;
+        }
+
+        .nav-btn {
+            min-width: 0;
+            border: 2px solid transparent;
+            border-radius: 20px;
+            padding: 9px 2px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #4a3b32;
+            background: transparent;
+            transition: .2s;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .nav-btn.active {
+            background: #8c7355;
+            color: white;
+            border-color: #5c4738;
+            box-shadow: 2px 2px 0 #5c4738;
+        }
+
+        #tab-content-tracker,
+        #tab-content-reports,
+        #tab-content-tips,
+        #tab-content-chatbot,
+        #tab-content-checklist,
+        #tab-content-calendar {
+            scroll-margin-top: calc(var(--header-height, 80px) + 12px);
+        }
+
+        /* TIMER */
+        .timer-buttons-grid {
+            display: flex;
+            flex-wrap: nowrap;
+            gap: 8px;
+        }
+
+        .timer-buttons-grid button {
+            flex: 1;
+            min-height: 40px;
+        }
+
+        /* SAFETY CHAT */
+        .chat-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: rgba(252,248,242,.97);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+            padding-top: max(16px, env(safe-area-inset-top));
+            padding-bottom: max(16px, env(safe-area-inset-bottom));
+        }
+
+        .chat-overlay.hidden { display: none; }
+
+        .chat-window {
+            width: min(600px, 100%);
+            max-height: calc(100dvh - 32px);
+            overflow-y: auto;
+            overscroll-behavior: contain;
+            padding: 24px;
+            background: linear-gradient(145deg,#fffdfa,#f7f1e5);
+            border: 2px solid #5c4738;
+            border-radius: 26px;
+            box-shadow: 6px 6px 0 #5c4738;
+        }
+
+        .chat-bubble {
+            background: #f5ede2;
+            border: 1px solid #d8c7b0;
+            padding: 15px;
+            border-radius: 20px;
+            width: 100%;
+        }
+
+        .chat-scene {
+            background: #fffaf4;
+            border: 1.5px dashed #b9a487;
+            border-radius: 22px;
+            min-height: 100px;
+        }
+
+        .chat-choice {
+            width: 100%;
+            min-height: 46px;
+            padding: 12px;
+            background: #fffdfa;
+            border: 1.5px solid #8c7355;
+            border-radius: 15px;
+            text-align: left;
+            font-weight: 700;
+            font-size: 13px;
+            color: #4a3b32;
+            transition: background .2s, transform .15s;
+        }
+
+        .chat-choice:hover { background: #f0e6d6; }
+        .chat-choice:active { transform: scale(.98); }
+
+        /* MASCOT */
+        .eco-mascot {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: visible;
+            flex-shrink: 0;
+            transition: transform 0.3s ease;
+        }
+
+        .eco-character {
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+            animation: mascot-float 3s ease-in-out infinite;
+            transform-origin: center bottom;
+        }
+
+        .eco-character.level-1 .mascot-body-fill { fill: #fff9ed; }
+        .eco-character.level-2 .mascot-body-fill { fill: #eef7eb; }
+        .eco-character.level-3 .mascot-body-fill { fill: #fcf3df; }
+
+        @keyframes mascot-float {
+            0%,100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+        }
+
+        @media (max-width: 640px) {
+            .header-inner {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 9px;
+                padding: 10px 12px;
+            }
+            .nav-pills { max-width: none; width: 100%; }
+            .nav-btn { font-size: 11px; padding: 8px 2px; }
+            main { padding-left: 12px !important; padding-right: 12px !important; padding-top: 16px !important; }
+            .timer-buttons-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); }
+            #custom-minutes { min-width: 0; width: 100%; }
+            .eco-mascot { width: 180px; height: 180px; }
+        }
+        @media (max-width:700px) { .header-inner{display:block;padding:10px 12px}.nav-pills{max-width:100%;display:flex;overflow-x:auto;gap:6px;scrollbar-width:none}.nav-pills::-webkit-scrollbar{display:none}.nav-btn{flex:0 0 auto;min-width:max-content;padding:10px 12px;font-size:13px}main{padding-left:12px!important;padding-right:12px!important}.vintage-panel{padding:16px!important;min-width:0}input,select,textarea{max-width:100%;min-width:0}#dashboard-col-chart{max-width:100%;overflow:hidden} }
+    </style>
+</head>
+
+<body class="min-h-screen flex flex-col justify-between selection:bg-amber-200">
+
+    <!-- HEADER + 6 TABS (CHỈ GIỮ LẠI ĐỒNG HỒ REALTIME) -->
+    <header class="border-b-2 border-[#5c4738]">
+        <div class="header-inner">
+            <div class="flex items-center space-x-2.5">
+                <span class="text-2xl">🌿</span>
+                <div>
+                    <h1 class="font-bold text-base text-[#4a3b32] leading-tight">Eco-Buddy Home Manager <span class="text-[10px] bg-[#8c7355] text-white px-2 py-0.5 rounded-full">V2</span></h1>
+                    <p class="text-xs text-[#7a6452] font-semibold mt-0.5">
+                        🕒 <span id="realtime-clock" class="text-[#5c4738] font-bold"></span>
+                    </p>
+                </div>
+            </div>
+
+            <!-- 6 TABS (TĂNG FONT CHỮ TO RÕ) -->
+            <nav class="nav-pills" aria-label="Main navigation">
+                <button onclick="switchTab('weather')" id="tab-btn-weather" class="nav-btn">🌦️ Weather</button>
+                <button onclick="switchTab('tracker')" id="tab-btn-tracker" class="nav-btn active">⚡ Tariff</button>
+                <button onclick="switchTab('reports')" id="tab-btn-reports" class="nav-btn">📊 Reports</button>
+                <button onclick="switchTab('tips')" id="tab-btn-tips" class="nav-btn">💡 Tips</button>
+                <button onclick="switchTab('chatbot')" id="tab-btn-chatbot" class="nav-btn">☁️ Bé Mây</button>
+                <button onclick="switchTab('checklist')" id="tab-btn-checklist" class="nav-btn">🍳 Cooking</button>
+                <button onclick="switchTab('calendar')" id="tab-btn-calendar" class="nav-btn">📅 Calendar</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- MAIN -->
+    <main class="max-w-4xl mx-auto px-4 py-6 flex-grow w-full space-y-6">
+
+        <!-- MASCOT CARD & LEVEL-UP (GIỮ CHÂN MASCOT GỐC) -->
+        <div id="mascot-global-card" class="vintage-panel p-6 flex flex-col items-center text-center">
+            <div class="w-full flex justify-between items-center px-2 mb-2 text-xs font-extrabold text-[#5c4738]">
+                <span id="mascot-level-badge" class="bg-[#f0e6d6] px-3 py-1 rounded-full border border-[#5c4738]">🌱 Level 1: Sprout</span>
+                <span id="mascot-xp-text" class="text-[#7a6452]">0 / 100 XP</span>
+            </div>
+            <div class="w-full bg-[#f0e6d6] h-2.5 rounded-full border border-[#5c4738] overflow-hidden mb-3">
+                <div id="mascot-xp-bar" class="bg-[#87a96b] h-full w-[0%] transition-all duration-500"></div>
+            </div>
+
+            <div class="relative mb-2 w-full flex justify-center">
+                <div class="eco-mascot">
+                    <svg id="main-mascot-svg" class="eco-character level-1" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+                        <ellipse cx="150" cy="269" rx="66" ry="8" fill="#b9a27b" opacity=".18"/>
+                        <!-- ĐÔI CHÂN GỐC CỦA BÉ MASCOT -->
+                        <path d="M116 220 Q105 239 107 252 Q110 261 134 257 L145 229" fill="#fff9ed" stroke="#75604d" stroke-width="5" stroke-linejoin="round"/>
+                        <ellipse cx="121" cy="257" rx="19" ry="10" fill="#fff9ed" stroke="#75604d" stroke-width="4"/>
+                        <path d="M174 222 Q188 239 185 252 Q182 262 159 257 L151 229" fill="#fff9ed" stroke="#75604d" stroke-width="5" stroke-linejoin="round"/>
+                        <ellipse cx="176" cy="257" rx="19" ry="10" fill="#fff9ed" stroke="#75604d" stroke-width="4"/>
+
+                        <!-- THÂN BÉ MÂY -->
+                        <path class="mascot-body-fill" d="M83 164 Q65 153 69 134 Q53 119 65 101 Q71 82 91 81 Q96 58 119 62 Q137 43 153 57 Q171 43 189 61 Q215 58 224 82 Q246 89 241 111 Q257 129 240 147 Q249 168 229 184 Q232 207 211 220 Q194 236 170 233 Q150 241 128 233 Q102 237 87 218 Q68 207 77 186 Q64 176 83 164 Z" stroke="#75604d" stroke-width="5" stroke-linejoin="round"/>
+
+                        <g>
+                            <path d="M145 57 Q108 45 103 23 Q134 17 151 46 Z" fill="#a3a875" stroke="#756b49" stroke-width="4"/>
+                            <path d="M151 48 Q171 13 198 25 Q194 52 158 62 Z" fill="#7d9368" stroke="#756b49" stroke-width="4"/>
+                        </g>
+
+                        <g id="mascot-face-group">
+                            <ellipse cx="105" cy="137" rx="13" ry="9" fill="#f5bca8"/>
+                            <ellipse cx="197" cy="137" rx="13" ry="9" fill="#f5bca8"/>
+                            <ellipse cx="128" cy="124" rx="5" ry="7" fill="#574b40"/>
+                            <ellipse cx="177" cy="124" rx="5" ry="7" fill="#574b40"/>
+                            <path id="mascot-mouth" d="M146 140 Q151 148 157 140" fill="none" stroke="#574b40" stroke-width="3.5" stroke-linecap="round"/>
+                        </g>
+
+                        <g>
+                            <path d="M78 159 Q113 173 151 158 Q190 173 226 154 L223 178 Q186 194 150 178 Q113 195 81 178 Z" fill="#8e9973" stroke="#6e7457" stroke-width="4"/>
+                            <path d="M204 175 Q224 190 214 217 L197 204 L193 187" fill="#9ca17a" stroke="#6e7457" stroke-width="4"/>
+                        </g>
+
+                        <g>
+                            <path d="M83 165 Q62 161 52 179 Q42 193 51 205 Q62 217 77 198 Q83 190 89 183" fill="#fff9ed" stroke="#75604d" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M220 163 Q244 158 249 136" fill="none" stroke="#75604d" stroke-width="18" stroke-linecap="round"/>
+                            <path d="M220 163 Q244 158 249 136" fill="none" stroke="#fff9ed" stroke-width="12" stroke-linecap="round"/>
+                            <ellipse cx="249" cy="136" rx="8" ry="7" fill="#fff9ed" stroke="#75604d" stroke-width="3"/>
+                        </g>
+                    </svg>
+                </div>
+
+                <div id="status-badge" class="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-[#87a96b] text-white text-[11px] font-extrabold px-4 py-1 rounded-full shadow border-2 border-[#5c4738] whitespace-nowrap">
+                    Normal Hours ☀️
+                </div>
+            </div>
+
+            <h3 class="font-bold text-[#4a3b32] text-base mt-2">Eco Buddy (Bé Mây)</h3>
+            <p class="text-[11px] text-[#7a6452] font-semibold italic mt-0.5">🌿 A little battery, leafy ears, and a friendly companion by your side.</p>
+            <p id="mascot-speech" class="text-xs text-[#5c4738] font-medium bg-[#f5ede2] p-3 rounded-2xl border-1.5 border-[#5c4738] w-full mt-3 leading-relaxed">"Let's save energy together! Complete daily tasks to level me up! 🤍"</p>
+        </div>
+
+        <div id="tab-content-weather" class="hidden space-y-6"><section class="vintage-panel p-5 space-y-4"><div class="flex items-center justify-between gap-3"><div><h2 class="font-bold text-lg">🌦️ Dublin Weather</h2><p class="text-sm text-[#7a6452]">Current conditions and wind</p></div><button onclick="loadDublinWeather()" class="rounded-xl px-3 py-2 bg-[#8c7355] text-white font-bold">Refresh</button></div><div id="weather-card" class="rounded-2xl border-2 border-[#d8c7b0] bg-[#edf1ef] p-5 text-center"><div id="weather-icon" class="text-5xl">🌥️</div><p id="weather-temp" class="text-4xl font-black">--°C</p><p id="weather-description" class="font-bold">Loading weather…</p><div class="grid grid-cols-2 gap-3 mt-4"><div class="rounded-xl bg-white/80 p-3"><p class="text-xs">Wind</p><b id="weather-wind">-- km/h</b></div><div class="rounded-xl bg-white/80 p-3"><p class="text-xs">Feels like</p><b id="weather-feels">--°C</b></div></div></div><p id="weather-advice" class="rounded-xl bg-[#f5ede2] p-4 text-sm">Bé Mây is checking Dublin weather…</p><section class="rounded-2xl border-2 border-[#d8c7b0] bg-[#fffaf2] p-4 space-y-3"><div><h3 class="font-bold text-lg">👗 What to wear today</h3><p id="outfit-summary" class="text-sm text-[#7a6452]">Outfit ideas based on Dublin’s live weather.</p></div><div id="outfit-suggestions" class="space-y-2"><div class="flex gap-2 overflow-x-auto pb-1" id="outfit-choice-tabs"><span class="text-xs text-[#8c7355]">Preparing outfit ideas…</span></div><div id="outfit-look" class="rounded-xl bg-white/90 border border-[#eadfce] p-3"><div class="grid grid-cols-4 gap-2 text-center"><div>🧥<p class="text-[11px]">Coat</p></div><div>👕<p class="text-[11px]">Top</p></div><div>👖<p class="text-[11px]">Bottom</p></div><div>👟<p class="text-[11px]">Shoes</p></div></div></div></div><p class="text-xs text-[#7a6452]">Suggestions are flexible — choose what feels comfortable.</p></section><p class="text-xs text-[#7a6452]">Data from Open-Meteo · Free API, no key required.</p></section></div>
+        <!-- TAB 1: TARIFF & 3 ECO TASKS -->
+        <div id="tab-content-tracker" class="space-y-6">
+            <div class="vintage-panel p-6 space-y-4">
+                <h2 class="font-bold text-[#4a3b32] text-base flex items-center gap-2 border-b-2 border-[#5c4738] pb-2.5">
+                    <span>⚡</span> Daily Electricity Tariff (SST Saver+)
+                </h2>
+
+                <div class="space-y-3 text-xs sm:text-sm">
+                    <div class="vint-card p-3.5 flex items-start justify-between gap-3 bg-[#f2f7ec]">
+                        <div class="flex-1 min-w-0">
+                            <p class="font-extrabold text-[#3b4a32]">☀️ Day Rate</p>
+                            <p class="text-[#5c6a52] text-[11px] mt-0.5">08:00 - 17:00 & 19:00 - 23:00</p>
+                        </div>
+                        <span class="font-black text-[#3b4a32] bg-[#d9e8cc] px-2.5 py-1 rounded-xl border border-[#5c4738] whitespace-nowrap">€0.3719/kWh</span>
+                    </div>
+
+                    <div class="p-3.5 rounded-2xl bg-[#fbe8e6] border-2 border-[#5c4738] flex items-start justify-between gap-3 shadow-[2px_2px_0px_#5c4738]">
+                        <div class="flex-1 min-w-0">
+                            <p class="font-extrabold text-[#5c3232]">🔴 Peak Rate</p>
+                            <p class="text-[#7c4d4d] text-[11px] mt-0.5">17:00 - 19:00 (Limit high-energy appliances)</p>
+                        </div>
+                        <span class="font-black text-[#5c3232] bg-[#f5d0cd] px-2.5 py-1 rounded-xl border border-[#5c4738] whitespace-nowrap">€0.3968/kWh</span>
+                    </div>
+
+                    <div class="vint-card p-3.5 flex items-start justify-between gap-3 bg-[#eaf2f8]">
+                        <div class="flex-1 min-w-0">
+                            <p class="font-extrabold text-[#32455c]">🟢 Night Rate (Cheapest)</p>
+                            <p class="text-[#4e647d] text-[11px] mt-0.5">23:00 - 08:00</p>
+                        </div>
+                        <span class="font-black text-[#32455c] bg-[#cfe2f3] px-2.5 py-1 rounded-xl border border-[#5c4738] whitespace-nowrap">€0.1954/kWh</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3 DAILY ECO TASKS -->
+            <div class="vintage-panel p-6 space-y-3">
+                <h3 class="font-bold text-[#4a3b32] text-sm flex items-center justify-between">
+                    <span class="flex items-center gap-2"><span>🌱</span> Daily Eco Tasks (1 time/day)</span>
+                    <span id="eco-points-label" class="text-xs bg-[#8c7355] text-white px-2.5 py-1 rounded-xl">0 Points 🌱</span>
+                </h3>
+                <div class="space-y-2 text-xs" id="tasks-container">
+                    <div class="vint-card p-3 flex items-center justify-between gap-2 bg-white" id="task-card-0">
+                        <div>
+                            <p class="font-bold text-[#4a3b32]">Turn off lights when leaving rooms (+20 XP)</p>
+                            <p class="text-[10px] text-[#7a6452]">Check all rooms in the house.</p>
+                        </div>
+                        <button onclick="completeTask(0, 20)" id="task-btn-0" class="px-3 py-1.5 bg-[#87a96b] text-white font-bold rounded-xl border border-[#5c4738] hover:opacity-90 flex-shrink-0">Complete</button>
+                    </div>
+                    <div class="vint-card p-3 flex items-center justify-between gap-2 bg-white" id="task-card-1">
+                        <div>
+                            <p class="font-bold text-[#4a3b32]">Laundry during Night Saver hours (+30 XP)</p>
+                            <p class="text-[10px] text-[#7a6452]">Run washing machine after 23:00.</p>
+                        </div>
+                        <button onclick="completeTask(1, 30)" id="task-btn-1" class="px-3.5 py-1.5 bg-[#87a96b] text-white font-bold rounded-xl border border-[#5c4738] hover:opacity-90 flex-shrink-0">Complete</button>
+                    </div>
+                    <div class="vint-card p-3 flex items-center justify-between gap-2 bg-white" id="task-card-2">
+                        <div>
+                            <p class="font-bold text-[#4a3b32]">Put away dry dishes (+20 XP)</p>
+                            <p class="text-[10px] text-[#7a6452]">Keep the kitchen tidy and organized.</p>
+                        </div>
+                        <button onclick="completeTask(2, 20)" id="task-btn-2" class="px-3.5 py-1.5 bg-[#87a96b] text-white font-bold rounded-xl border border-[#5c4738] hover:opacity-90 flex-shrink-0">Complete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2: REPORTS (CHIA THÀNH 3 TAB CON: UPLOAD & EDIT, LISTING, DASHBOARD) -->
+        <div id="tab-content-reports" class="hidden space-y-6">
+            <div class="vintage-panel p-6 space-y-5">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b-2 border-[#5c4738] pb-3 gap-3">
+                    <div>
+                        <h2 class="font-bold text-[#4a3b32] text-base flex items-center gap-2"><span>📊</span> Energy Analytics & Reports</h2>
+                        <p class="text-[11px] text-[#7a6452] mt-0.5">Manage bills, edit data, list history & view dashboard analytics</p>
+                    </div>
+                </div>
+
+                <!-- 3 SUB-TABS CHO REPORTS -->
+                <div class="grid grid-cols-3 gap-2 text-xs">
+                    <button onclick="switchReportSubTab('upload')" id="subtab-btn-upload" class="p-2.5 bg-[#8c7355] text-white font-bold rounded-xl border border-[#5c4738]">1. Upload & Edit Bill</button>
+                    <button onclick="switchReportSubTab('listing')" id="subtab-btn-listing" class="p-2.5 bg-[#fffaf4] text-[#4a3b32] font-bold rounded-xl border border-[#5c4738]">2. Billing Listing</button>
+                    <button onclick="switchReportSubTab('dashboard')" id="subtab-btn-dashboard" class="p-2.5 bg-[#fffaf4] text-[#4a3b32] font-bold rounded-xl border border-[#5c4738]">3. Dashboard & Avg</button>
+                </div>
+
+                <!-- SUB-TAB 1: UPLOAD & EDIT BILL -->
+                <div id="report-subtab-upload" class="space-y-4 vint-card p-4 bg-white">
+                    <h3 class="font-bold text-xs text-[#5c4738]">📷 Upload Bill Image & Adjust Data</h3>
+                    <div class="flex flex-col sm:flex-row items-center gap-3">
+                        <label class="w-full sm:w-auto px-4 py-2 bg-[#8c7355] text-white font-bold rounded-xl border border-[#5c4738] text-xs cursor-pointer text-center shadow">
+                            <span>Browse & Upload Bill Image</span>
+                            <input type="file" id="bill-img-file" accept="image/*" class="hidden" onchange="previewUploadedBill(event)">
+                        </label>
+                        <span id="upload-status-text" class="text-xs font-bold text-[#7a6452]">No bill uploaded yet.</span>
+                    </div>
+
+                    <div id="bill-preview-container" class="hidden">
+                        <img id="bill-preview-img" src="" alt="Bill preview" class="max-h-40 rounded-xl border border-[#5c4738] object-contain">
+                    </div>
+
+                    <!-- FORM CHỈNH SỬA THÔNG TIN BILL TRƯỚC KHI SAVE -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-[#d8c7b0] text-xs">
+                        <div>
+                            <label class="font-bold text-[#7a6452]">Month / Period Name:</label>
+                            <input type="text" id="edit-bill-month" value="September 2026" class="w-full px-3 py-2 rounded-xl border border-[#5c4738] font-bold mt-1">
+                        </div>
+                        <div>
+                            <label class="font-bold text-[#7a6452]">Year:</label>
+                            <input type="number" id="edit-bill-year" value="2026" class="w-full px-3 py-2 rounded-xl border border-[#5c4738] font-bold mt-1">
+                        </div>
+                        <div>
+                            <label class="font-bold text-[#7a6452]">Total Bill Amount (€):</label>
+                            <input type="number" id="edit-bill-amount" value="123.00" step="0.01" class="w-full px-3 py-2 rounded-xl border border-[#5c4738] font-bold mt-1">
+                        </div>
+                        <div>
+                            <label class="font-bold text-[#7a6452]">Total kWh Usage:</label>
+                            <input type="number" id="edit-bill-kwh" value="410" class="w-full px-3 py-2 rounded-xl border border-[#5c4738] font-bold mt-1">
+                        </div>
+                    </div>
+
+                    <button onclick="saveEditedBill()" class="w-full py-2.5 bg-[#87a96b] text-white font-bold rounded-xl border border-[#5c4738] text-xs shadow">💾 Save Bill Data & Update Dashboard</button>
+                </div>
+
+                <!-- SUB-TAB 2: LISTING HISTORY (DẠNG KHUNG THẺ NỐI TIẾP NHƯ TARIFF) -->
+                <div id="report-subtab-listing" class="hidden space-y-3">
+                    <h3 class="font-bold text-xs text-[#5c4738]">📋 Historical Billing Listing</h3>
+                    <div id="billing-listing-container" class="space-y-3 text-xs">
+                        <!-- Render qua JS -->
+                    </div>
+                </div>
+
+                <!-- SUB-TAB 3: DASHBOARD (COLUMN + LINE CHO TỪNG THÁNG & DONUT CHART PHÂN BỔ) -->
+                <div id="report-subtab-dashboard" class="hidden space-y-5">
+                    <!-- SLIDE CARDS LỌC MONTH & YEAR -->
+                    <div class="grid grid-cols-2 gap-3 text-xs">
+                        <div class="vint-card p-3 bg-white space-y-1">
+                            <label class="font-bold text-[#7a6452]">📅 Filter by Month:</label>
+                            <select id="dash-filter-month" onchange="updateDashboardView()" class="w-full px-2.5 py-1.5 rounded-xl border border-[#5c4738] font-bold bg-[#f5ede2]">
+                                <option value="all">-- All Months (Average) --</option>
+                            </select>
+                        </div>
+                        <div class="vint-card p-3 bg-white space-y-1">
+                            <label class="font-bold text-[#7a6452]">📆 Filter by Year:</label>
+                            <select id="dash-filter-year" onchange="updateDashboardView()" class="w-full px-2.5 py-1.5 rounded-xl border border-[#5c4738] font-bold bg-[#f5ede2]">
+                                <option value="all">-- All Years --</option>
+                                <option value="2026">2026</option>
+                                <option value="2025">2025</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- SLIDE CARDS TỔNG QUAN -->
+                    <div class="grid grid-cols-3 gap-3 text-xs">
+                        <div class="vint-card p-3 bg-white space-y-1">
+                            <p class="text-[10px] font-bold text-[#7a6452]">Selected / Avg kWh</p>
+                            <p id="dash-stat-kwh" class="text-base font-black text-[#32455c]">0 kWh</p>
+                        </div>
+                        <div class="vint-card p-3 bg-white space-y-1">
+                            <p class="text-[10px] font-bold text-[#7a6452]">Selected / Avg Bill</p>
+                            <p id="dash-stat-bill" class="text-base font-black text-[#5c3232]">€0.00</p>
+                        </div>
+                        <div class="vint-card p-3 bg-white space-y-1">
+                            <p class="text-[10px] font-bold text-[#7a6452]">Estimated Savings</p>
+                            <p id="dash-stat-savings" class="text-base font-black text-[#3b4a32]">€45.00 cr</p>
+                        </div>
+                    </div>
+
+                    <!-- BIỂU ĐỒ CỘT (TIỀN ĐIỆN) KẾT HỢP LINE (KWH) -->
+                    <div class="vint-card p-4 bg-white space-y-3">
+                        <div class="flex items-center justify-between">
+                            <p class="text-xs font-bold text-[#5c4738]">📈 Bill (€ - Columns) & kWh Usage (Lines)</p>
+                            <span id="dash-trend-info" class="text-[10px] bg-[#f0e6d6] px-2.5 py-0.5 rounded-full font-bold text-[#5c4738]">Auto Average Calculated</span>
+                        </div>
+                        <div id="dashboard-col-chart" class="flex items-end justify-around h-36 pt-6 px-4 border-b-2 border-[#5c4738] relative">
+                            <!-- Rendered via JS -->
+                        </div>
+                        <div id="dashboard-x-labels" class="flex justify-around text-[10px] font-bold text-[#7a6452] px-2">
+                            <!-- Rendered via JS -->
+                        </div>
+                    </div>
+
+                    <!-- DONUT CHART PHÂN BỔ CÁC THÀNH PHẦN (WATER HEATING, LIGHTING, ETC) -->
+                    <div class="vint-card p-5 bg-[#fffaf4] flex flex-col items-center space-y-4">
+                        <p class="text-xs font-bold text-[#5c4738]">🍩 Breakdown Donut Chart (Based on Bill Scan / Est. Avg)</p>
+                        
+                        <div class="relative w-56 h-56 flex items-center justify-center">
+                            <svg class="w-full h-full transform -rotate-90" viewBox="0 0 200 200">
+                                <circle cx="100" cy="100" r="70" fill="transparent" stroke="#87a96b" stroke-width="26" stroke-dasharray="439.8" stroke-dashoffset="0"></circle>
+                                <circle cx="100" cy="100" r="70" fill="transparent" stroke="#0096c7" stroke-width="26" stroke-dasharray="439.8" stroke-dashoffset="-154"></circle>
+                                <circle cx="100" cy="100" r="70" fill="transparent" stroke="#6a0dad" stroke-width="26" stroke-dasharray="439.8" stroke-dashoffset="-264"></circle>
+                                <circle cx="100" cy="100" r="70" fill="transparent" stroke="#8c7355" stroke-width="26" stroke-dasharray="439.8" stroke-dashoffset="-330"></circle>
+                                <circle cx="100" cy="100" r="70" fill="transparent" stroke="#38b000" stroke-width="26" stroke-dasharray="439.8" stroke-dashoffset="-374"></circle>
+                                <circle cx="100" cy="100" r="70" fill="transparent" stroke="#48cae4" stroke-width="26" stroke-dasharray="439.8" stroke-dashoffset="-409"></circle>
+                                <circle cx="100" cy="100" r="70" fill="transparent" stroke="#32455c" stroke-width="26" stroke-dasharray="439.8" stroke-dashoffset="-427"></circle>
+                            </svg>
+
+                            <div class="absolute flex flex-col items-center justify-center text-center">
+                                <span class="text-[10px] font-extrabold text-[#7a6452] uppercase tracking-wider">Active Total</span>
+                                <span id="donut-center-val" class="text-base font-black text-[#32455c]">0 kWh</span>
+                            </div>
+                        </div>
+
+                        <!-- CHÚ THÍCH CÁC CATEGORY -->
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 w-full text-[11px] font-bold text-[#4a3b32]">
+                            <div class="vint-card p-2 bg-white flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#0096c7] flex-shrink-0"></span> Other (25%)</div>
+                            <div class="vint-card p-2 bg-white flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#87a96b] flex-shrink-0"></span> Water Heating (35%)</div>
+                            <div class="vint-card p-2 bg-white flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#6a0dad] flex-shrink-0"></span> Cooking (15%)</div>
+                            <div class="vint-card p-2 bg-white flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#8c7355] flex-shrink-0"></span> Laundry (10%)</div>
+                            <div class="vint-card p-2 bg-white flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#38b000] flex-shrink-0"></span> Lighting (8%)</div>
+                            <div class="vint-card p-2 bg-white flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#48cae4] flex-shrink-0"></span> Refrigeration (4%)</div>
+                            <div class="vint-card p-2 bg-white flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#32455c] flex-shrink-0"></span> Always On (3%)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- REMINDERS & TIPS -->
+            <div class="vintage-panel p-6 space-y-3">
+                <h3 class="font-bold text-[#4a3b32] text-sm flex items-center gap-2"><span>💡</span> Daily Reminders & Basic Rules:</h3>
+                <ul class="text-xs space-y-2 text-[#5c4738] font-medium">
+                    <li class="bg-[#fffaf4] px-3 py-2.5 rounded-xl border border-[#5c4738]/30">💡 <strong>Turn off the lights:</strong> Remember to switch off room and hallway lights when not in use.</li>
+                    <li class="bg-[#fffaf4] px-3 py-2.5 rounded-xl border border-[#5c4738]/30">🔒 <strong>Check the doors:</strong> Make sure the doors are locked and the kitchen door is closed.</li>
+                    <li class="bg-[#fffaf4] px-3 py-2.5 rounded-xl border border-[#5c4738]/30">🔌 <strong>Unplug devices:</strong> Unplug standby appliances (TV, microwave) when not in use.</li>
+                    <li class="bg-[#fffaf4] px-3 py-2.5 rounded-xl border border-[#5c4738]/30">🚿 <strong>Water heater:</strong> Remember to switch off the water heater after showering.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- TAB 3: SMART TIPS & FLASHCARDS -->
+        <div id="tab-content-tips" class="hidden space-y-6">
+            <div class="vintage-panel p-6 space-y-4">
+                <div class="flex items-center justify-between border-b-2 border-[#5c4738] pb-2.5">
+                    <div>
+                        <h2 class="font-bold text-[#4a3b32] text-base flex items-center gap-2"><span>💡</span> Smart Energy Tips & Weekly Flashcards</h2>
+                        <p class="text-[11px] text-[#7a6452] mt-0.5">Curated expert tips (3 rotating flashcards per week from our 40+ database)</p>
+                    </div>
+                    <span id="weekly-tip-badge" class="bg-[#8c7355] text-white text-[10px] font-bold px-2.5 py-1 rounded-full">Week 1 / 4</span>
+                </div>
+
+                <div id="weekly-flashcards-container" class="space-y-3"></div>
+            </div>
+        </div>
+
+        <!-- TAB 4: BÉ MÂY CHATBOT HUB -->
+        <div id="tab-content-chatbot" class="hidden space-y-6">
+            <div class="vintage-panel p-6 space-y-4">
+                <div class="vint-card p-3.5 bg-gradient-to-r from-[#f7f1e5] to-[#f0e6d6] flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-[#8c7355] text-white flex items-center justify-center font-black text-lg border border-[#5c4738]">☁️</div>
+                        <div>
+                            <h2 class="font-extrabold text-sm text-[#4a3b32]">Ask Atlantic / Bé Mây Hub</h2>
+                            <p class="text-[10px] text-[#7a6452]">Live Weekly Schedule · 10 Eco Questions per Week (40 Total Pool)</p>
+                        </div>
+                    </div>
+                    <span id="weekly-quiz-counter" class="bg-[#87a96b] text-white text-[10px] font-extrabold px-2.5 py-1 rounded-full border border-[#5c4738]">Week 1: Q 1/10</span>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2 text-xs">
+                    <button onclick="setChatMode('quiz')" id="mode-btn-quiz" class="p-2.5 bg-[#8c7355] text-white font-bold rounded-xl border border-[#5c4738]">🧠 Weekly Eco Quiz (10 Qs)</button>
+                    <button onclick="setChatMode('chat')" id="mode-btn-chat" class="p-2.5 bg-[#fffaf4] text-[#4a3b32] font-bold rounded-xl border border-[#5c4738]">💬 Ask Bé Mây</button>
+                </div>
+
+                <div class="vint-card p-4 bg-white space-y-3">
+                    <div id="chatbot-messages" class="space-y-2.5 max-h-96 overflow-y-auto pr-1 text-xs">
+                        <div class="bg-[#f5ede2] p-3 rounded-2xl border border-[#d8c7b0]">
+                            <p class="font-bold text-[#5c4738]">Bé Mây ☁️ [Atlantic Style]</p>
+                            <p class="mt-1 text-[#4a3b32]">Ahoy, traveller! Welcome to this week's 10-question eco challenge straight from our 40-question master pool. Let's test your knowledge!</p>
+                        </div>
+                    </div>
+
+                    <div id="chatbot-input-area" class="hidden flex gap-2 pt-2 border-t border-[#d8c7b0]">
+                        <input type="text" id="chat-input-text" placeholder="Type a message to Bé Mây..." class="flex-1 px-3 py-2 rounded-xl border border-[#5c4738] text-xs">
+                        <button onclick="sendUserMessage()" class="px-4 py-2 bg-[#8c7355] text-white font-bold rounded-xl border border-[#5c4738] text-xs">Send</button>
+                    </div>
+
+                    <div id="chatbot-quiz-area" class="space-y-2 pt-2 border-t border-[#d8c7b0]">
+                        <p id="quiz-question" class="text-xs font-bold text-[#5c4738]">Loading question...</p>
+                        <div id="quiz-options" class="grid grid-cols-1 gap-1.5"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 5: COOKING CHECKLIST -->
+        <div id="tab-content-checklist" class="hidden space-y-6">
+            <div class="vintage-panel p-6 space-y-4">
+                <h2 class="font-bold text-[#4a3b32] text-base flex items-center gap-2 border-b-2 border-[#5c4738] pb-2.5">
+                    <span>🍳</span> Cooking Timer & Kitchen Safety Checklist
+                </h2>
+
+                <div class="vint-card p-4 space-y-3 bg-white" id="timer-setup-box">
+                    <p class="text-xs font-bold text-[#4a3b32]">⏱️ Choose a cooking time or enter your own:</p>
+                    <div class="timer-buttons-grid">
+                        <button onclick="setTimerMinutes(15)" class="px-3.5 py-1.5 bg-[#f5ede2] hover:bg-[#e8dac7] text-[#4a3b32] rounded-xl text-xs font-bold border border-[#5c4738] transition">15 min</button>
+                        <button onclick="setTimerMinutes(30)" class="px-3.5 py-1.5 bg-[#f5ede2] hover:bg-[#e8dac7] text-[#4a3b32] rounded-xl text-xs font-bold border border-[#5c4738] transition">30 min</button>
+                        <button onclick="setTimerMinutes(45)" class="px-3.5 py-1.5 bg-[#f5ede2] hover:bg-[#e8dac7] text-[#4a3b32] rounded-xl text-xs font-bold border border-[#5c4738] transition">45 min</button>
+                        <button onclick="setTimerMinutes(60)" class="px-3.5 py-1.5 bg-[#f5ede2] hover:bg-[#e8dac7] text-[#4a3b32] rounded-xl text-xs font-bold border border-[#5c4738] transition">60 min</button>
+                    </div>
+
+                    <div class="flex items-center gap-2 pt-1">
+                        <input type="number" id="custom-minutes" placeholder="Enter custom minutes..." min="1" max="180" class="flex-1 px-3 py-2 rounded-xl border-1.5 border-[#5c4738] text-xs bg-[#fffaf4]">
+                        <button onclick="startCustomTimer()" class="px-4 py-2 bg-[#8c7355] text-white text-xs font-bold rounded-xl border-1.5 border-[#5c4738] shadow-[2px_2px_0px_#5c4738] transition whitespace-nowrap">Start</button>
+                    </div>
+                </div>
+
+                <div id="timer-display-box" class="hidden p-4 rounded-2xl bg-[#f5ede2] border-1.5 border-[#5c4738] text-center space-y-3 shadow-[2px_2px_0px_#5c4738]">
+                    <div>
+                        <p class="text-xs font-bold text-[#5c3232]">⏳ Cooking countdown...</p>
+                        <p id="countdown-text" class="text-3xl font-black text-[#4a3b32] mt-1">00:00</p>
+                    </div>
+
+                    <div class="bg-white p-3 rounded-xl border border-[#5c4738]/40 flex items-center justify-between gap-2 text-xs">
+                        <span class="font-bold text-[#4a3b32] flex items-center gap-1.5">🚪 Have you closed the kitchen door?</span>
+                        <input type="checkbox" id="kitchen-door-checkbox" class="w-4 h-4 accent-[#8c7355] cursor-pointer">
+                    </div>
+
+                    <button onclick="stopTimer()" class="px-3 py-2 bg-[#fbe8e6] hover:bg-[#f5d0cd] text-[#5c3232] rounded-lg text-xs font-bold border border-[#5c4738]">Cancel Timer</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 6: CALENDAR (CÓ NHẮC ĐÓNG TIỀN NHÀ NGÀY 1 & PHÂN BIỆT ĐỔ RÁC) -->
+        <div id="tab-content-calendar" class="hidden space-y-6">
+            <div class="vintage-panel p-6 space-y-4">
+                <div class="flex items-center justify-between border-b-2 border-[#5c4738] pb-2.5 gap-2">
+                    <h2 class="font-bold text-[#4a3b32] text-base flex items-center gap-2"><span>📅</span> Waste Collection & Rent Payment</h2>
+                    <div class="flex items-center gap-2 flex-shrink-0">
+                        <button onclick="changeCalendarMonth(-1)" class="px-2.5 py-1 bg-[#f0e6d6] rounded-lg border border-[#5c4738] text-xs font-bold">◀</button>
+                        <span id="calendar-month-label" class="text-xs font-extrabold text-[#5c4738] min-w-[100px] text-center">Month...</span>
+                        <button onclick="changeCalendarMonth(1)" class="px-2.5 py-1 bg-[#f0e6d6] rounded-lg border border-[#5c4738] text-xs font-bold">▶</button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-7 gap-1 text-center text-[11px] font-extrabold text-[#7a6452] mb-2">
+                    <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+                </div>
+
+                <div id="calendar-days" class="grid grid-cols-7 gap-1.5"></div>
+
+                <!-- CHÚ THÍCH MÀU SẮC LỊCH -->
+                <div class="vint-card p-3 bg-white space-y-1.5 text-xs">
+                    <p class="font-bold text-[#5c4738]">📌 Calendar Legend & Notes:</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                        <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#d9534f] inline-block"></span> <span>🗑️ Waste Collection Day (Tuesday)</span></div>
+                        <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#bc6c25] inline-block"></span> <span>🏠 Rent Payment Due (1st of Month)</span></div>
+                        <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#6a0dad] inline-block"></span> <span>⚠️ Overlapping (Waste & Rent Due Same Day)</span></div>
+                    </div>
+                </div>
+
+                <div class="vint-card p-3 bg-[#fff5f0] text-center">
+                    <p id="next-trash-reminder" class="text-xs font-bold text-[#9c413b]">Next schedule reminder...</p>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- SAFETY CHAT -->
+    <section id="safety-chat-overlay" class="chat-overlay hidden" role="dialog" aria-modal="true">
+        <div class="chat-window">
+            <div class="flex justify-between items-center border-b-2 border-[#d8c7b0] pb-3 gap-2">
+                <div>
+                    <p class="text-xs font-bold text-[#8c7355]">ECO-BUDDY HOME MANAGER V2</p>
+                    <h2 class="text-lg font-extrabold">Let's check the kitchen together!</h2>
+                </div>
+                <button onclick="closeSafetyChat()" class="rounded-full border border-[#8c7355] px-3 py-2 font-bold flex-shrink-0">✕</button>
+            </div>
+
+            <div class="flex flex-col items-center py-3 gap-2">
+                <div id="chat-mascot" class="eco-mascot" style="width:140px;height:140px;"></div>
+                <div class="chat-bubble">
+                    <p class="font-extrabold text-sm mb-0.5 text-[#5c4738]">Eco Buddy ☁️</p>
+                    <p id="chat-question" class="text-sm font-medium text-[#4a3b32]">Time's up! Let's check the kitchen together!</p>
+                </div>
+            </div>
+
+            <div id="chat-scene" class="chat-scene text-center text-5xl py-3 flex items-center justify-center shadow-inner">🔥</div>
+
+            <div class="bg-[#f5ede2] rounded-2xl p-3.5 mb-3 mt-3 border border-[#d8c7b0]">
+                <p id="chat-action-title" class="font-extrabold text-sm mb-0.5 text-[#5c4738]">Turn off the cooker</p>
+                <p id="chat-action-hint" class="text-xs text-[#7a6452] font-medium"></p>
+            </div>
+
+            <div id="chat-actions" class="space-y-2"></div>
+            <p id="chat-progress" class="text-xs text-[#8c7355] text-center font-bold mt-3">Step 1 / 5</p>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="text-center py-5 text-xs text-[#7a6452] font-medium border-t-2 border-[#5c4738] bg-[#f7f1e5] mt-4">
+        Eco-Buddy Home Manager V2 · Vintage Pastel Edition 🌿🤍
+    </footer>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        let currentXP = 0;
+        let currentPoints = 0;
+        let completedTasks = [false, false, false];
+
+        // KHO 40 CÂU HỎI QUIZ (GIỚI HẠN 1 TUẦN 10 CÂU)
+        const ecoQuizPool = [
+            { q: "Which appliance consumes the most standby power in a typical home?", options: ["A. Microwave / TV", "B. LED Light bulb"], correct: 0, explain: "Correct! Microwaves and TVs draw continuous standby power." },
+            { q: "What is the cheapest time period for electricity under SST Saver+?", options: ["A. 17:00 - 19:00 (Peak)", "B. 23:00 - 08:00 (Night Saver)"], correct: 1, explain: "Correct! Night rate is €0.1954/kWh, much cheaper than day/peak rates." },
+            { q: "Which activity uses the most energy in household water heating?", options: ["A. Taking long showers", "B. Washing hands with cold water"], correct: 0, explain: "Correct! Heating water for long showers consumes massive energy." },
+            { q: "When is the worst time to run your washing machine or dishwasher?", options: ["A. Peak Hours (17:00 - 19:00)", "B. Night Saver Hours (after 23:00)"], correct: 0, explain: "Correct! Peak hours have the highest rate (€0.3968/kWh)." },
+            { q: "How much XP do you get when completing the Kitchen Safety Checklist?", options: ["A. +10 XP", "B. +30 XP"], correct: 1, explain: "Correct! You earn +30 XP for completing all 5 kitchen safety steps!" },
+            { q: "What color badge does Bé Mây show during Night Saver hours?", options: ["A. 🟢 Green Badge", "B. 🔴 Red Badge"], correct: 0, explain: "Correct! Green badge indicates Night Saver rate is active." },
+            { q: "Is it good practice to leave phone chargers plugged into the wall 24/7?", options: ["A. Yes, it uses zero power", "B. No, they draw a small idle current"], correct: 1, explain: "Correct! Unplugging idle chargers saves standby energy." },
+            { q: "What day of the week is waste collection scheduled in the calendar?", options: ["A. Tuesday", "B. Saturday"], correct: 0, explain: "Correct! Tuesdays are marked as waste collection days." },
+            { q: "What level does Bé Mây reach after passing 100 XP?", options: ["A. Level 1: Sprout", "B. Level 2: Green Sprout"], correct: 1, explain: "Correct! Reaching 100 XP upgrades Bé Mây to Level 2." },
+            { q: "Why should you cover pots with lids when cooking?", options: ["A. Food cooks faster and saves energy", "B. It makes the kitchen colder"], correct: 0, explain: "Correct! Lids trap heat so water boils faster with less energy." },
+            // Tuần 2
+            { q: "How much does Night Saver electricity cost approximately per kWh?", options: ["A. €0.1954/kWh", "B. €0.5000/kWh"], correct: 0, explain: "Correct! Night Saver is €0.1954/kWh." },
+            { q: "What is the peak hours rate window?", options: ["A. 17:00 - 19:00", "B. 12:00 - 14:00"], correct: 0, explain: "Correct! Peak hours are strictly between 17:00 and 19:00." },
+            { q: "Does LED lighting use significantly less energy than incandescent bulbs?", options: ["A. Yes, up to 80-90% less", "B. No, they use the same"], correct: 0, explain: "Correct! LEDs are highly energy efficient." },
+            { q: "What should you check right after cooking?", options: ["A. Cooker, hood, oven and lights", "B. The weather forecast"], correct: 0, explain: "Correct! Kitchen safety checklist includes cooker, hood, oven, lights and wipe." },
+            { q: "How many daily eco tasks are available in the app?", options: ["A. 3 tasks", "B. 10 tasks"], correct: 0, explain: "Correct! There are 3 daily eco tasks." },
+            { q: "What is the main mascot of this app called?", options: ["A. Bé Mây (Eco Buddy)", "B. Robo Spark"], correct: 0, explain: "Correct! Bé Mây is your friendly companion." },
+            { q: "Is keeping your refrigerator door open too long energy-efficient?", options: ["A. No, it lets cold air escape", "B. Yes, it cools the kitchen"], correct: 0, explain: "Correct! Keeping fridge doors closed saves compressor energy." },
+            { q: "Where is the electricity tariff benchmarked in this app?", options: ["A. Dublin, Ireland (SST Saver+)", "B. Tokyo, Japan"], correct: 0, explain: "Correct! Configured for Dublin, Ireland." },
+            { q: "Can you store your XP and Eco Points across page reloads?", options: ["A. Yes, via localStorage", "B. No, it resets every time"], correct: 0, explain: "Correct! localStorage safely keeps your score." },
+            { q: "What is the reward for completing the 5-step Kitchen Safety check?", options: ["A. +30 XP", "B. +5 XP"], correct: 0, explain: "Correct! You get +30 XP." },
+            // Tuần 3
+            { q: "Which room in a typical apartment consumes the most lighting energy if left on?", options: ["A. Living room & Kitchen", "B. Balcony"], correct: 0, explain: "Correct! Living room and kitchen have multiple active fixtures." },
+            { q: "What is phantom load?", options: ["A. Energy consumed by appliances in standby mode", "B. Power outage"], correct: 0, explain: "Correct! Standby power is phantom load." },
+            { q: "Does washing clothes at 30°C save more energy than 60°C?", options: ["A. Yes, significantly less water heating required", "B. No, identical energy"], correct: 0, explain: "Correct! Lower temperature saves most of the washing machine's energy." },
+            { q: "How can you optimize refrigerator temperature?", options: ["A. Keep it at 3-5°C and freezer at -18°C", "B. Max cooling 24/7"], correct: 0, explain: "Correct! Recommended temperatures prevent overworking the compressor." },
+            { q: "Is natural ventilation better than running AC during mild weather?", options: ["A. Yes, saves 100% cooling energy", "B. No"], correct: 0, explain: "Correct! Natural ventilation is eco-friendly." },
+            { q: "What is the benefit of full loads in dishwashers?", options: ["A. Maximizes water and energy efficiency per dish", "B. None"], correct: 0, explain: "Correct! Running full loads prevents wasting cycles." },
+            { q: "Why unplug hair dryers or straighteners after use?", options: ["A. Safety and standby elimination", "B. To keep them cold"], correct: 0, explain: "Correct! Heat appliances draw power and pose fire risks." },
+            { q: "How often should waste collection be checked in the app calendar?", options: ["A. Every Tuesday", "B. Once a year"], correct: 0, explain: "Correct! Tuesdays are collection days." },
+            { q: "What happens when you reach 250 XP?", options: ["A. Unlock Level 3: Eco Master 🌿", "B. Reset score"], correct: 0, explain: "Correct! Level 3 is Eco Master." },
+            { q: "How many flashcard tips are displayed per week in the Tips tab?", options: ["A. 3 curated tips", "B. 50 tips"], correct: 0, explain: "Correct! Exactly 3 rotating tips per week." },
+            // Tuần 4
+            { q: "What is the best way to defrost frozen food?", options: ["A. Move it to the fridge in advance", "B. Use boiling water"], correct: 0, explain: "Correct! Fridge defrosting uses zero electricity." },
+            { q: "Does closing doors to unused rooms help heating/cooling efficiency?", options: ["A. Yes, zones the conditioned air", "B. No effect"], correct: 0, explain: "Correct! Zoning rooms saves HVAC energy." },
+            { q: "What is the main goal of Eco-Buddy Home Manager V2?", options: ["A. Track tariffs, habits, and save household energy", "B. Play arcade games"], correct: 0, explain: "Correct! Designed for home energy management." },
+            { q: "Are LED bulbs recyclable?", options: ["A. Yes, at specialized e-waste recycling points", "B. No, throw in regular trash"], correct: 0, explain: "Correct! E-waste recycling handles LEDs." },
+            { q: "What is the purpose of the 5-step kitchen safety check?", options: ["A. Prevent fire hazards and save electricity after cooking", "B. Clean windows"], correct: 0, explain: "Correct! Safety first." },
+            { q: "How many Eco Points do you get for rating a tip?", options: ["A. +10 Eco Points", "B. 0 points"], correct: 0, explain: "Correct! +10 Points." },
+            { q: "Can you customize the cooking timer?", options: ["A. Yes, select presets or enter custom minutes", "B. No"], correct: 0, explain: "Correct! Fully customizable." },
+            { q: "Is daylight harvesting (using natural sunlight) effective?", options: ["A. Yes, reduces artificial lighting needs", "B. No"], correct: 0, explain: "Correct! Natural light is free and clean." },
+            { q: "What color is the Night Saver badge in the app?", options: ["A. Green 🟢", "B. Red 🔴"], correct: 0, explain: "Correct! Green." },
+            { q: "How do you level up Bé Mây?", options: ["A. Complete daily tasks, quizzes and safety checks", "B. Do nothing"], correct: 0, explain: "Correct! Earn XP to level up." }
+        ];
+
+        const weeklyTipsPool = [
+            [
+                { title: "🚿 Shower & Water Heating", tag: "High Impact", text: "Don't let the water run too long while taking showers. Heating water is one of the most energy-intensive activities in your home." },
+                { title: "🌙 Night Saver Shifting", tag: "Money Saver", text: "Run your washing machine and dishwasher strictly after 23:00 to take advantage of the cheap Night Rate (€0.1954/kWh)." },
+                { title: "🔌 Phantom Load & Standby", tag: "Easy Habit", text: "Unplug phone chargers, microwaves, and TVs when not in use. Standby power accounts for up to 10% of household electricity bills." }
+            ],
+            [
+                { title: "🍳 Lids on Cooking Pots", tag: "Kitchen Saver", text: "Always put lids on pots when boiling water. It traps heat and cooks food up to 30% faster, saving significant energy." },
+                { title: "🌡️ Refrigerator Optimization", tag: "Appliance Care", text: "Keep your fridge set at 3-5°C and freezer at -18°C. Avoid keeping the door open for too long so cold air doesn't escape." },
+                { title: "💡 Daylight Harvesting", tag: "Lighting", text: "Make the most of natural daylight during the day instead of turning on ceiling lights in rooms you're working in." }
+            ],
+            [
+                { title: "👕 Eco Laundry Temperatures", tag: "Laundry Tip", text: "Wash your clothes at 30°C instead of 60°C whenever possible. Modern detergents work brilliantly and save 60% washer energy." },
+                { title: "☀️ Smart Thermal Zoning", tag: "Heating / Cooling", text: "Close doors to unoccupied rooms to keep conditioned air concentrated where you actually spend your time." },
+                { title: "🧊 Natural Fridge Defrosting", tag: "Kitchen Habit", text: "Move frozen items to the fridge compartment the night before to defrost. It uses zero electricity and cools your fridge naturally." }
+            ],
+            [
+                { title: "📺 Smart Power Strips", tag: "Electronics", text: "Plug your entertainment center (TV, console, soundbar) into a master switch power strip to cut all standby power effortlessly." },
+                { title: "🫖 Kettle Water Management", tag: "Kitchen Habit", text: "Only boil as much water as you actually need in your kettle rather than filling it to the maximum every single time." },
+                { title: "🧹 Air Filter Maintenance", tag: "HVAC Care", text: "Clean dust and filters from ventilation and cooker hoods regularly to ensure peak airflow efficiency and lower energy drain." }
+            ]
+        ];
+
+        // HISTORICAL BILLING DATA STORE (CÓ SẴN THÁNG 9, 10, 11)
+        let billingRecords = [
+            { id: "september-2026", month: "September", year: 2026, bill: 123.00, kwh: 390, savings: "€65.20 cr" },
+            { id: "october-2026", month: "October", year: 2026, bill: 240.00, kwh: 750, savings: "€42.50 cr" },
+            { id: "november-2026", month: "November", year: 2026, bill: 221.73, kwh: 706, savings: "€57.91 cr" }
+        ];
+
+        let currentQuizIndex = 0;
+        let currentWeek = 1;
+
+        function loadUserData() {
+            const savedXP = localStorage.getItem("eco_buddy_xp");
+            const savedPoints = localStorage.getItem("eco_buddy_points");
+            const savedDate = localStorage.getItem("eco_buddy_date");
+            const savedTasks = localStorage.getItem("eco_buddy_tasks");
+            const savedBills = localStorage.getItem("eco_buddy_bills");
+
+            if (savedBills) {
+                try { billingRecords = JSON.parse(savedBills); } catch(e) {}
+            }
+
+            const todayStr = new Date().toDateString();
+            if (savedDate === todayStr) {
+                if (savedXP) currentXP = parseInt(savedXP);
+                if (savedPoints) currentPoints = parseInt(savedPoints);
+                if (savedTasks) completedTasks = JSON.parse(savedTasks);
+            } else {
+                localStorage.setItem("eco_buddy_date", todayStr);
+                completedTasks = [false, false, false];
+                localStorage.setItem("eco_buddy_tasks", JSON.stringify(completedTasks));
+                if (savedXP) currentXP = parseInt(savedXP);
+                if (savedPoints) currentPoints = parseInt(savedPoints);
+            }
+            updateMascotLevel();
+            renderTasksUI();
+            initWeeklyContent();
+        }
+
+        function saveUserData() {
+            localStorage.setItem("eco_buddy_xp", currentXP);
+            localStorage.setItem("eco_buddy_points", currentPoints);
+            localStorage.setItem("eco_buddy_tasks", JSON.stringify(completedTasks));
+            localStorage.setItem("eco_buddy_bills", JSON.stringify(billingRecords));
+            localStorage.setItem("eco_buddy_date", new Date().toDateString());
+        }
+
+        function updateHeaderHeight() {
+            const header = document.querySelector("header");
+            if (!header) return;
+            const height = header.offsetHeight;
+            document.documentElement.style.setProperty("--header-height", height + "px");
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            updateHeaderHeight();
+            loadUserData();
+            startRealtimeClock();
+            checkTariffStatus();
+            renderCalendar();
+            renderBillingListing();
+            populateDashboardFilters();
+            updateDashboardView();
+            setInterval(checkTariffStatus, 30000);
+
+            if ("ResizeObserver" in window) {
+                const header = document.querySelector("header");
+                if (header) {
+                    const headerObserver = new ResizeObserver(() => updateHeaderHeight());
+                    headerObserver.observe(header);
+                }
+            }
+        });
+
+        window.addEventListener("resize", updateHeaderHeight);
+        window.addEventListener("orientationchange", () => setTimeout(updateHeaderHeight, 150));
+
+        function startRealtimeClock() {
+            function updateClock() {
+                const now = new Date();
+                const clockEl = document.getElementById('realtime-clock');
+                if (clockEl) clockEl.innerText = now.toLocaleTimeString();
+            }
+            updateClock();
+            setInterval(updateClock, 1000);
+        }
+
+        function switchTab(tabName) {
+            const tabs = ['weather', 'tracker', 'reports', 'tips', 'chatbot', 'checklist', 'calendar'];
+            tabs.forEach(t => {
+                const el = document.getElementById(`tab-content-${t}`);
+                const btn = document.getElementById(`tab-btn-${t}`);
+                if (el) el.classList.add('hidden');
+                if (btn) btn.classList.remove('active');
+            });
+
+            const targetEl = document.getElementById(`tab-content-${tabName}`);
+            const targetBtn = document.getElementById(`tab-btn-${tabName}`);
+            if (targetEl) targetEl.classList.remove('hidden');
+            if (targetBtn) targetBtn.classList.add('active');
+
+            const mascotGlobalCard = document.getElementById('mascot-global-card');
+            if (mascotGlobalCard) {
+                if (tabName === 'tracker') {
+                    mascotGlobalCard.classList.remove('hidden');
+                } else {
+                    mascotGlobalCard.classList.add('hidden');
+                }
+            }
+
+            if (tabName === 'weather') loadDublinWeather();
+            if (tabName === 'calendar') renderCalendar();
+            if (tabName === 'reports') {
+                renderBillingListing();
+                updateDashboardView();
+            }
+        }
+
+        function switchReportSubTab(subName) {
+            ['upload', 'listing', 'dashboard'].forEach(s => {
+                const el = document.getElementById(`report-subtab-${s}`);
+                const btn = document.getElementById(`subtab-btn-${s}`);
+                if (el) el.classList.add('hidden');
+                if (btn) {
+                    btn.classList.remove('bg-[#8c7355]', 'text-white');
+                    btn.classList.add('bg-[#fffaf4]', 'text-[#4a3b32]');
+                }
+            });
+
+            const targetEl = document.getElementById(`report-subtab-${subName}`);
+            const targetBtn = document.getElementById(`subtab-btn-${subName}`);
+            if (targetEl) targetEl.classList.remove('hidden');
+            if (targetBtn) {
+                targetBtn.classList.remove('bg-[#fffaf4]', 'text-[#4a3b32]');
+                targetBtn.classList.add('bg-[#8c7355]', 'text-white');
+            }
+
+            if (subName === 'listing') renderBillingListing();
+            if (subName === 'dashboard') updateDashboardView();
+        }
+
+        function previewUploadedBill(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const previewImg = document.getElementById('bill-preview-img');
+                const previewContainer = document.getElementById('bill-preview-container');
+                const statusText = document.getElementById('upload-status-text');
+
+                previewImg.src = e.target.result;
+                previewContainer.classList.remove('hidden');
+                statusText.innerText = "📸 Bill scanned! You can adjust the details below before saving.";
+
+                statusText.innerText = "📸 Image preview ready. Enter the exact values printed on your bill; no values are guessed.";
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function saveEditedBill() {
+            const monthStr = document.getElementById('edit-bill-month').value.trim();
+            const yearNum = parseInt(document.getElementById('edit-bill-year').value) || 2026;
+            const billAmt = parseFloat(document.getElementById('edit-bill-amount').value) || 0;
+            const kwhAmt = parseInt(document.getElementById('edit-bill-kwh').value) || 0;
+
+            const newRecord = {
+                id: `${monthStr.toLowerCase().replace(/\s+/g, '-')}-${yearNum}`,
+                month: monthStr,
+                year: yearNum,
+                bill: billAmt,
+                kwh: kwhAmt,
+                savings: `€${(kwhAmt * 0.08).toFixed(2)} cr`
+            };
+
+            // Check xem đã tồn tại chưa để update hoặc push mới
+            const existingIdx = billingRecords.findIndex(r => r.id === newRecord.id);
+            if (existingIdx >= 0) {
+                billingRecords[existingIdx] = newRecord;
+            } else {
+                billingRecords.push(newRecord);
+            }
+
+            saveUserData();
+            renderBillingListing();
+            populateDashboardFilters();
+            switchReportSubTab('dashboard');
+            alert("💾 Bill saved successfully! Dashboard & Historical listing updated.");
+        }
+
+        function renderBillingListing() {
+            const container = document.getElementById('billing-listing-container');
+            if (!container) return;
+            container.innerHTML = "";
+
+            billingRecords.forEach(r => {
+                container.innerHTML += `
+                    <div class="vint-card p-3.5 flex items-center justify-between gap-3 bg-white">
+                        <div>
+                            <p class="font-extrabold text-[#5c4738]">${r.month} ${r.year}</p>
+                            <p class="text-[10px] text-[#7a6452] mt-0.5">Usage: <strong>${r.kwh} kWh</strong> · Savings: ${r.savings}</p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="font-black text-[#5c3232] bg-[#f5d0cd] px-3 py-1.5 rounded-xl border border-[#5c4738]">€${r.bill.toFixed(2)}</span>
+                            <button onclick="deleteBillRecord('${r.id}')" class="px-2 py-1 bg-[#fbe8e6] text-[#5c3232] rounded-lg font-bold text-[10px] border border-[#5c4738]">Delete</button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function deleteBillRecord(id) {
+            billingRecords = billingRecords.filter(r => r.id !== id);
+            saveUserData();
+            renderBillingListing();
+            populateDashboardFilters();
+            updateDashboardView();
+        }
+
+        function populateDashboardFilters() {
+            const monthSelect = document.getElementById('dash-filter-month');
+            if (!monthSelect) return;
+            monthSelect.innerHTML = `<option value="all">-- All Months (Average) --</option>`;
+            billingRecords.forEach(r => {
+                monthSelect.innerHTML += `<option value="${r.id}">${r.month} ${r.year}</option>`;
+            });
+        }
+
+        // DASHBOARD CẬP NHẬT THEO THÁNG HOẶC TÍNH AVERAGE TOÀN BỘ KHI KHÔNG CHỌN GÌ
+        function updateDashboardView() {
+            const monthVal = document.getElementById('dash-filter-month').value;
+            const yearVal = document.getElementById('dash-filter-year').value;
+
+            let filtered = billingRecords;
+            if (monthVal !== 'all') {
+                filtered = billingRecords.filter(r => r.id === monthVal);
+            }
+            if (yearVal !== 'all') {
+                filtered = filtered.filter(r => r.year.toString() === yearVal);
+            }
+
+            let displayKwh = 0;
+            let displayBill = 0;
+            let count = filtered.length;
+
+            if (count > 0) {
+                const totalK = filtered.reduce((acc, curr) => acc + curr.kwh, 0);
+                const totalB = filtered.reduce((acc, curr) => acc + curr.bill, 0);
+                displayKwh = Math.round(totalK / count);
+                displayBill = totalB / count;
+            }
+
+            document.getElementById('dash-stat-kwh').innerText = `${displayKwh} kWh`;
+            document.getElementById('dash-stat-bill').innerText = `€${displayBill.toFixed(2)}`;
+            document.getElementById('dash-stat-savings').innerText = `€${(displayKwh * 0.08).toFixed(2)} cr`;
+            document.getElementById('donut-center-val').innerText = `${displayKwh} kWh`;
+            document.getElementById('dash-trend-info').innerText = monthVal === 'all' ? "Showing All-Months Average" : `Showing ${monthVal}`;
+
+            renderDashboardColumnLineChart(filtered);
+        }
+
+        // BIỂU ĐỒ CỘT (€) KẾT HỢP LINE (kWh)
+        function renderDashboardColumnLineChart(activeRecords) {
+            const chartContainer = document.getElementById('dashboard-col-chart');
+            const xLabels = document.getElementById('dashboard-x-labels');
+            if (!chartContainer || !xLabels) return;
+
+            chartContainer.innerHTML = "";
+            xLabels.innerHTML = "";
+
+            const maxBill = Math.max(...billingRecords.map(r => r.bill), 300);
+
+            billingRecords.forEach(r => {
+                const isSelected = activeRecords.some(ar => ar.id === r.id);
+                const heightPercent = Math.max(25, (r.bill / maxBill) * 110);
+
+                chartContainer.innerHTML += `
+                    <div class="flex flex-col items-center gap-1 transition-all ${isSelected ? 'opacity-100 scale-105' : 'opacity-40'}">
+                        <span class="text-[10px] font-bold text-[#5c3232]">€${r.bill.toFixed(0)}</span>
+                        <div class="w-9 bg-gradient-to-t from-[#bc6c25] to-[#f4a261] rounded-t-lg shadow" style="height: ${heightPercent}px;"></div>
+                        <span class="text-[9px] font-bold text-[#32455c] bg-[#cfe2f3] px-1 rounded">${r.kwh}kWh</span>
+                    </div>
+                `;
+
+                xLabels.innerHTML += `<span class="text-center font-bold ${isSelected ? 'text-[#32455c] underline' : 'text-[#7a6452]'}">${r.month.substring(0,3)}</span>`;
+            });
+        }
+
+        function initWeeklyContent() {
+            const now = new Date();
+            const startOfYear = new Date(now.getFullYear(), 0, 1);
+            const weekNumber = Math.ceil((((now - startOfYear) / 86400000) + startOfYear.getDay() + 1) / 7);
+            currentWeek = ((weekNumber - 1) % 4) + 1;
+
+            const tipsContainer = document.getElementById('weekly-flashcards-container');
+            const tipBadge = document.getElementById('weekly-tip-badge');
+            if (tipBadge) tipBadge.innerText = `Week ${currentWeek} / 4`;
+            if (tipsContainer) {
+                tipsContainer.innerHTML = "";
+                const weekTips = weeklyTipsPool[currentWeek - 1];
+                weekTips.forEach(tip => {
+                    tipsContainer.innerHTML += `
+                        <div class="vint-card p-4 bg-[#f5ede2] border-l-4 border-l-[#8c7355] space-y-2 shadow-sm">
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs font-black text-[#5c4738]">${tip.title}</span>
+                                <span class="text-[10px] bg-[#8c7355] text-white px-2 py-0.5 rounded-full font-bold">${tip.tag}</span>
+                            </div>
+                            <p class="text-xs font-bold text-[#4a3b32]">"${tip.text}"</p>
+                            <div class="flex justify-end gap-2 pt-1">
+                                <button onclick="rateTip(true)" class="px-2.5 py-1 bg-white hover:bg-[#f0e6d6] text-[#4a3b32] rounded-lg text-[11px] font-bold border border-[#5c4738]">👍 Helpful (+10 pts)</button>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            currentQuizIndex = (currentWeek - 1) * 10;
+            loadWeeklyQuizQuestion();
+        }
+
+        function loadWeeklyQuizQuestion() {
+            const startIdx = (currentWeek - 1) * 10;
+            const endIdx = startIdx + 10;
+            const weekQuestions = ecoQuizPool.slice(startIdx, endIdx);
+
+            const relativeIndex = (currentQuizIndex - startIdx) % 10;
+            const item = weekQuestions[relativeIndex];
+
+            const qEl = document.getElementById('quiz-question');
+            const optsEl = document.getElementById('quiz-options');
+            const counterEl = document.getElementById('weekly-quiz-counter');
+            if (!qEl || !optsEl) return;
+
+            if (counterEl) counterEl.innerText = `Week ${currentWeek}: Q ${relativeIndex + 1}/10`;
+            qEl.innerText = `Question ${relativeIndex + 1}/10: ${item.q}`;
+            optsEl.innerHTML = "";
+            item.options.forEach((optText, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "chat-choice text-xs py-2";
+                btn.innerText = optText;
+                btn.onclick = () => answerQuiz(idx, weekQuestions, startIdx);
+                optsEl.appendChild(btn);
+            });
+        }
+
+        function answerQuiz(optionIndex, weekQuestions, startIdx) {
+            const relativeIndex = (currentQuizIndex - startIdx) % 10;
+            const item = weekQuestions[relativeIndex];
+            const msgs = document.getElementById('chatbot-messages');
+
+            msgs.innerHTML += `
+                <div class="bg-[#eaf2f8] p-3 rounded-2xl border border-[#b9d0e8] text-right">
+                    <p class="font-bold text-[#32455c]">You</p>
+                    <p class="mt-1 text-[#4a3b32]">${item.options[optionIndex]}</p>
+                </div>
+            `;
+
+            if (optionIndex === item.correct) {
+                msgs.innerHTML += `
+                    <div class="bg-[#f5ede2] p-3 rounded-2xl border border-[#d8c7b0]">
+                        <p class="font-bold text-[#5c4738]">Bé Mây ☁️</p>
+                        <p class="mt-1 text-[#4a3b32]">${item.explain} You earned +15 XP! 💚</p>
+                    </div>
+                `;
+                currentXP += 15;
+                saveUserData();
+                updateMascotLevel();
+            } else {
+                msgs.innerHTML += `
+                    <div class="bg-[#f5ede2] p-3 rounded-2xl border border-[#d8c7b0]">
+                        <p class="font-bold text-[#5c4738]">Bé Mây ☁️</p>
+                        <p class="mt-1 text-[#4a3b32]">Not quite right! Review this week's tips to learn more.</p>
+                    </div>
+                `;
+            }
+            msgs.scrollTop = msgs.scrollHeight;
+
+            currentQuizIndex++;
+            if (currentQuizIndex >= startIdx + 10) {
+                currentQuizIndex = startIdx; 
+            }
+            setTimeout(loadWeeklyQuizQuestion, 1500);
+        }
+
+        function completeTask(index, xpReward) {
+            if (completedTasks[index]) return;
+            completedTasks[index] = true;
+            currentXP += xpReward;
+            currentPoints += Math.floor(xpReward / 2);
+
+            saveUserData();
+            updateMascotLevel();
+            renderTasksUI();
+            document.getElementById('mascot-speech').innerText = `🎉 Awesome! You earned +${xpReward} XP and +${Math.floor(xpReward / 2)} Eco Points!`;
+        }
+
+        function renderTasksUI() {
+            for (let i = 0; i < completedTasks.length; i++) {
+                const btn = document.getElementById(`task-btn-${i}`);
+                if (!btn) continue;
+                if (completedTasks[i]) {
+                    btn.innerText = "Done ✓";
+                    btn.disabled = true;
+                    btn.classList.add('bg-gray-400');
+                    btn.classList.remove('bg-[#87a96b]');
+                } else {
+                    btn.innerText = "Complete";
+                    btn.disabled = false;
+                    btn.classList.remove('bg-gray-400');
+                    btn.classList.add('bg-[#87a96b]');
+                }
+            }
+        }
+
+        function updateMascotLevel() {
+            let level = 1;
+            let title = "Sprout";
+            let maxXP = 100;
+
+            if (currentXP >= 100 && currentXP < 250) {
+                level = 2; title = "Green Sprout"; maxXP = 250;
+            } else if (currentXP >= 250) {
+                level = 3; title = "Eco Master 🌿"; maxXP = 500;
+            }
+
+            const percent = Math.min(100, (currentXP / maxXP) * 100);
+            const xpBar = document.getElementById('mascot-xp-bar');
+            const xpText = document.getElementById('mascot-xp-text');
+            const levelBadge = document.getElementById('mascot-level-badge');
+            const pointsLabel = document.getElementById('eco-points-label');
+            const mascotSvg = document.getElementById('main-mascot-svg');
+
+            if (xpBar) xpBar.style.width = percent + '%';
+            if (xpText) xpText.innerText = `${currentXP} / ${maxXP} XP`;
+            if (levelBadge) levelBadge.innerText = `🌱 Level ${level}: ${title}`;
+            if (pointsLabel) pointsLabel.innerText = `${currentPoints} Points 🌱`;
+            if (mascotSvg) mascotSvg.className = `eco-character level-${level}`;
+        }
+
+        function rateTip(isHelpful) {
+            if (isHelpful) {
+                currentPoints += 10;
+                saveUserData();
+                updateMascotLevel();
+                alert("Thank you for your feedback! +10 Eco Points added! 💚");
+            } else {
+                alert("Thanks! We'll show you better tips next time.");
+            }
+        }
+
+        let chatMode = 'quiz';
+        function setChatMode(mode) {
+            chatMode = mode;
+            const btnQuiz = document.getElementById('mode-btn-quiz');
+            const btnChat = document.getElementById('mode-btn-chat');
+            const quizArea = document.getElementById('chatbot-quiz-area');
+            const inputArea = document.getElementById('chatbot-input-area');
+
+            if (mode === 'quiz') {
+                btnQuiz.className = "p-2.5 bg-[#8c7355] text-white font-bold rounded-xl border border-[#5c4738]";
+                btnChat.className = "p-2.5 bg-[#fffaf4] text-[#4a3b32] font-bold rounded-xl border border-[#5c4738]";
+                quizArea.classList.remove('hidden');
+                inputArea.classList.add('hidden');
+            } else {
+                btnChat.className = "p-2.5 bg-[#8c7355] text-white font-bold rounded-xl border border-[#5c4738]";
+                btnQuiz.className = "p-2.5 bg-[#fffaf4] text-[#4a3b32] font-bold rounded-xl border border-[#5c4738]";
+                quizArea.classList.add('hidden');
+                inputArea.classList.remove('hidden');
+            }
+        }
+
+        function sendUserMessage() {
+            const input = document.getElementById('chat-input-text');
+            const text = input.value.trim();
+            if (!text) return;
+
+            const msgs = document.getElementById('chatbot-messages');
+            msgs.innerHTML += `
+                <div class="bg-[#eaf2f8] p-3 rounded-2xl border border-[#b9d0e8] text-right">
+                    <p class="font-bold text-[#32455c]">You</p>
+                    <p class="mt-1 text-[#4a3b32]">${text}</p>
+                </div>
+            `;
+            input.value = "";
+
+            setTimeout(() => {
+                let reply = "That's wonderful! Let's save energy together to protect our environment! 🌿";
+                const lower = text.toLowerCase();
+                if (lower.includes('hi') || lower.includes('hello')) {
+                    reply = "Hello! I'm Bé Mây, your friendly eco assistant. How can I help you today? ☁️";
+                } else if (lower.includes('save') || lower.includes('bill')) {
+                    reply = "To save on your electricity bill, remember to run your laundry during Night Saver hours (after 23:00) and turn off standby appliances! ⚡";
+                } else if (lower.includes('weather')) {
+                    reply = "Dublin weather can be chilly! Make sure to check the Weather tab before heading out. 🌦️";
+                }
+
+                msgs.innerHTML += `
+                    <div class="bg-[#f5ede2] p-3 rounded-2xl border border-[#d8c7b0]">
+                        <p class="font-bold text-[#5c4738]">Bé Mây ☁️</p>
+                        <p class="mt-1 text-[#4a3b32]">${reply}</p>
+                    </div>
+                `;
+                msgs.scrollTop = msgs.scrollHeight;
+            }, 600);
+        }
+
+        function checkTariffStatus() {
+            const now = new Date();
+            const hour = now.getHours();
+            const badge = document.getElementById('status-badge');
+            const speech = document.getElementById('mascot-speech');
+
+            if (hour >= 17 && hour < 19) {
+                badge.className = "absolute -bottom-2 left-1/2 -translate-x-1/2 bg-[#bc6c25] text-white text-[11px] font-extrabold px-4 py-1 rounded-full shadow border-2 border-[#5c4738] whitespace-nowrap animate-pulse";
+                badge.innerText = "🔴 Peak Hours!";
+                if (speech) speech.innerText = "⚠️ It's peak time! Try to avoid using high-energy appliances.";
+            } else if (hour >= 23 || hour < 8) {
+                badge.className = "absolute -bottom-2 left-1/2 -translate-x-1/2 bg-[#87a96b] text-white text-[11px] font-extrabold px-4 py-1 rounded-full shadow border-2 border-[#5c4738] whitespace-nowrap";
+                badge.innerText = "🟢 Night Saver ON";
+                if (speech) speech.innerText = "🌙 It's the cheapest rate period. A great time to do your laundry!";
+            } else {
+                badge.className = "absolute -bottom-2 left-1/2 -translate-x-1/2 bg-[#d4a373] text-white text-[11px] font-extrabold px-4 py-1 rounded-full shadow border-2 border-[#5c4738] whitespace-nowrap";
+                badge.innerText = "Normal Hours ☀️";
+            }
+        }
+
+        // CALENDAR VỚI NHẮC ĐÓNG TIỀN NHÀ (MỒNG 1) VÀ ĐỔ RÁC (THỨ BA)
+        let calendarCursor = new Date();
+        function renderCalendar() {
+            const year = calendarCursor.getFullYear();
+            const month = calendarCursor.getMonth();
+            const label = document.getElementById("calendar-month-label");
+            const grid = document.getElementById("calendar-days");
+            if (!label || !grid) return;
+
+            label.textContent = new Intl.DateTimeFormat("en-IE", { month: "long", year: "numeric" }).format(calendarCursor);
+            grid.innerHTML = "";
+
+            const firstDay = new Date(year, month, 1);
+            const offset = (firstDay.getDay() + 6) % 7;
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+            for (let i = 0; i < offset; i++) {
+                grid.appendChild(document.createElement("div"));
+            }
+
+            const today = new Date();
+            for (let day = 1; day <= daysInMonth; day++) {
+                const date = new Date(year, month, day);
+                const isTuesday = date.getDay() === 2;
+                const isFirstOfMonth = (day === 1);
+                const isToday = date.toDateString() === today.toDateString();
+
+                const cell = document.createElement("div");
+
+                let bgClass = "bg-[#f5ede2] text-[#4a3b32]";
+                let badgeIcon = "";
+
+                if (isTuesday && isFirstOfMonth) {
+                    bgClass = "bg-[#6a0dad] text-white shadow-sm"; // Trùng ngày: Tím
+                    badgeIcon = '<span class="text-[7px]">🗑️🏠</span>';
+                } else if (isTuesday) {
+                    bgClass = "bg-[#d9534f] text-white shadow-sm"; // Đổ rác: Đỏ
+                    badgeIcon = '<span class="text-[8px]">🗑️</span>';
+                } else if (isFirstOfMonth) {
+                    bgClass = "bg-[#bc6c25] text-white shadow-sm"; // Đóng tiền nhà: Cam
+                    badgeIcon = '<span class="text-[8px]">🏠</span>';
+                }
+
+                cell.className = `h-10 rounded-xl flex flex-col items-center justify-center text-xs font-bold relative border border-[#5c4738]/20 ${bgClass} ${isToday ? " ring-2 ring-[#87a96b] ring-offset-1" : ""}`;
+                cell.innerHTML = `<span>${day}</span>${badgeIcon}`;
+                grid.appendChild(cell);
+            }
+
+            const reminder = document.getElementById("next-trash-reminder");
+            if (reminder) {
+                reminder.innerHTML = `💡 <strong>Reminder:</strong> Rent payment is due on the 1st of every month (🏠). Waste collection is every Tuesday (🗑️).`;
+            }
+        }
+
+        function changeCalendarMonth(delta) {
+            calendarCursor = new Date(calendarCursor.getFullYear(), calendarCursor.getMonth() + delta, 1);
+            renderCalendar();
+        }
+
+        let countdownInterval = null;
+        function setTimerMinutes(mins) { document.getElementById('custom-minutes').value = mins; }
+
+        function startCustomTimer() {
+            const minsInput = document.getElementById('custom-minutes').value.trim();
+            const mins = Number(minsInput);
+            if (!Number.isInteger(mins) || mins < 1 || mins > 180) {
+                alert("Please enter a number of minutes between 1 and 180.");
+                return;
+            }
+
+            const totalSecs = mins * 60;
+            const checkbox = document.getElementById('kitchen-door-checkbox');
+            if (checkbox) checkbox.checked = false;
+
+            clearInterval(countdownInterval);
+            let remaining = totalSecs;
+            const displayBox = document.getElementById('timer-display-box');
+            const textEl = document.getElementById('countdown-text');
+            displayBox.classList.remove('hidden');
+
+            function updateCountdown() {
+                const m = Math.floor(remaining / 60);
+                const s = remaining % 60;
+                textEl.innerText = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+
+                if (remaining <= 0) {
+                    clearInterval(countdownInterval);
+                    countdownInterval = null;
+                    displayBox.classList.add('hidden');
+                    openSafetyChat();
+                    return;
+                }
+                remaining--;
+            }
+
+            updateCountdown();
+            countdownInterval = setInterval(updateCountdown, 1000);
+        }
+
+        function stopTimer() {
+            clearInterval(countdownInterval);
+            countdownInterval = null;
+            document.getElementById('timer-display-box').classList.add('hidden');
+        }
+
+        const safetySteps = [
+            { title: "Turn off the cooker", question: "Have you turned off the cooker?", hint: "Make sure the cooker knobs are turned to the OFF position.", scene: "🔥", yes: "Wonderful!", no: "Let's check the cooker knobs!" },
+            { title: "Turn off the cooker hood", question: "Have you turned off the cooker hood?", hint: "Make sure the cooker hood fan is switched off.", scene: "🌀", yes: "Great job!", no: "Switch off the cooker hood!" },
+            { title: "Turn off the oven", question: "Have you turned off the oven?", hint: "Check power display.", scene: "🎛️", yes: "Well done!", no: "Check the oven!" },
+            { title: "Turn off the kitchen lights", question: "Have you turned off the kitchen lights?", hint: "Switch off unused lights.", scene: "💡", yes: "Energy saved!", no: "Turn off lights!" },
+            { title: "Wipe the cooker", question: "Have you cleaned the cooker surface?", hint: "Wipe with a damp cloth.", scene: "🧽", yes: "Sparkling clean!", no: "Clean up!" }
+        ];
+
+        let safetyStepIndex = 0;
+
+        function syncChatMascot() {
+            const original = document.getElementById("main-mascot-svg");
+            const container = document.getElementById("chat-mascot");
+            if (!original || !container) return;
+            container.innerHTML = original.outerHTML;
+            const cloned = container.querySelector("svg");
+            if (cloned) cloned.removeAttribute("id");
+        }
+
+        function openSafetyChat() {
+            safetyStepIndex = 0;
+            syncChatMascot();
+            document.getElementById("safety-chat-overlay").classList.remove("hidden");
+            document.body.style.overflow = "hidden";
+            renderSafetyStep();
+        }
+
+        function closeSafetyChat() {
+            document.getElementById("safety-chat-overlay").classList.add("hidden");
+            document.body.style.overflow = "";
+        }
+
+        function renderSafetyStep() {
+            const question = document.getElementById("chat-question");
+            const scene = document.getElementById("chat-scene");
+            const actions = document.getElementById("chat-actions");
+
+            if (safetyStepIndex >= safetySteps.length) {
+                question.textContent = "All done! You earned +30 XP for keeping the kitchen safe! 💚";
+                scene.textContent = "🌱✨💚";
+                document.getElementById("chat-action-title").textContent = "Safety check completed!";
+                document.getElementById("chat-action-hint").textContent = "Eco Buddy is so proud of you!";
+                actions.innerHTML = `<button class="chat-choice text-center" onclick="finishSafetyCheckAndReward()">💚 Done! Collect XP reward</button>`;
+                document.getElementById("chat-progress").textContent = "5 / 5 · Completed";
+                return;
+            }
+
+            const step = safetySteps[safetyStepIndex];
+            question.textContent = step.question;
+            scene.textContent = step.scene;
+            document.getElementById("chat-action-title").textContent = step.title;
+            document.getElementById("chat-action-hint").textContent = step.hint;
+            document.getElementById("chat-progress").textContent = `Step ${safetyStepIndex + 1} / 5`;
+
+            actions.innerHTML = `
+                <button class="chat-choice" onclick="answerSafetyStep(true)">☑️ Yes, I've done it!</button>
+                <button class="chat-choice" onclick="answerSafetyStep(false)">⏳ Not yet, I'll do it now</button>
+            `;
+        }
+
+        function answerSafetyStep(done) {
+            const step = safetySteps[safetyStepIndex];
+            if (!step) return;
+
+            if (!done) {
+                document.getElementById("chat-question").textContent = step.no;
+                document.getElementById("chat-actions").innerHTML = `
+                    <button class="chat-choice" onclick="answerSafetyStep(true)">💚 I've done it! Let's continue.</button>
+                    <button class="chat-choice" onclick="closeSafetyChat()">I'll do it later</button>
+                `;
+                return;
+            }
+
+            document.getElementById("chat-question").textContent = step.yes;
+            setTimeout(() => {
+                safetyStepIndex++;
+                renderSafetyStep();
+            }, 1100);
+        }
+
+        function finishSafetyCheckAndReward() {
+            currentXP += 30;
+            currentPoints += 15;
+            saveUserData();
+            updateMascotLevel();
+            closeSafetyChat();
+        }
+        async function loadDublinWeather(){
+            const d=document.getElementById('weather-description');if(!d)return;
+            d.textContent='Loading Dublin weather…';
+            try{
+                const u='https://api.open-meteo.com/v1/forecast?latitude=53.3498&longitude=-6.2603&current=temperature_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m&wind_speed_unit=kmh&timezone=Europe%2FDublin';
+                const r=await fetch(u);if(!r.ok)throw Error('Weather request failed');
+                const c=(await r.json()).current,code=c.weather_code,temp=c.temperature_2m,feels=c.apparent_temperature,wind=c.wind_speed_10m;
+                const rain=[51,53,55,56,57,61,63,65,66,67,80,81,82].includes(code)||c.precipitation>0;
+                const snow=[71,73,75,77,85,86].includes(code);
+                const fog=[45,48].includes(code);
+                const storm=[95,96,99].includes(code);
+                const st=code===0?['☀️','Clear']:([1,2,3].includes(code)?['🌤️','Cloudy']:(fog?['🌫️','Fog']:(rain?['🌧️','Rain']:(snow?['❄️','Snow']:(storm?['⛈️','Thunderstorm']:['🌦️','Showers'])))));
+                document.getElementById('weather-icon').textContent=st[0];
+                document.getElementById('weather-temp').textContent=Math.round(temp)+'°C';
+                d.textContent=st[1];
+                document.getElementById('weather-wind').textContent=Math.round(wind)+' km/h';
+                document.getElementById('weather-feels').textContent=Math.round(feels)+'°C';
+                document.getElementById('weather-card').style.background=temp<7?'#e8edf3':temp<14?'#edf1ef':temp<21?'#f4f0e5':'#f7eadc';
+                document.getElementById('weather-advice').textContent=rain?'☔ Rain around: dry clothes indoors with ventilation and keep windows closed against showers.':wind>30?'💨 Quite windy: secure outdoor items and check for draughts.':feels<10?'🧣 Chilly: close curtains at dusk and heat only rooms in use.':'🌿 Mild: make the most of daylight and switch off unused lights.';
+                const outfit=document.getElementById('outfit-suggestions'),summary=document.getElementById('outfit-summary');
+                const ideas=[];
+                if(snow||feels<5){
+                    summary.textContent='Cold outside — choose warm layers and shoes that keep your feet dry.';
+                    ideas.push({title:'Cosy casual',items:[['🧥','Puffer'],['🧣','Scarf'],['🧶','Sweater'],['👖','Jeans'],['🥾','Boots']],note:'Add a beanie or scarf if you feel cold.'});
+                    ideas.push({title:'Warm & smart',items:[['🧥','Wool coat'],['🧥','Jumper'],['👖','Trousers'],['👢','Ankle boots']],note:'A polished look with warm layers.'});
+                    if(rain||snow)ideas.push({title:'Wet & cold',items:[['🌧️','Rain shell'],['🧥','Fleece'],['👖','Lined pants'],['🥾','Waterproof boots']],note:'A hood is handy; avoid an umbrella in strong wind.'});
+                }else if(rain){
+                    summary.textContent='Rainy Dublin day — waterproof outerwear first; pick an umbrella when wind is light.';
+                    ideas.push({title:'Rainy casual',items:[['🌧️','Raincoat'],['👕','Hoodie'],['👖','Trousers'],['👟','Waterproof shoes']],note:wind>25?'Windy: use the hood instead of an umbrella.':'A compact umbrella is a handy extra.'});
+                    ideas.push({title:'Rainy smart',items:[['🧥','Waterproof mac'],['🧶','Fine knit'],['👖','Jeans'],['👢','Ankle boots']],note:'Good for town, work or going out.'});
+                    if(feels<12)ideas.push({title:'Extra warm',items:[['🧥','Padded raincoat'],['🧶','Warm jumper'],['👖','Thick trousers'],['🥾','Waterproof boots']],note:'Layer a thermal top underneath if needed.'});
+                }else if(feels<12){
+                    summary.textContent='Chilly but dry — mix a warm coat with comfortable layers.';
+                    ideas.push({title:'Everyday cosy',items:[['🧥','Puffer'],['🧶','Sweater'],['👖','Jeans'],['👟','Trainers']],note:'Easy everyday outfit; add a beanie if needed.'});
+                    ideas.push({title:'Smart layers',items:[['🧥','Wool coat'],['👚','Cardigan'],['👖','Trousers'],['👢','Ankle boots']],note:'A little dressier while still warm.'});
+                    ideas.push({title:'Sporty',items:[['🧥','Light puffer'],['🧥','Hoodie'],['👖','Joggers'],['👟','Trainers']],note:'Comfortable for walking and errands.'});
+                }else if(feels<19){
+                    summary.textContent='Mild weather — choose light layers you can take off indoors.';
+                    ideas.push({title:'Relaxed',items:[['🧥','Denim jacket'],['👕','T-shirt'],['👖','Jeans'],['👟','Trainers']],note:'Simple and easy to layer.'});
+                    ideas.push({title:'Smart casual',items:[['🧥','Light trench'],['👚','Fine knit'],['👖','Trousers'],['👞','Loafers']],note:'A neat outfit for a day out.'});
+                }else{
+                    summary.textContent='Milder weather — breathable fabrics and lighter layers work best.';
+                    ideas.push({title:'Light & comfy',items:[['🧥','Light shirt'],['👕','T-shirt'],['👖','Linen pants'],['👟','Trainers']],note:'Choose cotton or linen for comfort.'});
+                    ideas.push({title:'Sunny casual',items:[['🕶️','Sunglasses'],['👚','Blouse'],['🩳','Shorts'],['👡','Sandals']],note:'Bring a light layer for later in the day.'});
+                }
+                if(wind>30&&!rain&&!snow)ideas.push({title:'Windy day',items:[['🌬️','Windbreaker'],['👕','Fitted top'],['👖','Secure fit'],['👟','Closed shoes']],note:'Choose a snug hood and avoid loose hats.'});
+                const outfitArt=(label)=>{
+                    const t=label.toLowerCase(),stroke='#70594a';let art='';
+                    if(/scarf|shawl|choàng/.test(t)) return '<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" class="w-14 h-14 mx-auto"><ellipse cx="59" cy="101" rx="35" ry="6" fill="#8ba9a6" opacity=".18"/><path d="M24 29 Q35 17 49 25 Q62 31 76 23 Q91 16 99 29 L91 47 Q77 42 64 51 Q49 59 34 49 Q25 43 24 29 Z" fill="#b9d9d6" stroke="#668e89" stroke-width="3.2" stroke-linejoin="round"/><path d="M31 31 Q45 43 59 37 Q77 29 91 30" fill="none" stroke="#e5f0e9" stroke-width="3" stroke-linecap="round"/><path d="M72 44 Q83 39 94 47 Q102 56 94 70 L82 96 Q78 103 69 99 L60 94 Q55 90 61 80 L72 62 Q77 52 72 44 Z" fill="#a9ceca" stroke="#668e89" stroke-width="3.2" stroke-linejoin="round"/><path d="M78 53 Q86 59 88 67 M72 72 Q78 76 82 78 M67 86 Q73 91 78 91" fill="none" stroke="#e3f0e9" stroke-width="2.5" stroke-linecap="round"/><g fill="#f8f0dc" stroke="#b58f79" stroke-width="1"><circle cx="43" cy="34" r="3"/><circle cx="40" cy="30" r="2.5"/><circle cx="46" cy="30" r="2.5"/><circle cx="40" cy="38" r="2.5"/><circle cx="46" cy="38" r="2.5"/><circle cx="80" cy="30" r="2.5"/><circle cx="77" cy="27" r="2"/><circle cx="83" cy="27" r="2"/><circle cx="77" cy="33" r="2"/><circle cx="83" cy="33" r="2"/></g><g fill="#d9b77d"><circle cx="43" cy="34" r="1.8"/><circle cx="80" cy="30" r="1.5"/></g><g fill="#819f83"><path d="M53 43 Q48 36 55 35 Q60 39 53 43Z"/><path d="M55 43 Q61 36 63 42 Q60 47 55 43Z"/><path d="M86 81 Q80 74 87 72 Q92 76 86 81Z"/></g><path d="M29 42 Q43 55 58 48" fill="none" stroke="#f5eee0" stroke-width="1.5" stroke-dasharray="2 3"/></svg>';
+                    if(/puffer|down jacket|winter jacket/.test(t)) return '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" class="w-14 h-14 mx-auto"><path d="M31 30 Q22 7 50 7 Q78 7 69 30 L64 39 L36 39Z" fill="#C5D3B5" stroke="#75634F" stroke-width="2.2"/><path d="M37 24 Q50 15 63 24 Q59 34 50 34 Q41 34 37 24Z" fill="#82947A" stroke="#75634F" stroke-width="1.8"/><path d="M34 27 Q37 35 43 36 M66 27 Q63 35 57 36" fill="none" stroke="#F5EBD8" stroke-width="3" stroke-linecap="round"/><path d="M34 30 L23 35 Q13 40 10 54 L7 79 Q7 87 16 88 L84 88 Q93 87 93 79 L90 54 Q87 40 77 35 L66 30 Q50 40 34 30Z" fill="#A9BEA0" stroke="#75634F" stroke-width="2.2" stroke-linejoin="round"/><path d="M23 38 Q14 40 11 54 L5 76 Q4 84 13 87 Q21 89 25 78 L31 51Z" fill="#B7C9AB" stroke="#75634F" stroke-width="2.2"/><path d="M77 38 Q86 40 89 54 L95 76 Q96 84 87 87 Q79 89 75 78 L69 51Z" fill="#B7C9AB" stroke="#75634F" stroke-width="2.2"/><path d="M12 53 Q19 60 27 54 M9 68 Q17 75 24 69 M88 53 Q81 60 73 54 M91 68 Q83 75 76 69" fill="none" stroke="#829B7D" stroke-width="3" stroke-linecap="round"/><path d="M31 46 Q50 53 69 46 M29 62 Q50 69 71 62 M26 78 Q50 84 74 78" fill="none" stroke="#D4DFCB" stroke-width="3" stroke-linecap="round"/><path d="M50 35 L50 88" stroke="#75634F" stroke-width="2"/><circle cx="50" cy="44" r="1.5" fill="#F5EBD8"/><circle cx="50" cy="56" r="1.5" fill="#F5EBD8"/><circle cx="50" cy="68" r="1.5" fill="#F5EBD8"/><path d="M42 32 L42 50 M58 32 L58 50" stroke="#F5EBD8" stroke-width="2" stroke-linecap="round"/><circle cx="42" cy="52" r="3" fill="#F5EBD8"/><circle cx="58" cy="52" r="3" fill="#F5EBD8"/><path d="M29 60 L41 62 L37 75 L26 72Z M71 60 L59 62 L63 75 L74 72Z" fill="#C5D3B5" stroke="#75634F" stroke-width="1.8"/><path d="M7 79 Q15 85 24 80 L22 90 Q14 94 6 87Z M93 79 Q85 85 76 80 L78 90 Q86 94 94 87Z" fill="#C5D3B5" stroke="#75634F" stroke-width="1.8"/><path d="M23 87 Q50 94 77 87 L76 94 Q50 99 24 94Z" fill="#C5D3B5" stroke="#75634F" stroke-width="1.8"/></svg>';
+                    if(/puffer|parka|coat|raincoat|windbreaker|jacket|mac/.test(t)) art='<path d="M35 17q15 13 30 0l17 10 12 27-15 8-8-13v38H29V49l-8 13-15-8 12-27z" fill="#e9958e" stroke="'+stroke+'" stroke-width="2.8" stroke-linejoin="round"/><path d="M36 18q14 13 28 0l-4 13H40z" fill="#f7d9c9" stroke="'+stroke+'" stroke-width="2"/><path d="M50 31v55M29 42h42M29 55h42M29 68h42" stroke="#c96f6c" stroke-width="2.5"/><path d="M17 35l-8 17 10 5m64-22 8 17-10 5" fill="none" stroke="#f6c0ad" stroke-width="4"/><circle cx="55" cy="43" r="1.8" fill="'+stroke+'"/><circle cx="55" cy="58" r="1.8" fill="'+stroke+'"/><circle cx="55" cy="73" r="1.8" fill="'+stroke+'"/>';
+                    else if(/boot|ankle boot/.test(t)) art='<g stroke="'+stroke+'" stroke-width="2.8" stroke-linejoin="round"><path d="M18 10h29v40q0 10 12 17l21 10q10 5 9 17H12q-4-11 3-21l8-11z" fill="#8b5a36"/><path d="M22 12h21v38H22z" fill="#a8754d"/><path d="M17 17q15-7 31 0v26q-15-6-31 0z" fill="#f5ead7"/><path d="M17 20q15-7 31 0M17 27q15-7 31 0M17 34q15-7 31 0" fill="none" stroke="#e5d6bd" stroke-width="3"/><path d="M55 25h27v31q0 9 10 15l9 8q5 5 2 15H52q-4-10 3-20l6-9z" fill="#95623d"/><path d="M59 27h19v28H59z" fill="#b17d54"/><path d="M56 31q12-6 25 0v17q-13-5-25 0z" fill="#f5ead7"/><path d="M56 35q12-6 25 0M56 42q12-6 25 0" fill="none" stroke="#e5d6bd" stroke-width="3"/><path d="M12 89q20 6 69 0l1 8H13zM52 89q22 5 43 0l1 8H52z" fill="#c69b6b"/></g>';
+                    else if(/sweater|jumper|knit|cardigan|fleece|ao len/.test(t)) art='<path d="M34 13q16 12 32 0l17 10 13 27-17 10-9-13v39H30V47l-9 13L4 50l12-27z" fill="#e83d2d" stroke="'+stroke+'" stroke-width="2.8" stroke-linejoin="round"/><path d="M35 14q15 13 30 0l-5 10H40z" fill="#d83227" stroke="'+stroke+'" stroke-width="2"/><path d="M40 18q10 7 20 0M37 23q13 8 26 0" fill="none" stroke="#a92b24" stroke-width="2"/><path d="M30 48v38M70 48v38" stroke="#c52e25" stroke-width="2"/><path d="M30 79h40v8H30zM5 49l-2 9 16 8 5-9M95 49l2 9-16 8-5-9" fill="#d93629" stroke="'+stroke+'" stroke-width="2"/><path d="M30 83v7m5-7v7m5-7v7m5-7v7m5-7v7m5-7v7m5-7v7m5-7v7m5-7v7m5-7v7" stroke="#a92b24" stroke-width="1.4"/>';
+                    else if(/jean|pant|trouser|short|jogger|bottom|linen|quan/.test(t)) art='<path d="M23 10h54l-3 78q-10 5-20 0l-4-43-5 43q-10 5-20 0z" fill="#83b6e5" stroke="'+stroke+'" stroke-width="2.8" stroke-linejoin="round"/><path d="M23 10h54v13H23z" fill="#659bd0" stroke="#426fa8" stroke-width="2"/><path d="M50 23l-1 22M29 24l4 17m38-17-4 17" fill="none" stroke="#477db8" stroke-width="2"/><path d="M32 28q7 6 14 0m7 0q7 6 14 0" fill="none" stroke="#477db8" stroke-width="1.8"/><path d="M27 62q8-8 18-1l-2 10q-9 5-17-1zM55 61q9-8 18-1l-2 10q-9 5-17-1z" fill="#d8e7f3" stroke="#477db8" stroke-width="1.8"/><path d="M28 65l5 4 4-5 5 5m16-5 5 5 5-5 5 5" fill="none" stroke="#477db8" stroke-width="1.5"/><path d="M25 12h13m26 0h11" stroke="#dceafa" stroke-width="2.5" stroke-linecap="round"/><path d="M27 80q8 4 17 0l1 8q-10 4-19 0zM53 80q9 4 18 0l1 8q-10 4-19 0z" fill="#a8c9e8" stroke="#477db8" stroke-width="1.8"/>';
+                    else if(/shoe|boot|trainer|sneaker|loafer|sandal/.test(t)) art='<path d="M18 57q13 0 21-17l10 5q8 17 23 18 11 1 11 13v7H17q-5-13 1-26z" fill="#d8e3c5" stroke="'+stroke+'" stroke-width="2.5" stroke-linejoin="round"/><path d="M18 72h63M38 48l18 15m-23-7 20 13m-9-25 17 14" fill="none" stroke="'+stroke+'" stroke-width="2.5" stroke-linecap="round"/><path d="M25 79h50" stroke="#fffaf2" stroke-width="3"/>';
+                    else if(/scarf|hood|hat/.test(t)) art='<path d="M25 23q24-15 49 0l-8 13q-18-9-34 0z" fill="#9bbbd8" stroke="'+stroke+'" stroke-width="2.5"/><path d="M34 31q-2 20-9 48l12 4q13-34 14-50M55 33q6 17 15 45l11-5q-8-34-16-45" fill="#8fb2d2" stroke="'+stroke+'" stroke-width="2.5" stroke-linejoin="round"/><path d="M25 68l13 5m30-4 12-6" stroke="#f4c2a8" stroke-width="4"/>';
+                    else if(/glass|sunglass/.test(t)) art='<path d="M13 35q20-9 36 0 16-9 38 0l-4 28q-3 10-17 8-12-2-15-22-4 20-17 22Q19 73 17 63z" fill="#a9c8d9" stroke="'+stroke+'" stroke-width="2.5" stroke-linejoin="round"/><path d="M48 39h5" stroke="'+stroke+'" stroke-width="3"/>';
+                    else if(/tee|t-shirt|shirt|blouse|top/.test(t)) art='<path d="M34 14l-18 9-10 21 17 9 6-10v43h42V43l6 10 17-9-10-21-18-9q-7 11-16 11T34 14z" fill="#e8a04e" stroke="'+stroke+'" stroke-width="2.5" stroke-linejoin="round"/><path d="M29 45h42M29 58h42" stroke="#a95b35" stroke-width="3"/>';
+                    else if(/cardigan|knit|sweater|jumper|fleece/.test(t)) art='<path d="M34 13l-18 10-10 22 17 9 6-10v42h42V44l6 10 17-9-10-22-18-10q-7 11-16 11T34 13z" fill="#a8d0d1" stroke="'+stroke+'" stroke-width="2.5" stroke-linejoin="round"/><path d="M29 49h42M29 63h42M50 26v60" stroke="#f2b49e" stroke-width="3"/>';
+                    else art='<path d="M34 12l-18 10-10 24 17 9 6-11v43h42V44l6 11 17-9-10-24-18-10q-7 12-16 12T34 12z" fill="#e99a91" stroke="'+stroke+'" stroke-width="2.5" stroke-linejoin="round"/><path d="M34 14q16 12 32 0M28 60h44" stroke="#f7d9c9" stroke-width="3"/><path d="M38 54v23m24-23v23" stroke="'+stroke+'" stroke-width="1.5"/>';
+                    return '<svg viewBox="0 0 100 100" role="img" aria-label="'+label.replace(/&/g,'&amp;').replace(/"/g,'&quot;')+'" class="w-14 h-14 mx-auto" fill="none">'+art+'</svg>';
+                };
+                const tabs=document.getElementById('outfit-choice-tabs'),look=document.getElementById('outfit-look');
+                const showLook=(index)=>{
+                    const item=ideas[index];
+                    look.innerHTML='<h4 class="font-bold text-sm mb-3">'+item.title+'</h4><div class="grid grid-cols-5 gap-1 text-center">'+item.items.map(([icon,label])=>'<div class="rounded-lg bg-[#f8f3eb] py-2 px-1 min-w-0">'+outfitArt(label)+'<p class="text-[10px] mt-1 leading-tight">'+label+'</p></div>').join('')+'</div><p class="text-xs text-[#8c7355] mt-3">✨ '+item.note+'</p>';
+                    tabs.querySelectorAll('button').forEach((button,i)=>{button.className='shrink-0 rounded-full border px-3 py-1.5 text-xs font-bold '+(i===index?'bg-[#8c7355] text-white border-[#5c4738]':'bg-white text-[#5c4738] border-[#d8c7b0]');});
+                };
+                tabs.innerHTML=ideas.map((item,i)=>'<button type="button" data-outfit="'+i+'" class="shrink-0 rounded-full border px-3 py-1.5 text-xs font-bold">'+item.title+'</button>').join('');
+                tabs.querySelectorAll('button').forEach((button)=>button.addEventListener('click',()=>showLook(Number(button.dataset.outfit))));
+                showLook(0);
+            }catch(e){
+                d.textContent='Could not load weather. Try again later.';
+                const summary=document.getElementById('outfit-summary');if(summary)summary.textContent='Outfit suggestions will appear when weather data is available.';
+            }
+        }
+    </script>
+</body>
+</html>
