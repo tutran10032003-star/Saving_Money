@@ -1966,13 +1966,14 @@
 
             const lang = localStorage.getItem("eco_buddy_language") === "vi" ? "vi" : "en";
             const normalized = text.toLowerCase()
-                .normalize("NFD").replace(/[\\u0300-\\u036f]/g, "")
+                .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
                 .replace(/temparature|temprature|tempereture|temperture|tempature/g, "temperature")
-                .replace(/[^a-z0-9? ]/g, " ").replace(/\\s+/g, " ").trim();
+                .replace(/[^a-z0-9? ]/g, " ").replace(/\s+/g, " ").trim();
             const hasAny = (words) => words.some(word => normalized.includes(word));
+            const isGreeting = /(^| )(hello|hi|hey|xin chao|chao)( |$)/.test(normalized);
             let reply = "";
 
-            if (hasAny(["hello", "hi ", "hey", "xin chao", "chao"])) {
+            if (isGreeting) {
                 reply = lang === "vi"
                     ? "Chào bạn! Tớ là Bé Mây ☁️ Bạn muốn hỏi về thời tiết, tiết kiệm điện hay mẹo sinh hoạt hôm nay?"
                     : "Hello! I'm Baby Cloud ☁️ Would you like help with today's weather, saving energy, or everyday eco tips?";
