@@ -1199,7 +1199,7 @@
                     cy=points.reduce((n,p)=>n+p.y,0)/points.length;
                 }
                 const radius=Math.min(w*0.43,h*(h/w>1.15?0.27:0.43));
-                const ringPixels=[];
+                const ringPixels=[],pixels=ctx.getImageData(0,0,w,h).data;
                 for(let deg=0;deg<360;deg++){
                     const angle=(deg-90)*Math.PI/180;
                     let hits=0;
@@ -1207,8 +1207,8 @@
                         const r=radius*(0.75+j*0.021);
                         const x=Math.round(cx+Math.cos(angle)*r),y=Math.round(cy+Math.sin(angle)*r);
                         if(x<0||y<0||x>=w||y>=h)continue;
-                        const pixel=ctx.getImageData(x,y,1,1).data;
-                        const max=Math.max(pixel[0],pixel[1],pixel[2]),min=Math.min(pixel[0],pixel[1],pixel[2]);
+                        const offset=(y*w+x)*4,red=pixels[offset],green=pixels[offset+1],blue=pixels[offset+2];
+                        const max=Math.max(red,green,blue),min=Math.min(red,green,blue);
                         if(max-min>24||max<226)hits++;
                     }
                     ringPixels.push(hits>=2);
@@ -1217,10 +1217,10 @@
                 for(let pass=0;pass<2;pass++){
                     for(let i=0;i<360;i++){
                         if(ringPixels[i])continue;
-                        let gap=0;
-                        while(gap<4&&!ringPixels[(i+gap+1)%360])gap++;
-                        if(gap>0&&gap<=2&&ringPixels[(i+gap+1)%360]&&ringPixels[(i-1+360)%360]){
-                            for(let j=0;j<=gap;j++)ringPixels[(i+j)%360]=true;
+                        let gap=1;
+                        while(gap<=2&&!ringPixels[(i+gap)%360])gap++;
+                        if(gap<=2&&ringPixels[(i+gap)%360]&&ringPixels[(i-1+360)%360]){
+                            for(let j=0;j<gap;j++)ringPixels[(i+j)%360]=true;
                         }
                     }
                 }
