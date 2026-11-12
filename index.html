@@ -1,68 +1,103 @@
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Eco-Buddy Home Manager ⚡☁️</title>
-    
-    <!-- CẤU HÌNH PWA CHO GITHUB PAGES -->
-    <link rel="manifest" href="/Saving_Money/manifest.json">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="theme-color" content="#fcf8f2">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Eco-Buddy">
+    <link rel="manifest" href="/Saving_Money/manifest.json">
     <link rel="apple-touch-icon" href="/Saving_Money/icons/icon-192.png">
 
-    <!-- Tailwind CSS -->
+    <title>Eco-Buddy Home Manager ⚡☁️</title>
+
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts: Quicksand -->
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+
     <style>
-        body {
-            font-family: 'Quicksand', sans-serif;
-            background-color: #fcf8f2; 
-            color: #4a3b32;
+        * {
+            box-sizing: border-box;
         }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Quicksand', sans-serif;
+            background-color: #fcf8f2;
+            color: #4a3b32;
+            min-height: 100vh;
+            min-height: 100svh;
+            overflow-x: hidden;
+        }
+
+        button, input {
+            font-family: inherit;
+            touch-action: manipulation;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        button:focus-visible,
+        input:focus-visible {
+            outline: 3px solid #a3a875;
+            outline-offset: 3px;
+        }
+
         ::-webkit-scrollbar {
             width: 6px;
         }
+
         ::-webkit-scrollbar-track {
             background: #f4ecdf;
             border-radius: 3px;
         }
+
         ::-webkit-scrollbar-thumb {
             background: #d8c7b0;
             border-radius: 3px;
         }
-        .vintage-panel { 
-            background: linear-gradient(145deg, #fffdfa 0%, #f7f1e5 100%); 
-            border: 2px solid #5c4738; 
-            box-shadow: 4px 4px 0px #5c4738; 
+
+        .vintage-panel {
+            background: linear-gradient(145deg, #fffdfa 0%, #f7f1e5 100%);
+            border: 2px solid #5c4738;
+            box-shadow: 4px 4px 0 #5c4738;
             border-radius: 1.5rem;
         }
+
         .vint-card {
             background: #fffaf4;
             border: 1.5px solid #5c4738;
             border-radius: 1rem;
-            box-shadow: 2px 2px 0px #5c4738;
+            box-shadow: 2px 2px 0 #5c4738;
         }
 
-        /* Thanh điều hướng 1 hàng 4 tab ngang hàng gọn gàng */
+        /* HEADER + NAVIGATION */
         .nav-pills {
             width: 100%;
             max-width: 380px;
             padding: 5px;
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 3px;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 4px;
             background: #f0e6d6;
             border-radius: 30px;
             border: 1px solid #e4d8c5;
         }
+
         .nav-btn {
+            min-width: 0;
+            min-height: 38px;
             border: 2px solid transparent;
             border-radius: 20px;
-            padding: 6px 2px;
+            padding: 7px 3px;
             font-size: 11px;
             font-weight: 700;
             color: #4a3b32;
@@ -71,6 +106,7 @@
             text-align: center;
             white-space: nowrap;
         }
+
         .nav-btn.active {
             background: #8c7355;
             color: white;
@@ -78,40 +114,49 @@
             box-shadow: 2px 2px 0 #5c4738;
         }
 
-        /* KHUNG NÚT THỜI GIAN: LAPTOP NẰM 1 HÀNG NGANG */
+        /* TIMER */
         .timer-buttons-grid {
             display: flex;
             flex-wrap: nowrap;
             gap: 8px;
         }
+
         .timer-buttons-grid button {
             flex: 1;
+            min-height: 40px;
         }
 
-        /* Cửa sổ hội thoại Safety Chat */
+        /* CHAT */
         .chat-overlay {
             position: fixed;
             inset: 0;
             z-index: 9999;
-            background: #fcf8f2;
+            background: rgba(252, 248, 242, .97);
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 16px;
+            padding-top: max(16px, env(safe-area-inset-top));
+            padding-bottom: max(16px, env(safe-area-inset-bottom));
         }
+
         .chat-overlay.hidden {
             display: none;
         }
+
         .chat-window {
             width: min(560px, 100%);
             max-height: 95vh;
+            max-height: 95dvh;
             overflow-y: auto;
+            overscroll-behavior: contain;
             padding: 22px;
             background: linear-gradient(145deg, #fffdfa, #f7f1e5);
             border: 2px solid #5c4738;
             border-radius: 26px;
             box-shadow: 6px 6px 0 #5c4738;
         }
+
         .chat-bubble {
             background: #f5ede2;
             border: 1px solid #d8c7b0;
@@ -119,14 +164,17 @@
             border-radius: 20px;
             width: 100%;
         }
+
         .chat-scene {
             background: #fffaf4;
             border: 1.5px dashed #b9a487;
             border-radius: 22px;
             min-height: 100px;
         }
+
         .chat-choice {
             width: 100%;
+            min-height: 46px;
             padding: 12px;
             background: #fffdfa;
             border: 1.5px solid #8c7355;
@@ -134,12 +182,18 @@
             text-align: left;
             font-weight: 700;
             font-size: 13px;
+            transition: background .2s, transform .15s;
         }
+
         .chat-choice:hover {
             background: #f0e6d6;
         }
 
-        /* MASCOT STYLES ĐÃ FIX CHUẨN ĐỘNG TÁC TAY */
+        .chat-choice:active {
+            transform: scale(.98);
+        }
+
+        /* MASCOT */
         .eco-mascot {
             width: 200px;
             height: 200px;
@@ -149,6 +203,7 @@
             justify-content: center;
             overflow: visible;
         }
+
         .eco-character {
             width: 100%;
             height: 100%;
@@ -156,151 +211,202 @@
             animation: mascot-float 3s ease-in-out infinite;
             transform-origin: center bottom;
         }
+
         .mascot-leaves {
+            transform-box: view-box;
             transform-origin: 150px 60px;
             animation: mascot-leaves 3s ease-in-out infinite;
         }
-        .mascot-arm-right {
+
+        /*
+          Cánh tay được tách khỏi phích cắm.
+          Chỉ phần tay chuyển động, phích cắm đứng yên.
+        */
+        .mascot-arm-right-limb,
+        .mascot-arm-left {
             transform-box: view-box;
+            will-change: transform;
+        }
+
+        .mascot-arm-right-limb {
             transform-origin: 220px 163px;
             animation: mascot-wave 2.8s ease-in-out infinite;
         }
+
         .mascot-arm-left {
-            transform-box: view-box;
             transform-origin: 83px 175px;
             animation: mascot-hand 3s ease-in-out infinite;
         }
+
+        .mascot-plug {
+            transform-box: view-box;
+            transform-origin: center;
+        }
+
         .mascot-sparkle {
             animation: mascot-twinkle 1.8s ease-in-out infinite;
         }
+
         .mascot-battery {
             animation: mascot-breathe 3s ease-in-out infinite;
             transform-origin: center;
         }
+
         @keyframes mascot-float {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-6px); }
         }
+
         @keyframes mascot-leaves {
             0%, 100% { transform: rotate(0); }
             50% { transform: rotate(5deg); }
         }
+
         @keyframes mascot-wave {
             0%, 100% { transform: rotate(0); }
-            50% { transform: rotate(-7deg); }
+            50% { transform: rotate(-9deg); }
         }
+
         @keyframes mascot-hand {
             0%, 100% { transform: rotate(0); }
-            50% { transform: rotate(-3deg); }
+            50% { transform: rotate(-4deg); }
         }
+
         @keyframes mascot-twinkle {
             0%, 100% { opacity: .45; }
             50% { opacity: 1; }
         }
+
         @keyframes mascot-breathe {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(2px); }
         }
 
-        /* ===== MASCOT ACTION ANIMATIONS ===== */
+        /* HAPPY */
         .eco-character.pose-happy .mascot-arm-left {
-            animation: arm-cheer-left 0.6s ease-in-out infinite alternate;
-        }
-        .eco-character.pose-happy .mascot-arm-right {
-            animation: arm-cheer-right 0.6s ease-in-out infinite alternate;
-        }
-        .eco-character.pose-wait {
-            animation: mascot-wait 1.2s ease-in-out infinite;
-        }
-        .eco-character.pose-dance {
-            animation: mascot-dance 0.55s ease-in-out infinite;
+            animation: arm-cheer-left .6s ease-in-out infinite alternate;
         }
 
-        /* ===== ANIMATIONS CHO TỪNG CÔNG VIỆC ===== */
-        .eco-character.pose-stove .mascot-arm-right {
-            transform-box: view-box;
-            transform-origin: 220px 163px;
-            animation: stove-check 0.65s ease-in-out infinite alternate;
-        }
-        .eco-character.pose-stove {
-            animation: mascot-check 1.2s ease-in-out infinite;
-        }
-        @keyframes stove-check {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(-15deg); }
+        .eco-character.pose-happy .mascot-arm-right-limb {
+            animation: arm-cheer-right .6s ease-in-out infinite alternate;
         }
 
-        .eco-character.pose-oven .mascot-arm-right {
-            transform-box: view-box;
-            transform-origin: 220px 163px;
-            animation: oven-check 0.65s ease-in-out infinite alternate;
-        }
-        @keyframes oven-check {
-            from { transform: rotate(-5deg); }
-            to { transform: rotate(12deg); }
+        @keyframes arm-cheer-left {
+            from { transform: rotate(0); }
+            to { transform: rotate(-25deg); }
         }
 
-        .eco-character.pose-light .mascot-arm-left {
-            transform-box: view-box;
-            transform-origin: 83px 175px;
-            animation: light-left 0.6s ease-in-out infinite alternate;
-        }
-        .eco-character.pose-light .mascot-arm-right {
-            transform-box: view-box;
-            transform-origin: 220px 163px;
-            animation: light-right 0.6s ease-in-out infinite alternate;
-        }
-        @keyframes light-left {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(-35deg); }
-        }
-        @keyframes light-right {
-            from { transform: rotate(0deg); }
+        @keyframes arm-cheer-right {
+            from { transform: rotate(0); }
             to { transform: rotate(25deg); }
         }
 
+        /* WAIT */
+        .eco-character.pose-wait {
+            animation: mascot-wait 1.2s ease-in-out infinite;
+        }
+
+        @keyframes mascot-wait {
+            0%, 100% { transform: translateY(0) rotate(0); }
+            50% { transform: translateY(4px) rotate(2deg); }
+        }
+
+        /* DANCE */
+        .eco-character.pose-dance {
+            animation: mascot-dance .55s ease-in-out infinite;
+        }
+
+        .eco-character.pose-dance .mascot-arm-left {
+            animation: arm-cheer-left .4s ease-in-out infinite alternate;
+        }
+
+        .eco-character.pose-dance .mascot-arm-right-limb {
+            animation: arm-cheer-right .4s ease-in-out infinite alternate;
+        }
+
+        @keyframes mascot-dance {
+            0%, 100% { transform: translateY(0) rotate(0); }
+            25% { transform: translateY(-9px) rotate(-5deg); }
+            75% { transform: translateY(-9px) rotate(5deg); }
+        }
+
+        /* CHECK STOVE */
+        .eco-character.pose-stove .mascot-arm-right-limb {
+            animation: stove-check .65s ease-in-out infinite alternate;
+        }
+
+        .eco-character.pose-stove {
+            animation: mascot-check 1.2s ease-in-out infinite;
+        }
+
+        @keyframes stove-check {
+            from { transform: rotate(0); }
+            to { transform: rotate(-22deg); }
+        }
+
+        @keyframes mascot-check {
+            0%, 100% { transform: translateY(0) rotate(0); }
+            50% { transform: translateY(-4px) rotate(-2deg); }
+        }
+
+        /* CHECK OVEN */
+        .eco-character.pose-oven .mascot-arm-right-limb {
+            animation: oven-check .65s ease-in-out infinite alternate;
+        }
+
+        .eco-character.pose-oven .mascot-arm-left {
+            animation: oven-left .65s ease-in-out infinite alternate;
+        }
+
+        @keyframes oven-check {
+            from { transform: rotate(-12deg); }
+            to { transform: rotate(18deg); }
+        }
+
+        @keyframes oven-left {
+            from { transform: rotate(0); }
+            to { transform: rotate(-12deg); }
+        }
+
+        /* CHECK LIGHT */
+        .eco-character.pose-light .mascot-arm-left {
+            animation: light-left .6s ease-in-out infinite alternate;
+        }
+
+        .eco-character.pose-light .mascot-arm-right-limb {
+            animation: light-right .6s ease-in-out infinite alternate;
+        }
+
+        @keyframes light-left {
+            from { transform: rotate(0); }
+            to { transform: rotate(-38deg); }
+        }
+
+        @keyframes light-right {
+            from { transform: rotate(0); }
+            to { transform: rotate(28deg); }
+        }
+
+        /* WIPE */
         .eco-character.pose-wipe .mascot-arm-left {
-            transform-box: view-box;
-            transform-origin: 83px 175px;
-            animation: wipe-left 0.45s ease-in-out infinite alternate;
+            animation: wipe-left .45s ease-in-out infinite alternate;
         }
-        .eco-character.pose-wipe .mascot-arm-right {
-            transform-box: view-box;
-            transform-origin: 220px 163px;
-            animation: wipe-right 0.45s ease-in-out infinite alternate;
+
+        .eco-character.pose-wipe .mascot-arm-right-limb {
+            animation: wipe-right .45s ease-in-out infinite alternate;
         }
+
         @keyframes wipe-left {
             from { transform: rotate(-18deg) translateX(-2px); }
             to { transform: rotate(18deg) translateX(5px); }
         }
+
         @keyframes wipe-right {
             from { transform: rotate(15deg) translateX(2px); }
             to { transform: rotate(-15deg) translateX(-5px); }
         }
 
-        @keyframes arm-cheer-left {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(-18deg); }
-        }
-        @keyframes arm-cheer-right {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(15deg); }
-        }
-        @keyframes mascot-check {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-4px) rotate(-3deg); }
-        }
-        @keyframes mascot-wait {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(3px) rotate(2deg); }
-        }
-        @keyframes mascot-dance {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            25% { transform: translateY(-9px) rotate(-5deg); }
-            75% { transform: translateY(-9px) rotate(5deg); }
-        }
-
-        /* SCARF ICON ANIMATION */
+        /* SCARF */
         .vintage-scarf-icon {
             width: 36px;
             height: 36px;
@@ -308,39 +414,147 @@
             align-items: center;
             justify-content: center;
         }
+
         .vintage-scarf-icon svg {
             width: 100%;
             height: 100%;
             overflow: visible;
             animation: scarf-float 3s ease-in-out infinite;
         }
+
         @keyframes scarf-float {
             0%, 100% { transform: translateY(0) rotate(-2deg); }
             50% { transform: translateY(-3px) rotate(2deg); }
         }
 
-        /* RESPONSIVE CHO ĐIỆN THOẠI: 4 NÚT THỜI GIAN THÀNH 2 HÀNG X 2 CỘT */
+        /* MOBILE */
         @media (max-width: 640px) {
             header > div {
                 flex-direction: column;
                 align-items: stretch;
-                gap: 12px;
+                gap: 10px;
+                padding-top: 10px;
+                padding-bottom: 10px;
             }
-            .nav-pills {
+
+            header .nav-pills {
                 max-width: none;
                 width: 100%;
             }
+
+            .nav-btn {
+                font-size: clamp(9px, 2.6vw, 11px);
+                padding: 7px 1px;
+                min-height: 38px;
+            }
+
             main {
                 padding-left: 12px !important;
                 padding-right: 12px !important;
+                padding-top: 16px !important;
+                gap: 18px !important;
             }
+
+            .vintage-panel {
+                padding: 15px !important;
+                border-radius: 19px;
+                box-shadow: 3px 3px 0 #5c4738;
+            }
+
+            .eco-mascot {
+                width: min(190px, 62vw);
+                height: min(190px, 62vw);
+            }
+
             .timer-buttons-grid {
                 display: grid;
-                grid-template-columns: repeat(2, 1fr);
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 9px;
+            }
+
+            .timer-buttons-grid button {
+                min-height: 42px;
+            }
+
+            .chat-overlay {
+                padding: 10px;
+                padding-top: max(10px, env(safe-area-inset-top));
+                padding-bottom: max(10px, env(safe-area-inset-bottom));
+                align-items: center;
+            }
+
+            .chat-window {
+                width: 100%;
+                max-height: 94dvh;
+                padding: 15px;
+                border-radius: 21px;
+                box-shadow: 4px 4px 0 #5c4738;
+            }
+
+            .chat-window h2 {
+                font-size: 16px;
+            }
+
+            .chat-window .eco-mascot {
+                width: 125px !important;
+                height: 125px !important;
+            }
+
+            .chat-bubble {
+                padding: 12px;
+            }
+
+            .chat-scene {
+                min-height: 80px;
+                font-size: 42px;
+            }
+
+            footer {
+                padding-bottom: max(20px, env(safe-area-inset-bottom));
+            }
+        }
+
+        @media (max-width: 380px) {
+            .nav-btn {
+                font-size: 9px;
+            }
+
+            .nav-pills {
+                gap: 2px;
+                padding: 4px;
+            }
+
+            .vintage-panel {
+                padding: 12px !important;
+            }
+
+            .chat-window {
+                padding: 12px;
+            }
+
+            #weather-card-bg {
+                padding: 14px;
+            }
+
+            #weather-icon-lg {
+                font-size: 46px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .eco-character,
+            .mascot-leaves,
+            .mascot-arm-left,
+            .mascot-arm-right-limb,
+            .mascot-sparkle,
+            .mascot-battery,
+            .vintage-scarf-icon svg {
+                animation-duration: 5s !important;
             }
         }
     </style>
 </head>
+
 <body class="min-h-screen flex flex-col justify-between selection:bg-amber-200">
 
     <!-- HEADER -->
@@ -350,106 +564,138 @@
                 <span class="text-2xl">🌿</span>
                 <div>
                     <h1 class="font-bold text-base text-[#4a3b32] leading-tight">Eco-Buddy Home Manager</h1>
-                    <p class="text-[11px] text-[#7a6452] font-medium">Live Tariff & Weather ⚡ <span id="realtime-clock" class="text-[#5c4738] font-bold"></span></p>
+                    <p class="text-[11px] text-[#7a6452] font-medium">
+                        Live Tariff & Weather ⚡
+                        <span id="realtime-clock" class="text-[#5c4738] font-bold"></span>
+                    </p>
                 </div>
             </div>
-            
-            <!-- 4 TAB NGANG HÀNG -->
+
             <div class="nav-pills">
-              <button onclick="switchTab('tracker')" id="tab-btn-tracker" class="nav-btn active">⚡ Tariff</button>
-              <button onclick="switchTab('weather')" id="tab-btn-weather" class="nav-btn">🌦️ Weather</button>
-              <button onclick="switchTab('checklist')" id="tab-btn-checklist" class="nav-btn">🍳 Nấu Nướng</button>
-              <button onclick="switchTab('calendar')" id="tab-btn-calendar" class="nav-btn">📅 Calendar</button>
+                <button onclick="switchTab('tracker')" id="tab-btn-tracker" class="nav-btn active">⚡ Tariff</button>
+                <button onclick="switchTab('weather')" id="tab-btn-weather" class="nav-btn">🌦️ Weather</button>
+                <button onclick="switchTab('checklist')" id="tab-btn-checklist" class="nav-btn">🍳 Nấu Nướng</button>
+                <button onclick="switchTab('calendar')" id="tab-btn-calendar" class="nav-btn">📅 Calendar</button>
             </div>
         </div>
     </header>
 
-    <!-- MAIN CONTAINER -->
+    <!-- MAIN -->
     <main class="max-w-xl mx-auto px-4 py-6 flex-grow w-full space-y-6">
-        
-        <!-- MASCOT & INTRO CARD -->
+
+        <!-- MASCOT INTRO -->
         <div class="vintage-panel p-5 flex flex-col items-center text-center">
             <div class="relative mb-2 w-full flex justify-center">
                 <div class="eco-mascot">
                     <svg id="main-mascot-svg" class="eco-character" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
                         <defs>
-                          <filter id="ecoShadow">
-                            <feGaussianBlur stdDeviation="3"/>
-                          </filter>
+                            <filter id="ecoShadow">
+                                <feGaussianBlur stdDeviation="3"/>
+                            </filter>
                         </defs>
+
                         <ellipse cx="150" cy="269" rx="66" ry="8" fill="#b9a27b" opacity=".18"/>
+
                         <g class="mascot-legs">
-                          <path d="M116 220 Q105 239 107 252 Q110 261 134 257 L145 229" fill="#fff9ed" stroke="#75604d" stroke-width="5" stroke-linejoin="round"/>
-                          <ellipse cx="121" cy="257" rx="19" ry="10" fill="#fff9ed" stroke="#75604d" stroke-width="4"/>
-                          <path d="M174 222 Q188 239 185 252 Q182 262 159 257 L151 229" fill="#fff9ed" stroke="#75604d" stroke-width="5" stroke-linejoin="round"/>
-                          <ellipse cx="176" cy="257" rx="19" ry="10" fill="#fff9ed" stroke="#75604d" stroke-width="4"/>
+                            <path d="M116 220 Q105 239 107 252 Q110 261 134 257 L145 229" fill="#fff9ed" stroke="#75604d" stroke-width="5" stroke-linejoin="round"/>
+                            <ellipse cx="121" cy="257" rx="19" ry="10" fill="#fff9ed" stroke="#75604d" stroke-width="4"/>
+                            <path d="M174 222 Q188 239 185 252 Q182 262 159 257 L151 229" fill="#fff9ed" stroke="#75604d" stroke-width="5" stroke-linejoin="round"/>
+                            <ellipse cx="176" cy="257" rx="19" ry="10" fill="#fff9ed" stroke="#75604d" stroke-width="4"/>
                         </g>
+
                         <path d="M83 164 Q65 153 69 134 Q53 119 65 101 Q71 82 91 81 Q96 58 119 62 Q137 43 153 57 Q171 43 189 61 Q215 58 224 82 Q246 89 241 111 Q257 129 240 147 Q249 168 229 184 Q232 207 211 220 Q194 236 170 233 Q150 241 128 233 Q102 237 87 218 Q68 207 77 186 Q64 176 83 164 Z" fill="#fff9ed" stroke="#75604d" stroke-width="5" stroke-linejoin="round"/>
+
                         <g class="mascot-leaves">
-                          <path d="M145 57 Q108 45 103 23 Q134 17 151 46 Z" fill="#a3a875" stroke="#756b49" stroke-width="4"/>
-                          <path d="M151 48 Q171 13 198 25 Q194 52 158 62 Z" fill="#7d9368" stroke="#756b49" stroke-width="4"/>
-                          <path d="M111 29 Q130 37 145 51" fill="none" stroke="#6e8056" stroke-width="2"/>
-                          <path d="M190 30 Q172 41 158 54" fill="none" stroke="#6e8056" stroke-width="2"/>
+                            <path d="M145 57 Q108 45 103 23 Q134 17 151 46 Z" fill="#a3a875" stroke="#756b49" stroke-width="4"/>
+                            <path d="M151 48 Q171 13 198 25 Q194 52 158 62 Z" fill="#7d9368" stroke="#756b49" stroke-width="4"/>
+                            <path d="M111 29 Q130 37 145 51" fill="none" stroke="#6e8056" stroke-width="2"/>
+                            <path d="M190 30 Q172 41 158 54" fill="none" stroke="#6e8056" stroke-width="2"/>
                         </g>
+
                         <ellipse cx="105" cy="137" rx="13" ry="9" fill="#f5bca8"/>
                         <ellipse cx="197" cy="137" rx="13" ry="9" fill="#f5bca8"/>
                         <ellipse cx="128" cy="124" rx="5" ry="7" fill="#574b40"/>
                         <ellipse cx="177" cy="124" rx="5" ry="7" fill="#574b40"/>
                         <path d="M146 140 Q151 148 157 140" fill="none" stroke="#574b40" stroke-width="3.5" stroke-linecap="round"/>
+
                         <g class="mascot-scarf">
-                          <path d="M78 159 Q113 173 151 158 Q190 173 226 154 L223 178 Q186 194 150 178 Q113 195 81 178 Z" fill="#8e9973" stroke="#6e7457" stroke-width="4"/>
-                          <path d="M94 165 L107 183 M119 168 L132 186 M157 165 L170 184 M190 163 L204 179" stroke="#c3bd91" stroke-width="3" opacity=".8"/>
-                          <path d="M204 175 Q224 190 214 217 L197 204 L193 187" fill="#9ca17a" stroke="#6e7457" stroke-width="4"/>
+                            <path d="M78 159 Q113 173 151 158 Q190 173 226 154 L223 178 Q186 194 150 178 Q113 195 81 178 Z" fill="#8e9973" stroke="#6e7457" stroke-width="4"/>
+                            <path d="M94 165 L107 183 M119 168 L132 186 M157 165 L170 184 M190 163 L204 179" stroke="#c3bd91" stroke-width="3" opacity=".8"/>
+                            <path d="M204 175 Q224 190 214 217 L197 204 L193 187" fill="#9ca17a" stroke="#6e7457" stroke-width="4"/>
                         </g>
+
+                        <!-- TAY TRÁI -->
                         <g class="mascot-arm-left">
-                          <path d="M83 165 Q62 161 52 179 Q42 193 51 205 Q62 217 77 198 Q83 190 89 183" fill="#fff9ed" stroke="#75604d" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M83 165 Q62 161 52 179 Q42 193 51 205 Q62 217 77 198 Q83 190 89 183"
+                                  fill="#fff9ed" stroke="#75604d" stroke-width="5"
+                                  stroke-linecap="round" stroke-linejoin="round"/>
                         </g>
+
+                        <!-- TAY PHẢI: TÁCH RIÊNG PHẦN TAY -->
                         <g class="mascot-arm-right">
-                          <path d="M220 163 Q244 158 249 136" fill="none" stroke="#75604d" stroke-width="17" stroke-linecap="round"/>
-                          <path d="M220 163 Q244 158 249 136" fill="none" stroke="#fff9ed" stroke-width="11" stroke-linecap="round"/>
-                          <g transform="translate(227 67) rotate(13 25 40)">
-                            <rect x="12" y="24" width="42" height="49" rx="12" fill="#b7a78b" stroke="#75604d" stroke-width="4"/>
-                            <rect x="19" y="3" width="7" height="28" rx="3" fill="#75604d"/>
-                            <rect x="41" y="3" width="7" height="28" rx="3" fill="#75604d"/>
-                            <path d="M32 39 L24 52 L32 52 L27 64 L43 47 L34 47 Z" fill="#f6d36d"/>
-                          </g>
+                            <g class="mascot-arm-right-limb">
+                                <path d="M220 163 Q244 158 249 136"
+                                      fill="none" stroke="#75604d" stroke-width="17"
+                                      stroke-linecap="round"/>
+                                <path d="M220 163 Q244 158 249 136"
+                                      fill="none" stroke="#fff9ed" stroke-width="11"
+                                      stroke-linecap="round"/>
+                            </g>
+
+                            <!-- PHÍCH CẮM KHÔNG XOAY THEO TAY -->
+                            <g class="mascot-plug" transform="translate(227 67) rotate(13 25 40)">
+                                <rect x="12" y="24" width="42" height="49" rx="12" fill="#b7a78b" stroke="#75604d" stroke-width="4"/>
+                                <rect x="19" y="3" width="7" height="28" rx="3" fill="#75604d"/>
+                                <rect x="41" y="3" width="7" height="28" rx="3" fill="#75604d"/>
+                                <path d="M32 39 L24 52 L32 52 L27 64 L43 47 L34 47 Z" fill="#f6d36d"/>
+                            </g>
                         </g>
+
                         <g class="mascot-battery">
-                          <path d="M95 181 Q120 174 141 182 L143 224 Q119 238 96 222 Z" fill="#a4a981" stroke="#6e7457" stroke-width="4"/>
-                          <rect x="108" y="192" width="28" height="27" rx="6" fill="#e8e3c9" stroke="#72805f" stroke-width="3"/>
-                          <path d="M122 197 L116 207 L122 207 L118 215 L130 203 L124 203 Z" fill="#e7b947"/>
+                            <path d="M95 181 Q120 174 141 182 L143 224 Q119 238 96 222 Z" fill="#a4a981" stroke="#6e7457" stroke-width="4"/>
+                            <rect x="108" y="192" width="28" height="27" rx="6" fill="#e8e3c9" stroke="#72805f" stroke-width="3"/>
+                            <path d="M122 197 L116 207 L122 207 L118 215 L130 203 L124 203 Z" fill="#e7b947"/>
                         </g>
+
                         <g>
-                          <rect x="157" y="191" width="36" height="29" rx="7" fill="#e8e0c7" stroke="#8b8b66" stroke-width="3"/>
-                          <rect x="169" y="187" width="12" height="6" rx="3" fill="#a4a981"/>
-                          <path d="M174 197 L168 207 L176 207 L172 215 L183 203 L177 203 Z" fill="#d7ad4e"/>
+                            <rect x="157" y="191" width="36" height="29" rx="7" fill="#e8e0c7" stroke="#8b8b66" stroke-width="3"/>
+                            <rect x="169" y="187" width="12" height="6" rx="3" fill="#a4a981"/>
+                            <path d="M174 197 L168 207 L176 207 L172 215 L183 203 L177 203 Z" fill="#d7ad4e"/>
                         </g>
+
                         <path d="M69 116 Q60 109 66 102" stroke="#d4b66d" stroke-width="4" fill="none" stroke-linecap="round"/>
                         <path d="M236 98 Q245 89 251 99" stroke="#d4b66d" stroke-width="4" fill="none" stroke-linecap="round"/>
+
                         <g class="mascot-sparkle" fill="#d9b85f">
-                          <path d="M48 76 L52 87 L63 91 L52 95 L48 106 L44 95 L33 91 L44 87 Z"/>
-                          <path d="M263 174 L266 182 L274 185 L266 188 L263 196 L260 188 L252 185 L260 182 Z"/>
+                            <path d="M48 76 L52 87 L63 91 L52 95 L48 106 L44 95 L33 91 L44 87 Z"/>
+                            <path d="M263 174 L266 182 L274 185 L266 188 L263 196 L260 188 L252 185 L260 182 Z"/>
                         </g>
                     </svg>
                 </div>
+
                 <div id="status-badge" class="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-[#87a96b] text-white text-[11px] font-extrabold px-4 py-1 rounded-full shadow border-2 border-[#5c4738] whitespace-nowrap">
                     Normal Hours ☀️
                 </div>
             </div>
+
             <h3 class="font-bold text-[#4a3b32] text-base mt-2">Bé Mây Xanh</h3>
-            <p class="text-[11px] text-[#7a6452] font-semibold italic mt-0.5">🌿 Có chiếc pin nhỏ trên người, tai là lá cây, luôn đồng hành cùng bạn.</p>
-            <p id="mascot-speech" class="text-xs text-[#5c4738] font-medium bg-[#f5ede2] p-3 rounded-2xl border-1.5 border-[#5c4738] w-full mt-3 leading-relaxed">
+
+            <p class="text-[11px] text-[#7a6452] font-semibold italic mt-0.5">
+                🌿 Có chiếc pin nhỏ trên người, tai là lá cây, luôn đồng hành cùng bạn.
+            </p>
+
+            <p id="mascot-speech" class="text-xs text-[#5c4738] font-medium bg-[#f5ede2] p-3 rounded-2xl border border-[#5c4738] w-full mt-3 leading-relaxed">
                 "Tiết kiệm điện cùng mình nhé! 🤍"
             </p>
         </div>
 
-        <!-- TAB 1: TARIFF & TIPS -->
+        <!-- TAB 1: TARIFF -->
         <div id="tab-content-tracker" class="space-y-6">
             <div class="vintage-panel p-5 space-y-4">
                 <h2 class="font-bold text-[#4a3b32] text-base flex items-center gap-2 border-b-2 border-[#5c4738] pb-2.5">
                     <span>⚡</span> Biểu Giá Điện Trong Ngày (SST Saver+)
                 </h2>
-                
+
                 <div class="space-y-3 text-xs sm:text-sm">
                     <div class="vint-card p-3.5 flex items-start justify-between gap-3 bg-[#f2f7ec]">
                         <div class="flex-1 min-w-0">
@@ -458,6 +704,7 @@
                         </div>
                         <span class="font-black text-[#3b4a32] bg-[#d9e8cc] px-2.5 py-1 rounded-xl border border-[#5c4738] whitespace-nowrap">€0.3719/kWh</span>
                     </div>
+
                     <div class="p-3.5 rounded-2xl bg-[#fbe8e6] border-2 border-[#5c4738] flex items-start justify-between gap-3 shadow-[2px_2px_0px_#5c4738]">
                         <div class="flex-1 min-w-0">
                             <p class="font-extrabold text-[#5c3232]">🔴 Giờ Cao Điểm</p>
@@ -465,6 +712,7 @@
                         </div>
                         <span class="font-black text-[#5c3232] bg-[#f5d0cd] px-2.5 py-1 rounded-xl border border-[#5c4738] whitespace-nowrap">€0.3968/kWh</span>
                     </div>
+
                     <div class="vint-card p-3.5 flex items-start justify-between gap-3 bg-[#eaf2f8]">
                         <div class="flex-1 min-w-0">
                             <p class="font-extrabold text-[#32455c]">🟢 Giờ Đêm (Rẻ Nhất)</p>
@@ -475,23 +723,23 @@
                 </div>
             </div>
 
-            <!-- ECO-TIPS NGUYÊN BẢN -->
             <div class="vintage-panel p-5 space-y-3">
                 <h3 class="font-bold text-[#4a3b32] text-sm flex items-center gap-2">
                     <span>💡</span> Nhắc Nhở & Mẹo Xanh Hàng Ngày:
                 </h3>
+
                 <ul class="text-xs space-y-2 text-[#5c4738] font-medium">
                     <li class="bg-[#fffaf4] px-3 py-2.5 rounded-xl border border-[#5c4738]/30">
-                        <span>💡</span> <strong>Tắt đèn:</strong> Nhớ tắt đèn phòng & cầu thang khi không sử dụng.
+                        💡 <strong>Tắt đèn:</strong> Nhớ tắt đèn phòng & cầu thang khi không sử dụng.
                     </li>
                     <li class="bg-[#fffaf4] px-3 py-2.5 rounded-xl border border-[#5c4738]/30">
-                        <span>🔒</span> <strong>Kiểm tra cửa:</strong> Khóa cửa kỹ chưa và đã đóng cửa nhà bếp nữa.
+                        🔒 <strong>Kiểm tra cửa:</strong> Khóa cửa kỹ chưa và đã đóng cửa nhà bếp nữa.
                     </li>
                     <li class="bg-[#fffaf4] px-3 py-2.5 rounded-xl border border-[#5c4738]/30">
-                        <span>🔌</span> <strong>Rút phích cắm:</strong> Ngắt thiết bị chờ (tivi, lò vi sóng) khi không dùng.
+                        🔌 <strong>Rút phích cắm:</strong> Ngắt thiết bị chờ khi không dùng.
                     </li>
                     <li class="bg-[#fffaf4] px-3 py-2.5 rounded-xl border border-[#5c4738]/30">
-                        <span>🚿</span> <strong>Bình nước nóng:</strong> Tắt ngay bình nóng lạnh sau khi tắm xong.
+                        🚿 <strong>Bình nước nóng:</strong> Tắt ngay bình nóng lạnh sau khi tắm xong.
                     </li>
                 </ul>
             </div>
@@ -500,25 +748,26 @@
         <!-- TAB 2: CALENDAR -->
         <div id="tab-content-calendar" class="hidden space-y-6">
             <div class="vintage-panel p-5 space-y-4">
-                <div class="flex items-center justify-between border-b-2 border-[#5c4738] pb-2.5">
+                <div class="flex items-center justify-between gap-2 border-b-2 border-[#5c4738] pb-2.5">
                     <h2 class="font-bold text-[#4a3b32] text-base flex items-center gap-2">
                         <span>📅</span> Lịch Đổ Rác & Việc Nhà
                     </h2>
+
                     <div class="flex items-center gap-2">
-                        <button onclick="changeCalendarMonth(-1)" class="px-2.5 py-1 bg-[#f0e6d6] rounded-lg border border-[#5c4738] text-xs font-bold">◀</button>
+                        <button onclick="changeCalendarMonth(-1)" class="px-2.5 py-2 bg-[#f0e6d6] rounded-lg border border-[#5c4738] text-xs font-bold">◀</button>
                         <span id="calendar-month-label" class="text-xs font-extrabold text-[#5c4738] min-w-[100px] text-center">Tháng...</span>
-                        <button onclick="changeCalendarMonth(1)" class="px-2.5 py-1 bg-[#f0e6d6] rounded-lg border border-[#5c4738] text-xs font-bold">▶</button>
+                        <button onclick="changeCalendarMonth(1)" class="px-2.5 py-2 bg-[#f0e6d6] rounded-lg border border-[#5c4738] text-xs font-bold">▶</button>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-7 gap-1 text-center text-[11px] font-extrabold text-[#7a6452] mb-2">
-                  <span>T2</span>
-                  <span>T3</span>
-                  <span>T4</span>
-                  <span>T5</span>
-                  <span>T6</span>
-                  <span>T7</span>
-                  <span>CN</span>
+                    <span>T2</span>
+                    <span>T3</span>
+                    <span>T4</span>
+                    <span>T5</span>
+                    <span>T6</span>
+                    <span>T7</span>
+                    <span>CN</span>
                 </div>
 
                 <div id="calendar-days" class="grid grid-cols-7 gap-1.5"></div>
@@ -529,65 +778,73 @@
             </div>
         </div>
 
-        <!-- TAB 3: WEATHER & OUTFIT -->
+        <!-- TAB 3: WEATHER -->
         <div id="tab-content-weather" class="hidden space-y-6">
             <div class="vintage-panel p-5 space-y-4">
                 <div class="flex items-center justify-between gap-2 border-b-2 border-[#5c4738] pb-2.5">
-                    <div>
+                    <div class="min-w-0">
                         <h3 class="font-bold text-[#4a3b32] text-base flex items-center gap-2">
                             <span>🌦️</span> Thời Tiết Dublin & Gợi Ý Mặc Đồ
                         </h3>
                         <p class="text-xs text-[#7a6452] mt-0.5">Dữ liệu thực tế cập nhật liên tục.</p>
                     </div>
-                    <button onclick="fetchWeatherData()" class="bg-[#f0e6d6] hover:bg-[#e4d8c5] text-[#4a3b32] text-xs font-bold px-3 py-2 rounded-xl border-1.5 border-[#5c4738] shadow-[2px_2px_0px_#5c4738] transition">
+
+                    <button onclick="fetchWeatherData()" class="shrink-0 bg-[#f0e6d6] hover:bg-[#e4d8c5] text-[#4a3b32] text-xs font-bold px-3 py-2 rounded-xl border border-[#5c4738] shadow-[2px_2px_0px_#5c4738] transition">
                         🔄 Làm Mới
                     </button>
                 </div>
 
                 <div id="weather-card-bg" class="bg-gradient-to-br from-[#8fa8be] to-[#6a849b] text-white p-5 rounded-2xl shadow-[3px_3px_0px_#5c4738] border-2 border-[#5c4738] flex items-center justify-between gap-3">
-                    <div class="space-y-1">
+                    <div class="space-y-1 min-w-0">
                         <p id="weather-condition" class="text-sm font-extrabold">Đang tải thời tiết...</p>
                         <p id="weather-temp" class="text-3xl font-black">--°C</p>
                         <p id="weather-wind" class="text-[11px] text-[#e2ecf5] font-semibold">Gió: -- km/h</p>
                     </div>
-                    <div id="weather-icon-lg" class="text-6xl drop-shadow-md">☁️</div>
+                    <div id="weather-icon-lg" class="text-6xl drop-shadow-md shrink-0">☁️</div>
                 </div>
 
-                <div class="bg-[#f5ede2] border-1.5 border-[#5c4738] p-4 rounded-2xl space-y-3 shadow-[2px_2px_0px_#5c4738]">
+                <div class="bg-[#f5ede2] border border-[#5c4738] p-4 rounded-2xl space-y-3 shadow-[2px_2px_0px_#5c4738]">
                     <h4 class="font-bold text-[#4a3b32] text-xs sm:text-sm flex items-center gap-2">
                         <span>👕</span> Gợi ý trang phục khi ra ngoài:
                     </h4>
+
                     <div class="grid grid-cols-1 gap-2.5">
-                        <div class="bg-white p-3 rounded-xl border-1.5 border-[#5c4738] text-xs text-[#4a3b32] flex items-center gap-2.5 shadow-sm">
-                            <div class="flex-shrink-0 w-9 h-9 flex items-center justify-center">
-                                <div class="vintage-scarf-icon" style="width:34px; height:34px;">
+                        <div class="bg-white p-3 rounded-xl border border-[#5c4738] text-xs text-[#4a3b32] flex items-center gap-2.5 shadow-sm">
+                            <div class="shrink-0 w-9 h-9 flex items-center justify-center">
+                                <div class="vintage-scarf-icon" style="width:34px;height:34px;">
                                     <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
-                                        <defs>
-                                            <filter id="scarf-shadow"><feGaussianBlur stdDeviation="2"/></filter>
-                                        </defs>
-                                        <ellipse cx="59" cy="101" rx="35" ry="6" fill="#8ba9a6" opacity=".18" filter="url(#scarf-shadow)"/>
+                                        <ellipse cx="59" cy="101" rx="35" ry="6" fill="#8ba9a6" opacity=".18"/>
                                         <path d="M24 29 Q35 17 49 25 Q62 31 76 23 Q91 16 99 29 L91 47 Q77 42 64 51 Q49 59 34 49 Q25 43 24 29 Z" fill="#b9d9d6" stroke="#668e89" stroke-width="3.2" stroke-linejoin="round"/>
                                         <path d="M31 31 Q45 43 59 37 Q77 29 91 30" fill="none" stroke="#e5f0e9" stroke-width="3" stroke-linecap="round"/>
                                         <path d="M72 44 Q83 39 94 47 Q102 56 94 70 L82 96 Q78 103 69 99 L60 94 Q55 90 61 80 L72 62 Q77 52 72 44 Z" fill="#a9ceca" stroke="#668e89" stroke-width="3.2" stroke-linejoin="round"/>
                                         <path d="M78 53 Q86 59 88 67 M72 72 Q78 76 82 78 M67 86 Q73 91 78 91" fill="none" stroke="#e3f0e9" stroke-width="2.5" stroke-linecap="round"/>
                                         <g fill="#f8f0dc" stroke="#b58f79" stroke-width="1">
-                                            <circle cx="43" cy="34" r="3"/><circle cx="40" cy="30" r="2.5"/><circle cx="46" cy="30" r="2.5"/><circle cx="40" cy="38" r="2.5"/><circle cx="46" cy="38" r="2.5"/>
-                                            <circle cx="80" cy="30" r="2.5"/><circle cx="77" cy="27" r="2"/><circle cx="83" cy="27" r="2"/><circle cx="77" cy="33" r="2"/><circle cx="83" cy="33" r="2"/>
+                                            <circle cx="43" cy="34" r="3"/>
+                                            <circle cx="40" cy="30" r="2.5"/>
+                                            <circle cx="46" cy="30" r="2.5"/>
+                                            <circle cx="40" cy="38" r="2.5"/>
+                                            <circle cx="46" cy="38" r="2.5"/>
+                                            <circle cx="80" cy="30" r="2.5"/>
+                                            <circle cx="77" cy="27" r="2"/>
+                                            <circle cx="83" cy="27" r="2"/>
                                         </g>
                                         <g fill="#d9b77d">
-                                            <circle cx="43" cy="34" r="1.8"/><circle cx="80" cy="30" r="1.5"/>
+                                            <circle cx="43" cy="34" r="1.8"/>
+                                            <circle cx="80" cy="30" r="1.5"/>
                                         </g>
                                         <g fill="#819f83">
-                                            <path d="M53 43 Q48 36 55 35 Q60 39 53 43Z"/><path d="M55 43 Q61 36 63 42 Q60 47 55 43Z"/><path d="M86 81 Q80 74 87 72 Q92 76 86 81Z"/>
+                                            <path d="M53 43 Q48 36 55 35 Q60 39 53 43Z"/>
+                                            <path d="M55 43 Q61 36 63 42 Q60 47 55 43Z"/>
+                                            <path d="M86 81 Q80 74 87 72 Q92 76 86 81Z"/>
                                         </g>
-                                        <path d="M29 42 Q43 55 58 48" fill="none" stroke="#f5eee0" stroke-width="1.5" stroke-dasharray="2 3"/>
                                     </svg>
                                 </div>
-                            </div> 
+                            </div>
                             <span id="outfit-text-1" class="font-medium">Khăn choàng cổ và găng tay ấm</span>
                         </div>
-                        <div class="bg-white p-3 rounded-xl border-1.5 border-[#5c4738] text-xs text-[#4a3b32] flex items-center gap-2.5 shadow-sm">
-                            <div class="flex-shrink-0 w-9 h-9 flex items-center justify-center">
+
+                        <div class="bg-white p-3 rounded-xl border border-[#5c4738] text-xs text-[#4a3b32] flex items-center gap-2.5 shadow-sm">
+                            <div class="shrink-0 w-9 h-9 flex items-center justify-center">
                                 <svg viewBox="0 0 100 100" width="34" height="34" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M31 30 Q22 7 50 7 Q78 7 69 30 L64 39 L36 39Z" fill="#C5D3B5" stroke="#75634F" stroke-width="2.2"/>
                                     <path d="M37 24 Q50 15 63 24 Q59 34 50 34 Q41 34 37 24Z" fill="#82947A" stroke="#75634F" stroke-width="1.8"/>
@@ -595,20 +852,13 @@
                                     <path d="M34 30 L23 35 Q13 40 10 54 L7 79 Q7 87 16 88 L84 88 Q93 87 93 79 L90 54 Q87 40 77 35 L66 30 Q50 40 34 30Z" fill="#A9BEA0" stroke="#75634F" stroke-width="2.2" stroke-linejoin="round"/>
                                     <path d="M23 38 Q14 40 11 54 L5 76 Q4 84 13 87 Q21 89 25 78 L31 51Z" fill="#B7C9AB" stroke="#75634F" stroke-width="2.2"/>
                                     <path d="M77 38 Q86 40 89 54 L95 76 Q96 84 87 87 Q79 89 75 78 L69 51Z" fill="#B7C9AB" stroke="#75634F" stroke-width="2.2"/>
-                                    <path d="M12 53 Q19 60 27 54 M9 68 Q17 75 24 69 M88 53 Q81 60 73 54 M91 68 Q83 75 76 69" fill="none" stroke="#829B7D" stroke-width="3" stroke-linecap="round"/>
-                                    <path d="M31 46 Q50 53 69 46 M29 62 Q50 69 71 62 M26 78 Q50 84 74 78" fill="none" stroke="#D4DFCB" stroke-width="3" stroke-linecap="round"/>
+                                    <path d="M23 46 Q50 53 77 46 M29 62 Q50 69 71 62 M26 78 Q50 84 74 78" fill="none" stroke="#D4DFCB" stroke-width="3" stroke-linecap="round"/>
                                     <path d="M50 35 L50 88" stroke="#75634F" stroke-width="2"/>
                                     <circle cx="50" cy="44" r="1.5" fill="#F5EBD8"/>
                                     <circle cx="50" cy="56" r="1.5" fill="#F5EBD8"/>
                                     <circle cx="50" cy="68" r="1.5" fill="#F5EBD8"/>
-                                    <path d="M42 32 L42 50 M58 32 L58 50" stroke="#F5EBD8" stroke-width="2" stroke-linecap="round"/>
-                                    <circle cx="42" cy="52" r="3" fill="#F5EBD8"/>
-                                    <circle cx="58" cy="52" r="3" fill="#F5EBD8"/>
-                                    <path d="M29 60 L41 62 L37 75 L26 72Z M71 60 L59 62 L63 75 L74 72Z" fill="#C5D3B5" stroke="#75634F" stroke-width="1.8"/>
-                                    <path d="M7 79 Q15 85 24 80 L22 90 Q14 94 6 87Z M93 79 Q85 85 76 80 L78 90 Q86 94 94 87Z" fill="#C5D3B5" stroke="#75634F" stroke-width="1.8"/>
-                                    <path d="M23 87 Q50 94 77 87 L76 94 Q50 99 24 94Z" fill="#C5D3B5" stroke="#75634F" stroke-width="1.8"/>
                                 </svg>
-                            </div> 
+                            </div>
                             <span id="outfit-text-2" class="font-medium">Áo phao mùa đông (Xám/Xanh ấm áp)</span>
                         </div>
                     </div>
@@ -616,17 +866,18 @@
             </div>
         </div>
 
-        <!-- TAB 4: COOKING CHECKLIST & TIMER -->
+        <!-- TAB 4: COOKING -->
         <div id="tab-content-checklist" class="hidden space-y-6">
             <div class="vintage-panel p-5 space-y-4">
                 <h2 class="font-bold text-[#4a3b32] text-base flex items-center gap-2 border-b-2 border-[#5c4738] pb-2.5">
                     <span>🍳</span> Hẹn Giờ Nấu Nướng & Kiểm Tra An Toàn
                 </h2>
-                
+
                 <div class="vint-card p-4 space-y-3 bg-white" id="timer-setup-box">
-                    <p class="text-xs font-bold text-[#4a3b32]">⏱️ Chọn thời gian nấu (hoặc nhập số phút tùy ý):</p>
-                    
-                    <!-- DÙNG CLASS TIMER-BUTTONS-GRID: LAPTOP 1 HÀNG NGANG, ĐT 2 HÀNG X 2 CỘT -->
+                    <p class="text-xs font-bold text-[#4a3b32]">
+                        ⏱️ Chọn thời gian nấu (hoặc nhập số phút tùy ý):
+                    </p>
+
                     <div class="timer-buttons-grid">
                         <button onclick="setTimerMinutes(15)" class="px-3.5 py-1.5 bg-[#f5ede2] hover:bg-[#e8dac7] text-[#4a3b32] rounded-xl text-xs font-bold border border-[#5c4738] transition">15 phút</button>
                         <button onclick="setTimerMinutes(30)" class="px-3.5 py-1.5 bg-[#f5ede2] hover:bg-[#e8dac7] text-[#4a3b32] rounded-xl text-xs font-bold border border-[#5c4738] transition">30 phút</button>
@@ -635,88 +886,75 @@
                     </div>
 
                     <div class="flex items-center gap-2 pt-1">
-                        <input type="number" id="custom-minutes" placeholder="Nhập số phút tùy ý..." min="1" max="180" class="flex-1 px-3 py-2 rounded-xl border-1.5 border-[#5c4738] text-xs bg-[#fffaf4]">
-                        <button onclick="startCustomTimer()" class="px-4 py-2 bg-[#8c7355] text-white text-xs font-bold rounded-xl border-1.5 border-[#5c4738] shadow-[2px_2px_0px_#5c4738] transition">Bắt Đầu</button>
+                        <input type="number" id="custom-minutes" placeholder="Nhập số phút..." min="1" max="180" step="1" inputmode="numeric" class="min-w-0 flex-1 px-3 py-3 rounded-xl border border-[#5c4738] text-xs bg-[#fffaf4]">
+                        <button onclick="startCustomTimer()" class="shrink-0 px-4 py-3 bg-[#8c7355] text-white text-xs font-bold rounded-xl border border-[#5c4738] shadow-[2px_2px_0px_#5c4738] transition">
+                            Bắt Đầu
+                        </button>
                     </div>
                 </div>
 
-                <!-- Active Timer Display & Kitchen Door Reminder -->
-                <div id="timer-display-box" class="hidden p-4 rounded-2xl bg-[#f5ede2] border-1.5 border-[#5c4738] text-center space-y-3 shadow-[2px_2px_0px_#5c4738]">
+                <div id="timer-display-box" class="hidden p-4 rounded-2xl bg-[#f5ede2] border border-[#5c4738] text-center space-y-3 shadow-[2px_2px_0px_#5c4738]">
                     <div>
                         <p class="text-xs font-bold text-[#5c3232]">⏳ Đang đếm ngược thời gian nấu nướng...</p>
                         <p id="countdown-text" class="text-3xl font-black text-[#4a3b32] mt-1">00:00</p>
                     </div>
-                    
+
                     <div class="bg-white p-3 rounded-xl border border-[#5c4738]/40 flex items-center justify-between gap-2 text-xs">
                         <span class="font-bold text-[#4a3b32] flex items-center gap-1.5">🚪 Bạn đã đóng cửa nhà bếp chưa?</span>
-                        <input type="checkbox" id="kitchen-door-checkbox" class="w-4 h-4 accent-[#8c7355] cursor-pointer">
+                        <input type="checkbox" id="kitchen-door-checkbox" class="w-5 h-5 accent-[#8c7355] cursor-pointer">
                     </div>
 
-                    <button onclick="stopTimer()" class="px-3 py-1 bg-[#fbe8e6] hover:bg-[#f5d0cd] text-[#5c3232] rounded-lg text-xs font-bold border border-[#5c4738]">Hủy Hẹn Giờ</button>
+                    <button onclick="stopTimer()" class="px-4 py-2 bg-[#fbe8e6] hover:bg-[#f5d0cd] text-[#5c3232] rounded-lg text-xs font-bold border border-[#5c4738]">
+                        Hủy Hẹn Giờ
+                    </button>
                 </div>
             </div>
         </div>
-
     </main>
 
-    <!-- CỬA SỔ HỘI THOẠI BÉ MÂY XANH (SAFETY CHAT OVERLAY) -->
-    <section id="safety-chat-overlay"
-      class="chat-overlay hidden"
-      role="dialog"
-      aria-modal="true">
+    <!-- SAFETY CHAT -->
+    <section id="safety-chat-overlay" class="chat-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="safety-chat-title">
+        <div class="chat-window">
 
-      <div class="chat-window">
+            <div class="flex justify-between items-center border-b-2 border-[#d8c7b0] pb-3 gap-2">
+                <div class="min-w-0">
+                    <p class="text-xs font-bold text-[#8c7355]">ECO-BUDDY HOME MANAGER</p>
+                    <h2 id="safety-chat-title" class="text-lg font-extrabold">
+                        Cùng Bé Mây kiểm tra bếp nhé!
+                    </h2>
+                </div>
 
-        <div class="flex justify-between items-center border-b-2 border-[#d8c7b0] pb-3">
-          <div>
-            <p class="text-xs font-bold text-[#8c7355]">
-              ECO-BUDDY HOME MANAGER
+                <button onclick="closeSafetyChat()" class="shrink-0 rounded-full border border-[#8c7355] px-3 py-2 font-bold" aria-label="Đóng">
+                    ✕
+                </button>
+            </div>
+
+            <div class="flex flex-col items-center py-3 gap-2">
+                <div id="chat-mascot" class="eco-mascot" style="width:140px;height:140px;"></div>
+
+                <div class="chat-bubble">
+                    <p class="font-extrabold text-sm mb-0.5 text-[#5c4738]">Bé Mây Xanh ☁️</p>
+                    <p id="chat-question" class="text-sm font-medium text-[#4a3b32]">
+                        Hết giờ rồi! Cùng mình kiểm tra căn bếp nha!
+                    </p>
+                </div>
+            </div>
+
+            <div id="chat-scene" class="chat-scene text-center text-5xl py-3 flex items-center justify-center shadow-inner">
+                🔥
+            </div>
+
+            <div class="bg-[#f5ede2] rounded-2xl p-3.5 mb-3 mt-3 border border-[#d8c7b0]">
+                <p id="chat-action-title" class="font-extrabold text-sm mb-0.5 text-[#5c4738]">Tắt bếp</p>
+                <p id="chat-action-hint" class="text-xs text-[#7a6452] font-medium"></p>
+            </div>
+
+            <div id="chat-actions" class="space-y-2"></div>
+
+            <p id="chat-progress" class="text-xs text-[#8c7355] text-center font-bold mt-3">
+                Bước 1 / 4
             </p>
-            <h2 class="text-lg font-extrabold">
-              Cùng Bé Mây kiểm tra bếp nhé!
-            </h2>
-          </div>
-
-          <button onclick="closeSafetyChat()"
-            class="rounded-full border border-[#8c7355] px-3 py-1 font-bold">
-            ✕
-          </button>
         </div>
-
-        <div class="flex flex-col items-center py-3 gap-2">
-          <!-- MASCOT TRONG CHAT -->
-          <div id="chat-mascot"
-               class="eco-mascot"
-               style="width: 140px; height: 140px;">
-          </div>
-
-          <div class="chat-bubble">
-            <p class="font-extrabold text-sm mb-0.5 text-[#5c4738]">
-              Bé Mây Xanh ☁️
-            </p>
-            <p id="chat-question" class="text-sm font-medium text-[#4a3b32]">
-              Hết giờ rồi! Cùng mình kiểm tra căn bếp nha!
-            </p>
-          </div>
-        </div>
-
-        <div id="chat-scene"
-          class="chat-scene text-center text-5xl py-3 flex items-center justify-center shadow-inner">
-          🔥
-        </div>
-
-        <div class="bg-[#f5ede2] rounded-2xl p-3.5 mb-3 mt-3 border border-[#d8c7b0]">
-          <p id="chat-action-title" class="font-extrabold text-sm mb-0.5 text-[#5c4738]">Tắt bếp</p>
-          <p id="chat-action-hint" class="text-xs text-[#7a6452] font-medium"></p>
-        </div>
-
-        <div id="chat-actions" class="space-y-2"></div>
-
-        <p id="chat-progress" class="text-xs text-[#8c7355] text-center font-bold mt-3">
-          Bước 1 / 4
-        </p>
-
-      </div>
     </section>
 
     <!-- FOOTER -->
@@ -724,258 +962,291 @@
         Eco-Buddy Home Manager · Vintage Pastel Edition 🌿🤍
     </footer>
 
-    <!-- JAVASCRIPT -->
     <script>
+        /* INITIALIZATION */
         window.addEventListener('DOMContentLoaded', () => {
             startRealtimeClock();
             checkTariffStatus();
             fetchWeatherData();
             renderCalendar();
+
             setInterval(checkTariffStatus, 30000);
             setInterval(fetchWeatherData, 600000);
         });
 
+        /* PWA */
         if ("serviceWorker" in navigator) {
-          window.addEventListener("load", () => {
-            navigator.serviceWorker.register(
-              "/Saving_Money/sw.js"
-            ).then(() => {
-              console.log("Eco-Buddy PWA ready!");
-            }).catch(error => {
-              console.error("PWA error:", error);
+            window.addEventListener("load", () => {
+                navigator.serviceWorker.register("/Saving_Money/sw.js")
+                    .then(() => console.log("Eco-Buddy PWA ready!"))
+                    .catch(error => console.error("PWA error:", error));
             });
-          });
         }
 
+        /* CLOCK */
         function startRealtimeClock() {
             function updateClock() {
                 const now = new Date();
                 const clockEl = document.getElementById('realtime-clock');
-                if (clockEl) clockEl.innerText = `| 🕒 ${now.toLocaleTimeString()}`;
+
+                if (clockEl) {
+                    clockEl.innerText = `| 🕒 ${now.toLocaleTimeString()}`;
+                }
             }
+
             updateClock();
             setInterval(updateClock, 1000);
         }
 
+        /* TAB SWITCHING */
         function switchTab(tabName) {
-            const trackerTab = document.getElementById('tab-content-tracker');
-            const calendarTab = document.getElementById('tab-content-calendar');
-            const weatherTab = document.getElementById('tab-content-weather');
-            const checklistTab = document.getElementById('tab-content-checklist');
+            const tabs = {
+                tracker: document.getElementById('tab-content-tracker'),
+                calendar: document.getElementById('tab-content-calendar'),
+                weather: document.getElementById('tab-content-weather'),
+                checklist: document.getElementById('tab-content-checklist')
+            };
 
-            const btnTracker = document.getElementById('tab-btn-tracker');
-            const btnCalendar = document.getElementById('tab-btn-calendar');
-            const btnWeather = document.getElementById('tab-btn-weather');
-            const btnChecklist = document.getElementById('tab-btn-checklist');
+            const buttons = {
+                tracker: document.getElementById('tab-btn-tracker'),
+                calendar: document.getElementById('tab-btn-calendar'),
+                weather: document.getElementById('tab-btn-weather'),
+                checklist: document.getElementById('tab-btn-checklist')
+            };
 
-            trackerTab.classList.add('hidden');
-            calendarTab.classList.add('hidden');
-            weatherTab.classList.add('hidden');
-            checklistTab.classList.add('hidden');
+            Object.values(tabs).forEach(tab => tab.classList.add('hidden'));
+            Object.values(buttons).forEach(btn => btn.classList.remove('active'));
 
-            [btnTracker, btnCalendar, btnWeather, btnChecklist]
-              .forEach(btn => btn.classList.remove("active"));
+            const selectedTab = tabs[tabName] ? tabName : 'tracker';
 
-            if (tabName === "tracker") {
-              trackerTab.classList.remove("hidden");
-              btnTracker.classList.add("active");
-            } else if (tabName === "calendar") {
-              calendarTab.classList.remove("hidden");
-              btnCalendar.classList.add("active");
-              renderCalendar();
-            } else if (tabName === "weather") {
-              weatherTab.classList.remove("hidden");
-              btnWeather.classList.add("active");
-            } else {
-              checklistTab.classList.remove("hidden");
-              btnChecklist.classList.add("active");
+            tabs[selectedTab].classList.remove('hidden');
+            buttons[selectedTab].classList.add('active');
+
+            if (selectedTab === 'calendar') {
+                renderCalendar();
+            }
+
+            if (selectedTab === 'weather') {
+                fetchWeatherData();
             }
         }
 
+        /* TARIFF STATUS */
         function checkTariffStatus() {
-            const now = new Date();
-            const hour = now.getHours();
+            const hour = new Date().getHours();
             const badge = document.getElementById('status-badge');
             const speech = document.getElementById('mascot-speech');
 
+            if (!badge || !speech) return;
+
+            const baseClass = "absolute -bottom-2 left-1/2 -translate-x-1/2 text-white text-[11px] font-extrabold px-4 py-1 rounded-full shadow border-2 border-[#5c4738] whitespace-nowrap";
+
             if (hour >= 17 && hour < 19) {
-                badge.className = "absolute -bottom-2 left-1/2 -translate-x-1/2 bg-[#bc6c25] text-white text-[11px] font-extrabold px-4 py-1 rounded-full shadow border-2 border-[#5c4738] whitespace-nowrap animate-pulse";
+                badge.className = baseClass + " bg-[#bc6c25] animate-pulse";
                 badge.innerText = "🔴 Peak Hours!";
                 speech.innerText = "⚠️ Giờ cao điểm rồi! Tạm ngưng thiết bị lớn nha!";
             } else if (hour >= 23 || hour < 8) {
-                badge.className = "absolute -bottom-2 left-1/2 -translate-x-1/2 bg-[#87a96b] text-white text-[11px] font-extrabold px-4 py-1 rounded-full shadow border-2 border-[#5c4738] whitespace-nowrap";
+                badge.className = baseClass + " bg-[#87a96b]";
                 badge.innerText = "🟢 Night Saver ON";
                 speech.innerText = "🌙 Giờ đêm rẻ nhất, tranh thủ giặt sấy nào!";
             } else {
-                badge.className = "absolute -bottom-2 left-1/2 -translate-x-1/2 bg-[#d4a373] text-white text-[11px] font-extrabold px-4 py-1 rounded-full shadow border-2 border-[#5c4738] whitespace-nowrap";
+                badge.className = baseClass + " bg-[#d4a373]";
                 badge.innerText = "Normal Hours ☀️";
                 speech.innerText = "Tiết kiệm điện cùng mình nhé! 🤍";
             }
         }
 
+        /* CALENDAR */
         let calendarCursor = new Date();
 
         function renderCalendar() {
-          const year = calendarCursor.getFullYear();
-          const month = calendarCursor.getMonth();
+            const year = calendarCursor.getFullYear();
+            const month = calendarCursor.getMonth();
 
-          const label = document.getElementById("calendar-month-label");
-          const grid = document.getElementById("calendar-days");
+            const label = document.getElementById("calendar-month-label");
+            const grid = document.getElementById("calendar-days");
 
-          if (!label || !grid) return;
+            if (!label || !grid) return;
 
-          label.textContent = new Intl.DateTimeFormat("vi-VN", {
-            month: "long",
-            year: "numeric"
-          }).format(calendarCursor);
+            label.textContent = new Intl.DateTimeFormat("vi-VN", {
+                month: "long",
+                year: "numeric"
+            }).format(calendarCursor);
 
-          grid.innerHTML = "";
+            grid.innerHTML = "";
 
-          const firstDay = new Date(year, month, 1);
-          const offset = (firstDay.getDay() + 6) % 7;
-          const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const firstDay = new Date(year, month, 1);
+            const offset = (firstDay.getDay() + 6) % 7;
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-          for (let i = 0; i < offset; i++) {
-            const empty = document.createElement("div");
-            grid.appendChild(empty);
-          }
+            for (let i = 0; i < offset; i++) {
+                const empty = document.createElement("div");
+                grid.appendChild(empty);
+            }
 
-          const today = new Date();
+            const today = new Date();
 
-          for (let day = 1; day <= daysInMonth; day++) {
-            const date = new Date(year, month, day);
-            const isTuesday = date.getDay() === 2;
-            const isToday =
-              date.toDateString() === today.toDateString();
+            for (let day = 1; day <= daysInMonth; day++) {
+                const date = new Date(year, month, day);
+                const isTuesday = date.getDay() === 2;
+                const isToday = date.toDateString() === today.toDateString();
 
-            const cell = document.createElement("div");
+                const cell = document.createElement("div");
 
-            cell.className =
-              "h-10 rounded-xl flex flex-col items-center justify-center text-xs font-bold relative border border-[#5c4738]/20 " +
-              (isTuesday
-                ? "bg-[#d9534f] text-white shadow-sm"
-                : "bg-[#f5ede2] text-[#5c4738]") +
-              (isToday ? " ring-2 ring-[#87a96b] ring-offset-1" : "");
+                cell.className =
+                    "min-h-10 rounded-xl flex flex-col items-center justify-center text-xs font-bold relative border border-[#5c4738]/20 " +
+                    (isTuesday
+                        ? "bg-[#d9534f] text-white shadow-sm"
+                        : "bg-[#f5ede2] text-[#5c4738]") +
+                    (isToday ? " ring-2 ring-[#87a96b] ring-offset-1" : "");
 
-            cell.innerHTML = `
-              <span>${day}</span>
-              ${isTuesday
-                ? '<span class="text-[8px]">🗑️</span>'
-                : ""}
-            `;
+                const dayNumber = document.createElement("span");
+                dayNumber.textContent = day;
+                cell.appendChild(dayNumber);
 
-            cell.title = isTuesday
-              ? "Thứ Ba - Ngày đổ rác"
-              : isToday ? "Hôm nay" : "";
+                if (isTuesday) {
+                    const icon = document.createElement("span");
+                    icon.className = "text-[8px]";
+                    icon.textContent = "🗑️";
+                    cell.appendChild(icon);
+                }
 
-            grid.appendChild(cell);
-          }
+                cell.title = isTuesday
+                    ? "Thứ Ba - Ngày đổ rác"
+                    : isToday ? "Hôm nay" : "";
 
-          const next = new Date();
-          next.setHours(0, 0, 0, 0);
+                grid.appendChild(cell);
+            }
 
-          do {
-            next.setDate(next.getDate() + 1);
-          } while (next.getDay() !== 2);
+            const next = new Date();
+            next.setHours(0, 0, 0, 0);
 
-          const reminder =
-            document.getElementById("next-trash-reminder");
+            do {
+                next.setDate(next.getDate() + 1);
+            } while (next.getDay() !== 2);
 
-          if (reminder) {
-            reminder.textContent =
-              `Lần nhắc đổ rác tiếp theo: Thứ Ba, ${
-                next.toLocaleDateString("vi-VN")
-              }`;
-          }
+            const reminder = document.getElementById("next-trash-reminder");
+
+            if (reminder) {
+                reminder.textContent =
+                    `Lần nhắc đổ rác tiếp theo: Thứ Ba, ${next.toLocaleDateString("vi-VN")}`;
+            }
         }
 
         function changeCalendarMonth(delta) {
-          calendarCursor = new Date(
-            calendarCursor.getFullYear(),
-            calendarCursor.getMonth() + delta,
-            1
-          );
-          renderCalendar();
+            calendarCursor = new Date(
+                calendarCursor.getFullYear(),
+                calendarCursor.getMonth() + delta,
+                1
+            );
+
+            renderCalendar();
         }
 
+        /* COOKING TIMER */
         let countdownInterval = null;
+        let timerEndTime = null;
+
         function setTimerMinutes(mins) {
             document.getElementById('custom-minutes').value = mins;
         }
 
         function startCustomTimer() {
-            const minsInput = document.getElementById('custom-minutes').value;
-            const totalSecs = parseInt(minsInput) * 60;
-            if (!totalSecs || totalSecs <= 0) {
-                alert("Vui lòng nhập số phút hợp lệ!");
+            const input = document.getElementById('custom-minutes');
+            const mins = Number(input.value);
+
+            if (!Number.isInteger(mins) || mins < 1 || mins > 180) {
+                alert("Vui lòng nhập số phút từ 1 đến 180!");
+                input.focus();
                 return;
             }
 
             const checkbox = document.getElementById('kitchen-door-checkbox');
+
             if (checkbox) checkbox.checked = false;
 
             clearInterval(countdownInterval);
-            let remaining = totalSecs;
+
+            timerEndTime = Date.now() + mins * 60 * 1000;
+
             const displayBox = document.getElementById('timer-display-box');
             const textEl = document.getElementById('countdown-text');
+
             displayBox.classList.remove('hidden');
 
-            countdownInterval = setInterval(() => {
+            function updateCountdown() {
+                const remaining = Math.max(
+                    0,
+                    Math.ceil((timerEndTime - Date.now()) / 1000)
+                );
+
                 const m = Math.floor(remaining / 60);
                 const s = remaining % 60;
-                textEl.innerText = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-                
+
+                textEl.innerText =
+                    `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+
                 if (remaining <= 0) {
                     clearInterval(countdownInterval);
+                    countdownInterval = null;
+                    timerEndTime = null;
                     displayBox.classList.add('hidden');
                     openSafetyChat();
                 }
-                remaining--;
-            }, 1000);
+            }
+
+            updateCountdown();
+            countdownInterval = setInterval(updateCountdown, 250);
         }
 
         function stopTimer() {
             clearInterval(countdownInterval);
+            countdownInterval = null;
+            timerEndTime = null;
+
             document.getElementById('timer-display-box').classList.add('hidden');
         }
 
+        /* SAFETY CHAT STEPS */
         const safetySteps = [
-          {
-            title: "Tắt bếp",
-            question: "Bạn đã tắt bếp chưa?",
-            hint: "Kiểm tra núm bếp đã về vị trí OFF nhé!",
-            scene: "🔥",
-            yes: "Tuyệt vời! Bé Mây vui quá!",
-            no: "Mình cùng kiểm tra núm bếp nhé!"
-          },
-          {
-            title: "Tắt lò nướng (Oven)",
-            question: "Bạn đã tắt lò nướng chưa?",
-            hint: "Kiểm tra nút nguồn và màn hình của oven nhé.",
-            scene: "🎛️",
-            yes: "Oven đã được tắt. Giỏi lắm!",
-            no: "Bé Mây đợi bạn kiểm tra nha!"
-          },
-          {
-            title: "Tắt đèn bếp",
-            question: "Đèn khu vực bếp đã tắt chưa?",
-            hint: "Đảm bảo đã tắt hết đèn không dùng nhé!",
-            scene: "💡",
-            yes: "Căn nhà đã tiết kiệm thêm điện rồi!",
-            no: "Mình đi tắt đèn thôi nào!"
-          },
-          {
-            title: "Lau bếp",
-            question: "Bạn đã lau sạch mặt bếp chưa?",
-            hint: "Đợi bếp nguội và dùng khăn ẩm lau sạch nhé.",
-            scene: "🧽",
-            yes: "Bếp sạch bong! Bé Mây tự hào về bạn!",
-            no: "Mình cùng dọn dẹp nhé!"
-          }
+            {
+                title: "Tắt bếp",
+                question: "Bạn đã tắt bếp chưa?",
+                hint: "Kiểm tra núm bếp đã về vị trí OFF nhé!",
+                scene: "🔥",
+                yes: "Tuyệt vời! Bé Mây vui quá!",
+                no: "Mình cùng kiểm tra núm bếp nhé!"
+            },
+            {
+                title: "Tắt lò nướng (Oven)",
+                question: "Bạn đã tắt lò nướng chưa?",
+                hint: "Kiểm tra nút nguồn và màn hình của oven nhé.",
+                scene: "🎛️",
+                yes: "Oven đã được tắt. Giỏi lắm!",
+                no: "Bé Mây đợi bạn kiểm tra nha!"
+            },
+            {
+                title: "Tắt đèn bếp",
+                question: "Đèn khu vực bếp đã tắt chưa?",
+                hint: "Đảm bảo đã tắt hết đèn không dùng nhé!",
+                scene: "💡",
+                yes: "Căn nhà đã tiết kiệm thêm điện rồi!",
+                no: "Mình đi tắt đèn thôi nào!"
+            },
+            {
+                title: "Lau bếp",
+                question: "Bạn đã lau sạch mặt bếp chưa?",
+                hint: "Đợi bếp nguội và dùng khăn ẩm lau sạch nhé.",
+                scene: "🧽",
+                yes: "Bếp sạch bong! Bé Mây tự hào về bạn!",
+                no: "Mình cùng dọn dẹp nhé!"
+            }
         ];
 
         let safetyStepIndex = 0;
+        let safetyAnswerLocked = false;
 
+        /* CLONE MASCOT */
         function syncChatMascot() {
             const original = document.getElementById("main-mascot-svg");
             const container = document.getElementById("chat-mascot");
@@ -988,6 +1259,7 @@
 
             if (cloned) {
                 cloned.removeAttribute("id");
+
                 cloned.classList.remove(
                     "pose-happy",
                     "pose-check",
@@ -1001,13 +1273,14 @@
             }
         }
 
+        /* SET MASCOT ACTION */
         function setMascotPose(pose) {
             const container = document.getElementById("chat-mascot");
             const mascot = container?.querySelector(".eco-character");
 
             if (!mascot) return;
 
-            mascot.classList.remove(
+            const poses = [
                 "pose-happy",
                 "pose-check",
                 "pose-wait",
@@ -1016,96 +1289,151 @@
                 "pose-oven",
                 "pose-light",
                 "pose-wipe"
-            );
+            ];
 
-            void mascot.offsetWidth;
+            mascot.classList.remove(...poses);
+
+            /* Reset animation để động tác mới chạy ngay */
+            void mascot.getBoundingClientRect();
 
             if (pose) {
                 mascot.classList.add("pose-" + pose);
             }
         }
 
+        /* OPEN CHAT */
         function openSafetyChat() {
             safetyStepIndex = 0;
+            safetyAnswerLocked = false;
+
             syncChatMascot();
-            document.getElementById("safety-chat-overlay").classList.remove("hidden");
+
+            const overlay = document.getElementById("safety-chat-overlay");
+
+            overlay.classList.remove("hidden");
             document.body.style.overflow = "hidden";
+
             renderSafetyStep();
         }
 
+        /* CLOSE CHAT */
         function closeSafetyChat() {
-          document.getElementById("safety-chat-overlay").classList.add("hidden");
-          document.body.style.overflow = "";
+            const overlay = document.getElementById("safety-chat-overlay");
+
+            overlay.classList.add("hidden");
+            document.body.style.overflow = "";
+
+            safetyAnswerLocked = false;
         }
 
+        /* RENDER CURRENT STEP */
         function renderSafetyStep() {
-          const step = safetySteps[safetyStepIndex];
-          const poses = ["stove", "oven", "light", "wipe"];
+            const question = document.getElementById("chat-question");
+            const scene = document.getElementById("chat-scene");
+            const actions = document.getElementById("chat-actions");
 
-          const question = document.getElementById("chat-question");
-          const scene = document.getElementById("chat-scene");
-          const actions = document.getElementById("chat-actions");
+            if (safetyStepIndex >= safetySteps.length) {
+                setMascotPose("dance");
 
-          if (safetyStepIndex >= safetySteps.length) {
-            setMascotPose("dance");
-            question.textContent = "Hoàn thành rồi! Cảm ơn bạn đã cùng Bé Mây giữ an toàn cho căn bếp nhé! 💚";
-            scene.textContent = "🌱✨💚";
-            document.getElementById("chat-action-title").textContent = "Hoàn thành kiểm tra!";
-            document.getElementById("chat-action-hint").textContent = "Bé Mây rất tự hào về bạn!";
+                question.textContent =
+                    "Hoàn thành rồi! Cảm ơn bạn đã cùng Bé Mây giữ an toàn cho căn bếp nhé! 💚";
+
+                scene.textContent = "🌱✨💚";
+
+                document.getElementById("chat-action-title").textContent =
+                    "Hoàn thành kiểm tra!";
+
+                document.getElementById("chat-action-hint").textContent =
+                    "Bé Mây rất tự hào về bạn!";
+
+                actions.innerHTML = `
+                    <button class="chat-choice text-center" onclick="closeSafetyChat()">
+                        💚 Xong rồi, quay lại ứng dụng
+                    </button>
+                `;
+
+                document.getElementById("chat-progress").textContent =
+                    "4 / 4 · Hoàn thành";
+
+                return;
+            }
+
+            const step = safetySteps[safetyStepIndex];
+            const poses = ["stove", "oven", "light", "wipe"];
+
+            setMascotPose(poses[safetyStepIndex]);
+
+            question.textContent = step.question;
+            scene.textContent = step.scene;
+
+            document.getElementById("chat-action-title").textContent =
+                step.title;
+
+            document.getElementById("chat-action-hint").textContent =
+                step.hint;
+
+            document.getElementById("chat-progress").textContent =
+                `Bước ${safetyStepIndex + 1} / 4`;
+
             actions.innerHTML = `
-              <button class="chat-choice text-center" onclick="closeSafetyChat()">
-                💚 Xong rồi, quay lại ứng dụng
-              </button>
+                <button class="chat-choice" onclick="answerSafetyStep(true)">
+                    ☑️ Rồi, mình đã làm xong!
+                </button>
+
+                <button class="chat-choice" onclick="answerSafetyStep(false)">
+                    ⏳ Chưa, để mình làm ngay
+                </button>
             `;
-            document.getElementById("chat-progress").textContent = "4 / 4 · Hoàn thành";
-            return;
-          }
-
-          setMascotPose(poses[safetyStepIndex]);
-
-          question.textContent = step.question;
-          scene.textContent = step.scene;
-
-          document.getElementById("chat-action-title").textContent = step.title;
-          document.getElementById("chat-action-hint").textContent = step.hint;
-          document.getElementById("chat-progress").textContent = `Bước ${safetyStepIndex + 1} / 4`;
-
-          actions.innerHTML = `
-            <button class="chat-choice" onclick="answerSafetyStep(true)">
-              ☑️ Rồi, mình đã làm xong!
-            </button>
-            <button class="chat-choice" onclick="answerSafetyStep(false)">
-              ⏳ Chưa, để mình làm ngay
-            </button>
-          `;
         }
 
+        /* ANSWER STEP */
         function answerSafetyStep(done) {
-          const step = safetySteps[safetyStepIndex];
+            if (safetyAnswerLocked) return;
 
-          if (!done) {
-            setMascotPose("wait");
-            document.getElementById("chat-question").textContent = step.no;
+            if (safetyStepIndex >= safetySteps.length) return;
+
+            const step = safetySteps[safetyStepIndex];
+
+            if (!done) {
+                setMascotPose("wait");
+
+                document.getElementById("chat-question").textContent =
+                    step.no;
+
+                document.getElementById("chat-actions").innerHTML = `
+                    <button class="chat-choice" onclick="answerSafetyStep(true)">
+                        💚 Mình đã làm xong, tiếp tục nhé!
+                    </button>
+
+                    <button class="chat-choice" onclick="closeSafetyChat()">
+                        Để mình làm sau
+                    </button>
+                `;
+
+                return;
+            }
+
+            safetyAnswerLocked = true;
+
+            setMascotPose("happy");
+
+            document.getElementById("chat-question").textContent =
+                step.yes;
+
             document.getElementById("chat-actions").innerHTML = `
-              <button class="chat-choice" onclick="answerSafetyStep(true)">
-                💚 Mình đã làm xong, tiếp tục nhé!
-              </button>
-              <button class="chat-choice" onclick="closeSafetyChat()">
-                Để mình làm sau
-              </button>
+                <div class="text-center text-xs font-bold text-[#7a6452] py-2">
+                    💚 Bé Mây đang vui lắm!
+                </div>
             `;
-            return;
-          }
 
-          setMascotPose("happy");
-          document.getElementById("chat-question").textContent = step.yes;
-
-          setTimeout(() => {
-            safetyStepIndex++;
-            renderSafetyStep();
-          }, 1100);
+            setTimeout(() => {
+                safetyStepIndex++;
+                safetyAnswerLocked = false;
+                renderSafetyStep();
+            }, 1100);
         }
 
+        /* WEATHER */
         async function fetchWeatherData() {
             const weatherCondition = document.getElementById('weather-condition');
             const weatherTemp = document.getElementById('weather-temp');
@@ -1115,40 +1443,96 @@
             try {
                 const lat = 53.3498;
                 const lon = -6.2603;
-                const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,precipitation,weather_code,wind_speed_10m&timezone=Europe/Dublin`);
-                const data = await res.json();
-                
-                if (data && data.current) {
-                    const temp = data.current.temperature_2m;
-                    const precip = data.current.precipitation;
-                    const wind = data.current.wind_speed_10m;
-                    const wcode = data.current.weather_code;
 
-                    let condition = "Trời quang đãng";
-                    let icon = "☀️";
+                const url =
+                    `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,precipitation,weather_code,wind_speed_10m&timezone=Europe%2FDublin`;
 
-                    if (precip > 0 || (wcode >= 50 && wcode < 68)) {
-                        condition = "Trời có mưa nhẹ";
-                        icon = "🌧️";
-                    } else if (temp < 8) {
-                        condition = "Trời rất lạnh";
-                        icon = "❄️";
-                    } else if (temp <= 15) {
-                        condition = "Trời se lạnh, lộng gió";
-                        icon = "⛅";
-                    } else if (temp > 20) {
-                        condition = "Trời ấm áp, dễ chịu";
-                        icon = "☀️";
-                    }
+                const res = await fetch(url);
 
-                    weatherCondition.innerText = condition;
-                    weatherTemp.innerText = `${Math.round(temp)}°C`;
-                    weatherWind.innerText = `Gió: ${Math.round(wind)} km/h`;
-                    weatherIcon.innerText = icon;
+                if (!res.ok) {
+                    throw new Error("Không thể tải dữ liệu thời tiết.");
                 }
+
+                const data = await res.json();
+
+                if (!data || !data.current) {
+                    throw new Error("Dữ liệu thời tiết không hợp lệ.");
+                }
+
+                const temp = data.current.temperature_2m;
+                const precip = data.current.precipitation;
+                const wind = data.current.wind_speed_10m;
+                const code = data.current.weather_code;
+
+                let condition = "Trời quang đãng";
+                let icon = "☀️";
+
+                if (code === 0) {
+                    condition = "Trời quang đãng";
+                    icon = "☀️";
+                } else if ([1, 2].includes(code)) {
+                    condition = "Trời có mây";
+                    icon = "⛅";
+                } else if (code === 3) {
+                    condition = "Trời nhiều mây";
+                    icon = "☁️";
+                } else if ([45, 48].includes(code)) {
+                    condition = "Trời có sương mù";
+                    icon = "🌫️";
+                } else if (code >= 51 && code <= 67) {
+                    condition = "Trời có mưa";
+                    icon = "🌧️";
+                } else if (code >= 71 && code <= 77) {
+                    condition = "Trời có tuyết";
+                    icon = "❄️";
+                } else if (code >= 80 && code <= 82) {
+                    condition = "Có mưa rào";
+                    icon = "🌦️";
+                } else if (code >= 95) {
+                    condition = "Có giông bão";
+                    icon = "⛈️";
+                } else if (precip > 0) {
+                    condition = "Trời có mưa nhẹ";
+                    icon = "🌧️";
+                }
+
+                if (temp <= 5) {
+                    condition += " · Rất lạnh";
+                } else if (temp <= 10) {
+                    condition += " · Khá lạnh";
+                } else if (temp > 20) {
+                    condition += " · Ấm áp";
+                }
+
+                weatherCondition.innerText = condition;
+                weatherTemp.innerText = `${Math.round(temp)}°C`;
+                weatherWind.innerText = `Gió: ${Math.round(wind)} km/h`;
+                weatherIcon.innerText = icon;
+
+                /* Outfit suggestions */
+                const outfit1 = document.getElementById("outfit-text-1");
+                const outfit2 = document.getElementById("outfit-text-2");
+
+                if (temp <= 5) {
+                    outfit1.textContent = "Khăn len, găng tay và mũ ấm";
+                    outfit2.textContent = "Áo phao dày, giữ ấm cơ thể";
+                } else if (temp <= 12) {
+                    outfit1.textContent = "Khăn choàng cổ và găng tay";
+                    outfit2.textContent = "Áo khoác ấm hoặc áo phao";
+                } else if (temp <= 17) {
+                    outfit1.textContent = "Nên mang theo khăn mỏng";
+                    outfit2.textContent = "Áo khoác nhẹ hoặc cardigan";
+                } else {
+                    outfit1.textContent = "Có thể mang khăn mỏng dự phòng";
+                    outfit2.textContent = "Áo khoác mỏng, trang phục thoải mái";
+                }
+
             } catch (err) {
                 console.error("Lỗi thời tiết:", err);
-                weatherCondition.innerText = "Lỗi tải thời tiết";
+                weatherCondition.innerText = "Không thể tải thời tiết";
+                weatherTemp.innerText = "--°C";
+                weatherWind.innerText = "Vui lòng thử làm mới";
+                weatherIcon.innerText = "☁️";
             }
         }
     </script>
