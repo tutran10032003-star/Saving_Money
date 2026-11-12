@@ -1358,18 +1358,19 @@
         }
         function parseBillBands(text){
             const out={};
-            const toNumber=t=>Number(String(t).replace(/,/g,"").replace(/[Oo](?=\\d)/g,"0").replace(/[Il|](?=\\d)/g,"1").replace(",","."));
-            String(text||"").split(/\\n/).forEach(line=>{
+            const toNumber=t=>Number(String(t).replace(/,/g,"").replace(/[Oo](?=\d)/g,"0").replace(/[Il|](?=\d)/g,"1").replace(",","."));
+            String(text||"").split(/\n/).forEach(line=>{
                 if(/standing|levy|charge/i.test(line))return;
-                const match=line.match(/\\b(day|peak|night)\\b/i);if(!match)return;
+                const match=line.match(/\b(day|peak|night)\b/i);if(!match)return;
                 const key=match[1].toLowerCase();if(out[key])return;
-                // Strip time ranges before extracting numbers, so 8am/11pm never become kWh.
-                const clean=line.replace(/\\b\\d{1,2}\\s*(?:am|pm)\\b\\s*(?:[-–—to]+\\s*\\d{1,2}\\s*(?:am|pm)\\b)?/gi," ")
-                    .replace(/\\b\\d{1,2}\\s*[:.]\\s*\\d{2}\\b/g," ");
-                const tokens=(clean.match(/[\\dOoIl|]+(?:[.,]\\d+)?/g)||[]).map(t=>t.replace(/[Oo](?=\\d)/g,"0").replace(/[Il|](?=\\d)/g,"1"));
-                const pi=tokens.findIndex(t=>/^0[.,]\\d{4}$/.test(t));if(pi<1)return;
-                const kwhToken=[...tokens.slice(0,pi)].reverse().find(t=>/^\\d{2,5}(?:[.,]\\d{1,2})?$/.test(t));if(!kwhToken)return;
-                const amountToken=tokens.slice(pi+1).find(t=>/^\\d{1,5}[.,]\\d{2}$/.test(t));
+                // Strip tariff hours first; preserve currency amounts such as €34.92.
+                const clean=line.replace(/\b\d{1,2}\s*[-–—]\s*\d{1,2}\s*(?:am|pm)\b/gi," ")
+                    .replace(/\b\d{1,2}\s*(?:am|pm)\b\s*(?:[-–—to]+\s*\d{1,2}\s*(?:am|pm)\b)?/gi," ")
+                    .replace(/\b\d{1,2}:\d{2}\b/g," ");
+                const tokens=(clean.match(/[\dOoIl|]+(?:[.,]\d+)?/g)||[]).map(t=>t.replace(/[Oo](?=\d)/g,"0").replace(/[Il|](?=\d)/g,"1"));
+                const pi=tokens.findIndex(t=>/^0[.,]\d{4}$/.test(t));if(pi<1)return;
+                const kwhToken=[...tokens.slice(0,pi)].reverse().find(t=>/^\d{2,5}(?:[.,]\d{1,2})?$/.test(t));if(!kwhToken)return;
+                const amountToken=tokens.slice(pi+1).find(t=>/^\d{1,5}[.,]\d{2}$/.test(t));
                 const kwh=toNumber(kwhToken),price=toNumber(tokens[pi]),amount=amountToken?toNumber(amountToken):null;
                 if(Number.isFinite(kwh)&&Number.isFinite(price))out[key]={kwh,price,amount};
             });
