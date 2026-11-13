@@ -518,7 +518,40 @@
           #eco-game-stage.eco-game-fullscreen .eco-memory-status{max-width:390px;margin-bottom:10px}
         }
 
-    </style>
+    
+        /* Memory Match: slightly smaller cards, raised card depth, beige matched state */
+        body.memory-playing #eco-memory-grid.eco-memory-grid{
+            width:min(100%,620px);
+            max-width:620px;
+            margin-inline:auto;
+            gap:clamp(9px,1.5vw,14px);
+        }
+        body.memory-playing #eco-memory-grid .eco-memory-card{
+            aspect-ratio:.74;
+            min-height:0;
+        }
+        body.memory-playing #eco-memory-grid .eco-memory-inner{
+            border:1px solid #8c7355;
+            box-shadow:0 4px 0 #6b5743,0 9px 17px #34291f40;
+        }
+        body.memory-playing #eco-memory-grid .eco-memory-face{
+            box-shadow:inset 0 1px 2px #ffffff80;
+        }
+        body.memory-playing #eco-memory-grid .eco-memory-card.matched .eco-card-front{
+            background:linear-gradient(145deg,#f5ead8,#e6d5bd)!important;
+            border-color:#b69b78!important;
+            color:#4a3b32;
+        }
+        body.memory-playing #eco-memory-grid .eco-memory-card.matched .eco-memory-front{
+            background:linear-gradient(145deg,#f5ead8,#e6d5bd)!important;
+            border-color:#b69b78!important;
+            color:#4a3b32;
+        }
+        @media(max-width:520px){
+            body.memory-playing #eco-memory-grid.eco-memory-grid{width:100%;gap:7px}
+            body.memory-playing #eco-memory-grid .eco-memory-card{aspect-ratio:.72}
+        }
+</style>
 </head>
 
 <body class="min-h-screen flex flex-col justify-between selection:bg-amber-200">
