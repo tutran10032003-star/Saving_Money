@@ -366,10 +366,27 @@
         .eco-game-option:disabled{opacity:.7}
         .eco-game-scene{min-height:210px;border:2px solid #5c4738;border-radius:18px;background:linear-gradient(160deg,#27313b,#121820);color:#fffaf4;padding:18px;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden}
         .eco-game-scene button{border:1px solid #d8c7b0;background:#fffaf4;color:#4a3b32;border-radius:12px;padding:10px;font-size:11px;font-weight:800}
-        .eco-memory-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
-        .eco-memory-card{min-height:92px;border:1.5px solid #8c7355;border-radius:14px;background:#f0e6d6;font-size:23px;font-weight:900;color:#4a3b32;padding:8px}
-        .eco-memory-card span{display:block;font-size:10px;line-height:1.25;margin-top:5px}
-        @media(max-width:380px){.eco-game-card{min-height:150px;padding:10px 6px}.eco-game-card strong{font-size:11px}.eco-game-card small{font-size:9px}.eco-memory-card{min-height:78px}}
+        .eco-memory-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(8px,2vw,18px);width:100%;max-width:none}
+        .eco-memory-card{position:relative;display:block;width:100%;aspect-ratio:.68;min-height:0;padding:0;border:0;background:transparent;perspective:900px;box-shadow:none}
+        .eco-memory-inner{position:absolute;inset:0;display:block;border-radius:13px;transform-style:preserve-3d;transition:transform .35s ease}
+        .eco-memory-face{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:7px;border:2px solid #6c543d;border-radius:13px;box-shadow:0 4px 0 #5c4738,0 9px 16px #34291f45;backface-visibility:hidden;-webkit-backface-visibility:hidden;overflow:hidden}
+        .eco-card-back{background:repeating-linear-gradient(135deg,#31543a 0 9px,#42694b 9px 18px);color:#fff8e9}
+        .eco-card-back:before{content:"";position:absolute;inset:7px;border:1px solid #e4d4b5;border-radius:8px;pointer-events:none}
+        .eco-card-back b{font-size:clamp(27px,5vw,42px);line-height:1;text-shadow:0 2px 4px #1b3021}
+        .eco-card-back small{font-size:10px;letter-spacing:2px;font-weight:900}
+        .eco-card-front{background:linear-gradient(145deg,#fffdf5,#e9dfc9);color:#4a3b32;transform:rotateY(180deg)}
+        .eco-card-front b{font-size:clamp(30px,5vw,46px);line-height:1}
+        .eco-card-front small{font-size:clamp(9px,1.4vw,12px);font-weight:900;line-height:1.25;text-align:center;padding:0 5px}
+        .eco-memory-card.flipped .eco-memory-inner{transform:rotateY(180deg)}
+        .eco-memory-card.matched .eco-card-front{background:linear-gradient(145deg,#e7f2df,#c9dfbd);border-color:#54794f}
+        .eco-memory-card:disabled{opacity:1;cursor:default}
+        #eco-game-stage.memory-fullscreen{width:100vw;max-width:none;margin-left:calc(50% - 50vw);margin-right:calc(50% - 50vw);padding:12px clamp(12px,3vw,38px);border:0;border-radius:0;box-shadow:none;background:transparent}
+        body.memory-playing{padding-top:0!important}
+        body.memory-playing>header{display:none!important}
+        body.memory-playing #tab-content-tips{width:100%;max-width:none;margin:0;padding:0}
+        body.memory-playing #eco-game-stage .eco-playfield{width:100%;max-width:none;border:0;border-radius:0;box-shadow:none;background:transparent;padding:0}
+        @media(max-width:520px){.eco-memory-grid{gap:7px}.eco-memory-face{border-radius:10px}.eco-memory-face{border-width:1.5px}.eco-card-back:before{inset:4px}.eco-card-back b{font-size:25px}.eco-card-back small{font-size:8px}.eco-card-front b{font-size:25px}.eco-card-front small{font-size:8px}#eco-game-stage.memory-fullscreen{padding:8px}}
+        @media(max-width:380px){.eco-memory-grid{gap:5px}.eco-memory-face{border-radius:8px}.eco-card-front small{font-size:7px}}
 
     
         .eco-game-cardback{background:repeating-linear-gradient(135deg,#34563f 0 7px,#42694b 7px 14px);border:3px solid #d9c5a5;box-shadow:0 5px 0 #263a2a,0 8px 14px #34291f55;color:#f8f0df}
@@ -845,7 +862,7 @@
                 </div>
             </section>
             <section id="eco-game-stage" class="hidden vintage-panel p-4 sm:p-6 space-y-4">
-                <div class="flex justify-start"><button onclick="closeEcoGame()" id="eco-game-back" class="shrink-0 px-3 py-2 rounded-xl bg-[#f0e6d6] border border-[#5c4738] text-xs font-bold">← Trở lại</button></div>
+                <div class="flex justify-end"><button onclick="closeEcoGame()" id="eco-game-back" class="shrink-0 px-3 py-2 rounded-xl bg-[#f0e6d6] border border-[#5c4738] text-xs font-bold">← Trở lại</button></div>
                 <div id="eco-game-play-area" class="space-y-3"></div>
                 <div id="eco-game-tip" class="hidden rounded-2xl border border-[#8c7355] bg-[#f2f7ec] p-3 space-y-1">
                     <p id="eco-game-tip-heading" class="text-xs font-extrabold text-[#3b4a32]">💡 Energy-saving tip</p>
@@ -2615,10 +2632,12 @@ document.addEventListener("DOMContentLoaded",()=>{
             const vi=gameLang();
             document.getElementById("eco-game-tip").classList.add("hidden");
             document.getElementById("eco-game-hub-panel").classList.add("hidden");
+            document.getElementById("eco-game-stage").classList.toggle("memory-fullscreen",id==="memory");
+            document.body.classList.toggle("memory-playing",id==="memory");
             if(id==="runner")startEcoRunner();else if(id==="home")renderEcoHome();else if(id==="rush")startEnergyRush();else if(id==="garden")renderEcoGarden();else if(id==="escape")renderEscapeRoom();else if(id==="memory")renderMemoryGame();
         }
         function closeEcoGame(){
-            activeEcoGame=null;if(window.ecoRunnerTimer)clearInterval(window.ecoRunnerTimer);if(window.energyRushTimer)clearInterval(window.energyRushTimer);document.getElementById("eco-game-stage").classList.add("hidden");document.getElementById("eco-game-hub-panel").classList.remove("hidden");document.getElementById("eco-game-grid").classList.remove("hidden");document.getElementById("eco-game-tip").classList.add("hidden");renderGameHub();
+            activeEcoGame=null;if(window.ecoRunnerTimer)clearInterval(window.ecoRunnerTimer);if(window.energyRushTimer)clearInterval(window.energyRushTimer);document.body.classList.remove("memory-playing");document.getElementById("eco-game-stage").classList.remove("memory-fullscreen");document.getElementById("eco-game-stage").classList.add("hidden");document.getElementById("eco-game-hub-panel").classList.remove("hidden");document.getElementById("eco-game-grid").classList.remove("hidden");document.getElementById("eco-game-tip").classList.add("hidden");renderGameHub();
         }
 
         let ecoRunnerPos=1,ecoRunnerStep=0,ecoRunnerHits=0,ecoHomeDone=[],ecoGardenPlants=[],energyRushDone=[];
@@ -2774,7 +2793,7 @@ document.addEventListener("DOMContentLoaded",()=>{
             window.ecoMemoryDeck=deck;
             ecoMemoryOpen=[];ecoMemoryMatched=[];ecoMemoryLocked=false;window.ecoMemoryMoves=0;
             const area=document.getElementById("eco-game-play-area");
-            area.innerHTML='<div class="eco-playfield space-y-3"><div class="flex items-center justify-between text-xs font-black"><span>🃏 MEMORY MATCH</span><span id="memory-progress">0 / 4</span></div><p class="text-xs">'+(vi?"Lật hai lá bài để tìm cặp biểu tượng giống nhau.":"Flip two cards to find matching symbol pairs.")+'</p><div id="eco-memory-grid" class="grid grid-cols-4 gap-2">'+deck.map((c,i)=>'<button type="button" class="eco-memory-card" data-card-index="'+i+'" aria-label="'+(vi?"Lá bài úp":"Face-down card")+'" onclick="flipMemoryCard('+i+')"><span class="eco-memory-face eco-memory-back"><b>☘</b><small>ECO</small></span></button>').join("")+'</div><div class="flex justify-between text-[10px] font-bold text-[#7a6452]"><span id="memory-moves">0 '+(vi?"lượt":"moves")+'</span><span id="memory-feedback">'+(vi?"Tìm đủ 4 cặp nhé!":"Find all 4 pairs!")+'</span></div></div>';
+            area.innerHTML='<div class="eco-playfield"><div class="flex items-center justify-end gap-4 mb-3 text-xs font-black"><span id="memory-progress">0 / 4</span><span id="memory-moves">0 '+(vi?"lượt":"moves")+'</span></div><div id="eco-memory-grid" class="eco-memory-grid">'+deck.map((c,i)=>'<button type="button" class="eco-memory-card" data-card-index="'+i+'" aria-label="'+(vi?"Lá bài úp":"Face-down card")+'" onclick="flipMemoryCard('+i+')"><span class="eco-memory-inner"><span class="eco-memory-face eco-card-back"><b>☘</b><small>ECO</small></span><span class="eco-memory-face eco-card-front"><b>'+c.icon+'</b><small>'+(vi?c.vi:c.en)+'</small></span></span></button>').join("")+'</div><p id="memory-feedback" class="text-center text-xs font-bold mt-4">'+(vi?"Tìm đủ 4 cặp thẻ giống nhau nhé!":"Find all 4 matching pairs!")+'</p></div>';
         }
         function flipMemoryCard(i){
             if(ecoMemoryLocked||ecoMemoryMatched.includes(i)||ecoMemoryOpen.includes(i))return;
@@ -2782,8 +2801,6 @@ document.addEventListener("DOMContentLoaded",()=>{
             if(!card||!buttons[i])return;
             const vi=gameLang(),button=buttons[i];
             button.classList.add("flipped");
-            button.classList.remove("eco-memory-back");
-            button.innerHTML='<span class="eco-memory-face eco-memory-front"><b>'+card.icon+'</b><small>'+ (vi?card.vi:card.en) +'</small></span>';
             button.setAttribute("aria-label",vi?card.vi:card.en);
             ecoMemoryOpen.push(i);
             if(ecoMemoryOpen.length!==2)return;
@@ -2810,13 +2827,12 @@ document.addEventListener("DOMContentLoaded",()=>{
                         const btn=document.querySelector('#eco-memory-grid .eco-memory-card[data-card-index="'+n+'"]');
                         if(btn&&!ecoMemoryMatched.includes(n)){
                             btn.classList.remove("flipped");
-                            btn.innerHTML='<span class="eco-memory-face eco-memory-back"><b>☘</b><small>ECO</small></span>';
                             btn.setAttribute("aria-label",gameLang()==="vi"?"Lá bài úp":"Face-down card");
                         }
                     });
                     ecoMemoryOpen=[];ecoMemoryLocked=false;
                     const fb=document.getElementById("memory-feedback");
-                    if(fb)fb.textContent=gameLang()==="vi"?"Tìm đủ 4 cặp nhé!":"Find all 4 pairs!";
+                    if(fb)fb.textContent=gameLang()==="vi"?"Tìm đủ 4 cặp thẻ giống nhau nhé!":"Find all 4 matching pairs!";
                 },850);
             }
         }
