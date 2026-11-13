@@ -450,6 +450,25 @@
         }
 
 
+
+        /* Hard reset legacy 3D face transforms: cards now reveal with display toggles only. */
+        #eco-game-stage.eco-game-fullscreen .eco-memory-card .eco-card-back,
+        #eco-game-stage.eco-game-fullscreen .eco-memory-card .eco-card-front{
+          transform:none!important;
+          backface-visibility:visible!important;
+          -webkit-backface-visibility:visible!important;
+          opacity:1!important;
+          visibility:visible!important;
+        }
+        #eco-game-stage.eco-game-fullscreen .eco-memory-card.flipped .eco-card-front{
+          display:flex!important;
+          transform:none!important;
+          z-index:2!important;
+        }
+        #eco-game-stage.eco-game-fullscreen .eco-memory-card.flipped .eco-card-back{
+          display:none!important;
+        }
+
         /* Memory Match: compact portrait cards, pastel faces, reliable content reveal */
         #eco-game-stage.eco-game-fullscreen .eco-memory-playfield{min-height:0!important;width:100%!important;max-width:none!important;margin:0 auto!important;padding:8px 12px 18px!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important}
         .eco-memory-status{display:flex;justify-content:flex-end;gap:18px;max-width:620px;margin:0 auto 14px;padding:0 2px;font-size:12px;font-weight:900;color:#5c4738}
