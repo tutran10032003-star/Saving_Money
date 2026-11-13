@@ -391,6 +391,21 @@
         .eco-garden-tile{aspect-ratio:1;border:2px solid #8c7355;border-radius:12px;background:linear-gradient(#d7e7c9 0 35%,#98754f 35%);font-size:26px;box-shadow:0 3px 0 #5c4738}
         .eco-garden-tile.planted{background:linear-gradient(#d7e7c9 0 35%,#668b50 35%)}
 
+    
+        .eco-memory-card{position:relative;display:flex;align-items:center;justify-content:center;min-width:0;min-height:118px;padding:5px;border:3px solid #d7c19d;border-radius:14px;background:repeating-linear-gradient(135deg,#31563c 0 8px,#426d4b 8px 16px);box-shadow:0 4px 0 #253d2b,0 7px 12px #34291f45;color:#fff8e9;transition:transform .16s,background .16s;overflow:hidden}
+        .eco-memory-card:active{transform:translateY(2px);box-shadow:0 2px 0 #253d2b}
+        .eco-memory-face{width:100%;min-height:100px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;border-radius:8px}
+        .eco-memory-back b{font-size:36px;line-height:1;text-shadow:0 2px 3px #203927}
+        .eco-memory-back small{font-size:9px;letter-spacing:3px;font-weight:900}
+        .eco-memory-front{background:linear-gradient(145deg,#fffdf5,#e9dfc9);color:#4a3b32;border:1px solid #b8a27f}
+        .eco-memory-front b{font-size:30px;line-height:1.1}
+        .eco-memory-front small{font-size:9px;line-height:1.2;font-weight:900;text-align:center;padding:0 2px}
+        .eco-memory-card.flipped{background:#eee3cf;border-color:#8c7355}
+        .eco-memory-card.matched{background:#d9e9ce;border-color:#52764a;box-shadow:0 4px 0 #52764a}
+        .eco-memory-card.matched .eco-memory-front{background:linear-gradient(145deg,#eaf5e2,#c9dfbd);border-color:#52764a}
+        .eco-memory-card:disabled{opacity:1;cursor:default}
+        @media(max-width:390px){.eco-memory-card{min-height:94px}.eco-memory-face{min-height:82px}.eco-memory-front b{font-size:25px}.eco-memory-front small{font-size:8px}}
+
     </style>
 </head>
 
@@ -2746,27 +2761,65 @@ document.addEventListener("DOMContentLoaded",()=>{
          const vi=gameLang();document.getElementById("eco-game-play-area").innerHTML='<div class="rounded-2xl border-2 border-[#5c4738] p-5 text-center space-y-3" style="background:linear-gradient(145deg,#fff4c9,#f4e2a4);color:#4a3b32"><div class="text-6xl">💡</div><h4 class="font-black">'+(vi?"Đèn đã sáng! Cửa được mở khóa.":"The light is on! The door unlocks.")+'</h4><p class="text-xs">'+(vi?"Bài học: tắt đèn khi rời phòng và tận dụng ánh sáng tự nhiên.":"Lesson: switch lights off when leaving and use natural daylight where possible.")+'</p><button onclick="finishEscapeGame()" class="w-full rounded-xl bg-[#A8C7A0] border border-[#5c4738] px-4 py-3 text-xs font-extrabold">'+(vi?"Thoát khỏi phòng":"Escape the room")+'</button></div>';
         }
                 function finishEscapeGame(){ecoGameScore=1;finishEcoGame();}
+        let ecoMemoryLocked=false;
         function renderMemoryGame(){
- const vi=gameLang(),pairs=[["🌙",vi?"Giặt giờ thấp điểm":"Off-peak laundry"],["🌡️",vi?"Giặt 30°C":"30°C wash"],["💡",vi?"Ánh sáng tự nhiên":"Daylight"],["🔌",vi?"Tắt chế độ chờ":"Switch off standby"]];
- const deck=pairs.flatMap((p,id)=>[{id,icon:p[0],label:p[1]},{id,icon:p[0],label:p[1]}]).sort(()=>Math.random()-.5);
- window.ecoMemoryDeck=deck;ecoMemoryOpen=[];ecoMemoryMatched=[];
- document.getElementById("eco-game-play-area").innerHTML='<div class="eco-playfield space-y-3"><div class="flex justify-between text-xs font-black"><span>🃏 MEMORY MATCH</span><span id="memory-progress">0 / 4</span></div><p class="text-xs">'+(vi?"Lật hai lá bài để tìm hai hình giống nhau.":"Flip two cards to find matching pairs.")+'</p><div id="eco-memory-grid" class="grid grid-cols-4 gap-2">'+deck.map((c,i)=>'<button class="eco-memory-card" onclick="flipMemoryCard('+i+')"><span class="eco-memory-inner"><span class="eco-card-back"><b>☘</b><small> ECO</small></span><span class="eco-card-front"><b class="eco-memory-icon">'+c.icon+'</b><small>'+c.label+'</small></span></span></button>').join("")+'</div><p id="memory-moves" class="text-center text-[10px] font-bold text-[#7a6452]">0 '+(vi?"lượt":"moves")+'</p></div>';
- window.ecoMemoryMoves=0;
-}
-function flipMemoryCard(i){
- if(ecoMemoryMatched.includes(i)||ecoMemoryOpen.includes(i)||ecoMemoryOpen.length===2)return;
- ecoMemoryOpen.push(i);document.querySelectorAll(".eco-memory-card")[i].classList.add("flipped");
- if(ecoMemoryOpen.length===2){
-  window.ecoMemoryMoves++;const [a,b]=ecoMemoryOpen,ca=window.ecoMemoryDeck[a],cb=window.ecoMemoryDeck[b],vi=gameLang();
-  document.getElementById("memory-moves").textContent=window.ecoMemoryMoves+" "+(vi?"lượt":"moves");
-  if(ca.id===cb.id){
-   ecoMemoryMatched.push(a,b);document.querySelectorAll(".eco-memory-card")[a].classList.add("matched");document.querySelectorAll(".eco-memory-card")[b].classList.add("matched");
-   ecoGameScore++;ecoGameLearned.push(ca.id===0?(vi?"Chuyển việc giặt linh hoạt sang giờ điện thấp điểm.":"Shift flexible laundry to off-peak electricity hours."):ca.id===1?(vi?"Giặt ở 30°C khi phù hợp giúp giảm điện năng.":"A 30°C wash can reduce energy use when suitable."):ca.id===2?(vi?"Tận dụng ánh sáng tự nhiên thay cho đèn điện.":"Use daylight instead of electric lighting."): (vi?"Tắt thiết bị ở chế độ chờ khi không dùng.":"Switch off devices left on standby when not in use."));
-   document.getElementById("memory-progress").textContent=(ecoMemoryMatched.length/2)+" / 4";
-   ecoMemoryOpen=[];if(ecoMemoryMatched.length===8)setTimeout(finishEcoGame,550);
-  }else{setTimeout(()=>{[a,b].forEach(n=>document.querySelectorAll(".eco-memory-card")[n].classList.remove("flipped"));ecoMemoryOpen=[];},850);}
- }
-}
+            const vi=gameLang();
+            const pairs=[
+                {id:0,icon:"🌙",en:"Off-peak laundry",vi:"Giặt giờ thấp điểm",tipEn:"Shift flexible laundry to off-peak electricity hours.",tipVi:"Chuyển việc giặt linh hoạt sang khung giờ điện thấp điểm."},
+                {id:1,icon:"🌡️",en:"30°C wash",vi:"Giặt ở 30°C",tipEn:"A 30°C wash can use less electricity when suitable.",tipVi:"Giặt ở 30°C khi phù hợp có thể giảm điện năng."},
+                {id:2,icon:"☀️",en:"Daylight",vi:"Ánh sáng tự nhiên",tipEn:"Use daylight instead of switching on lights.",tipVi:"Tận dụng ánh sáng tự nhiên thay cho đèn điện."},
+                {id:3,icon:"🔌",en:"Standby off",vi:"Tắt chế độ chờ",tipEn:"Switch off devices left on standby when not needed.",tipVi:"Tắt thiết bị ở chế độ chờ khi không cần dùng."}
+            ];
+            const deck=pairs.flatMap(p=>[{...p,uid:p.id+"a"},{...p,uid:p.id+"b"}]).sort(()=>Math.random()-.5);
+            window.ecoMemoryDeck=deck;
+            ecoMemoryOpen=[];ecoMemoryMatched=[];ecoMemoryLocked=false;window.ecoMemoryMoves=0;
+            const area=document.getElementById("eco-game-play-area");
+            area.innerHTML='<div class="eco-playfield space-y-3"><div class="flex items-center justify-between text-xs font-black"><span>🃏 MEMORY MATCH</span><span id="memory-progress">0 / 4</span></div><p class="text-xs">'+(vi?"Lật hai lá bài để tìm cặp biểu tượng giống nhau.":"Flip two cards to find matching symbol pairs.")+'</p><div id="eco-memory-grid" class="grid grid-cols-4 gap-2">'+deck.map((c,i)=>'<button type="button" class="eco-memory-card" data-card-index="'+i+'" aria-label="'+(vi?"Lá bài úp":"Face-down card")+'" onclick="flipMemoryCard('+i+')"><span class="eco-memory-face eco-memory-back"><b>☘</b><small>ECO</small></span></button>').join("")+'</div><div class="flex justify-between text-[10px] font-bold text-[#7a6452]"><span id="memory-moves">0 '+(vi?"lượt":"moves")+'</span><span id="memory-feedback">'+(vi?"Tìm đủ 4 cặp nhé!":"Find all 4 pairs!")+'</span></div></div>';
+        }
+        function flipMemoryCard(i){
+            if(ecoMemoryLocked||ecoMemoryMatched.includes(i)||ecoMemoryOpen.includes(i))return;
+            const deck=window.ecoMemoryDeck||[],card=deck[i],buttons=document.querySelectorAll("#eco-memory-grid .eco-memory-card");
+            if(!card||!buttons[i])return;
+            const vi=gameLang(),button=buttons[i];
+            button.classList.add("flipped");
+            button.classList.remove("eco-memory-back");
+            button.innerHTML='<span class="eco-memory-face eco-memory-front"><b>'+card.icon+'</b><small>'+ (vi?card.vi:card.en) +'</small></span>';
+            button.setAttribute("aria-label",vi?card.vi:card.en);
+            ecoMemoryOpen.push(i);
+            if(ecoMemoryOpen.length!==2)return;
+            window.ecoMemoryMoves=(window.ecoMemoryMoves||0)+1;
+            const moves=document.getElementById("memory-moves");
+            if(moves)moves.textContent=window.ecoMemoryMoves+" "+(vi?"lượt":"moves");
+            const [a,b]=ecoMemoryOpen,first=deck[a],second=deck[b];
+            if(first.id===second.id){
+                ecoMemoryMatched.push(a,b);ecoGameScore++;
+                [a,b].forEach(n=>{buttons[n].classList.add("matched");buttons[n].disabled=true;});
+                ecoGameLearned.push(vi?first.tipVi:first.tipEn);
+                const progress=document.getElementById("memory-progress");
+                if(progress)progress.textContent=(ecoMemoryMatched.length/2)+" / 4";
+                const feedback=document.getElementById("memory-feedback");
+                if(feedback)feedback.textContent=vi?"Ghép đúng rồi! +1 cặp":"Match found! +1 pair";
+                ecoMemoryOpen=[];
+                if(ecoMemoryMatched.length===8)setTimeout(finishEcoGame,450);
+            }else{
+                ecoMemoryLocked=true;
+                const feedback=document.getElementById("memory-feedback");
+                if(feedback)feedback.textContent=vi?"Chưa khớp, thử lại nhé":"Not a match — try again";
+                setTimeout(()=>{
+                    [a,b].forEach(n=>{
+                        const btn=document.querySelector('#eco-memory-grid .eco-memory-card[data-card-index="'+n+'"]');
+                        if(btn&&!ecoMemoryMatched.includes(n)){
+                            btn.classList.remove("flipped");
+                            btn.innerHTML='<span class="eco-memory-face eco-memory-back"><b>☘</b><small>ECO</small></span>';
+                            btn.setAttribute("aria-label",gameLang()==="vi"?"Lá bài úp":"Face-down card");
+                        }
+                    });
+                    ecoMemoryOpen=[];ecoMemoryLocked=false;
+                    const fb=document.getElementById("memory-feedback");
+                    if(fb)fb.textContent=gameLang()==="vi"?"Tìm đủ 4 cặp nhé!":"Find all 4 pairs!";
+                },850);
+            }
+        }
 
 </script>
 
