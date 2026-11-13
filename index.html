@@ -663,7 +663,7 @@
             align-items:stretch!important;
             justify-items:stretch!important;
             column-gap:20px!important;
-            row-gap:30px!important;
+            row-gap:40px!important;
             width:min(94vw,680px)!important;
             max-width:680px!important;
             height:auto!important;
@@ -705,6 +705,26 @@
                 row-gap:30px!important;
                 width:94vw!important;
             }
+        }
+
+        /* Center the Memory Match board in the available fullscreen space on web and mobile. */
+        body.memory-game-playing #eco-game-stage.eco-game-fullscreen{
+            justify-content:flex-start!important;
+        }
+        body.memory-game-playing #eco-game-stage.eco-game-fullscreen #eco-game-play-area{
+            flex:1 1 auto!important;
+            display:flex!important;
+            align-items:center!important;
+            justify-content:center!important;
+            min-height:0!important;
+        }
+        body.memory-game-playing #eco-game-stage.eco-game-fullscreen .eco-memory-playfield{
+            display:flex!important;
+            flex-direction:column!important;
+            justify-content:center!important;
+            min-height:0!important;
+            height:100%!important;
+            margin:auto!important;
         }
 
 </style>
