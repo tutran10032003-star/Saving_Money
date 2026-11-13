@@ -371,6 +371,26 @@
         .eco-memory-card span{display:block;font-size:10px;line-height:1.25;margin-top:5px}
         @media(max-width:380px){.eco-game-card{min-height:150px;padding:10px 6px}.eco-game-card strong{font-size:11px}.eco-game-card small{font-size:9px}.eco-memory-card{min-height:78px}}
 
+    
+        .eco-game-cardback{background:repeating-linear-gradient(135deg,#34563f 0 7px,#42694b 7px 14px);border:3px solid #d9c5a5;box-shadow:0 5px 0 #263a2a,0 8px 14px #34291f55;color:#f8f0df}
+        .eco-memory-card{position:relative;min-height:112px;padding:0;border:0;background:transparent;perspective:700px;box-shadow:none}
+        .eco-memory-inner{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;border-radius:15px;border:2px solid #8c7355;box-shadow:0 4px 0 #5c4738,0 7px 12px #34291f35;transition:transform .28s;transform-style:preserve-3d;overflow:hidden}
+        .eco-memory-card .eco-card-back{background:repeating-linear-gradient(135deg,#34563f 0 8px,#42694b 8px 16px);color:#f8f0df}
+        .eco-memory-card .eco-card-back b{font-size:30px;text-shadow:0 2px 3px #1b3021}
+        .eco-memory-card .eco-card-front{background:linear-gradient(145deg,#fffdf5,#e9dfc9);color:#4a3b32;transform:rotateY(180deg);backface-visibility:hidden}
+        .eco-memory-card.flipped .eco-memory-inner{transform:rotateY(180deg)}
+        .eco-memory-card.matched .eco-card-front{background:linear-gradient(145deg,#e7f2df,#c9dfbd);border-color:#54794f}
+        .eco-memory-card .eco-card-back{backface-visibility:hidden}
+        .eco-memory-card .eco-card-front .eco-memory-icon{font-size:31px;line-height:1.1}
+        .eco-memory-card .eco-card-front small{font-size:9px;font-weight:800;line-height:1.2;margin-top:5px;padding:0 4px}
+        .eco-playfield{border:2px solid #5c4738;border-radius:18px;background:linear-gradient(145deg,#fffaf1,#eee2ce);padding:14px;box-shadow:inset 0 1px 4px #fff}
+        .eco-action{border:1.5px solid #6c7957;background:#e4ecd9;color:#31432f;border-radius:12px;padding:10px 12px;font-weight:900;font-size:12px;box-shadow:0 3px 0 #9cac8d}
+        .eco-action:active{transform:translateY(2px);box-shadow:0 1px 0 #9cac8d}
+        .eco-lane{min-height:75px;border:1px dashed #9b896f;border-radius:12px;background:#f8f0df;display:flex;align-items:center;justify-content:center;font-size:27px}
+        .eco-home-room{border:1.5px solid #9b896f;border-radius:14px;background:#fffaf1;padding:12px;display:flex;align-items:center;gap:10px}
+        .eco-garden-tile{aspect-ratio:1;border:2px solid #8c7355;border-radius:12px;background:linear-gradient(#d7e7c9 0 35%,#98754f 35%);font-size:26px;box-shadow:0 3px 0 #5c4738}
+        .eco-garden-tile.planted{background:linear-gradient(#d7e7c9 0 35%,#668b50 35%)}
+
     </style>
 </head>
 
@@ -795,7 +815,7 @@
 
         <!-- TAB 3: ECO GAME HUB -->
         <div id="tab-content-tips" class="hidden space-y-6">
-            <section class="vintage-panel p-5 sm:p-6 space-y-4">
+            <section id="eco-game-hub-panel" class="vintage-panel p-5 sm:p-6 space-y-4">
                 <div class="border-b-2 border-[#5c4738] pb-3">
                     <h2 class="font-bold text-[#4a3b32] text-lg" id="game-hub-title">🎮 Eco Game Hub</h2>
                     <p class="text-xs text-[#7a6452] mt-1" id="game-hub-subtitle">Choose a game, play a board, and learn practical ways to save electricity.</p>
@@ -810,10 +830,7 @@
                 </div>
             </section>
             <section id="eco-game-stage" class="hidden vintage-panel p-4 sm:p-6 space-y-4">
-                <div class="flex items-center justify-between gap-3 border-b-2 border-[#5c4738] pb-3">
-                    <div class="min-w-0"><p id="eco-game-kicker" class="text-[10px] uppercase tracking-wider font-extrabold text-[#8c7355]">MINI GAME</p><h3 id="eco-game-title" class="font-extrabold text-base text-[#4a3b32]">Game</h3></div>
-                    <button onclick="closeEcoGame()" id="eco-game-back" class="shrink-0 px-3 py-2 rounded-xl bg-[#f0e6d6] border border-[#5c4738] text-xs font-bold">← All games</button>
-                </div>
+                <div class="flex justify-start"><button onclick="closeEcoGame()" id="eco-game-back" class="shrink-0 px-3 py-2 rounded-xl bg-[#f0e6d6] border border-[#5c4738] text-xs font-bold">← Trở lại</button></div>
                 <div id="eco-game-play-area" class="space-y-3"></div>
                 <div id="eco-game-tip" class="hidden rounded-2xl border border-[#8c7355] bg-[#f2f7ec] p-3 space-y-1">
                     <p id="eco-game-tip-heading" class="text-xs font-extrabold text-[#3b4a32]">💡 Energy-saving tip</p>
@@ -2584,12 +2601,78 @@ document.addEventListener("DOMContentLoaded",()=>{
             document.getElementById("eco-game-title").textContent=vi?({runner:"Eco Runner",home:"Xây nhà xanh",rush:"Thử thách năng lượng",garden:"Khu vườn xanh",escape:"Phòng thoát hiểm · Căn phòng tối",memory:"Lật thẻ ghi nhớ"}[id]):data.en.title;
             document.getElementById("eco-game-kicker").textContent=vi?"TRÒ CHƠI MINI":"MINI GAME";
             document.getElementById("eco-game-tip").classList.add("hidden");
-            if(id==="escape")renderEscapeRoom();else if(id==="memory")renderMemoryGame();else renderQuestionGame();
+            document.getElementById("eco-game-hub-panel").classList.add("hidden");
+            if(id==="runner")startEcoRunner();else if(id==="home")renderEcoHome();else if(id==="rush")startEnergyRush();else if(id==="garden")renderEcoGarden();else if(id==="escape")renderEscapeRoom();else if(id==="memory")renderMemoryGame();
         }
         function closeEcoGame(){
-            activeEcoGame=null;document.getElementById("eco-game-stage").classList.add("hidden");document.getElementById("eco-game-grid").classList.remove("hidden");document.getElementById("eco-game-tip").classList.add("hidden");renderGameHub();
+            activeEcoGame=null;if(window.ecoRunnerTimer)clearInterval(window.ecoRunnerTimer);if(window.energyRushTimer)clearInterval(window.energyRushTimer);document.getElementById("eco-game-stage").classList.add("hidden");document.getElementById("eco-game-hub-panel").classList.remove("hidden");document.getElementById("eco-game-grid").classList.remove("hidden");document.getElementById("eco-game-tip").classList.add("hidden");renderGameHub();
         }
-        function renderQuestionGame(){
+
+        let ecoRunnerPos=1,ecoRunnerStep=0,ecoRunnerHits=0,ecoHomeDone=[],ecoGardenPlants=[],energyRushDone=[];
+        function startEcoRunner(){
+            ecoRunnerPos=1;ecoRunnerStep=0;ecoRunnerHits=0;
+            const vi=gameLang(),area=document.getElementById("eco-game-play-area");
+            area.innerHTML='<div class="eco-playfield space-y-3"><div class="flex justify-between text-xs font-black"><span>🏃 ECO RUNNER</span><span id="runner-score">⭐ 0 / 8</span></div><p class="text-xs">'+(vi?"Chạy qua 8 đoạn đường. Đổi làn để né rác điện và nhặt lá năng lượng!":"Run through 8 lanes. Switch lanes to dodge energy waste and collect green leaves!")+'</p><div id="runner-lanes" class="grid grid-cols-3 gap-2"><div class="eco-lane">🌿</div><div class="eco-lane">🏃</div><div class="eco-lane">⚡</div></div><div class="flex justify-center gap-3"><button class="eco-action" onclick="moveEcoRunner(-1)">←</button><button class="eco-action" onclick="moveEcoRunner(1)">→</button></div><p id="runner-feedback" class="text-center text-xs font-bold text-[#54794f]">'+(vi?"Dùng nút trái/phải để di chuyển.":"Use left/right to move.")+'</p></div>';
+            drawEcoRunner();
+        }
+        function drawEcoRunner(){
+            const lanes=document.getElementById("runner-lanes");if(!lanes)return;
+            const hazards=["🧺","💡","🔌","🚿","🧊","📺","🌀","🧯"];
+            const safe=["🌱","⭐","🍃","🌞","🌿","💚","🌻","🌳"];
+            const target=ecoRunnerStep%3,items=[0,1,2].map((_,i)=>i===target?hazards[ecoRunnerStep%hazards.length]:safe[(ecoRunnerStep+i)%safe.length]);
+            items[ecoRunnerPos]="🏃";
+            lanes.innerHTML=items.map((v,i)=>'<div class="eco-lane" style="'+(i===ecoRunnerPos?'background:#e4ecd9;border:2px solid #54794f;':'')+'">'+v+'</div>').join("");
+        }
+        function moveEcoRunner(dir){
+            if(activeEcoGame!=="runner")return;
+            ecoRunnerPos=Math.max(0,Math.min(2,ecoRunnerPos+dir));ecoRunnerStep++;
+            const hazardLane=(ecoRunnerStep-1)%3;
+            if(ecoRunnerPos===hazardLane)ecoRunnerHits++;else ecoGameScore++;
+            const score=document.getElementById("runner-score");if(score)score.textContent="⭐ "+ecoGameScore+" / 8";
+            const fb=document.getElementById("runner-feedback");if(fb)fb.textContent=ecoRunnerPos===hazardLane?(gameLang()==="vi"?"Ôi! Bạn va vào thiết bị đang lãng phí điện.":"Oops! You hit an energy-wasting obstacle."):(gameLang()==="vi"?"Tốt! Bạn đã thu thập năng lượng xanh.":"Nice! You collected green energy.");
+            drawEcoRunner();
+            if(ecoRunnerStep>=8){ecoGameLearned.push(gameLang()==="vi"?"Tắt thiết bị khi không sử dụng và tránh lãng phí điện ở nhà.":"Switch off devices when not in use and avoid wasting electricity at home.");setTimeout(finishEcoGame,350);}
+        }
+        function renderEcoHome(){
+            const vi=gameLang(),rooms=[["kitchen","🍳",vi?"Nhà bếp":"Kitchen",vi?"Tủ lạnh tiết kiệm điện":"Efficient fridge"],["living","💡",vi?"Phòng khách":"Living room",vi?"Đèn LED":"LED lighting"],["laundry","🧺",vi?"Phòng giặt":"Laundry",vi?"Giặt nhiệt độ thấp":"Cool wash"],["bedroom","🌡️",vi?"Phòng ngủ":"Bedroom",vi?"Sưởi theo vùng":"Zoned heating"]];
+            ecoHomeDone=[];
+            document.getElementById("eco-game-play-area").innerHTML='<div class="eco-playfield space-y-3"><div class="flex justify-between text-xs font-black"><span>🏡 BUILD MY ECO HOME</span><span id="home-progress">0 / 4</span></div><p class="text-xs">'+(vi?"Chạm vào từng phòng để lắp một nâng cấp tiết kiệm năng lượng.":"Tap each room to install an energy-saving upgrade.")+'</p><div class="space-y-2">'+rooms.map(r=>'<button id="home-'+r[0]+'" class="eco-home-room w-full text-left" onclick="upgradeEcoRoom(\''+r[0]+'\')"><span class="text-3xl">'+r[1]+'</span><span class="flex-1"><b class="block text-xs">'+r[2]+'</b><small class="text-[10px] text-[#7a6452]">'+r[3]+'</small></span><span class="text-xl">＋</span></button>').join("")+'</div><div class="rounded-xl bg-[#dce9d1] p-3 text-center"><span class="text-3xl">🏠</span><p id="home-status" class="text-xs font-bold">'+(vi?"Ngôi nhà đang chờ được nâng cấp!":"Your home is waiting for upgrades!")+'</p></div></div>';
+        }
+        function upgradeEcoRoom(id){
+            if(ecoHomeDone.includes(id))return;ecoHomeDone.push(id);ecoGameScore++;
+            const b=document.getElementById("home-"+id);b.style.background="#dce9d1";b.querySelector("span:last-child").textContent="✓";
+            document.getElementById("home-progress").textContent=ecoHomeDone.length+" / 4";
+            document.getElementById("home-status").textContent=gameLang()==="vi"?"Nâng cấp thành công! Ngôi nhà ngày càng xanh.":"Upgrade installed! Your home is getting greener.";
+            const tips={kitchen:["Giữ cửa tủ lạnh đóng kín và đặt nhiệt độ hợp lý.","Keep the fridge door closed and set a sensible temperature."],living:["Dùng ánh sáng tự nhiên và tắt đèn khi rời phòng.","Use daylight and switch lights off when leaving."],laundry:["Chọn chu trình giặt mát phù hợp để giảm điện.","Choose a suitable cool wash to reduce electricity."],bedroom:["Chỉ sưởi những phòng đang sử dụng.","Heat only the rooms you are using."]};
+            ecoGameLearned.push(tips[id][gameLang()==="vi"?0:1]);
+            if(ecoHomeDone.length===4)setTimeout(finishEcoGame,400);
+        }
+        function startEnergyRush(){
+            const vi=gameLang();energyRushDone=[];let seconds=25;
+            const devices=[["📺","TV standby"],["🎮","Game console"],["💻","Laptop charger"],["💡","Empty-room light"],["🔊","Speaker"],["🖨️","Printer standby"],["🧺","Washer"],["🍞","Toaster"]];
+            window.energyRushItems=devices;
+            document.getElementById("eco-game-play-area").innerHTML='<div class="eco-playfield space-y-3"><div class="flex justify-between text-xs font-black"><span>⚡ ENERGY RUSH</span><span id="rush-clock">25s</span></div><p class="text-xs">'+(vi?"Chạm vào 6 thiết bị đang tiêu thụ điện không cần thiết để tắt chúng trước khi hết giờ!":"Tap the 6 devices wasting electricity unnecessarily before time runs out!")+'</p><div id="rush-devices" class="grid grid-cols-2 gap-2">'+devices.map((d,i)=>'<button id="rush-'+i+'" class="eco-home-room flex-col text-center" onclick="switchOffRushDevice('+i+')"><span class="text-3xl">'+d[0]+'</span><b class="text-[10px]">'+d[1]+'</b><small class="text-[9px] text-red-700">● ON</small></button>').join("")+'</div><p id="rush-status" class="text-center text-xs font-bold"></p></div>';
+            window.energyRushTimer=setInterval(()=>{seconds--;const c=document.getElementById("rush-clock");if(c)c.textContent=seconds+"s";if(seconds<=0){clearInterval(window.energyRushTimer);finishEcoGame();}},1000);
+        }
+        function switchOffRushDevice(i){
+            if(energyRushDone.includes(i)||activeEcoGame!=="rush")return;energyRushDone.push(i);ecoGameScore++;
+            const b=document.getElementById("rush-"+i);b.style.background="#dce9d1";b.querySelector("small").textContent="✓ OFF";b.querySelector("small").style.color="#416b3e";
+            document.getElementById("rush-status").textContent=energyRushDone.length+" / 6 "+(gameLang()==="vi"?"đã tắt":"switched off");
+            if(energyRushDone.length===6){clearInterval(window.energyRushTimer);ecoGameLearned.push(gameLang()==="vi"?"Tắt các thiết bị ở chế độ chờ khi không cần thiết, nếu an toàn và phù hợp.":"Switch off standby devices when unnecessary, where safe and appropriate.");setTimeout(finishEcoGame,350);}
+        }
+        function renderEcoGarden(){
+            const vi=gameLang();ecoGardenPlants=[];
+            document.getElementById("eco-game-play-area").innerHTML='<div class="eco-playfield space-y-3"><div class="flex justify-between text-xs font-black"><span>🌱 ECO GARDEN</span><span id="garden-progress">0 / 6</span></div><p class="text-xs">'+(vi?"Chạm 6 ô đất để trồng cây. Dùng ánh sáng mặt trời và nước mưa, không cần thiết bị điện!":"Tap 6 soil plots to grow plants. Use sunlight and rainwater instead of powered equipment!")+'</p><div id="garden-grid" class="grid grid-cols-3 gap-3">'+Array.from({length:6},(_,i)=>'<button class="eco-garden-tile" onclick="plantEcoGarden('+i+')">🟫</button>').join("")+'</div><p id="garden-status" class="text-center text-xs font-bold">'+(vi?"Khu vườn còn trống.":"Your garden is waiting to grow.")+'</p></div>';
+        }
+        function plantEcoGarden(i){
+            if(ecoGardenPlants.includes(i))return;ecoGardenPlants.push(i);ecoGameScore++;
+            const b=document.querySelectorAll(".eco-garden-tile")[i];b.classList.add("planted");b.textContent=["🌻","🌿","🌱","🌼","🍀","🌳"][i];
+            document.getElementById("garden-progress").textContent=ecoGardenPlants.length+" / 6";
+            document.getElementById("garden-status").textContent=gameLang()==="vi"?"Cây đã lớn nhờ ánh nắng tự nhiên!":"A plant grew using natural sunlight!";
+            if(ecoGardenPlants.length===6){ecoGameLearned.push(gameLang()==="vi"?"Tận dụng ánh sáng tự nhiên và các giải pháp không dùng điện khi có thể.":"Use natural daylight and non-electric solutions where practical.");setTimeout(finishEcoGame,350);}
+        }
+
+                function renderQuestionGame(){
             const vi=gameLang(),cfg=ecoGameContent[activeEcoGame].en,area=document.getElementById("eco-game-play-area");
             if(ecoGameStep>=cfg.items.length){finishEcoGame();return;}
             const q=cfg.items[ecoGameStep],question=vi?translateGameQuestion(activeEcoGame,ecoGameStep):q[0],opts=vi?translateGameOptions(activeEcoGame,ecoGameStep):[q[1],q[2]];
@@ -2633,11 +2716,10 @@ document.addEventListener("DOMContentLoaded",()=>{
         }
         function finishEcoGame(){
  const vi=gameLang(),id=activeEcoGame,already=localStorage.getItem("eco_game_reward_"+id+"_"+new Date().toDateString())==="1";
- const total=id==="escape"?1:ecoGameContent[id].en.items.length;
  let reward=already?0:10;
  if(reward){currentXP+=10;currentPoints+=10;saveUserData();updateMascotLevel();localStorage.setItem("eco_game_reward_"+id+"_"+new Date().toDateString(),"1");}
  const learned=ecoGameLearned.map(t=>"<li>"+t+"</li>").join("");
- document.getElementById("eco-game-play-area").innerHTML='<div class="text-center vint-card p-5 space-y-3"><div class="text-5xl">🏆</div><h4 class="font-black text-base">'+(vi?"Hoàn thành bàn chơi!":"Board complete!")+'</h4><p class="text-sm font-bold">'+(vi?"Bạn hoàn thành bàn chơi":"Board completed")+' · '+ecoGameScore+'/'+total+'</p><div class="text-left rounded-xl bg-[#f2f7ec] border border-[#8c7355] p-3"><p class="text-xs font-black mb-2">'+(vi?"📚 Mẹo tiết kiệm điện đã học":"📚 Energy-saving tips learned")+'</p><ul class="list-disc pl-4 space-y-1 text-[11px]">'+learned+'</ul></div><p class="text-xs text-[#7a6452]">'+(reward?(vi?"+10 XP và +10 điểm!":"+10 XP and +10 points!"):(vi?"Phần thưởng trò này hôm nay đã nhận rồi.":"Today's reward for this game has already been claimed."))+'</p><button onclick="openEcoGame(&quot;'+id+'&quot;)" class="w-full rounded-xl bg-[#A8C7A0] border border-[#5c4738] px-4 py-3 text-xs font-extrabold">'+(vi?"Chơi lại":"Play again")+'</button><button onclick="closeEcoGame()" class="w-full rounded-xl bg-[#f0e6d6] border border-[#5c4738] px-4 py-3 text-xs font-extrabold">'+(vi?"Về danh sách trò chơi":"Back to games")+'</button></div>';
+ document.getElementById("eco-game-play-area").innerHTML='<div class="text-center eco-playfield space-y-3"><div class="text-5xl">🏆</div><h4 class="font-black text-base">'+(vi?"Hoàn thành!":"Completed!")+'</h4><p class="text-sm font-bold">'+(vi?"Điểm của bạn: ":"Your score: ")+ecoGameScore+'</p><div class="text-left rounded-xl bg-[#e5efdc] p-3"><p class="text-xs font-black mb-2">'+(vi?"💡 Mẹo tiết kiệm điện":"💡 Energy-saving tips")+'</p><ul class="list-disc pl-4 space-y-1 text-[11px]">'+learned+'</ul></div><p class="text-xs font-bold">'+(reward?(vi?"+10 XP · +10 điểm":"+10 XP · +10 points"):(vi?"Đã nhận thưởng hôm nay":"+Today's reward already claimed"))+'</p></div>';
  document.getElementById("eco-game-tip").classList.add("hidden");
 }
         function renderEscapeRoom(){
@@ -2667,32 +2749,26 @@ document.addEventListener("DOMContentLoaded",()=>{
         }
                 function finishEscapeGame(){ecoGameScore=1;finishEcoGame();}
         function renderMemoryGame(){
-            const vi=gameLang(),pairs=[
-                ["🌙","Night-rate laundry","Shift flexible washing to the cheaper night tariff."],
-                ["🌡️","30°C wash","Lower-temperature washing can save energy."],
-                ["💡","Daylight","Use natural light instead of switching on lamps."]
-            ];
-            const cards=pairs.flatMap((p,i)=>[{id:i,side:0,icon:p[0],label:p[1]},{id:i,side:1,icon:"❔",label:vi?"Ghép với mẹo phù hợp":"Match the saving tip"}]).sort(()=>Math.random()-.5);
-            window.ecoMemoryDeck=cards;
-            document.getElementById("eco-game-play-area").innerHTML='<p class="text-xs text-[#7a6452]">'+(vi?"Lật hai thẻ mỗi lượt. Tìm đủ 3 cặp.":"Flip two cards per turn. Find all 3 pairs.")+'</p><div id="eco-memory-grid" class="eco-memory-grid">'+cards.map((c,i)=>'<button class="eco-memory-card" onclick="flipMemoryCard('+i+')">❔<span>'+(vi?"Lật thẻ":"Flip card")+'</span></button>').join("")+'</div><p id="memory-progress" class="text-xs font-extrabold text-center">0 / 3</p>';
-        }
-        function flipMemoryCard(i){
-            if(ecoMemoryMatched.includes(i)||ecoMemoryOpen.includes(i)||ecoMemoryOpen.length===2)return;
-            ecoMemoryOpen.push(i);const c=window.ecoMemoryDeck[i],btn=document.querySelectorAll(".eco-memory-card")[i],vi=gameLang();
-            btn.innerHTML=c.icon+'<span>'+(c.side===0?(vi?"Thói quen":"Habit"):(vi?"Mẹo tiết kiệm":"Saving tip"))+'</span>';
-            if(ecoMemoryOpen.length===2){
-                const [a,b]=ecoMemoryOpen,ca=window.ecoMemoryDeck[a],cb=window.ecoMemoryDeck[b];
-                if(ca.id===cb.id&&ca.side!==cb.side){
-                    ecoMemoryMatched.push(a,b);ecoGameLearned.push(ca.id===0?(vi?"Chuyển việc giặt linh hoạt sang khung giờ điện đêm rẻ hơn.":"Shift flexible laundry to the cheaper night tariff when practical."):ca.id===1?(vi?"Giặt ở 30°C khi phù hợp có thể giảm điện năng.":"A 30°C wash can reduce energy use when suitable."):(vi?"Tận dụng ánh sáng ban ngày để giảm dùng đèn.":"Use daylight to reduce electric lighting."));document.getElementById("memory-progress").textContent=(ecoMemoryMatched.length/2)+" / 3";
-                    document.getElementById("eco-game-tip").classList.remove("hidden");
-                    document.getElementById("eco-game-tip-text").textContent=ca.id===0?(vi?"Giặt vào khung giờ điện đêm rẻ hơn nếu phù hợp.":"Shift flexible laundry to the cheaper night tariff when practical."):ca.id===1?(vi?"Giặt ở 30°C khi phù hợp có thể giảm điện năng.":"A 30°C wash can reduce energy use when suitable."):(vi?"Tận dụng ánh sáng ban ngày để giảm dùng đèn.":"Use daylight to reduce electric lighting.");
-                    ecoMemoryOpen=[];if(ecoMemoryMatched.length===6)setTimeout(()=>{ecoGameScore=3;finishMemoryGame();},450);
-                }else{
-                    setTimeout(()=>{[a,b].forEach(n=>{if(!ecoMemoryMatched.includes(n))document.querySelectorAll(".eco-memory-card")[n].innerHTML='❔<span>'+(vi?"Lật thẻ":"Flip card")+'</span>';});ecoMemoryOpen=[];},750);
-                }
-            }
-        }
-        function finishMemoryGame(){finishEcoGame();}
+ const vi=gameLang(),pairs=[["🌙",vi?"Giặt giờ thấp điểm":"Off-peak laundry"],["🌡️",vi?"Giặt 30°C":"30°C wash"],["💡",vi?"Ánh sáng tự nhiên":"Daylight"],["🔌",vi?"Tắt chế độ chờ":"Switch off standby"]];
+ const deck=pairs.flatMap((p,id)=>[{id,icon:p[0],label:p[1]},{id,icon:p[0],label:p[1]}]).sort(()=>Math.random()-.5);
+ window.ecoMemoryDeck=deck;ecoMemoryOpen=[];ecoMemoryMatched=[];
+ document.getElementById("eco-game-play-area").innerHTML='<div class="eco-playfield space-y-3"><div class="flex justify-between text-xs font-black"><span>🃏 MEMORY MATCH</span><span id="memory-progress">0 / 4</span></div><p class="text-xs">'+(vi?"Lật hai lá bài để tìm hai hình giống nhau.":"Flip two cards to find matching pairs.")+'</p><div id="eco-memory-grid" class="grid grid-cols-4 gap-2">'+deck.map((c,i)=>'<button class="eco-memory-card" onclick="flipMemoryCard('+i+')"><span class="eco-memory-inner"><span class="eco-card-back"><b>☘</b><small> ECO</small></span><span class="eco-card-front"><b class="eco-memory-icon">'+c.icon+'</b><small>'+c.label+'</small></span></span></button>').join("")+'</div><p id="memory-moves" class="text-center text-[10px] font-bold text-[#7a6452]">0 '+(vi?"lượt":"moves")+'</p></div>';
+ window.ecoMemoryMoves=0;
+}
+function flipMemoryCard(i){
+ if(ecoMemoryMatched.includes(i)||ecoMemoryOpen.includes(i)||ecoMemoryOpen.length===2)return;
+ ecoMemoryOpen.push(i);document.querySelectorAll(".eco-memory-card")[i].classList.add("flipped");
+ if(ecoMemoryOpen.length===2){
+  window.ecoMemoryMoves++;const [a,b]=ecoMemoryOpen,ca=window.ecoMemoryDeck[a],cb=window.ecoMemoryDeck[b],vi=gameLang();
+  document.getElementById("memory-moves").textContent=window.ecoMemoryMoves+" "+(vi?"lượt":"moves");
+  if(ca.id===cb.id){
+   ecoMemoryMatched.push(a,b);document.querySelectorAll(".eco-memory-card")[a].classList.add("matched");document.querySelectorAll(".eco-memory-card")[b].classList.add("matched");
+   ecoGameScore++;ecoGameLearned.push(ca.id===0?(vi?"Chuyển việc giặt linh hoạt sang giờ điện thấp điểm.":"Shift flexible laundry to off-peak electricity hours."):ca.id===1?(vi?"Giặt ở 30°C khi phù hợp giúp giảm điện năng.":"A 30°C wash can reduce energy use when suitable."):ca.id===2?(vi?"Tận dụng ánh sáng tự nhiên thay cho đèn điện.":"Use daylight instead of electric lighting."): (vi?"Tắt thiết bị ở chế độ chờ khi không dùng.":"Switch off devices left on standby when not in use."));
+   document.getElementById("memory-progress").textContent=(ecoMemoryMatched.length/2)+" / 4";
+   ecoMemoryOpen=[];if(ecoMemoryMatched.length===8)setTimeout(finishEcoGame,550);
+  }else{setTimeout(()=>{[a,b].forEach(n=>document.querySelectorAll(".eco-memory-card")[n].classList.remove("flipped"));ecoMemoryOpen=[];},850);}
+ }
+}
 
 </script>
 
