@@ -585,6 +585,75 @@
             body.memory-game-playing #eco-game-stage #eco-memory-grid .eco-memory-card{min-height:clamp(125px,18vh,165px)!important;aspect-ratio:.82!important}
         }
         @media(prefers-reduced-motion:reduce){body.memory-game-playing #eco-game-stage:before,body.memory-game-playing #eco-game-stage:after{animation:none!important}}
+
+        /* Memory Match layout repair: stack the fullscreen stage and keep cards compact */
+        #eco-game-stage.eco-game-fullscreen{
+            flex-direction:column!important;
+            align-items:stretch!important;
+            justify-content:flex-start!important;
+        }
+        #eco-game-stage.eco-game-fullscreen #eco-game-play-area{
+            flex:1 1 auto!important;
+            min-width:0!important;
+        }
+        body.memory-game-playing #eco-game-stage.eco-game-fullscreen{
+            overflow:hidden!important;
+        }
+        body.memory-game-playing #eco-game-stage .eco-memory-playfield{
+            width:100%!important;
+            min-height:0!important;
+            height:auto!important;
+            margin:0 auto!important;
+            padding:6px 12px 10px!important;
+            border:0!important;
+            border-radius:0!important;
+            box-shadow:none!important;
+            background:transparent!important;
+        }
+        body.memory-game-playing #eco-game-stage .eco-memory-status{
+            width:min(94vw,760px)!important;
+            max-width:760px!important;
+            margin:0 auto 8px!important;
+        }
+        body.memory-game-playing #eco-game-stage #eco-memory-grid{
+            display:grid!important;
+            width:min(94vw,760px)!important;
+            max-width:760px!important;
+            grid-template-columns:repeat(4,minmax(0,1fr))!important;
+            gap:clamp(7px,1.5vw,13px)!important;
+            margin:8px auto 10px!important;
+        }
+        body.memory-game-playing #eco-game-stage #eco-memory-grid .eco-memory-card{
+            width:100%!important;
+            min-width:0!important;
+            min-height:0!important;
+            height:auto!important;
+            max-height:150px!important;
+            aspect-ratio:1.2!important;
+        }
+        body.memory-game-playing #eco-game-stage #eco-memory-grid .eco-memory-inner{
+            position:absolute!important;
+            inset:0!important;
+        }
+        body.memory-game-playing #eco-game-stage .eco-memory-feedback{
+            width:min(94vw,760px)!important;
+            max-width:760px!important;
+            margin:8px auto 0!important;
+        }
+        @media(max-width:600px){
+            body.memory-game-playing #eco-game-stage .eco-memory-playfield{padding:4px 8px 8px!important}
+            body.memory-game-playing #eco-game-stage #eco-memory-grid{
+                width:94vw!important;
+                gap:7px!important;
+                grid-template-columns:repeat(4,minmax(0,1fr))!important;
+            }
+            body.memory-game-playing #eco-game-stage #eco-memory-grid .eco-memory-card{
+                min-height:0!important;
+                max-height:100px!important;
+                aspect-ratio:1.12!important;
+            }
+        }
+
 </style>
 </head>
 
