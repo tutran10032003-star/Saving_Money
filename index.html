@@ -2558,7 +2558,7 @@ document.addEventListener("DOMContentLoaded",()=>{
             escape:{en:{title:"Escape Room · The Dark Room",intro:"First-person mystery. Search the room, discover the clues, unlock the switch and escape.",items:[]}},
             memory:{en:{title:"Memory Match",intro:"Flip the cards and match each energy-saving habit with its benefit.",items:[]}}
         };
-        let activeEcoGame = null, ecoGameStep = 0, ecoGameScore = 0, ecoMemoryOpen = [], ecoMemoryMatched = [];
+        let activeEcoGame = null, ecoGameStep = 0, ecoGameScore = 0, ecoMemoryOpen = [], ecoMemoryMatched = [], ecoGameLearned = [];
         let escapeFound = [], escapeCodeOpen = false, escapeSwitchReady = false;
         function gameLang(){return localStorage.getItem("eco_buddy_language")==="vi"?"vi":"en";}
         function gameText(en,vi){return gameLang()==="vi"?vi:en;}
@@ -2578,7 +2578,7 @@ document.addEventListener("DOMContentLoaded",()=>{
             const back=document.getElementById("eco-game-back");if(back)back.textContent=vi?"← Tất cả trò chơi":"← All games";
         }
         function openEcoGame(id){
-            activeEcoGame=id;ecoGameStep=0;ecoGameScore=0;escapeFound=[];escapeCodeOpen=false;escapeSwitchReady=false;ecoMemoryOpen=[];ecoMemoryMatched=[];
+            activeEcoGame=id;ecoGameStep=0;ecoGameScore=0;ecoGameLearned=[];escapeFound=[];escapeCodeOpen=false;escapeSwitchReady=false;ecoMemoryOpen=[];ecoMemoryMatched=[];
             document.getElementById("eco-game-grid").classList.add("hidden");document.getElementById("eco-game-stage").classList.remove("hidden");
             const data=ecoGameContent[id],vi=gameLang();
             document.getElementById("eco-game-title").textContent=vi?({runner:"Eco Runner",home:"Xây nhà xanh",rush:"Thử thách năng lượng",garden:"Khu vườn xanh",escape:"Phòng thoát hiểm · Căn phòng tối",memory:"Lật thẻ ghi nhớ"}[id]):data.en.title;
@@ -2615,6 +2615,7 @@ document.addEventListener("DOMContentLoaded",()=>{
         function answerEcoGame(choice){
             const q=ecoGameContent[activeEcoGame].en.items[ecoGameStep],correct=q[3]===choice,vi=gameLang();
             if(correct)ecoGameScore++;
+            ecoGameLearned.push(vi?translateGameTip(activeEcoGame,ecoGameStep):q[4]);
             const tip=document.getElementById("eco-game-tip");tip.classList.remove("hidden");
             document.getElementById("eco-game-tip-heading").textContent=correct?(vi?"✅ Chính xác! Mẹo tiết kiệm:":"✅ Correct! Energy-saving tip:"):(vi?"💡 Ghi nhớ mẹo này:":"💡 Remember this tip:");
             document.getElementById("eco-game-tip-text").textContent=vi?translateGameTip(activeEcoGame,ecoGameStep):q[4];
@@ -2631,38 +2632,14 @@ document.addEventListener("DOMContentLoaded",()=>{
             };return (tips[id]||[])[i]||"";
         }
         function finishEcoGame(){
-            const vi=gameLang(),id=activeEcoGame,already=localStorage.getItem("eco_game_reward_"+id+"_"+new Date().toDateString())==="1";
-            let reward=already?0:10;
-            if(reward){currentXP+=10;currentPoints+=10;saveUserData();updateMascotLevel();localStorage.setItem("eco_game_reward_"+id+"_"+new Date().toDateString(),"1");}
-            document.getElementById("eco-game-play-area").innerHTML='<div class="text-center vint-card p-5 space-y-3"><div class="text-5xl">🏆</div><h4 class="font-black text-base">'+(vi?"Hoàn thành bàn chơi!":"Board complete!")+'</h4><p class="text-sm font-bold">'+(vi?"Bạn trả lời đúng ":"You got ")+ecoGameScore+'/'+ecoGameContent[id].en.items.length+'</p><p class="text-xs text-[#7a6452]">'+(reward?(vi?"+10 XP và +10 điểm!":"+10 XP and +10 points!"):(vi?"Phần thưởng trò này hôm nay đã nhận rồi.":"Today's reward for this game has already been claimed."))+'</p><button onclick="openEcoGame(\''+id+'\')" class="w-full rounded-xl bg-[#A8C7A0] border border-[#5c4738] px-4 py-3 text-xs font-extrabold">'+(vi?"Chơi lại":"Play again")+'</button><button onclick="closeEcoGame()" class="w-full rounded-xl bg-[#f0e6d6] border border-[#5c4738] px-4 py-3 text-xs font-extrabold">'+(vi?"Về danh sách trò chơi":"Back to games")+'</button></div>';
-            document.getElementById("eco-game-tip").classList.add("hidden");
-        }
-        function renderEscapeRoom(){
-            const vi=gameLang(),area=document.getElementById("eco-game-play-area");
-            area.innerHTML='<div class="eco-game-scene"><div><p class="text-[10px] uppercase tracking-widest text-[#d8c7b0]">'+(vi?"CĂN PHÒNG TỐI · GÓC NHÌN THỨ NHẤT":"DARK ROOM · FIRST-PERSON VIEW")+'</p><p class="text-3xl mt-3">🌑 🪟</p><h4 class="font-black text-base mt-2">'+(vi?"Bạn tỉnh dậy trong một căn phòng mất điện. Cửa đang khóa.":"You wake in a powerless room. The door is locked.")+'</h4><p class="text-xs mt-2 text-[#e5d8c7]">'+(vi?"Hãy chạm vào các vật thể để quan sát và tìm manh mối.":"Tap objects to inspect them and find clues.")+'</p></div><div class="grid grid-cols-2 gap-2"><button onclick="searchEscapeObject(\'desk\')">🗄️ '+(vi?"Bàn":"Desk")+'</button><button onclick="searchEscapeObject(\'clock\')">🕰️ '+(vi?"Đồng hồ":"Clock")+'</button><button onclick="searchEscapeObject(\'drawer\')">🧰 '+(vi?"Ngăn kéo":"Drawer")+'</button><button onclick="searchEscapeObject(\'door\')">🚪 '+(vi?"Cửa":"Door")+'</button></div></div><div id="escape-result" class="vint-card p-3 text-xs font-bold">'+(vi?"Vật phẩm tìm được: chưa có":"Items found: none")+'</div><div id="escape-puzzle" class="space-y-2"></div>';
-        }
-        function searchEscapeObject(obj){
-            const vi=gameLang(),result=document.getElementById("escape-result"),puzzle=document.getElementById("escape-puzzle");
-            const clues={desk:vi?"Dưới bàn có một mảnh giấy: 'Tháng có 3 ngày cuối tuần đặc biệt? Hãy đếm số bóng đèn trong phòng.'":"Under the desk is a note: 'Count the bulbs shown in the room.'",clock:vi?"Đồng hồ dừng ở số 2. Ghi nhớ chữ số đầu tiên: 2.":"The clock stopped at 2. Remember the first digit: 2.",drawer:vi?"Trong ngăn kéo có sơ đồ công tắc và chữ số 4.":"Inside the drawer is a switch diagram and the digit 4.",door:vi?"Bàn phím cửa yêu cầu mã 3 chữ số. Bạn cần tìm đủ manh mối.":"The door keypad needs a 3-digit code. Find all clues first."};
-            if(!escapeFound.includes(obj))escapeFound.push(obj);
-            result.textContent=clues[obj]+" · "+(vi?"Đã khám phá: ":"Explored: ")+escapeFound.length+"/4";
-            if(escapeFound.includes("clock")&&escapeFound.includes("drawer")&&escapeFound.includes("desk")){
-                puzzle.innerHTML='<div class="vint-card p-3 space-y-2"><p class="font-extrabold">'+(vi?"Mật mã được ghép từ các manh mối. Nhập 243 để mở hộp công tắc.":"Combine the clues. Enter 243 to unlock the switch kit.")+'</p><div class="flex gap-2"><input id="escape-code" inputmode="numeric" maxlength="3" placeholder="•••" class="min-w-0 flex-1 rounded-xl border border-[#8c7355] p-2 text-center font-black tracking-widest"><button onclick="submitEscapeCode()" class="rounded-xl bg-[#A8C7A0] border border-[#5c4738] px-4 py-2 font-extrabold">'+(vi?"Mở khóa":"Unlock")+'</button></div></div>';
-            }
-        }
-        function submitEscapeCode(){
-            const vi=gameLang(),val=document.getElementById("escape-code")?.value;
-            const puzzle=document.getElementById("escape-puzzle");
-            if(val!=="243"){puzzle.insertAdjacentHTML("beforeend",'<p class="text-xs font-bold text-red-700">'+(vi?"Mã chưa đúng. Kiểm tra lại manh mối nhé.":"Not quite. Recheck the clues.")+'</p>');return;}
-            escapeCodeOpen=true;puzzle.innerHTML='<div class="vint-card p-3 space-y-2"><p class="font-extrabold">'+(vi?"Hộp mở ra! Hãy ghép mặt công tắc với đế công tắc mô phỏng.":"The case opens! Fit the switch faceplate to the simulated switch base.")+'</p><button onclick="assembleEscapeSwitch()" class="w-full rounded-xl bg-[#A8C7A0] border border-[#5c4738] px-3 py-3 font-extrabold">'+(vi?"Lắp công tắc":"Assemble switch")+'</button></div>';
-        }
-        function assembleEscapeSwitch(){
-            const vi=gameLang();escapeSwitchReady=true;
-            document.getElementById("escape-puzzle").innerHTML='<div class="eco-game-scene text-center"><p class="text-4xl">🔘</p><p class="font-black">'+(vi?"Công tắc mô phỏng đã được lắp!":"Simulated switch assembled!")+'</p><button onclick="turnOnEscapeLight()">'+(vi?"BẬT ĐÈN":"TURN ON LIGHT")+'</button></div>';
-        }
-        function turnOnEscapeLight(){
-            const vi=gameLang();document.getElementById("eco-game-play-area").innerHTML='<div class="rounded-2xl border-2 border-[#5c4738] p-5 text-center space-y-3" style="background:linear-gradient(145deg,#fff4c9,#f4e2a4);color:#4a3b32"><div class="text-6xl">💡</div><h4 class="font-black">'+(vi?"Đèn đã sáng! Cửa được mở khóa.":"The light is on! The door unlocks.")+'</h4><p class="text-xs">'+(vi?"Bài học: tắt đèn khi rời phòng và tận dụng ánh sáng tự nhiên.":"Lesson: switch lights off when leaving and use natural daylight where possible.")+'</p><button onclick="finishEscapeGame()" class="w-full rounded-xl bg-[#A8C7A0] border border-[#5c4738] px-4 py-3 text-xs font-extrabold">'+(vi?"Thoát khỏi phòng":"Escape the room")+'</button></div>';
-        }
+ const vi=gameLang(),id=activeEcoGame,already=localStorage.getItem("eco_game_reward_"+id+"_"+new Date().toDateString())==="1";
+ const total=id==="escape"?1:ecoGameContent[id].en.items.length;
+ let reward=already?0:10;
+ if(reward){currentXP+=10;currentPoints+=10;saveUserData();updateMascotLevel();localStorage.setItem("eco_game_reward_"+id+"_"+new Date().toDateString(),"1");}
+ const learned=ecoGameLearned.map(t=>"<li>"+t+"</li>").join("");
+ document.getElementById("eco-game-play-area").innerHTML='<div class="text-center vint-card p-5 space-y-3"><div class="text-5xl">🏆</div><h4 class="font-black text-base">'+(vi?"Hoàn thành bàn chơi!":"Board complete!")+'</h4><p class="text-sm font-bold">'+(vi?"Bạn hoàn thành bàn chơi":"Board completed")+' · '+ecoGameScore+'/'+total+'</p><div class="text-left rounded-xl bg-[#f2f7ec] border border-[#8c7355] p-3"><p class="text-xs font-black mb-2">'+(vi?"📚 Mẹo tiết kiệm điện đã học":"📚 Energy-saving tips learned")+'</p><ul class="list-disc pl-4 space-y-1 text-[11px]">'+learned+'</ul></div><p class="text-xs text-[#7a6452]">'+(reward?(vi?"+10 XP và +10 điểm!":"+10 XP and +10 points!"):(vi?"Phần thưởng trò này hôm nay đã nhận rồi.":"Today's reward for this game has already been claimed."))+'</p><button onclick="openEcoGame(&quot;'+id+'&quot;)" class="w-full rounded-xl bg-[#A8C7A0] border border-[#5c4738] px-4 py-3 text-xs font-extrabold">'+(vi?"Chơi lại":"Play again")+'</button><button onclick="closeEcoGame()" class="w-full rounded-xl bg-[#f0e6d6] border border-[#5c4738] px-4 py-3 text-xs font-extrabold">'+(vi?"Về danh sách trò chơi":"Back to games")+'</button></div>';
+ document.getElementById("eco-game-tip").classList.add("hidden");
+}
         function finishEscapeGame(){ecoGameScore=1;finishEcoGame();}
         function renderMemoryGame(){
             const vi=gameLang(),pairs=[
@@ -2681,7 +2658,7 @@ document.addEventListener("DOMContentLoaded",()=>{
             if(ecoMemoryOpen.length===2){
                 const [a,b]=ecoMemoryOpen,ca=window.ecoMemoryDeck[a],cb=window.ecoMemoryDeck[b];
                 if(ca.id===cb.id&&ca.side!==cb.side){
-                    ecoMemoryMatched.push(a,b);document.getElementById("memory-progress").textContent=(ecoMemoryMatched.length/2)+" / 3";
+                    ecoMemoryMatched.push(a,b);ecoGameLearned.push(ca.id===0?(vi?"Chuyển việc giặt linh hoạt sang khung giờ điện đêm rẻ hơn.":"Shift flexible laundry to the cheaper night tariff when practical."):ca.id===1?(vi?"Giặt ở 30°C khi phù hợp có thể giảm điện năng.":"A 30°C wash can reduce energy use when suitable."):(vi?"Tận dụng ánh sáng ban ngày để giảm dùng đèn.":"Use daylight to reduce electric lighting."));document.getElementById("memory-progress").textContent=(ecoMemoryMatched.length/2)+" / 3";
                     document.getElementById("eco-game-tip").classList.remove("hidden");
                     document.getElementById("eco-game-tip-text").textContent=ca.id===0?(vi?"Giặt vào khung giờ điện đêm rẻ hơn nếu phù hợp.":"Shift flexible laundry to the cheaper night tariff when practical."):ca.id===1?(vi?"Giặt ở 30°C khi phù hợp có thể giảm điện năng.":"A 30°C wash can reduce energy use when suitable."):(vi?"Tận dụng ánh sáng ban ngày để giảm dùng đèn.":"Use daylight to reduce electric lighting.");
                     ecoMemoryOpen=[];if(ecoMemoryMatched.length===6)setTimeout(()=>{ecoGameScore=3;finishMemoryGame();},450);
