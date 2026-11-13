@@ -394,17 +394,17 @@
     
         .eco-memory-card{position:relative;display:flex;align-items:center;justify-content:center;min-width:0;min-height:118px;padding:5px;border:3px solid #d7c19d;border-radius:14px;background:repeating-linear-gradient(135deg,#31563c 0 8px,#426d4b 8px 16px);box-shadow:0 4px 0 #253d2b,0 7px 12px #34291f45;color:#fff8e9;transition:transform .16s,background .16s;overflow:hidden}
         .eco-memory-card:active{transform:translateY(2px);box-shadow:0 2px 0 #253d2b}
-        .eco-memory-face{width:100%;min-height:100px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;border-radius:8px}
-        .eco-memory-back b{font-size:36px;line-height:1;text-shadow:0 2px 3px #203927}
-        .eco-memory-back small{font-size:9px;letter-spacing:3px;font-weight:900}
-        .eco-memory-front{background:linear-gradient(145deg,#fffdf5,#e9dfc9);color:#4a3b32;border:1px solid #b8a27f}
-        .eco-memory-front b{font-size:30px;line-height:1.1}
-        .eco-memory-front small{font-size:9px;line-height:1.2;font-weight:900;text-align:center;padding:0 2px}
+        .eco-memory-card .eco-memory-face{width:100%;min-height:100px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;margin:0;border-radius:8px}
+        .eco-memory-card .eco-memory-back b{font-size:36px;line-height:1;text-shadow:0 2px 3px #203927}
+        .eco-memory-card .eco-memory-back small{font-size:9px;letter-spacing:3px;font-weight:900}
+        .eco-memory-card .eco-memory-front{background:linear-gradient(145deg,#fffdf5,#e9dfc9);color:#4a3b32;border:1px solid #b8a27f}
+        .eco-memory-card .eco-memory-front b{font-size:30px;line-height:1.1}
+        .eco-memory-card .eco-memory-front small{font-size:9px;line-height:1.2;font-weight:900;text-align:center;padding:0 2px}
         .eco-memory-card.flipped{background:#eee3cf;border-color:#8c7355}
         .eco-memory-card.matched{background:#d9e9ce;border-color:#52764a;box-shadow:0 4px 0 #52764a}
         .eco-memory-card.matched .eco-memory-front{background:linear-gradient(145deg,#eaf5e2,#c9dfbd);border-color:#52764a}
         .eco-memory-card:disabled{opacity:1;cursor:default}
-        @media(max-width:390px){.eco-memory-card{min-height:94px}.eco-memory-face{min-height:82px}.eco-memory-front b{font-size:25px}.eco-memory-front small{font-size:8px}}
+        @media(max-width:390px){.eco-memory-card{min-height:94px}.eco-memory-face{min-height:82px}.eco-memory-card .eco-memory-front b{font-size:25px}.eco-memory-card .eco-memory-front small{font-size:8px}}
 
     </style>
 </head>
