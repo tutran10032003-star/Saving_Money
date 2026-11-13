@@ -2597,9 +2597,7 @@ document.addEventListener("DOMContentLoaded",()=>{
         function openEcoGame(id){
             activeEcoGame=id;ecoGameStep=0;ecoGameScore=0;ecoGameLearned=[];escapeFound=[];escapeCodeOpen=false;escapeSwitchReady=false;ecoMemoryOpen=[];ecoMemoryMatched=[];
             document.getElementById("eco-game-grid").classList.add("hidden");document.getElementById("eco-game-stage").classList.remove("hidden");
-            const data=ecoGameContent[id],vi=gameLang();
-            document.getElementById("eco-game-title").textContent=vi?({runner:"Eco Runner",home:"Xây nhà xanh",rush:"Thử thách năng lượng",garden:"Khu vườn xanh",escape:"Phòng thoát hiểm · Căn phòng tối",memory:"Lật thẻ ghi nhớ"}[id]):data.en.title;
-            document.getElementById("eco-game-kicker").textContent=vi?"TRÒ CHƠI MINI":"MINI GAME";
+            const vi=gameLang();
             document.getElementById("eco-game-tip").classList.add("hidden");
             document.getElementById("eco-game-hub-panel").classList.add("hidden");
             if(id==="runner")startEcoRunner();else if(id==="home")renderEcoHome();else if(id==="rush")startEnergyRush();else if(id==="garden")renderEcoGarden();else if(id==="escape")renderEscapeRoom();else if(id==="memory")renderMemoryGame();
