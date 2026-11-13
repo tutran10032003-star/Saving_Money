@@ -423,6 +423,32 @@
         .eco-memory-card:disabled{opacity:1;cursor:default}
         @media(max-width:390px){.eco-memory-card{min-height:94px}.eco-memory-face{min-height:82px}.eco-memory-card .eco-memory-front b{font-size:25px}.eco-memory-card .eco-memory-front small{font-size:8px}}
 
+
+        /* TRUE FULL-SCREEN GAME MODE — hide the app navigation and release every parent constraint */
+        body.eco-game-playing{padding-top:0!important;margin:0!important;overflow:hidden!important;height:100dvh!important}
+        body.eco-game-playing>header{display:none!important}
+        body.eco-game-playing main{padding:0!important;margin:0!important;width:100%!important;max-width:none!important}
+        body.eco-game-playing #tab-content-tips{display:block!important;position:static!important;width:100%!important;max-width:none!important;margin:0!important;padding:0!important}
+        body.eco-game-playing #eco-game-hub-panel{display:none!important}
+        #eco-game-stage.eco-game-fullscreen{display:flex!important;position:fixed!important;inset:0!important;z-index:99999!important;width:100vw!important;height:100dvh!important;max-width:none!important;max-height:none!important;margin:0!important;padding:calc(env(safe-area-inset-top) + 58px) 0 env(safe-area-inset-bottom)!important;overflow-y:auto!important;overflow-x:hidden!important;border:0!important;border-radius:0!important;box-shadow:none!important;background:#fcf8f2!important;gap:12px!important}
+        #eco-game-stage.eco-game-fullscreen>.eco-game-toolbar{position:fixed!important;top:calc(env(safe-area-inset-top) + 8px)!important;right:clamp(10px,2vw,24px)!important;z-index:100000!important;width:auto!important;margin:0!important;padding:0!important}
+        #eco-game-stage.eco-game-fullscreen #eco-game-back{min-height:42px!important;padding:10px 16px!important;border:1px solid #8c7355!important;border-radius:999px!important;background:#fffaf4!important;box-shadow:0 3px 12px #34291f30!important;font-size:13px!important}
+        #eco-game-stage.eco-game-fullscreen #eco-game-play-area{width:100%!important;max-width:none!important;margin:0!important;padding:0 clamp(10px,2.5vw,30px)!important}
+        #eco-game-stage.eco-game-fullscreen .eco-playfield{width:100%!important;max-width:none!important;min-height:calc(100dvh - 78px)!important;margin:0!important;padding:clamp(12px,2.5vw,28px)!important;border:0!important;border-radius:0!important;box-shadow:none!important;background:transparent!important}
+        #eco-game-stage.eco-game-fullscreen #eco-game-tip{margin:0 clamp(10px,2.5vw,30px) 14px!important;border-radius:14px!important}
+        #eco-game-stage.eco-game-fullscreen .eco-memory-grid{width:100%!important;max-width:none!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:clamp(9px,2.2vw,22px)!important}
+        #eco-game-stage.eco-game-fullscreen .eco-memory-card{width:100%!important;min-width:0!important;min-height:0!important;aspect-ratio:.68!important}
+        #eco-game-stage.eco-game-fullscreen .eco-memory-inner{border-radius:clamp(10px,1.4vw,18px)!important;box-shadow:0 5px 0 #5c4738,0 12px 22px #34291f45!important}
+        #eco-game-stage.eco-game-fullscreen .eco-memory-face{border-radius:inherit!important}
+        @media(max-width:600px){
+          #eco-game-stage.eco-game-fullscreen{padding-top:calc(env(safe-area-inset-top) + 58px)!important}
+          #eco-game-stage.eco-game-fullscreen #eco-game-play-area{padding:0 9px!important}
+          #eco-game-stage.eco-game-fullscreen .eco-playfield{padding:10px 2px!important}
+          #eco-game-stage.eco-game-fullscreen .eco-memory-grid{gap:7px!important}
+          #eco-game-stage.eco-game-fullscreen .eco-memory-card{aspect-ratio:.64!important}
+          #eco-game-stage.eco-game-fullscreen .eco-memory-face{border-width:1.5px!important}
+        }
+
     </style>
 </head>
 
@@ -862,7 +888,7 @@
                 </div>
             </section>
             <section id="eco-game-stage" class="hidden vintage-panel p-4 sm:p-6 space-y-4">
-                <div class="flex justify-end"><button onclick="closeEcoGame()" id="eco-game-back" class="shrink-0 px-3 py-2 rounded-xl bg-[#f0e6d6] border border-[#5c4738] text-xs font-bold">← Trở lại</button></div>
+                <div class="eco-game-toolbar flex justify-end"><button onclick="closeEcoGame()" id="eco-game-back" class="shrink-0 px-3 py-2 rounded-xl bg-[#f0e6d6] border border-[#5c4738] text-xs font-bold">← Trở lại</button></div>
                 <div id="eco-game-play-area" class="space-y-3"></div>
                 <div id="eco-game-tip" class="hidden rounded-2xl border border-[#8c7355] bg-[#f2f7ec] p-3 space-y-1">
                     <p id="eco-game-tip-heading" class="text-xs font-extrabold text-[#3b4a32]">💡 Energy-saving tip</p>
@@ -2624,20 +2650,25 @@ document.addEventListener("DOMContentLoaded",()=>{
                 ["🃏","Lật thẻ ghi nhớ","Lật thẻ và ghép các cặp mẹo tiết kiệm điện"]
             ]:[["🏃","Eco Runner","Run, dodge waste and collect energy stars"],["🏡","Build My Eco Home","Make each room more energy-efficient"],["⚡","Energy Rush","Make smart energy decisions before time runs out"],["🌱","Eco Garden","Grow a garden with clever energy habits"],["🔐","Escape Room","Explore in first person, find clues and escape"],["🃏","Memory Match","Flip cards and match energy-saving pairs"]];
             document.querySelectorAll(".eco-game-card").forEach((el,i)=>{if(labels[i]){el.innerHTML='<span class="eco-game-emoji">'+labels[i][0]+'</span><strong>'+labels[i][1]+'</strong><small>'+labels[i][2]+'</small>';}});
-            const back=document.getElementById("eco-game-back");if(back)back.textContent=vi?"← Tất cả trò chơi":"← All games";
+            const back=document.getElementById("eco-game-back");if(back)back.textContent=vi?"← Trở lại":"← Back";
         }
         function openEcoGame(id){
             activeEcoGame=id;ecoGameStep=0;ecoGameScore=0;ecoGameLearned=[];escapeFound=[];escapeCodeOpen=false;escapeSwitchReady=false;ecoMemoryOpen=[];ecoMemoryMatched=[];
             document.getElementById("eco-game-grid").classList.add("hidden");document.getElementById("eco-game-stage").classList.remove("hidden");
-            const vi=gameLang();
             document.getElementById("eco-game-tip").classList.add("hidden");
             document.getElementById("eco-game-hub-panel").classList.add("hidden");
-            document.getElementById("eco-game-stage").classList.toggle("memory-fullscreen",id==="memory");
-            document.body.classList.toggle("memory-playing",id==="memory");
+            document.getElementById("eco-game-stage").classList.add("eco-game-fullscreen");
+            document.body.classList.add("eco-game-playing");
             if(id==="runner")startEcoRunner();else if(id==="home")renderEcoHome();else if(id==="rush")startEnergyRush();else if(id==="garden")renderEcoGarden();else if(id==="escape")renderEscapeRoom();else if(id==="memory")renderMemoryGame();
         }
         function closeEcoGame(){
-            activeEcoGame=null;if(window.ecoRunnerTimer)clearInterval(window.ecoRunnerTimer);if(window.energyRushTimer)clearInterval(window.energyRushTimer);document.body.classList.remove("memory-playing");document.getElementById("eco-game-stage").classList.remove("memory-fullscreen");document.getElementById("eco-game-stage").classList.add("hidden");document.getElementById("eco-game-hub-panel").classList.remove("hidden");document.getElementById("eco-game-grid").classList.remove("hidden");document.getElementById("eco-game-tip").classList.add("hidden");renderGameHub();
+            activeEcoGame=null;if(window.ecoRunnerTimer)clearInterval(window.ecoRunnerTimer);if(window.energyRushTimer)clearInterval(window.energyRushTimer);
+            document.body.classList.remove("eco-game-playing");
+            document.getElementById("eco-game-stage").classList.remove("eco-game-fullscreen");
+            document.getElementById("eco-game-stage").classList.add("hidden");
+            document.getElementById("eco-game-hub-panel").classList.remove("hidden");
+            document.getElementById("eco-game-grid").classList.remove("hidden");
+            document.getElementById("eco-game-tip").classList.add("hidden");renderGameHub();
         }
 
         let ecoRunnerPos=1,ecoRunnerStep=0,ecoRunnerHits=0,ecoHomeDone=[],ecoGardenPlants=[],energyRushDone=[];
