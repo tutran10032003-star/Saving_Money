@@ -430,7 +430,7 @@
         body.eco-game-playing main{padding:0!important;margin:0!important;width:100%!important;max-width:none!important}
         body.eco-game-playing #tab-content-tips{display:block!important;position:static!important;width:100%!important;max-width:none!important;margin:0!important;padding:0!important}
         body.eco-game-playing #eco-game-hub-panel{display:none!important}
-        #eco-game-stage.eco-game-fullscreen{display:flex!important;position:fixed!important;inset:0!important;z-index:99999!important;width:100vw!important;height:100dvh!important;max-width:none!important;max-height:none!important;margin:0!important;padding:calc(env(safe-area-inset-top) + 58px) 0 env(safe-area-inset-bottom)!important;overflow-y:auto!important;overflow-x:hidden!important;border:0!important;border-radius:0!important;box-shadow:none!important;background:#fcf8f2!important;gap:12px!important}
+        #eco-game-stage.eco-game-fullscreen{display:flex!important;position:fixed!important;top:0!important;left:0!important;right:0!important;bottom:0!important;z-index:2147483000!important;width:100%!important;height:100vh!important;height:100dvh!important;max-width:none!important;max-height:none!important;margin:0!important;padding:calc(env(safe-area-inset-top, 0px) + 58px) 0 env(safe-area-inset-bottom, 0px)!important;overflow-y:auto!important;overflow-x:hidden!important;overscroll-behavior:contain!important;-webkit-overflow-scrolling:touch!important;border:0!important;border-radius:0!important;box-shadow:none!important;background:#fcf8f2!important;gap:12px!important;visibility:visible!important;opacity:1!important}
         #eco-game-stage.eco-game-fullscreen>.eco-game-toolbar{position:fixed!important;top:calc(env(safe-area-inset-top) + 8px)!important;right:clamp(10px,2vw,24px)!important;z-index:100000!important;width:auto!important;margin:0!important;padding:0!important}
         #eco-game-stage.eco-game-fullscreen #eco-game-back{min-height:42px!important;padding:10px 16px!important;border:1px solid #8c7355!important;border-radius:999px!important;background:#fffaf4!important;box-shadow:0 3px 12px #34291f30!important;font-size:13px!important}
         #eco-game-stage.eco-game-fullscreen #eco-game-play-area{width:100%!important;max-width:none!important;margin:0!important;padding:0 clamp(10px,2.5vw,30px)!important}
@@ -2654,20 +2654,21 @@ document.addEventListener("DOMContentLoaded",()=>{
         }
         function openEcoGame(id){
             activeEcoGame=id;ecoGameStep=0;ecoGameScore=0;ecoGameLearned=[];escapeFound=[];escapeCodeOpen=false;escapeSwitchReady=false;ecoMemoryOpen=[];ecoMemoryMatched=[];
-            document.getElementById("eco-game-grid").classList.add("hidden");document.getElementById("eco-game-stage").classList.remove("hidden");
-            document.getElementById("eco-game-tip").classList.add("hidden");
-            document.getElementById("eco-game-hub-panel").classList.add("hidden");
-            document.getElementById("eco-game-stage").classList.add("eco-game-fullscreen");
-            document.body.classList.add("eco-game-playing");
+            const stage=document.getElementById("eco-game-stage"),hub=document.getElementById("eco-game-hub-panel");
+            document.getElementById("eco-game-grid").classList.add("hidden");stage.classList.remove("hidden");
+            document.getElementById("eco-game-tip").classList.add("hidden");hub.classList.add("hidden");
+            /* Detach the game from tab/main wrappers so mobile browsers cannot clip or hide it. */
+            if(stage.parentElement!==document.body){document.body.appendChild(stage);}
+            stage.classList.add("eco-game-fullscreen");document.body.classList.add("eco-game-playing");
             if(id==="runner")startEcoRunner();else if(id==="home")renderEcoHome();else if(id==="rush")startEnergyRush();else if(id==="garden")renderEcoGarden();else if(id==="escape")renderEscapeRoom();else if(id==="memory")renderMemoryGame();
         }
         function closeEcoGame(){
             activeEcoGame=null;if(window.ecoRunnerTimer)clearInterval(window.ecoRunnerTimer);if(window.energyRushTimer)clearInterval(window.energyRushTimer);
-            document.body.classList.remove("eco-game-playing");
-            document.getElementById("eco-game-stage").classList.remove("eco-game-fullscreen");
-            document.getElementById("eco-game-stage").classList.add("hidden");
-            document.getElementById("eco-game-hub-panel").classList.remove("hidden");
-            document.getElementById("eco-game-grid").classList.remove("hidden");
+            const stage=document.getElementById("eco-game-stage"),hub=document.getElementById("eco-game-hub-panel");
+            document.body.classList.remove("eco-game-playing");stage.classList.remove("eco-game-fullscreen");stage.classList.add("hidden");
+            /* Restore the stage immediately after the hub panel in its original tab. */
+            if(hub&&hub.parentNode)hub.parentNode.insertBefore(stage,hub.nextSibling);
+            hub.classList.remove("hidden");document.getElementById("eco-game-grid").classList.remove("hidden");
             document.getElementById("eco-game-tip").classList.add("hidden");renderGameHub();
         }
 
