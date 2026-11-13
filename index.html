@@ -654,6 +654,57 @@
             }
         }
 
+
+        /* Hard fix: give every memory card a real grid cell and fixed row height */
+        body.memory-game-playing #eco-game-stage #eco-memory-grid{
+            display:grid!important;
+            grid-template-columns:repeat(4,minmax(0,1fr))!important;
+            grid-auto-rows:clamp(82px,14vh,116px)!important;
+            align-items:stretch!important;
+            justify-items:stretch!important;
+            gap:10px!important;
+            width:min(94vw,680px)!important;
+            max-width:680px!important;
+            height:auto!important;
+            margin:8px auto!important;
+        }
+        body.memory-game-playing #eco-game-stage #eco-memory-grid .eco-memory-card{
+            display:block!important;
+            position:relative!important;
+            width:100%!important;
+            height:100%!important;
+            min-width:0!important;
+            min-height:0!important;
+            max-height:none!important;
+            aspect-ratio:auto!important;
+            align-self:stretch!important;
+            justify-self:stretch!important;
+            margin:0!important;
+            padding:0!important;
+            transform:none!important;
+        }
+        body.memory-game-playing #eco-game-stage #eco-memory-grid .eco-memory-inner{
+            position:absolute!important;
+            display:block!important;
+            inset:0!important;
+            width:100%!important;
+            height:100%!important;
+        }
+        body.memory-game-playing #eco-game-stage #eco-memory-grid .eco-memory-face{
+            position:absolute!important;
+            inset:0!important;
+            width:100%!important;
+            height:100%!important;
+        }
+        @media(max-width:600px){
+            body.memory-game-playing #eco-game-stage #eco-memory-grid{
+                grid-template-columns:repeat(4,minmax(0,1fr))!important;
+                grid-auto-rows:clamp(72px,12vh,94px)!important;
+                gap:7px!important;
+                width:94vw!important;
+            }
+        }
+
 </style>
 </head>
 
