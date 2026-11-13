@@ -449,6 +449,36 @@
           #eco-game-stage.eco-game-fullscreen .eco-memory-face{border-width:1.5px!important}
         }
 
+
+        /* Memory Match: compact portrait cards, pastel faces, reliable content reveal */
+        #eco-game-stage.eco-game-fullscreen .eco-memory-playfield{min-height:0!important;width:100%!important;max-width:none!important;margin:0 auto!important;padding:8px 12px 18px!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important}
+        .eco-memory-status{display:flex;justify-content:flex-end;gap:18px;max-width:620px;margin:0 auto 14px;padding:0 2px;font-size:12px;font-weight:900;color:#5c4738}
+        .eco-memory-grid{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:12px!important;width:100%!important;max-width:620px!important;margin:0 auto!important}
+        .eco-memory-card{position:relative!important;display:flex!important;align-items:center!important;justify-content:center!important;width:100%!important;min-width:0!important;min-height:0!important;aspect-ratio:.72!important;padding:0!important;overflow:hidden!important;border:1px solid #c7b69e!important;border-radius:12px!important;background:transparent!important;box-shadow:0 4px 0 #b7a58c,0 8px 15px rgba(65,49,34,.18)!important;color:#514638!important;transition:transform .15s,box-shadow .15s!important}
+        .eco-memory-card:active{transform:translateY(2px)!important;box-shadow:0 2px 0 #b7a58c,0 4px 9px rgba(65,49,34,.16)!important}
+        .eco-memory-card .eco-card-back,.eco-memory-card .eco-card-front{position:absolute!important;inset:0!important;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;padding:8px 5px;border-radius:11px;text-align:center;overflow:hidden}
+        .eco-memory-card .eco-card-back{background:linear-gradient(145deg,#c8d9ce,#a9c5b3)!important;color:#496453!important}
+        .eco-memory-card .eco-card-back:before{content:"";position:absolute;inset:6px;border:1px solid rgba(255,255,255,.8);border-radius:7px}
+        .eco-memory-card .eco-card-back b{font-size:clamp(23px,4vw,34px);line-height:1}
+        .eco-memory-card .eco-card-back small{font-size:8px;letter-spacing:2px;font-weight:900}
+        .eco-memory-card .eco-card-front{display:none;background:linear-gradient(150deg,#fff9ef,#f1e6d8)!important;color:#594b3e!important;border:1px solid #dfcdb7}
+        .eco-memory-card.flipped .eco-card-back{display:none!important}
+        .eco-memory-card.flipped .eco-card-front{display:flex!important}
+        .eco-memory-card .eco-card-front b{font-size:clamp(23px,4vw,34px);line-height:1.1}
+        .eco-memory-card .eco-card-front small{font-size:clamp(8px,1.5vw,11px);font-weight:850;line-height:1.25}
+        .eco-memory-card.matched .eco-card-front{background:linear-gradient(145deg,#e5efdf,#cbdcc3)!important;border-color:#a9c19d!important}
+        .eco-memory-card:disabled{opacity:1!important;cursor:default}
+        .eco-memory-feedback{max-width:620px;margin:16px auto 0;text-align:center;font-size:12px;font-weight:800;color:#5c7357}
+        @media(max-width:600px){
+          #eco-game-stage.eco-game-fullscreen .eco-memory-playfield{padding:4px 10px 14px!important}
+          .eco-memory-grid{max-width:390px!important;gap:9px!important}
+          .eco-memory-card{aspect-ratio:.70!important;border-radius:10px!important;box-shadow:0 3px 0 #b7a58c,0 6px 11px rgba(65,49,34,.17)!important}
+          .eco-memory-card .eco-card-back,.eco-memory-card .eco-card-front{padding:5px 3px;border-radius:9px}
+          .eco-memory-card .eco-card-back b,.eco-memory-card .eco-card-front b{font-size:clamp(20px,7vw,28px)!important}
+          .eco-memory-card .eco-card-front small{font-size:8px!important}
+          .eco-memory-status{max-width:390px;margin-bottom:10px}
+        }
+
     </style>
 </head>
 
@@ -2825,7 +2855,7 @@ document.addEventListener("DOMContentLoaded",()=>{
             window.ecoMemoryDeck=deck;
             ecoMemoryOpen=[];ecoMemoryMatched=[];ecoMemoryLocked=false;window.ecoMemoryMoves=0;
             const area=document.getElementById("eco-game-play-area");
-            area.innerHTML='<div class="eco-playfield"><div class="flex items-center justify-end gap-4 mb-3 text-xs font-black"><span id="memory-progress">0 / 4</span><span id="memory-moves">0 '+(vi?"lượt":"moves")+'</span></div><div id="eco-memory-grid" class="eco-memory-grid">'+deck.map((c,i)=>'<button type="button" class="eco-memory-card" data-card-index="'+i+'" aria-label="'+(vi?"Lá bài úp":"Face-down card")+'" onclick="flipMemoryCard('+i+')"><span class="eco-memory-inner"><span class="eco-memory-face eco-card-back"><b>☘</b><small>ECO</small></span><span class="eco-memory-face eco-card-front"><b>'+c.icon+'</b><small>'+(vi?c.vi:c.en)+'</small></span></span></button>').join("")+'</div><p id="memory-feedback" class="text-center text-xs font-bold mt-4">'+(vi?"Tìm đủ 4 cặp thẻ giống nhau nhé!":"Find all 4 matching pairs!")+'</p></div>';
+            area.innerHTML='<div class="eco-playfield eco-memory-playfield"><div class="eco-memory-status"><span id="memory-progress">0 / 4</span><span id="memory-moves">0 '+(vi?"lượt":"moves")+'</span></div><div id="eco-memory-grid" class="eco-memory-grid">'+deck.map((c,i)=>'<button type="button" class="eco-memory-card" data-card-index="'+i+'" aria-label="'+(vi?"Lá bài úp":"Face-down card")+'" onclick="flipMemoryCard('+i+')"><span class="eco-card-back"><b>☘</b><small>ECO</small></span><span class="eco-card-front"><b class="eco-memory-icon">'+c.icon+'</b><small>'+(vi?c.vi:c.en)+'</small></span></button>').join("")+'</div><p id="memory-feedback" class="eco-memory-feedback">'+(vi?"Tìm đủ 4 cặp thẻ giống nhau nhé!":"Find all 4 matching pairs!")+'</p></div>';
         }
         function flipMemoryCard(i){
             if(ecoMemoryLocked||ecoMemoryMatched.includes(i)||ecoMemoryOpen.includes(i))return;
