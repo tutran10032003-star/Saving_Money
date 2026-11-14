@@ -2935,7 +2935,7 @@ document.addEventListener("DOMContentLoaded",()=>{
 
     <script src="./eco-games.js?v=17"></script>
     <script src="./memory-tips-data.js?v=16"></script>
-    <script src="./memory-game.js?v=18"></script>
+    <script src="./memory-game.js?v=19"></script>
 
 
 <style id="eco-game-font-reset">
@@ -2962,6 +2962,68 @@ body.memory-game-playing #eco-game-stage #eco-memory-grid .eco-card-front .eco-m
 body.memory-game-playing #eco-game-stage #eco-memory-grid .eco-card-front .eco-memory-category{display:block!important;flex:0 0 auto!important;font-size:9px!important;line-height:1.1!important;opacity:.68!important;text-align:center!important}
 body.memory-game-playing #eco-game-stage #eco-memory-grid .eco-memory-card.matched .eco-card-front{background:#f6f0e3!important;border-color:transparent!important}
 @media(max-width:600px){body.memory-game-playing #eco-game-stage #eco-memory-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;grid-auto-rows:clamp(118px,17vh,145px)!important;width:min(92vw,430px)!important;gap:10px!important}body.memory-game-playing #eco-game-stage #eco-memory-grid .eco-card-front .eco-memory-tip-text{font-size:10px!important;-webkit-line-clamp:3!important}}
+
+
+/* Memory Match v19: explicitly restore the two distinct 3D card faces */
+body.memory-game-playing #eco-game-stage #eco-memory-grid .eco-memory-card{perspective:900px!important;overflow:visible!important}
+body.memory-game-playing #eco-game-stage #eco-memory-grid .eco-memory-inner{
+ position:absolute!important;inset:0!important;display:block!important;
+ transform-style:preserve-3d!important;-webkit-transform-style:preserve-3d!important;
+ transition:transform .35s ease!important;transform:rotateY(0deg)!important;
+ border:0!important;background:transparent!important;box-shadow:none!important;
+}
+body.memory-game-playing #eco-game-stage #eco-memory-grid .eco-memory-face{
+ position:absolute!important;inset:0!important;display:flex!important;
+ flex-direction:column!important;align-items:center!important;justify-content:center!important;
+ gap:5px!important;padding:7px!important;box-sizing:border-box!important;
+ border:2px solid #8c7355!important;border-radius:12px!important;
+ backface-visibility:hidden!important;-webkit-backface-visibility:hidden!important;
+ overflow:hidden!important;
+}
+body.memory-game-playing #eco-game-stage #eco-memory-grid .eco-card-back{
+ transform:rotateY(0deg)!important;
+ background:repeating-linear-gradient(135deg,#34563f 0 8px,#42694b 8px 16px)!important;
+ color:#f8f0df!important;
+}
+body.memory-game-playing #eco-game-stage #eco-memory-grid .eco-card-back b{
+ display:block!important;font-family:system-ui,sans-serif!important;
+ font-size:30px!important;line-height:1!important;color:#f8f0df!important;
+}
+body.memory-game-playing #eco-game-stage #eco-memory-grid .eco-card-back small{
+ display:block!important;font-size:8px!important;line-height:1!important;
+ letter-spacing:2px!important;font-weight:900!important;color:#f8f0df!important;
+}
+body.memory-game-playing #eco-game-stage #eco-memory-grid .eco-card-front{
+ transform:rotateY(180deg)!important;
+ background:linear-gradient(145deg,#fffdf5,#e9dfc9)!important;
+ color:#4a3b32!important;
+}
+body.memory-game-playing #eco-game-stage #eco-memory-grid .eco-memory-card.flipped .eco-memory-inner{
+ transform:rotateY(180deg)!important;
+}
+body.memory-game-playing #eco-game-stage #eco-memory-grid .eco-card-front .eco-memory-icon{
+ display:block!important;font-family:system-ui,sans-serif!important;
+ font-size:24px!important;line-height:1!important;flex:0 0 auto!important;
+}
+body.memory-game-playing #eco-game-stage #eco-memory-grid .eco-card-front .eco-memory-tip-text{
+ display:-webkit-box!important;max-width:100%!important;
+ font-family:'Quicksand',sans-serif!important;font-size:10px!important;
+ font-weight:700!important;line-height:1.2!important;text-align:center!important;
+ -webkit-box-orient:vertical!important;-webkit-line-clamp:3!important;
+ overflow:hidden!important;overflow-wrap:anywhere!important;
+}
+body.memory-game-playing #eco-game-stage #eco-memory-grid .eco-card-front .eco-memory-category{
+ display:block!important;font-family:'Quicksand',sans-serif!important;
+ font-size:8px!important;line-height:1!important;font-weight:700!important;
+ opacity:.7!important;text-align:center!important;flex:0 0 auto!important;
+}
+body.memory-game-playing #eco-game-stage #eco-memory-grid .eco-memory-card.matched .eco-card-front{
+ background:#f6f0e3!important;border-color:#f6f0e3!important;
+}
+@media(max-width:600px){
+ body.memory-game-playing #eco-game-stage #eco-memory-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ body.memory-game-playing #eco-game-stage #eco-memory-grid .eco-card-front .eco-memory-tip-text{font-size:9px!important}
+}
 
 </style>
 
