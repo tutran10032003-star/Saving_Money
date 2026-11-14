@@ -1944,13 +1944,18 @@
                 if(billData.month)_bbEl("edit-bill-month").value=billData.month;else if(billData.start){const d=new Date(billData.start+"T12:00:00");_bbEl("edit-bill-month").value=d.toLocaleString("en",{month:"long"});if(!billData.year)_bbEl("edit-bill-year").value=d.getFullYear();}
                 if(billData.year)_bbEl("edit-bill-year").value=billData.year;
                 let bandMessage="";
-                if(breakdownResult){
-                    // Day / Peak / Night rows belong to Image B, not the bill-summary page.
-                    const found=await readBillBandsFromImage(worker,breakdownResult.file,breakdownResult.words,breakdownResult.text),result=applyBillBands(found);
+                if(totalResults.length){
+                    // Day / Peak / Night are on the bill pages in Image A.
+                    // Read each A page separately so word coordinates match the correct image.
+                    const bandCandidates=[];
+                    for(const page of totalResults){
+                        bandCandidates.push(await readBillBandsFromImage(worker,page.file,page.words,page.text));
+                    }
+                    const found=mergeBillBands(bandCandidates),result=applyBillBands(found);
                     updateBillBands();
-                    if(result.good===3)bandMessage=" ✓ Đọc được bảng Day/Peak/Night.";
-                    else if(result.good>0)bandMessage=" Đọc được một phần bảng khung giờ — kiểm tra và nhập nốt.";
-                    else bandMessage=" Chưa đọc được bảng khung giờ từ ảnh B. Kiểm tra ảnh trang chi tiết hoặc nhập tay.";
+                    if(result.good===3)bandMessage=" ✓ Đọc được bảng Day/Peak/Night từ ảnh A.";
+                    else if(result.good>0)bandMessage=" Đọc được một phần bảng Day/Peak/Night từ ảnh A — kiểm tra và nhập nốt.";
+                    else bandMessage=" Chưa đọc được bảng Day/Peak/Night từ ảnh A. Kiểm tra ảnh trang chi tiết hoặc nhập tay.";
                 }
                 updateBillPerPerson();
                 const filled=[billData.start,billData.end,billData.amount!==undefined,billData.kwh!==undefined,billData.month,billData.year].filter(Boolean).length;
