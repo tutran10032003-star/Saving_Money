@@ -15,6 +15,40 @@
   const setRound = n => { try{localStorage.setItem(ROUND_KEY,String(n));}catch(e){} };
   const pairCountForRound = n => n<=2?4:(n<=5?6:8);
   let open=[],matched=[],locked=false,deck=[],currentTips=[],savedGameMarkup=null;
+  let memoryAudioContext=null;
+  function getMemoryAudio(){
+    try{
+      const AudioContextClass=window.AudioContext||window.webkitAudioContext;
+      if(!AudioContextClass)return null;
+      if(!memoryAudioContext)memoryAudioContext=new AudioContextClass();
+      if(memoryAudioContext.state==="suspended")memoryAudioContext.resume().catch(()=>{});
+      return memoryAudioContext;
+    }catch(e){return null;}
+  }
+  function playMemoryTone(frequency,delay,duration,volume,type){
+    const ctx=getMemoryAudio();if(!ctx)return;
+    try{
+      const start=ctx.currentTime+delay,osc=ctx.createOscillator(),gain=ctx.createGain();
+      osc.type=type||"sine";
+      osc.frequency.setValueAtTime(frequency,start);
+      gain.gain.setValueAtTime(0.0001,start);
+      gain.gain.exponentialRampToValueAtTime(volume||0.025,start+0.012);
+      gain.gain.exponentialRampToValueAtTime(0.0001,start+duration);
+      osc.connect(gain);gain.connect(ctx.destination);
+      osc.start(start);osc.stop(start+duration+0.015);
+    }catch(e){}
+  }
+  function playMemoryFlipSound(){
+    playMemoryTone(590,0,0.075,0.022,"triangle");
+  }
+  function playMemoryMatchSound(){
+    playMemoryTone(660,0,0.16,0.035,"sine");
+    playMemoryTone(830,0.085,0.18,0.032,"sine");
+    playMemoryTone(990,0.17,0.24,0.03,"sine");
+  }
+  function playMemoryMissSound(){
+    playMemoryTone(300,0,0.11,0.014,"sine");
+  }
 
   function renderVault(){
     const unlocked=readUnlocked(),all=BANK(),pct=all.length?Math.round(unlocked.length/all.length*100):0;
@@ -76,12 +110,13 @@
     if(locked||matched.includes(i)||open.includes(i))return;
     const card=deck[i],buttons=document.querySelectorAll("#eco-memory-grid .eco-memory-card");
     if(!card||!buttons[i])return;
-    const vi=language()==="vi",button=buttons[i];button.classList.add("flipped");button.setAttribute("aria-label",vi?card.categoryName.vi:card.categoryName.en);open.push(i);
+    const vi=language()==="vi",button=buttons[i];playMemoryFlipSound();button.classList.add("flipped");button.setAttribute("aria-label",vi?card.categoryName.vi:card.categoryName.en);open.push(i);
     if(open.length!==2)return;
     window.ecoMemoryMoves=(window.ecoMemoryMoves||0)+1;
     const moves=document.getElementById("memory-moves");if(moves)moves.textContent=window.ecoMemoryMoves+" "+(vi?"lượt":"moves");
     const [a,b]=open,first=deck[a],second=deck[b];
     if(first.pairId===second.pairId){
+      playMemoryMatchSound();
       matched.push(a,b);ecoMemoryMatched=matched.slice();ecoGameScore=(ecoGameScore||0)+1;
       [a,b].forEach(n=>{buttons[n].classList.add("matched");buttons[n].disabled=true;});
       const unlocked=readUnlocked(),isNew=!unlocked.includes(first.id);
@@ -98,6 +133,7 @@
       open=[];ecoMemoryOpen=[];
       if(matched.length===deck.length)setTimeout(()=>{renderVault();finishEcoGame();},500);
     }else{
+      playMemoryMissSound();
       locked=true;const feedback=document.getElementById("memory-feedback");if(feedback)feedback.textContent=vi?"Chưa khớp, thử lại nhé!":"Not a match — try again!";
       setTimeout(()=>{
         [a,b].forEach(n=>{const btn=document.querySelector('#eco-memory-grid .eco-memory-card[data-card-index="'+n+'"]');if(btn&&!matched.includes(n)){btn.classList.remove("flipped");btn.setAttribute("aria-label",text("Face-down card","Lá bài úp"));}});
