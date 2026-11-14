@@ -757,6 +757,28 @@
         body.memory-game-playing #eco-game-stage.eco-game-fullscreen .eco-game-toolbar{position:fixed!important;z-index:2147483001!important}
 
 
+
+        /* FINAL TYPOGRAPHY RESET: use the same Quicksand font throughout the site */
+        html, body, body * { font-family:'Quicksand',sans-serif!important; }
+        /* Memory Match: matched cards use the warm page background, not green */
+        body.memory-game-playing #eco-game-stage #eco-memory-grid .eco-memory-card.matched,
+        body.memory-game-playing #eco-game-stage #eco-memory-grid .eco-memory-card.matched .eco-memory-inner,
+        body.memory-game-playing #eco-game-stage #eco-memory-grid .eco-memory-card.matched .eco-memory-face,
+        body.memory-game-playing #eco-game-stage #eco-memory-grid .eco-memory-card.matched .eco-card-front {
+            background:#f6f0e3!important;
+            background-image:none!important;
+            border-color:#f6f0e3!important;
+            box-shadow:none!important;
+            color:#594b3e!important;
+        }
+        /* Hide legacy pair-number labels if an older renderer leaves one behind */
+        #eco-memory-grid .memory-pair-number,
+        #eco-memory-grid .pair-number,
+        #eco-memory-grid .eco-pair-number,
+        #eco-memory-grid .card-pair-number { display:none!important; }
+        #eco-memory-grid .eco-memory-card::before,
+        #eco-memory-grid .eco-memory-card::after { content:none!important; display:none!important; }
+
 </style>
 </head>
 
@@ -2911,9 +2933,9 @@ document.addEventListener("DOMContentLoaded",()=>{
 
 </script>
 
-    <script src="./eco-games.js"></script>
-    <script src="./memory-tips-data.js"></script>
-    <script src="./memory-game.js"></script>
+    <script src="./eco-games.js?v=16"></script>
+    <script src="./memory-tips-data.js?v=16"></script>
+    <script src="./memory-game.js?v=16"></script>
 
 </body>
 </html>
