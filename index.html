@@ -3072,7 +3072,7 @@ document.addEventListener("DOMContentLoaded",()=>{
  let reward=already?0:10;
  if(reward){currentXP+=10;currentPoints+=10;saveUserData();updateMascotLevel();localStorage.setItem("eco_game_reward_"+id+"_"+new Date().toDateString(),"1");}
  const learned=ecoGameLearned.map(t=>"<li>"+t+"</li>").join("");
- document.getElementById("eco-game-play-area").innerHTML='<div class="text-center eco-playfield space-y-3"><div class="text-5xl">🏆</div><h4 class="font-black text-base">'+(vi?"Hoàn thành!":"Completed!")+'</h4><p class="text-sm font-bold">'+(vi?"Điểm của bạn: ":"Your score: ")+ecoGameScore+'</p><div class="text-left rounded-xl bg-[#e5efdc] p-3"><p class="text-xs font-black mb-2">'+(vi?"💡 Mẹo tiết kiệm điện":"💡 Energy-saving tips")+'</p><ul class="list-disc pl-4 space-y-1 text-[11px]">'+learned+'</ul></div><p class="text-xs font-bold">'+(reward?(vi?"+10 XP · +10 điểm":"+10 XP · +10 points"):(vi?"Đã nhận thưởng hôm nay":"+Today's reward already claimed"))+'</p></div>';
+ document.getElementById("eco-game-play-area").innerHTML='<div class="text-center eco-playfield space-y-3"><div class="text-5xl">🏆</div><h4 class="font-black text-base">'+(vi?"Hoàn thành!":"Completed!")+'</h4><p class="text-sm font-bold">'+(vi?"Điểm của bạn: ":"Your score: ")+ecoGameScore+'</p><div class="text-left rounded-xl bg-[#e5efdc] p-3"><p class="text-xs font-black mb-2">'+(vi?"💡 Mẹo tiết kiệm điện":"💡 Energy-saving tips")+'</p><ul class="list-disc pl-4 space-y-1 text-[11px]">'+learned+'</ul></div><p class="text-xs font-bold">'+(reward?(vi?"+10 XP · +10 điểm":"+10 XP · +10 points"):(vi?"Đã nhận thưởng hôm nay":"Today's reward already claimed"))+'</p></div>';
  document.getElementById("eco-game-tip").classList.add("hidden");
 }
         function renderEscapeRoom(){
@@ -3159,6 +3159,9 @@ document.addEventListener("DOMContentLoaded",()=>{
         }
 
 </script>
+
+    <script src="./memory-tips-data.js"></script>
+    <script src="./memory-game.js"></script>
 
 </body>
 </html>
