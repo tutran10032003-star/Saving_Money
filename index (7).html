@@ -1,0 +1,1616 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Eco Runner: Supercapacitor Energy Surfer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background-color: #f7f4ea;
+            color: #3b302a;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+        }
+        .vintage-card {
+            background-color: #fdfbf7;
+            border: 3px double #8c7355;
+            box-shadow: 4px 4px 0px rgba(140, 115, 85, 0.3);
+            border-radius: 14px;
+        }
+        .vintage-btn {
+            background-color: #e6dfcd;
+            border: 2px solid #5c4738;
+            box-shadow: 3px 3px 0px #5c4738;
+            transition: all 0.1s ease;
+            font-weight: 700;
+        }
+        .vintage-btn:hover:not(:disabled) {
+            background-color: #d8ceb8;
+            transform: translate(-1px, -1px);
+            box-shadow: 4px 4px 0px #5c4738;
+        }
+        .vintage-btn:active:not(:disabled) {
+            transform: translate(2px, 2px);
+            box-shadow: 1px 1px 0px #5c4738;
+        }
+        .stamp {
+            border: 2px dashed #b94a39;
+            color: #b94a39;
+            transform: rotate(-3deg);
+            font-weight: bold;
+        }
+        #game-area {
+            touch-action: none;
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1ebd9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #b5a285;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-2 sm:p-4">
+
+    <!-- MAIN APP CONTAINER -->
+    <div id="app" class="w-full max-w-md mx-auto vintage-card p-4 sm:p-5 flex flex-col items-center relative overflow-hidden">
+        
+        <!-- HEADER -->
+        <div class="w-full flex justify-between items-center mb-3 border-b-2 border-dashed border-[#8c7355] pb-2">
+            <div>
+                <h1 class="font-black text-lg sm:text-xl text-[#4a3b32] tracking-wider" style="font-family: 'Playfair Display', serif;">ECO SURFER</h1>
+                <p class="text-[11px] text-[#735d4c] font-semibold">Tích Hũ Năng Lượng & Thanh Toán Hóa Đơn</p>
+            </div>
+            <div class="flex items-center gap-1.5">
+                <button onclick="openShopModal()" title="Kho Đồ" class="vintage-btn w-9 h-9 text-base rounded-lg bg-[#f5e1a4] text-[#5c4738] flex items-center justify-center">
+                    🔋
+                </button>
+                <button onclick="openRulesModal()" title="Luật chơi" class="vintage-btn w-9 h-9 text-base rounded-lg flex items-center justify-center">
+                    📜
+                </button>
+                <button onclick="openAudioModal()" id="header-audio-btn" title="Cài đặt âm thanh" class="vintage-btn w-9 h-9 text-base rounded-lg bg-[#e6dfcd] flex items-center justify-center">
+                    🔊
+                </button>
+            </div>
+        </div>
+
+        <!-- SCREEN: MENU / MONTH SELECTOR -->
+        <div id="screen-menu" class="w-full flex flex-col items-center space-y-3.5 py-1">
+            <div class="w-full bg-[#f2ecdc] p-3 rounded-xl border border-[#c4b59d] flex justify-between items-center shadow-sm">
+                <div>
+                    <p class="text-[11px] text-[#614e3e] font-semibold">Xu tiết kiệm hiện có:</p>
+                    <div class="flex items-center gap-1.5 mt-0.5">
+                        <svg class="w-5 h-5 inline-block" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#d4af37" stroke="#5c4738" stroke-width="2"/><text x="12" y="16" font-size="12" font-weight="bold" fill="#fff" text-anchor="middle">$</text></svg>
+                        <span id="total-coins" class="text-xl font-black text-[#8c4a32]">0</span>
+                    </div>
+                </div>
+                <div class="text-right text-[11px] text-[#4a3b32] bg-[#fdfbf7] px-2.5 py-1.5 rounded-lg border border-[#d6c9b4]">
+                    <p class="font-bold" id="equipped-char-label">☁️ Eco Buddy</p>
+                    <p class="text-[#735d4c] font-semibold" id="equipped-pack-label">🔋 Pin Dự Phòng</p>
+                </div>
+            </div>
+
+            <div class="w-full">
+                <div class="flex items-center justify-between mb-1.5">
+                    <h2 class="text-xs font-bold uppercase tracking-wide text-[#5c4738]">📅 Chọn Tháng Thử Thách (30 Bàn):</h2>
+                    <span class="text-[10px] text-[#735d4c] font-semibold">Càng cao càng khó!</span>
+                </div>
+                <div id="months-list" class="space-y-2 max-h-[275px] overflow-y-auto pr-1"></div>
+            </div>
+
+            <button onclick="openEndlessMode()" class="w-full vintage-btn py-3 px-4 rounded-xl font-bold text-sm bg-[#d4e4bc] text-[#2c4a1d] border-[#3e6629] shadow-[3px_3px_0px_#3e6629] flex items-center justify-center gap-2">
+                ♾️ Chạy Vô Tận (Đua Tốc Độ Cao)
+            </button>
+        </div>
+
+        <!-- SCREEN: GAMEPLAY -->
+        <div id="screen-game" class="w-full hidden flex flex-col items-center space-y-2.5">
+            <div class="w-full flex justify-between items-center text-xs bg-[#f2ecdc] px-3 py-2 rounded-xl border border-[#c4b59d] font-bold">
+                <div class="flex items-center gap-1">
+                    <span id="hud-lives">❤️❤️❤️</span>
+                </div>
+                <div class="flex items-center gap-1.5">
+                    <span id="hud-zone" class="px-2 py-0.5 rounded-md text-[10px] bg-amber-200 text-amber-900">☀️ Giờ Ngày</span>
+                    <div class="flex items-center gap-1 text-[#8c4a32]">
+                        <svg class="w-3.5 h-3.5 inline-block" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#d4af37" stroke="#5c4738" stroke-width="2"/><text x="12" y="16" font-size="12" font-weight="bold" fill="#fff" text-anchor="middle">$</text></svg>
+                        <span id="hud-score">0</span>
+                    </div>
+                </div>
+                <div class="text-[#4a3b32]">
+                    <span id="hud-progress">0</span>/<span id="hud-target">2000</span>đ
+                </div>
+            </div>
+
+            <div id="active-buffs-bar" class="w-full flex gap-1.5 justify-center min-h-[22px]">
+                <span id="buff-pack" class="hidden text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-600 text-white animate-pulse">⚡ Khiên Tụ Điện</span>
+                <span id="buff-magnet" class="hidden text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-600 text-white animate-pulse">🧲 Nam Châm Hút Xu</span>
+                <span id="buff-double" class="hidden text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-600 text-white animate-pulse">⚡ x2 Điểm Hóa Đơn</span>
+            </div>
+
+            <div id="game-area" class="w-full relative aspect-[3/4] bg-[#2a3625] rounded-xl border-2 border-[#5c4738] overflow-hidden shadow-inner cursor-pointer">
+                <canvas id="gameCanvas" class="w-full h-full block"></canvas>
+                <div id="game-popup" class="absolute top-6 left-1/2 transform -translate-x-1/2 bg-[#fdfbf7] border-2 border-[#8c7355] px-3 py-1 rounded-lg shadow-lg text-xs font-bold text-[#8c4a32] opacity-0 transition-opacity duration-300 pointer-events-none whitespace-nowrap z-10">
+                    +300đ Hóa Đơn!
+                </div>
+                <div id="swipe-hint" class="absolute bottom-24 left-1/2 transform -translate-x-1/2 bg-black/75 text-white px-3.5 py-1.5 rounded-full text-[11px] font-semibold pointer-events-none transition-opacity duration-500 whitespace-nowrap text-center">
+                    👈 Vuốt Trái/Phải • Chạm 2 lần bật Siêu Tụ Điện ⚡
+                </div>
+            </div>
+
+            <div class="w-full grid grid-cols-3 gap-2">
+                <button onclick="movePlayer(-1)" class="vintage-btn py-3 text-xs sm:text-sm rounded-xl bg-[#ebdccb]">⬅️ Trái</button>
+                <button id="btn-superpack" onclick="activateSuperPack()" class="vintage-btn py-3 text-xs sm:text-sm rounded-xl bg-[#d4e4bc] text-[#2c4a1d]">⚡ Tụ Điện (<span id="pack-charges">2</span>)</button>
+                <button onclick="movePlayer(1)" class="vintage-btn py-3 text-xs sm:text-sm rounded-xl bg-[#ebdccb]">Phải ➡️</button>
+            </div>
+
+            <button onclick="quitGame()" class="text-xs text-[#8c4a32] underline font-bold">⚠️ Dừng & Quay lại Menu</button>
+        </div>
+
+        <!-- SCREEN: GAME OVER / RESULT -->
+        <div id="screen-result" class="w-full hidden flex flex-col items-center space-y-4 py-3 text-center">
+            <div id="result-stamp" class="stamp px-4 py-2 text-2xl font-black rounded-lg uppercase tracking-widest my-2">
+                ĐÃ THANH TOÁN
+            </div>
+            
+            <div class="w-full bg-[#f2ecdc] p-3.5 rounded-xl border border-[#c4b59d] space-y-1.5 text-xs text-left font-semibold">
+                <p id="res-title" class="font-bold text-sm text-[#4a3b32] text-center mb-2">Hóa đơn tháng 1</p>
+                <div class="flex justify-between"><span>Tiến độ đạt được:</span> <strong id="res-progress">2000 / 2000 đ</strong></div>
+                <div class="flex justify-between items-center">
+                    <span>Xu tiết kiệm nhặt được:</span> 
+                    <div class="flex items-center gap-1 font-bold text-[#8c4a32]">
+                        <svg class="w-3.5 h-3.5 inline-block" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#d4af37" stroke="#5c4738" stroke-width="2"/><text x="12" y="16" font-size="12" font-weight="bold" fill="#fff" text-anchor="middle">$</text></svg>
+                        <strong id="res-coins">120</strong>
+                    </div>
+                </div>
+                <div class="flex justify-between"><span>Đánh giá sao:</span> <strong id="res-stars">⭐⭐⭐</strong></div>
+            </div>
+
+            <div class="w-full flex gap-2">
+                <button onclick="returnToMenu()" class="flex-1 vintage-btn py-2.5 rounded-xl text-xs bg-[#e6dfcd]">🏠 Về Menu</button>
+                <button onclick="restartCurrentGame()" class="flex-1 vintage-btn py-2.5 rounded-xl text-xs bg-[#d4e4bc] text-[#2c4a1d]">🔄 Chạy Lại</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- AUDIO SETTINGS MODAL -->
+    <div id="audio-modal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center p-4 z-50">
+        <div class="vintage-card bg-[#fdfbf7] p-5 max-w-xs w-full space-y-4 relative">
+            <h3 class="font-bold text-base text-[#4a3b32] border-b border-dashed border-[#8c7355] pb-2 text-center">🎛️ Cài Đặt Âm Thanh</h3>
+            
+            <div class="space-y-3 text-xs font-semibold">
+                <div class="flex items-center justify-between bg-[#f2ecdc] p-3 rounded-xl border border-[#c4b59d]">
+                    <div>
+                        <p class="font-bold text-[#4a3b32]">🎵 Nhạc nền khi chạy</p>
+                        <p class="text-[10px] text-[#735d4c]">Giai điệu nhịp độ nhanh</p>
+                    </div>
+                    <button id="toggle-bgm-btn" onclick="toggleBGMSetting()" class="vintage-btn px-3 py-1.5 rounded-lg text-xs min-w-[68px] bg-[#d4e4bc] text-[#2c4a1d]">
+                        Đang Bật
+                    </button>
+                </div>
+
+                <div class="flex items-center justify-between bg-[#f2ecdc] p-3 rounded-xl border border-[#c4b59d]">
+                    <div>
+                        <p class="font-bold text-[#4a3b32]">🔊 Hiệu ứng & Nút bấm</p>
+                        <p class="text-[10px] text-[#735d4c]">Tiếng bấm nút, nhặt xu, va chạm</p>
+                    </div>
+                    <button id="toggle-sfx-btn" onclick="toggleSFXSetting()" class="vintage-btn px-3 py-1.5 rounded-lg text-xs min-w-[68px] bg-[#d4e4bc] text-[#2c4a1d]">
+                        Đang Bật
+                    </button>
+                </div>
+            </div>
+
+            <button onclick="closeAudioModal()" class="w-full vintage-btn py-2.5 bg-[#e6dfcd] text-[#3b302a] font-bold text-xs rounded-xl">Xong</button>
+        </div>
+    </div>
+
+    <!-- SHOP MODAL -->
+    <div id="shop-modal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center p-4 z-50">
+        <div class="vintage-card bg-[#fdfbf7] p-4 max-w-sm w-full space-y-3 relative max-h-[85vh] flex flex-col">
+            <div class="flex justify-between items-center border-b border-dashed border-[#8c7355] pb-2">
+                <h3 class="font-bold text-base text-[#4a3b32]">🔋 Kho Năng Lượng Xanh</h3>
+                <div class="flex items-center gap-1 bg-[#f2ecdc] px-2 py-1 rounded-lg border border-[#c4b59d] text-xs font-bold text-[#8c4a32]">
+                    <svg class="w-3.5 h-3.5 inline-block" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#d4af37" stroke="#5c4738" stroke-width="2"/><text x="12" y="16" font-size="12" font-weight="bold" fill="#fff" text-anchor="middle">$</text></svg>
+                    <span id="shop-coins">0</span>
+                </div>
+            </div>
+
+            <div class="overflow-y-auto space-y-4 pr-1 flex-1">
+                <div>
+                    <h4 class="text-xs font-bold uppercase text-[#5c4738] mb-2">👤 Nhân Vật (Eco Buddies):</h4>
+                    <div id="shop-chars-list" class="space-y-2"></div>
+                </div>
+
+                <div>
+                    <h4 class="text-xs font-bold uppercase text-[#5c4738] mb-2">⚡ Balo Siêu Tụ Điện:</h4>
+                    <div id="shop-packs-list" class="space-y-2"></div>
+                </div>
+            </div>
+
+            <button onclick="closeShopModal()" class="w-full vintage-btn py-2.5 bg-[#e6dfcd] text-[#3b302a] font-bold text-xs rounded-xl">Đóng Kho Đồ</button>
+        </div>
+    </div>
+
+    <!-- REVIEW CHARACTER MODAL -->
+    <div id="review-modal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center p-4 z-50">
+        <div class="vintage-card bg-[#fdfbf7] p-5 max-w-xs w-full space-y-3 relative flex flex-col items-center">
+            
+            <div class="w-20 h-24 bg-[#2a3625] rounded-xl border-2 border-[#5c4738] relative overflow-hidden flex items-center justify-center shadow-inner">
+                <canvas id="previewCanvas" width="80" height="96"></canvas>
+            </div>
+
+            <div class="border-b border-dashed border-[#8c7355] pb-2 text-center w-full">
+                <h3 id="rev-name" class="font-bold text-base text-[#4a3b32]">Tên Nhân Vật</h3>
+                <p id="rev-title" class="text-[11px] text-[#735d4c] font-semibold">Chuyên gia năng lượng</p>
+            </div>
+            
+            <div class="space-y-2 text-xs font-medium text-[#5c4738] w-full">
+                <div class="bg-[#f2ecdc] p-2.5 rounded-xl border border-[#c4b59d]">
+                    <p class="font-bold mb-1 text-[#4a3b32]">📝 Mô tả & Trang bị:</p>
+                    <p id="rev-desc" class="text-[11px] text-[#735d4c]">Mô tả chi tiết kỹ năng đặc biệt của nhân vật.</p>
+                </div>
+                
+                <div class="space-y-1.5 bg-[#fdfbf7] p-2.5 rounded-lg border border-[#d6c9b4]">
+                    <div class="flex justify-between items-center">
+                        <span class="flex items-center gap-1">🛡️ Độ bền va chạm:</span> 
+                        <strong id="rev-stat-defense" class="text-[#8c4a32]">Tốt</strong>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="flex items-center gap-1">🧲 Hút xu:</span> 
+                        <strong id="rev-stat-magnet" class="text-[#8c4a32]">Nhanh</strong>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="flex items-center gap-1">⭐ Hệ số điểm:</span> 
+                        <strong id="rev-stat-score" class="text-[#8c4a32]">x1.3</strong>
+                    </div>
+                </div>
+
+                <div class="text-center pt-1">
+                    <span class="text-xs font-bold text-[#8c4a32]" id="rev-price-tag">Giá: 3500 xu</span>
+                </div>
+            </div>
+
+            <div class="flex gap-2 pt-1 w-full">
+                <button onclick="closeReviewModal()" class="flex-1 vintage-btn py-2 bg-[#e6dfcd] text-xs rounded-xl">Đóng</button>
+                <button id="rev-buy-btn" onclick="" class="flex-1 vintage-btn py-2 bg-[#f5e1a4] text-[#5c4738] text-xs rounded-xl font-bold">Mua Ngay</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- RULES MODAL -->
+    <div id="rules-modal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center p-4 z-50">
+        <div class="vintage-card bg-[#fdfbf7] p-5 max-w-sm w-full space-y-3 relative">
+            <h3 class="font-bold text-base text-[#4a3b32] border-b pb-1">📜 Hướng dẫn chơi Eco Surfer</h3>
+            <ul class="text-xs space-y-2 text-[#5c4738] list-disc pl-4 font-medium leading-relaxed">
+                <li><strong>Di chuyển:</strong> Vuốt Trái/Phải trên màn hình (hoặc phím <strong>A/D</strong>, mũi tên).</li>
+                <li><strong>Bật Siêu Tụ Điện (Khiên Năng Lượng):</strong> Bấm nút <strong>⚡ Tụ Điện</strong> (hoặc chạm 2 lần vào màn hình / phím <strong>Space</strong>) để kích hoạt khiên bảo vệ trong 8 giây.</li>
+                <li><strong>Vật phẩm hỗ trợ:</strong>
+                    <br>- 🧲 <strong>Nam châm:</strong> Hút toàn bộ xu trên 3 làn.
+                    <br>- ⚡ <strong>Pin Sạc Nhanh:</strong> Nhân đôi điểm hóa đơn.
+                    <br>- 📄 <strong>Hóa đơn xanh:</strong> Cộng ngay 300đ vào mục tiêu tháng.
+                </li>
+            </ul>
+            <button onclick="closeRulesModal()" class="w-full vintage-btn py-2.5 bg-[#d4e4bc] text-[#2c4a1d] font-bold text-xs rounded-xl">Đã hiểu, vào chạy ngay!</button>
+        </div>
+    </div>
+
+    <!-- SCRIPT LOGIC -->
+    <script>
+        const CHARACTERS_DATA = [
+            { 
+                id: 'buddy', name: 'Eco Buddy (Baby Cloud)', title: 'Linh vật mây xanh đáng yêu', desc: 'Đám mây trắng nhỏ nhắn, mang tai lá cây và chiếc khăn quàng xanh thân thiện[cite: 5].', price: 0, 
+                defense: '3 mạng', magnetPower: 'Bình thường', scoreBonus: 'x1.0', outfit: 'Khăn choàng & tai lá cây'
+            },
+            { 
+                id: 'solar', name: 'Kỹ Sư Mặt Trời', title: 'Bậc thầy quang năng', desc: 'Trang bị nón bảo hộ chuyên dụng và kính quang năng, tối ưu hóa năng lượng mặt trời.', price: 1200, 
+                defense: 'Tốt', magnetPower: 'Khá', scoreBonus: 'x1.2', outfit: 'Nón kỹ sư & Kính quang năng'
+            },
+            { 
+                id: 'wind', name: 'Chiến Binh Gió', title: 'Cơn lốc năng lượng sạch', desc: 'Khoác áo choàng gió lướt đi mượt mà, giảm thiểu 50% sát thương va chạm.', price: 3500, 
+                defense: 'Giảm 50% phạt', magnetPower: 'Nhanh', scoreBonus: 'x1.3', outfit: 'Áo choàng gió tung bay'
+            },
+            { 
+                id: 'netzero', name: 'Hiệp Sĩ Net-Zero', title: 'Huyền thoại không phát thải', desc: 'Bay lướt vút nhanh với áo choàng đỏ siêu anh hùng và giáp năng lượng tối tân[cite: 6].', price: 7500, 
+                defense: 'Cao cấp', magnetPower: 'Siêu rộng', scoreBonus: 'x1.5', outfit: 'Áo choàng siêu anh hùng & Giáp xanh'
+            },
+            { 
+                id: 'quantum', name: 'Pháp Sư Lượng Tử', title: 'Đỉnh cao tương lai', desc: 'Đội mũ chóp phép thuật huyền bí, giúp nhân đôi toàn bộ phần thưởng thu thập.', price: 15000, 
+                defense: 'Tối ưu', magnetPower: 'Toàn làn', scoreBonus: 'x2.0', outfit: 'Mũ & Áo choàng pháp sư lượng tử'
+            }
+        ];
+
+        const PACKS_DATA = [
+            { id: 'battery', name: '🔋 Pin Dự Phòng Cơ Bản', desc: '2 lần dùng/ván', price: 0, color: '#467551', trim: '#a3e635', charges: 2 },
+            { id: 'supercap', name: '⚡ Siêu Tụ Điện Nhanh', desc: '3 lần dùng/ván', price: 1500, color: '#d97706', trim: '#fef08a', charges: 3 },
+            { id: 'solarpack', name: '☀️ Balo Năng Lượng Mặt Trời', desc: '4 lần dùng/ván', price: 4000, color: '#0369a1', trim: '#7dd3fc', charges: 4 },
+            { id: 'reactor', name: '⚛️ Lò Phản Ứng Xanh Miti', desc: '5 lần dùng/ván', price: 10000, color: '#7e22ce', trim: '#f0abfc', charges: 5 }
+        ];
+
+        const THEMES_POOL = [
+            "Khởi Động Tiết Kiệm", "Mùa Đông Ấm Áp", "Giao Mùa Xuân", "Nắng Đầu Sớm", "Cao Điểm Nóng", "Đỉnh Điểm Mùa Hè",
+            "Mùa Mưa Bão", "Tựu Trường Xanh", "Đêm Hội Trăng Rằm", "Gió Bấc Đầu Mùa", "Chuẩn Bị Cuối Năm", "Tổng Kết Năng Lượng",
+            "Nắng Hạn Kéo Dài", "Đợt Lạnh Kỷ Lục", "Mùa Hoa Nở", "Nắng Gắt Tháng Tư", "Tối Ưu Điều Hòa", "Hè Sôi Động",
+            "Sống Xanh Tự Lập", "Tiết Trời Mát Mẻ", "Lá Rụng Mùa Thu", "Gió Lạnh Đầu Đông", "Gia Đình Tiết Kiệm", "Đêm Đông Giá Rét",
+            "Mùa Xuân Năng Lượng", "Nắng Sớm Mai", "Bứt Phá Tiết Kiệm", "Đỉnh Điểm Tiêu Thụ", "Cân Bằng Năng Lượng", "Về Đích Net-Zero"
+        ];
+
+        const MONTHS_DATA = [];
+        for (let i = 1; i <= 30; i++) {
+            MONTHS_DATA.push({
+                id: i,
+                name: `Tháng ${i}: ${THEMES_POOL[i-1] || 'Tiết Kiệm Xanh'}`,
+                target: 1600 + i * 450, 
+                reward: 80 + i * 25,
+                unlocked: i === 1 ? true : false,
+                completed: false,
+                stars: 0
+            });
+        }
+
+        const OBSTACLE_TYPES = [
+            { icon: '❄️', label: 'Máy lạnh 16°C', color: '#2b6cb0' },
+            { icon: '🔥', label: 'Bình nóng lạnh', color: '#c53030' },
+            { icon: '🧺', label: 'Máy sấy đồ', color: '#b7791f' },
+            { icon: '💡', label: 'Đèn bật ngày', color: '#d69e2e' },
+            { icon: '📺', label: 'Tivi chạy không', color: '#4a5568' },
+            { icon: '🔌', label: 'Sạc qua đêm', color: '#805ad5' },
+            { icon: '♨️', label: 'Lò sưởi điện', color: '#dd6b20' },
+            { icon: '🧊', label: 'Tủ lạnh hở', color: '#319795' }
+        ];
+
+        let gameState = {
+            totalCoins: 0,
+            unlockedChars: ['buddy'],
+            equippedChar: 'buddy',
+            unlockedPacks: ['battery'],
+            equippedPack: 'battery',
+            currentMonthId: null,
+            isEndless: false,
+            coinsCollected: 0,
+            lives: 3,
+            targetScore: 2000,
+            progressScore: 0,
+            zone: 'day',
+            zoneTimer: 0,
+            baseSpeed: 5.2,
+            gameSpeed: 5.2,
+            isPlaying: false,
+            packCharges: 2,
+            packActiveTimer: 0,
+            magnetTimer: 0,
+            doubleScoreTimer: 0,
+            bgmEnabled: true,
+            sfxEnabled: true
+        };
+
+        let audioCtx = null;
+        let bgmTimer = null;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        function playSoundClick() {
+            if (!gameState.sfxEnabled) return;
+            initAudio();
+            if (!audioCtx) return;
+            let osc = audioCtx.createOscillator();
+            let gain = audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(520, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(760, audioCtx.currentTime + 0.045);
+            gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.05);
+        }
+
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('.vintage-btn')) {
+                playSoundClick();
+            }
+        });
+
+        function playSoundSwipe() {
+            if (!gameState.sfxEnabled) return;
+            initAudio();
+            if (!audioCtx) return;
+            let osc = audioCtx.createOscillator();
+            let gain = audioCtx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(300, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(450, audioCtx.currentTime + 0.06);
+            gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.06);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.06);
+        }
+
+        function playSoundCoin() {
+            if (!gameState.sfxEnabled) return;
+            initAudio();
+            if (!audioCtx) return;
+            let osc = audioCtx.createOscillator();
+            let gain = audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(920, audioCtx.currentTime + 0.09);
+            gain.gain.setValueAtTime(0.14, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.14);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.14);
+        }
+
+        function playSoundPowerup() {
+            if (!gameState.sfxEnabled) return;
+            initAudio();
+            if (!audioCtx) return;
+            let osc = audioCtx.createOscillator();
+            let gain = audioCtx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(440, audioCtx.currentTime);
+            osc.frequency.setValueAtTime(554.37, audioCtx.currentTime + 0.07);
+            osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.14);
+            osc.frequency.setValueAtTime(880, audioCtx.currentTime + 0.21);
+            gain.gain.setValueAtTime(0.18, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.3);
+        }
+
+        function playSoundHit() {
+            if (!gameState.sfxEnabled) return;
+            initAudio();
+            if (!audioCtx) return;
+            let osc = audioCtx.createOscillator();
+            let gain = audioCtx.createGain();
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(160, audioCtx.currentTime);
+            osc.frequency.linearRampToValueAtTime(40, audioCtx.currentTime + 0.25);
+            gain.gain.setValueAtTime(0.28, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.25);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.25);
+        }
+
+        function playSoundWin() {
+            if (!gameState.sfxEnabled) return;
+            initAudio();
+            if (!audioCtx) return;
+            let now = audioCtx.currentTime;
+            let notes = [523.25, 659.25, 783.99, 1046.50];
+            notes.forEach((freq, idx) => {
+                let osc = audioCtx.createOscillator();
+                let gain = audioCtx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(freq, now + idx * 0.1);
+                gain.gain.setValueAtTime(0.2, now + idx * 0.1);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.1 + 0.25);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(now + idx * 0.1);
+                osc.stop(now + idx * 0.1 + 0.25);
+            });
+        }
+
+        function playSoundLose() {
+            if (!gameState.sfxEnabled) return;
+            initAudio();
+            if (!audioCtx) return;
+            let now = audioCtx.currentTime;
+            let notes = [300, 240, 180, 120];
+            notes.forEach((freq, idx) => {
+                let osc = audioCtx.createOscillator();
+                let gain = audioCtx.createGain();
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(freq, now + idx * 0.12);
+                gain.gain.setValueAtTime(0.25, now + idx * 0.12);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.12 + 0.3);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(now + idx * 0.12);
+                osc.stop(now + idx * 0.12 + 0.3);
+            });
+        }
+
+        function startBGM() {
+            stopBGM();
+            if (!gameState.bgmEnabled) return;
+            initAudio();
+            if (!audioCtx) return;
+            let notes = [261.63, 293.66, 329.63, 392.00, 440.00, 392.00, 329.63, 293.66];
+            let step = 0;
+            bgmTimer = setInterval(() => {
+                if (!gameState.isPlaying || !gameState.bgmEnabled) return;
+                let osc = audioCtx.createOscillator();
+                let gain = audioCtx.createGain();
+                osc.type = 'triangle';
+                let pitchShift = gameState.zone === 'peak' ? 1.15 : 1.0;
+                osc.frequency.setValueAtTime(notes[step % notes.length] * pitchShift, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.035, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.11);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.11);
+                step++;
+            }, 165);
+        }
+
+        function stopBGM() {
+            if (bgmTimer) {
+                clearInterval(bgmTimer);
+                bgmTimer = null;
+            }
+        }
+
+        function openAudioModal() {
+            updateAudioUI();
+            document.getElementById('audio-modal').classList.remove('hidden');
+        }
+        function closeAudioModal() {
+            document.getElementById('audio-modal').classList.add('hidden');
+        }
+        function toggleBGMSetting() {
+            gameState.bgmEnabled = !gameState.bgmEnabled;
+            if (gameState.bgmEnabled && gameState.isPlaying) {
+                startBGM();
+            } else {
+                stopBGM();
+            }
+            saveGameData();
+            updateAudioUI();
+        }
+        function toggleSFXSetting() {
+            gameState.sfxEnabled = !gameState.sfxEnabled;
+            if (gameState.sfxEnabled) playSoundClick();
+            saveGameData();
+            updateAudioUI();
+        }
+        function updateAudioUI() {
+            const bgmBtn = document.getElementById('toggle-bgm-btn');
+            const sfxBtn = document.getElementById('toggle-sfx-btn');
+            const headerBtn = document.getElementById('header-audio-btn');
+
+            if (gameState.bgmEnabled) {
+                bgmBtn.innerText = 'Đang Bật';
+                bgmBtn.className = 'vintage-btn px-3 py-1.5 rounded-lg text-xs min-w-[68px] bg-[#d4e4bc] text-[#2c4a1d]';
+            } else {
+                bgmBtn.innerText = 'Đã Tắt';
+                bgmBtn.className = 'vintage-btn px-3 py-1.5 rounded-lg text-xs min-w-[68px] bg-[#eae3d2] text-gray-500';
+            }
+
+            if (gameState.sfxEnabled) {
+                sfxBtn.innerText = 'Đang Bật';
+                sfxBtn.className = 'vintage-btn px-3 py-1.5 rounded-lg text-xs min-w-[68px] bg-[#d4e4bc] text-[#2c4a1d]';
+            } else {
+                sfxBtn.innerText = 'Đã Tắt';
+                sfxBtn.className = 'vintage-btn px-3 py-1.5 rounded-lg text-xs min-w-[68px] bg-[#eae3d2] text-gray-500';
+            }
+
+            if (!gameState.bgmEnabled && !gameState.sfxEnabled) {
+                headerBtn.innerText = '🔇';
+            } else {
+                headerBtn.innerText = '🔊';
+            }
+        }
+
+        function loadSavedData() {
+            const savedCoins = localStorage.getItem('eco_surfer_coins');
+            if (savedCoins !== null) gameState.totalCoins = parseInt(savedCoins);
+
+            const savedChars = localStorage.getItem('eco_surfer_chars');
+            if (savedChars) {
+                try { gameState.unlockedChars = JSON.parse(savedChars); } catch(e) {}
+            }
+            const eqChar = localStorage.getItem('eco_surfer_eq_char');
+            if (eqChar) gameState.equippedChar = eqChar;
+
+            const savedPacks = localStorage.getItem('eco_surfer_packs');
+            if (savedPacks) {
+                try { gameState.unlockedPacks = JSON.parse(savedPacks); } catch(e) {}
+            }
+            const eqPack = localStorage.getItem('eco_surfer_eq_pack');
+            if (eqPack) gameState.equippedPack = eqPack;
+
+            const savedBgm = localStorage.getItem('eco_surfer_bgm');
+            if (savedBgm !== null) gameState.bgmEnabled = savedBgm === 'true';
+
+            const savedSfx = localStorage.getItem('eco_surfer_sfx');
+            if (savedSfx !== null) gameState.sfxEnabled = savedSfx === 'true';
+
+            const savedMonths = localStorage.getItem('eco_surfer_months');
+            if (savedMonths !== null) {
+                try {
+                    const parsed = JSON.parse(savedMonths);
+                    parsed.forEach((m, idx) => {
+                        if (MONTHS_DATA[idx]) {
+                            MONTHS_DATA[idx].unlocked = m.unlocked;
+                            MONTHS_DATA[idx].completed = m.completed;
+                            MONTHS_DATA[idx].stars = m.stars;
+                        }
+                    });
+                } catch(e) {}
+            }
+        }
+
+        function saveGameData() {
+            localStorage.setItem('eco_surfer_coins', gameState.totalCoins);
+            localStorage.setItem('eco_surfer_chars', JSON.stringify(gameState.unlockedChars));
+            localStorage.setItem('eco_surfer_eq_char', gameState.equippedChar);
+            localStorage.setItem('eco_surfer_packs', JSON.stringify(gameState.unlockedPacks));
+            localStorage.setItem('eco_surfer_eq_pack', gameState.equippedPack);
+            localStorage.setItem('eco_surfer_bgm', gameState.bgmEnabled);
+            localStorage.setItem('eco_surfer_sfx', gameState.sfxEnabled);
+            localStorage.setItem('eco_surfer_months', JSON.stringify(MONTHS_DATA.map(m => ({
+                unlocked: m.unlocked,
+                completed: m.completed,
+                stars: m.stars
+            }))));
+        }
+
+        function switchScreen(screenName) {
+            document.getElementById('screen-menu').classList.add('hidden');
+            document.getElementById('screen-game').classList.add('hidden');
+            document.getElementById('screen-result').classList.add('hidden');
+
+            if (screenName === 'menu') {
+                stopBGM();
+                document.getElementById('screen-menu').classList.remove('hidden');
+                renderMonthsList();
+                updateMenuHeaderInfo();
+            } else if (screenName === 'game') {
+                document.getElementById('screen-game').classList.remove('hidden');
+            } else if (screenName === 'result') {
+                stopBGM();
+                document.getElementById('screen-result').classList.remove('hidden');
+            }
+        }
+
+        function updateMenuHeaderInfo() {
+            document.getElementById('total-coins').innerText = gameState.totalCoins;
+            const cObj = CHARACTERS_DATA.find(c => c.id === gameState.equippedChar) || CHARACTERS_DATA[0];
+            const pObj = PACKS_DATA.find(p => p.id === gameState.equippedPack) || PACKS_DATA[0];
+            document.getElementById('equipped-char-label').innerText = `☁️ ${cObj.name.split(' ')[0]}`;
+            document.getElementById('equipped-pack-label').innerText = `🔋 ${pObj.name.split(' ')[1] || 'Pin'}`;
+        }
+
+        function renderMonthsList() {
+            const container = document.getElementById('months-list');
+            container.innerHTML = '';
+
+            MONTHS_DATA.forEach((month) => {
+                let statusBadge = '';
+                let bgClass = 'bg-[#fdfbf7]';
+                let btnDisabled = '';
+
+                if (!month.unlocked) {
+                    bgClass = 'bg-[#eae3d2] opacity-70';
+                    btnDisabled = 'opacity-50 cursor-not-allowed';
+                    statusBadge = '<span class="text-[10px] text-gray-500 font-bold">🔒 Khóa</span>';
+                } else if (month.completed) {
+                    let starsStr = '⭐'.repeat(month.stars);
+                    statusBadge = `<span class="text-[10px] text-amber-700 font-bold">${starsStr}</span>`;
+                } else {
+                    statusBadge = '<span class="text-[10px] text-green-700 font-bold">✨ Mới</span>';
+                }
+
+                const item = document.createElement('div');
+                item.className = `w-full p-2.5 rounded-xl border border-[#c4b59d] flex justify-between items-center ${bgClass} shadow-sm`;
+                item.innerHTML = `
+                    <div class="pr-2">
+                        <p class="font-bold text-xs text-[#4a3b32]">${month.name}</p>
+                        <p class="text-[10px] text-[#735d4c] font-semibold">Mục tiêu: ${month.target}đ • Thưởng: ${month.reward} xu</p>
+                    </div>
+                    <div class="flex items-center gap-2 shrink-0">
+                        ${statusBadge}
+                        <button onclick="startMonthGame(${month.id})" class="vintage-btn px-3 py-1.5 text-xs rounded-lg bg-[#d4e4bc] text-[#2c4a1d] ${btnDisabled}" ${!month.unlocked ? 'disabled' : ''}>
+                            Chạy 🏃
+                        </button>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function openShopModal() {
+            document.getElementById('shop-modal').classList.remove('hidden');
+            renderShop();
+        }
+        function closeShopModal() {
+            document.getElementById('shop-modal').classList.add('hidden');
+            updateMenuHeaderInfo();
+        }
+
+        function renderShop() {
+            document.getElementById('shop-coins').innerText = gameState.totalCoins;
+            const charList = document.getElementById('shop-chars-list');
+            const packList = document.getElementById('shop-packs-list');
+            charList.innerHTML = '';
+            packList.innerHTML = '';
+
+            CHARACTERS_DATA.forEach(char => {
+                const isUnlocked = gameState.unlockedChars.includes(char.id);
+                const isEquipped = gameState.equippedChar === char.id;
+                let btnHtml = '';
+
+                if (isEquipped) {
+                    btnHtml = `<span class="px-2.5 py-1 text-[11px] font-bold rounded-lg bg-[#467551] text-white">Đang dùng</span>`;
+                } else if (isUnlocked) {
+                    btnHtml = `<button onclick="equipChar('${char.id}')" class="vintage-btn px-2.5 py-1 text-[11px] rounded-lg bg-[#e6dfcd]">Chọn</button>`;
+                } else {
+                    const canAfford = gameState.totalCoins >= char.price;
+                    btnHtml = `
+                        <div class="flex items-center gap-1.5">
+                            <button onclick="openReviewModal('${char.id}')" class="vintage-btn w-8 h-8 text-sm rounded-lg bg-[#d6c9b4] flex items-center justify-center" title="Xem review">🔍</button>
+                            <button onclick="buyChar('${char.id}')" class="vintage-btn px-2.5 py-1.5 text-[11px] rounded-lg ${canAfford ? 'bg-[#f5e1a4] text-[#5c4738]' : 'opacity-50 cursor-not-allowed'}" ${!canAfford ? 'disabled' : ''}>Mua ${char.price}</button>
+                        </div>
+                    `;
+                }
+
+                charList.innerHTML += `
+                    <div class="p-2.5 rounded-xl border border-[#c4b59d] bg-[#f2ecdc] flex justify-between items-center">
+                        <div class="pr-2">
+                            <p class="font-bold text-xs text-[#4a3b32]">${char.name}</p>
+                            <p class="text-[10px] text-[#735d4c]">Trang bị: ${char.outfit}</p>
+                        </div>
+                        ${btnHtml}
+                    </div>
+                `;
+            });
+
+            PACKS_DATA.forEach(pack => {
+                const isUnlocked = gameState.unlockedPacks.includes(pack.id);
+                const isEquipped = gameState.equippedPack === pack.id;
+                let btnHtml = '';
+
+                if (isEquipped) {
+                    btnHtml = `<span class="px-2.5 py-1 text-[11px] font-bold rounded-lg bg-[#467551] text-white">Đang dùng</span>`;
+                } else if (isUnlocked) {
+                    btnHtml = `<button onclick="equipPack('${pack.id}')" class="vintage-btn px-2.5 py-1 text-[11px] rounded-lg bg-[#e6dfcd]">Chọn</button>`;
+                } else {
+                    const canAfford = gameState.totalCoins >= pack.price;
+                    btnHtml = `<button onclick="buyPack('${pack.id}')" class="vintage-btn px-2.5 py-1 text-[11px] rounded-lg ${canAfford ? 'bg-[#f5e1a4] text-[#5c4738]' : 'opacity-50 cursor-not-allowed'}" ${!canAfford ? 'disabled' : ''}>Mua ${pack.price}</button>`;
+                }
+
+                packList.innerHTML += `
+                    <div class="p-2.5 rounded-xl border border-[#c4b59d] bg-[#f2ecdc] flex justify-between items-center">
+                        <div class="pr-2">
+                            <p class="font-bold text-xs text-[#4a3b32]">${pack.name}</p>
+                            <p class="text-[10px] text-[#735d4c]">${pack.desc}</p>
+                        </div>
+                        ${btnHtml}
+                    </div>
+                `;
+            });
+        }
+
+        // --- HÀM VẼ NHÂN VẬT: BABY CLOUD HOẶC SIÊU ANH HÙNG BAY LƯỢN (SUPERMAN STYLE) ---
+        function drawCuteMascot(ctx, cx, cy, charId, gameFrame) {
+            let bounce = Math.sin(gameFrame * 0.3) * 3;
+            let currentY = cy + bounce;
+
+            ctx.save();
+            ctx.translate(cx, currentY);
+
+            if (charId === 'buddy') {
+                // --- ECO BUDDY: Đám mây trắng siêu cute với má hồng & tai lá cây[cite: 5] ---
+                ctx.fillStyle = 'rgba(0,0,0,0.15)';
+                ctx.beginPath();
+                ctx.ellipse(0, 34, 18, 5, 0, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.fillStyle = '#fdfbf7';
+                ctx.strokeStyle = '#5c4738';
+                ctx.lineWidth = 2.5;
+
+                ctx.beginPath();
+                ctx.arc(0, 4, 21, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.stroke();
+
+                // Tai lá cây đôi
+                ctx.fillStyle = '#467551';
+                ctx.beginPath();
+                ctx.ellipse(-5, -19, 5, 9, -0.4, 0, Math.PI * 2);
+                ctx.ellipse(6, -18, 5, 9, 0.4, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.stroke();
+
+                // Khăn choàng xanh lá
+                ctx.fillStyle = '#467551';
+                ctx.beginPath();
+                ctx.roundRect(-16, 10, 32, 8, 4);
+                ctx.fill();
+                ctx.stroke();
+
+                // Mắt & Miệng
+                ctx.fillStyle = '#3b302a';
+                ctx.beginPath();
+                ctx.arc(-6, 2, 2.2, 0, Math.PI * 2);
+                ctx.arc(6, 2, 2.2, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.beginPath();
+                ctx.arc(0, 4, 3, 0, Math.PI);
+                ctx.stroke();
+
+                // Má hồng
+                ctx.fillStyle = 'rgba(235, 130, 130, 0.45)';
+                ctx.beginPath();
+                ctx.arc(-11, 5, 4, 0, Math.PI * 2);
+                ctx.arc(11, 5, 4, 0, Math.PI * 2);
+                ctx.fill();
+
+            } else {
+                // --- CÁC NHÂN VẬT HIỆP SĨ / SIÊU ANH HÙNG (DÁNG BAY NGANG SUPERMAN STYLE NHƯ ẢNH BẠN GỬI)[cite: 6] ---
+                let capeColor = '#b94a39';
+                let suitColor = '#0284c7';
+                let emblemColor = '#eab308';
+                let hairColor = '#78350f';
+
+                if (charId === 'solar') { suitColor = '#d97706'; capeColor = '#ea580c'; }
+                else if (charId === 'wind') { suitColor = '#0369a1'; capeColor = '#0f766e'; }
+                else if (charId === 'netzero') { suitColor = '#15803d'; capeColor = '#b94a39'; emblemColor = '#facc15'; }
+                else if (charId === 'quantum') { suitColor = '#7e22ce'; capeColor = '#581c87'; emblemColor = '#f0abfc'; }
+
+                // Vệt tốc độ phía sau (Speed lines)
+                ctx.strokeStyle = 'rgba(92, 71, 56, 0.35)';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(-28, -6); ctx.lineTo(-42, -6);
+                ctx.moveTo(-26, 4); ctx.lineTo(-40, 4);
+                ctx.moveTo(-28, 14); ctx.lineTo(-44, 14);
+                ctx.stroke();
+
+                // Áo choàng bay phấp phới phía sau
+                ctx.fillStyle = capeColor;
+                ctx.beginPath();
+                ctx.moveTo(-10, -2);
+                ctx.lineTo(-32 + Math.sin(gameFrame * 0.4) * 6, -16);
+                ctx.lineTo(-28 + Math.sin(gameFrame * 0.3) * 6, 18);
+                ctx.lineTo(0, 6);
+                ctx.closePath();
+                ctx.fill();
+                ctx.strokeStyle = '#3b302a';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                // Thân siêu anh hùng nằm ngang
+                ctx.fillStyle = suitColor;
+                ctx.beginPath();
+                ctx.roundRect(-16, -10, 32, 22, 8);
+                ctx.fill();
+                ctx.stroke();
+
+                // Huy hiệu trước ngực
+                ctx.fillStyle = emblemColor;
+                ctx.beginPath();
+                ctx.arc(0, 0, 5, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.stroke();
+
+                // Tay vươn lên phía trước (Dáng bay superman)
+                ctx.fillStyle = suitColor;
+                ctx.beginPath();
+                ctx.roundRect(10, -18, 22, 10, 4);
+                ctx.fill();
+                ctx.stroke();
+
+                // Găng tay siêu anh hùng
+                ctx.fillStyle = capeColor;
+                ctx.beginPath();
+                ctx.roundRect(22, -18, 12, 10, 3);
+                ctx.fill();
+                ctx.stroke();
+
+                // Chân duỗi phía sau
+                ctx.fillStyle = suitColor;
+                ctx.beginPath();
+                ctx.roundRect(-22, 4, 14, 9, 4);
+                ctx.fill();
+                ctx.stroke();
+
+                // Đầu & Tóc bồng bềnh
+                ctx.fillStyle = '#fde68a'; // Mặt
+                ctx.beginPath();
+                ctx.arc(10, -8, 11, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.stroke();
+
+                // Mắt cười & Miệng cười
+                ctx.fillStyle = '#3b302a';
+                ctx.beginPath();
+                ctx.arc(13, -10, 1.8, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.beginPath();
+                ctx.arc(14, -6, 2.5, 0, Math.PI);
+                ctx.stroke();
+
+                // Tóc bồng bềnh thời trang phía sau đầu
+                ctx.fillStyle = hairColor;
+                ctx.beginPath();
+                ctx.arc(4, -14, 10, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.stroke();
+            }
+
+            ctx.restore();
+        }
+
+        function openReviewModal(charId) {
+            const char = CHARACTERS_DATA.find(c => c.id === charId);
+            if (!char) return;
+
+            document.getElementById('rev-name').innerText = char.name;
+            document.getElementById('rev-title').innerText = char.title;
+            document.getElementById('rev-desc').innerText = char.desc;
+            document.getElementById('rev-stat-defense').innerText = char.defense;
+            document.getElementById('rev-stat-magnet').innerText = char.magnetPower;
+            document.getElementById('rev-stat-score').innerText = char.scoreBonus;
+            document.getElementById('rev-price-tag').innerText = `Giá: ${char.price} xu`;
+
+            const buyBtn = document.getElementById('rev-buy-btn');
+            const canAfford = gameState.totalCoins >= char.price;
+            buyBtn.innerText = `Mua ${char.price} xu`;
+            buyBtn.disabled = !canAfford;
+            buyBtn.className = `flex-1 vintage-btn py-2 text-xs rounded-lg font-bold ${canAfford ? 'bg-[#f5e1a4] text-[#5c4738]' : 'opacity-50 cursor-not-allowed bg-[#e6dfcd]'}`;
+            buyBtn.onclick = () => {
+                buyChar(char.id);
+                closeReviewModal();
+            };
+
+            document.getElementById('review-modal').classList.remove('hidden');
+
+            setTimeout(() => {
+                const pCanvas = document.getElementById('previewCanvas');
+                const pCtx = pCanvas.getContext('2d');
+                pCtx.clearRect(0, 0, pCanvas.width, pCanvas.height);
+                drawCuteMascot(pCtx, pCanvas.width / 2, pCanvas.height / 2 + 2, char.id, 0);
+            }, 50);
+        }
+
+        function closeReviewModal() {
+            document.getElementById('review-modal').classList.add('hidden');
+        }
+
+        function buyChar(id) {
+            const char = CHARACTERS_DATA.find(c => c.id === id);
+            if (!char || gameState.totalCoins < char.price) return;
+            gameState.totalCoins -= char.price;
+            gameState.unlockedChars.push(id);
+            gameState.equippedChar = id;
+            playSoundPowerup();
+            saveGameData();
+            renderShop();
+        }
+        function equipChar(id) {
+            gameState.equippedChar = id;
+            saveGameData();
+            renderShop();
+        }
+
+        function buyPack(id) {
+            const pack = PACKS_DATA.find(p => p.id === id);
+            if (!pack || gameState.totalCoins < pack.price) return;
+            gameState.totalCoins -= pack.price;
+            gameState.unlockedPacks.push(id);
+            gameState.equippedPack = id;
+            playSoundPowerup();
+            saveGameData();
+            renderShop();
+        }
+        function equipPack(id) {
+            gameState.equippedPack = id;
+            saveGameData();
+            renderShop();
+        }
+
+        function openRulesModal() {
+            document.getElementById('rules-modal').classList.remove('hidden');
+        }
+        function closeRulesModal() {
+            document.getElementById('rules-modal').classList.add('hidden');
+        }
+
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const gameArea = document.getElementById('game-area');
+
+        let player = {
+            lane: 1,
+            x: 0,
+            y: 0,
+            width: 44,
+            height: 54
+        };
+
+        let obstacles = [];
+        let collectibles = [];
+        let gameFrame = 0;
+        let spawnTimer = 0;
+        let roadOffset = 0;
+
+        function resizeCanvas() {
+            const rect = gameArea.getBoundingClientRect();
+            canvas.width = rect.width;
+            canvas.height = rect.height;
+        }
+
+        function startMonthGame(monthId) {
+            const month = MONTHS_DATA.find(m => m.id === monthId);
+            if (!month || !month.unlocked) return;
+
+            gameState.currentMonthId = monthId;
+            gameState.isEndless = false;
+            gameState.targetScore = month.target;
+            gameState.baseSpeed = 5.0 + Math.min(3.5, monthId * 0.12);
+            initGameSession();
+        }
+
+        function openEndlessMode() {
+            gameState.currentMonthId = null;
+            gameState.isEndless = true;
+            gameState.targetScore = 20000;
+            gameState.baseSpeed = 5.5;
+            initGameSession();
+        }
+
+        function initGameSession() {
+            switchScreen('game');
+            resizeCanvas();
+
+            const equippedPackObj = PACKS_DATA.find(p => p.id === gameState.equippedPack) || PACKS_DATA[0];
+
+            gameState.coinsCollected = 0;
+            gameState.lives = 3;
+            gameState.progressScore = 0;
+            gameState.zone = 'day';
+            gameState.zoneTimer = 0;
+            gameState.gameSpeed = gameState.baseSpeed;
+            gameState.isPlaying = true;
+
+            gameState.packCharges = equippedPackObj.charges;
+            gameState.packActiveTimer = 0;
+            gameState.magnetTimer = 0;
+            gameState.doubleScoreTimer = 0;
+
+            player.lane = 1;
+            let laneWidth = canvas.width / 3;
+            player.x = player.lane * laneWidth + laneWidth / 2 - player.width / 2;
+
+            obstacles = [];
+            collectibles = [];
+            gameFrame = 0;
+            spawnTimer = 0;
+
+            const hint = document.getElementById('swipe-hint');
+            hint.style.opacity = '1';
+            setTimeout(() => { hint.style.opacity = '0'; }, 3500);
+
+            updateHUD();
+            startBGM();
+            requestAnimationFrame(gameLoop);
+        }
+
+        function quitGame() {
+            gameState.isPlaying = false;
+            stopBGM();
+            switchScreen('menu');
+        }
+
+        function restartCurrentGame() {
+            if (gameState.isEndless) {
+                openEndlessMode();
+            } else if (gameState.currentMonthId) {
+                startMonthGame(gameState.currentMonthId);
+            }
+        }
+
+        function activateSuperPack() {
+            if (!gameState.isPlaying) return;
+            if (gameState.packActiveTimer > 0) return;
+            if (gameState.packCharges <= 0) {
+                showPopup('⚠️ Đã hết lượt kích hoạt Siêu Tụ Điện trong ván này!', '#b94a39');
+                return;
+            }
+            gameState.packCharges--;
+            gameState.packActiveTimer = 480;
+            playSoundPowerup();
+            showPopup('⚡ Kích hoạt Siêu Tụ Điện! Khiên năng lượng bảo vệ', '#2c4a1d');
+            updateHUD();
+        }
+
+        function movePlayer(dir) {
+            if (!gameState.isPlaying) return;
+            let prevLane = player.lane;
+            player.lane += dir;
+            if (player.lane < 0) player.lane = 0;
+            if (player.lane > 2) player.lane = 2;
+            if (prevLane !== player.lane) playSoundSwipe();
+        }
+
+        window.addEventListener('keydown', (e) => {
+            if (!gameState.isPlaying) return;
+            if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') movePlayer(-1);
+            if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') movePlayer(1);
+            if (e.key === ' ' || e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') {
+                e.preventDefault();
+                activateSuperPack();
+            }
+        });
+
+        let touchStartX = 0;
+        let touchMoved = false;
+        let lastTapTime = 0;
+
+        gameArea.addEventListener('touchstart', (e) => {
+            if (!gameState.isPlaying) return;
+            touchStartX = e.touches[0].clientX;
+            touchMoved = false;
+
+            let now = Date.now();
+            if (now - lastTapTime < 280) {
+                activateSuperPack();
+            }
+            lastTapTime = now;
+        }, { passive: true });
+
+        gameArea.addEventListener('touchmove', (e) => {
+            if (!gameState.isPlaying || touchMoved) return;
+            let currentX = e.touches[0].clientX;
+            let diffX = currentX - touchStartX;
+
+            if (diffX > 25) {
+                movePlayer(1);
+                touchMoved = true;
+            } else if (diffX < -25) {
+                movePlayer(-1);
+                touchMoved = true;
+            }
+        }, { passive: true });
+
+        gameArea.addEventListener('touchend', (e) => {
+            if (!gameState.isPlaying || touchMoved) return;
+            const rect = gameArea.getBoundingClientRect();
+            const tapX = e.changedTouches[0].clientX - rect.left;
+            if (tapX < rect.width / 2) {
+                movePlayer(-1);
+            } else {
+                movePlayer(1);
+            }
+        }, { passive: true });
+
+        gameArea.addEventListener('dblclick', () => {
+            if (gameState.isPlaying) activateSuperPack();
+        });
+
+        function gameLoop() {
+            if (!gameState.isPlaying) return;
+
+            gameFrame++;
+            gameState.zoneTimer++;
+
+            if (gameState.packActiveTimer > 0) gameState.packActiveTimer--;
+            if (gameState.magnetTimer > 0) gameState.magnetTimer--;
+            if (gameState.doubleScoreTimer > 0) gameState.doubleScoreTimer--;
+
+            let progressiveBoost = Math.min(3.5, Math.floor(gameFrame / 600) * 0.25);
+
+            let cycle = gameState.zoneTimer % 1800;
+            if (cycle < 650) {
+                gameState.zone = 'day';
+                gameState.gameSpeed = gameState.baseSpeed + progressiveBoost;
+            } else if (cycle < 1300) {
+                gameState.zone = 'peak';
+                gameState.gameSpeed = gameState.baseSpeed + 1.8 + progressiveBoost;
+            } else {
+                gameState.zone = 'night';
+                gameState.gameSpeed = Math.max(4.5, gameState.baseSpeed - 0.7 + progressiveBoost);
+            }
+
+            roadOffset = (roadOffset + gameState.gameSpeed) % 40;
+
+            spawnTimer++;
+            let levelDifficultyFactor = Math.min(18, (gameState.currentMonthId || 5) * 0.6 + Math.floor(gameFrame / 500));
+            let spawnInterval = Math.max(32, (gameState.zone === 'peak' ? 48 : 62) - levelDifficultyFactor);
+            if (spawnTimer > spawnInterval) {
+                spawnTimer = 0;
+                spawnEntities();
+            }
+
+            updatePhysics();
+            renderGame();
+
+            if (gameFrame % 15 === 0) updateHUD();
+
+            if (!gameState.isEndless && gameState.progressScore >= gameState.targetScore) {
+                endGameSession(true);
+                return;
+            }
+
+            requestAnimationFrame(gameLoop);
+        }
+
+        function spawnEntities() {
+            let lanes = [0, 1, 2];
+            lanes.sort(() => Math.random() - 0.5);
+
+            let highLevelChance = Math.min(0.65, 0.25 + (gameState.currentMonthId || 1) * 0.015);
+            let numObstacles = (gameState.zone === 'peak' || Math.random() < highLevelChance) ? 2 : 1;
+            if (gameState.zone === 'night') numObstacles = 1;
+
+            for (let i = 0; i < numObstacles; i++) {
+                let obsLane = lanes[i];
+                let chosenObs = OBSTACLE_TYPES[Math.floor(Math.random() * OBSTACLE_TYPES.length)];
+                obstacles.push({
+                    lane: obsLane,
+                    y: -70,
+                    width: 68,
+                    height: 54,
+                    icon: chosenObs.icon,
+                    label: chosenObs.label,
+                    color: chosenObs.color
+                });
+            }
+
+            let freeLane = lanes[numObstacles];
+            if (Math.random() < 0.85) {
+                let r = Math.random();
+                let itemType = 'coin';
+                let val = 50;
+
+                if (r < 0.08) {
+                    itemType = 'magnet';
+                    val = 0;
+                } else if (r < 0.16) {
+                    itemType = 'double';
+                    val = 0;
+                } else if (r < 0.40) {
+                    itemType = 'bill';
+                    val = 300;
+                }
+
+                collectibles.push({
+                    lane: freeLane,
+                    x: null,
+                    y: -60,
+                    width: 34,
+                    height: 34,
+                    type: itemType,
+                    value: val
+                });
+            }
+        }
+
+        function updatePhysics() {
+            let laneWidth = canvas.width / 3;
+            let targetLaneX = player.lane * laneWidth + laneWidth / 2 - player.width / 2;
+            player.x += (targetLaneX - player.x) * 0.25;
+
+            let playerTop = canvas.height - 90;
+            let playerBottom = canvas.height - 40;
+            let playerCenterX = player.x + player.width / 2;
+            let playerCenterY = canvas.height - 65;
+
+            for (let i = obstacles.length - 1; i >= 0; i--) {
+                obstacles[i].y += gameState.gameSpeed;
+
+                let obsTop = obstacles[i].y;
+                let obsBottom = obstacles[i].y + obstacles[i].height;
+
+                if (obstacles[i].lane === player.lane && obsBottom > playerTop + 8 && obsTop < playerBottom - 8) {
+                    hitObstacle(obstacles[i]);
+                    obstacles.splice(i, 1);
+                    continue;
+                }
+
+                if (obstacles[i] && obstacles[i].y > canvas.height + 60) {
+                    obstacles.splice(i, 1);
+                }
+            }
+
+            for (let i = collectibles.length - 1; i >= 0; i--) {
+                let col = collectibles[i];
+                col.y += gameState.gameSpeed;
+                col.x = col.lane * laneWidth + laneWidth / 2;
+
+                if (gameState.magnetTimer > 0 && (col.type === 'coin' || col.type === 'bill') && col.y > 20) {
+                    col.x += (playerCenterX - col.x) * 0.12;
+                    col.y += (playerCenterY - col.y) * 0.10;
+                    let dist = Math.hypot(playerCenterX - col.x, playerCenterY - col.y);
+                    if (dist < 40) {
+                        collectItem(col);
+                        collectibles.splice(i, 1);
+                        continue;
+                    }
+                } else {
+                    let colTop = col.y;
+                    let colBottom = col.y + col.height;
+                    if (col.lane === player.lane && colBottom > playerTop && colTop < playerBottom) {
+                        collectItem(col);
+                        collectibles.splice(i, 1);
+                        continue;
+                    }
+                }
+
+                if (collectibles[i] && collectibles[i].y > canvas.height + 60) {
+                    collectibles.splice(i, 1);
+                }
+            }
+        }
+
+        function hitObstacle(obs) {
+            if (gameState.packActiveTimer > 0) {
+                gameState.packActiveTimer = 0;
+                playSoundPowerup();
+                showPopup(`⚡ Siêu Tụ Điện đã xả năng lượng chặn ${obs.label}!`, '#2c4a1d');
+                updateHUD();
+                return;
+            }
+
+            gameState.lives--;
+            let penaltyPercent = gameState.equippedChar === 'wind' ? 0.10 : 0.20;
+            let penalty = Math.floor(gameState.coinsCollected * penaltyPercent);
+            gameState.coinsCollected = Math.max(0, gameState.coinsCollected - penalty);
+            
+            playSoundHit();
+            showPopup(`💥 Đụng ${obs.label}! -1❤️ & mất xu`, '#b94a39');
+            updateHUD();
+
+            if (gameState.lives <= 0) {
+                endGameSession(false);
+            }
+        }
+
+        function collectItem(item) {
+            const cObj = CHARACTERS_DATA.find(c => c.id === gameState.equippedChar) || CHARACTERS_DATA[0];
+            let scoreMult = 1.0;
+            if (cObj.id === 'solar') scoreMult = 1.2;
+            else if (cObj.id === 'wind') scoreMult = 1.3;
+            else if (cObj.id === 'netzero') scoreMult = 1.5;
+            else if (cObj.id === 'quantum') scoreMult = 2.0;
+
+            if (item.type === 'magnet') {
+                gameState.magnetTimer = 420;
+                playSoundPowerup();
+                showPopup(`🧲 Nam Châm Hút Xu (7 giây)!`, '#be123c');
+            } else if (item.type === 'double') {
+                gameState.doubleScoreTimer = 420;
+                playSoundPowerup();
+                showPopup(`⚡ Pin Sạc Nhanh: x2 Điểm Hóa Đơn!`, '#b45309');
+            } else if (item.type === 'bill') {
+                playSoundCoin();
+                let mult = gameState.doubleScoreTimer > 0 ? 2 : 1;
+                let pts = Math.floor(item.value * mult * scoreMult);
+                gameState.progressScore += pts;
+                showPopup(`📄 +${pts}đ Hóa đơn xanh!`, '#2c4a1d');
+            } else {
+                playSoundCoin();
+                let zoneMult = gameState.zone === 'peak' ? 2 : 1;
+                let itemMult = gameState.doubleScoreTimer > 0 ? 2 : 1;
+                let earned = item.value * zoneMult;
+                if (cObj.id === 'quantum') earned *= 2;
+                gameState.coinsCollected += earned;
+                gameState.progressScore += Math.floor((earned / 2) * itemMult * scoreMult);
+                showPopup(`🪙 +${earned} Xu`, '#8c4a32');
+            }
+            updateHUD();
+        }
+
+        let popupTimeout;
+        function showPopup(text, color) {
+            const popup = document.getElementById('game-popup');
+            popup.innerText = text;
+            popup.style.color = color;
+            popup.style.opacity = '1';
+            clearTimeout(popupTimeout);
+            popupTimeout = setTimeout(() => {
+                popup.style.opacity = '0';
+            }, 1100);
+        }
+
+        function updateHUD() {
+            let livesStr = '❤️'.repeat(gameState.lives) + '🖤'.repeat(3 - gameState.lives);
+            document.getElementById('hud-lives').innerText = livesStr;
+            document.getElementById('hud-score').innerText = gameState.coinsCollected;
+            document.getElementById('hud-progress').innerText = gameState.progressScore;
+            document.getElementById('hud-target').innerText = gameState.targetScore;
+            document.getElementById('pack-charges').innerText = gameState.packCharges;
+
+            document.getElementById('buff-pack').classList.toggle('hidden', gameState.packActiveTimer <= 0);
+            document.getElementById('buff-magnet').classList.toggle('hidden', gameState.magnetTimer <= 0);
+            document.getElementById('buff-double').classList.toggle('hidden', gameState.doubleScoreTimer <= 0);
+
+            const zoneEl = document.getElementById('hud-zone');
+            if (gameState.zone === 'day') {
+                zoneEl.innerText = '☀️ Giờ Ngày';
+                zoneEl.className = 'px-2 py-0.5 rounded-md text-[10px] bg-amber-200 text-amber-900';
+            } else if (gameState.zone === 'peak') {
+                zoneEl.innerText = '⚡ Cao Điểm (x2)';
+                zoneEl.className = 'px-2 py-0.5 rounded-md text-[10px] bg-red-200 text-red-900 animate-pulse';
+            } else {
+                zoneEl.innerText = '🌙 Giờ Đêm';
+                zoneEl.className = 'px-2 py-0.5 rounded-md text-[10px] bg-indigo-200 text-indigo-900';
+            }
+        }
+
+        function renderGame() {
+            if (gameState.zone === 'day') ctx.fillStyle = '#eaf0e6';
+            else if (gameState.zone === 'peak') ctx.fillStyle = '#fceade';
+            else ctx.fillStyle = '#dce3ed';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            let laneWidth = canvas.width / 3;
+            ctx.strokeStyle = '#c8bc9f';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([20, 20]);
+            ctx.lineDashOffset = -roadOffset;
+            ctx.beginPath();
+            ctx.moveTo(laneWidth, 0); ctx.lineTo(laneWidth, canvas.height);
+            ctx.moveTo(laneWidth * 2, 0); ctx.lineTo(laneWidth * 2, canvas.height);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            ctx.fillStyle = '#d4c7b0';
+            ctx.fillRect(0, 0, 8, canvas.height);
+            ctx.fillRect(canvas.width - 8, 0, 8, canvas.height);
+
+            obstacles.forEach(obs => {
+                let w = Math.min(laneWidth - 14, 78);
+                let ox = obs.lane * laneWidth + (laneWidth - w) / 2;
+                let oy = obs.y;
+                
+                ctx.fillStyle = obs.color;
+                ctx.beginPath();
+                ctx.roundRect(ox, oy, w, obs.height, 8);
+                ctx.fill();
+
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = '#3b302a';
+                ctx.stroke();
+
+                ctx.font = '20px sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillText(obs.icon, ox + w / 2, oy + 24);
+
+                ctx.fillStyle = '#ffffff';
+                ctx.font = 'bold 9px Quicksand, sans-serif';
+                ctx.fillText(obs.label, ox + w / 2, oy + 43);
+            });
+
+            collectibles.forEach(col => {
+                let cx = col.x !== null ? col.x : (col.lane * laneWidth + laneWidth / 2);
+                let cy = col.y + 15;
+
+                ctx.beginPath();
+                ctx.arc(cx, cy, col.type === 'coin' ? 14 : 18, 0, Math.PI * 2);
+                
+                if (col.type === 'bill') ctx.fillStyle = '#467551';
+                else if (col.type === 'magnet') ctx.fillStyle = '#e11d48';
+                else if (col.type === 'double') ctx.fillStyle = '#d97706';
+                else ctx.fillStyle = '#d4af37';
+                
+                ctx.fill();
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = '#5c4738';
+                ctx.stroke();
+
+                ctx.font = '15px sans-serif';
+                ctx.textAlign = 'center';
+                let iconChar = '🪙';
+                if (col.type === 'bill') iconChar = '📄';
+                else if (col.type === 'magnet') iconChar = '🧲';
+                else if (col.type === 'double') iconChar = '⚡';
+                ctx.fillText(iconChar, cx, cy + 5);
+            });
+
+            const cObj = CHARACTERS_DATA.find(c => c.id === gameState.equippedChar) || CHARACTERS_DATA[0];
+            const pObj = PACKS_DATA.find(p => p.id === gameState.equippedPack) || PACKS_DATA[0];
+
+            let px = player.x + player.width / 2;
+            let py = canvas.height - 75;
+
+            if (gameState.packActiveTimer > 0) {
+                ctx.strokeStyle = pObj.color;
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.arc(px, py, 34, 0, Math.PI * 2);
+                ctx.stroke();
+
+                ctx.fillStyle = pObj.trim;
+                ctx.font = '14px sans-serif';
+                ctx.fillText('⚡', px - 25, py - 10);
+                ctx.fillText('⚡', px + 15, py + 20);
+            }
+
+            // Vẽ nhân vật (Baby Cloud hoặc Hiệp sĩ bay lướt ngang siêu đẹp)
+            drawCuteMascot(ctx, px, py, cObj.id, gameFrame);
+        }
+
+        function endGameSession(isWin) {
+            gameState.isPlaying = false;
+            stopBGM();
+            switchScreen('result');
+
+            let stampEl = document.getElementById('result-stamp');
+            let starsCount = 1;
+
+            if (isWin) {
+                playSoundWin();
+                stampEl.innerText = "HOÀN THÀNH HÓA ĐƠN";
+                stampEl.style.color = "#2c4a1d";
+                stampEl.style.borderColor = "#2c4a1d";
+
+                if (gameState.lives === 3) starsCount = 3;
+                else if (gameState.lives === 2) starsCount = 2;
+                else starsCount = 1;
+
+                if (!gameState.isEndless && gameState.currentMonthId) {
+                    const currentM = MONTHS_DATA.find(m => m.id === gameState.currentMonthId);
+                    if (currentM) {
+                        currentM.completed = true;
+                        currentM.stars = Math.max(currentM.stars, starsCount);
+
+                        const nextM = MONTHS_DATA.find(m => m.id === gameState.currentMonthId + 1);
+                        if (nextM) nextM.unlocked = true;
+
+                        gameState.totalCoins += currentM.reward + gameState.coinsCollected;
+                    }
+                }
+            } else {
+                playSoundLose();
+                stampEl.innerText = "HẾT MẠNG - THỬ LẠI";
+                stampEl.style.color = "#b94a39";
+                stampEl.style.borderColor = "#b94a39";
+                starsCount = 0;
+            }
+
+            saveGameData();
+
+            document.getElementById('res-title').innerText = gameState.isEndless ? "Chạy Vô Tận (Endless)" : `Hóa đơn tháng ${gameState.currentMonthId}`;
+            document.getElementById('res-progress').innerText = `${gameState.progressScore} / ${gameState.targetScore} đ`;
+            document.getElementById('res-coins').innerText = `${gameState.coinsCollected}`;
+            document.getElementById('res-stars').innerText = '⭐'.repeat(starsCount) + (starsCount === 0 ? '❌' : '');
+        }
+
+        function returnToMenu() {
+            switchScreen('menu');
+        }
+
+        window.addEventListener('resize', () => {
+            if (gameState.isPlaying) resizeCanvas();
+        });
+
+        window.onload = function() {
+            loadSavedData();
+            updateAudioUI();
+            switchScreen('menu');
+        };
+    </script>
+</body>
+</html>
