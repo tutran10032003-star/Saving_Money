@@ -191,6 +191,7 @@
     window.finishEcoGame=function(){
       const isMemory=typeof activeEcoGame!=="undefined"&&activeEcoGame==="memory";
       if(!isMemory){return originalFinish.apply(this,arguments);}
+      stopMemoryMusic();
       originalFinish.apply(this,arguments);
       const area=document.getElementById("eco-game-play-area");if(!area)return;
       const done=readLevels();if(!done.includes(-activeLevel))done.push(-activeLevel);
