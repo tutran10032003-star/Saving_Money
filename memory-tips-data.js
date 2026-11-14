@@ -84,6 +84,8 @@
   ];
   window.ecoMemoryTips = groups.flatMap(group => group.items.map((pair,index)=>({
     id:group.id+"-"+(index+1), category:group.id, categoryName:group.name,
-    en:pair[0], vi:pair[1], icon:({lighting:"💡",standby:"🔌",kitchen:"🍳",laundry:"🧺",fridge:"🧊",heating:"🌡️",tariff:"⚡",bathroom:"🚿"})[group.id]
+    en:pair[0], vi:pair[1],
+    short:{en:pair[2],vi:pair[3]},
+    icon:pair[4]
   })));
 })();
