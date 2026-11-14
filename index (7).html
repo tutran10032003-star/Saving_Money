@@ -324,14 +324,30 @@
             { 
                 id: 'quantum', name: 'Pháp Sư Lượng Tử', title: 'Đỉnh cao tương lai', desc: 'Bé Mây đội mũ phù thủy tím và ngôi sao lượng tử lấp lánh.', price: 15000, 
                 defense: 'Tối ưu', magnetPower: 'Toàn làn', scoreBonus: 'x2.0', outfit: 'Mũ phù thủy & sao lượng tử'
+            },
+            {
+                id: 'aurora', name: 'Vũ Công Cực Quang', title: 'Ánh sáng phương Bắc', desc: 'Bé Mây khoác áo choàng cực quang, cài trâm pha lê đổi sắc.', price: 22000,
+                defense: 'Tối ưu+', magnetPower: 'Toàn làn', scoreBonus: 'x2.1', outfit: 'Áo choàng cực quang & trâm pha lê'
+            },
+            {
+                id: 'ocean', name: 'Nhà Thám Hiểm Đại Dương', title: 'Bảo vệ biển xanh', desc: 'Bé Mây đội mũ thủy thủ, đeo kính lặn và vỏ sò may mắn.', price: 30000,
+                defense: 'Lá chắn biển', magnetPower: 'Toàn làn+', scoreBonus: 'x2.2', outfit: 'Mũ thủy thủ & kính lặn'
+            },
+            {
+                id: 'forest', name: 'Thần Rừng Xanh', title: 'Hộ vệ thiên nhiên', desc: 'Bé Mây đội vương miện lá, mang áo choàng rêu và hoa nhỏ.', price: 40000,
+                defense: 'Hộ vệ rừng', magnetPower: 'Siêu rộng+', scoreBonus: 'x2.3', outfit: 'Vương miện lá & áo choàng rêu'
             }
         ];
 
         const PACKS_DATA = [
-            { id: 'battery', name: '🔋 Pin Dự Phòng Cơ Bản', desc: '2 lần dùng/ván', price: 0, color: '#467551', trim: '#a3e635', charges: 2 },
-            { id: 'supercap', name: '⚡ Siêu Tụ Điện Nhanh', desc: '3 lần dùng/ván', price: 1500, color: '#d97706', trim: '#fef08a', charges: 3 },
-            { id: 'solarpack', name: '☀️ Balo Năng Lượng Mặt Trời', desc: '4 lần dùng/ván', price: 4000, color: '#0369a1', trim: '#7dd3fc', charges: 4 },
-            { id: 'reactor', name: '⚛️ Lò Phản Ứng Xanh Miti', desc: '5 lần dùng/ván', price: 10000, color: '#7e22ce', trim: '#f0abfc', charges: 5 }
+            { id: 'battery', name: '🔋 Pin Dự Phòng Cơ Bản', desc: '2 lần dùng/ván', price: 0, color: '#467551', trim: '#a3e635', charges: 2, icon: '🔋' },
+            { id: 'supercap', name: '⚡ Siêu Tụ Điện Nhanh', desc: '3 lần dùng/ván', price: 1500, color: '#d97706', trim: '#fef08a', charges: 3, icon: '⚡' },
+            { id: 'solarpack', name: '☀️ Balo Năng Lượng Mặt Trời', desc: '4 lần dùng/ván', price: 4000, color: '#0369a1', trim: '#7dd3fc', charges: 4, icon: '☀️' },
+            { id: 'reactor', name: '⚛️ Lò Phản Ứng Xanh Miti', desc: '5 lần dùng/ván', price: 10000, color: '#7e22ce', trim: '#f0abfc', charges: 5, icon: '⚛️' },
+            { id: 'crystal', name: '💎 Lõi Pha Lê', desc: '6 lần dùng/ván · Khiên pha lê', price: 16000, color: '#0e7490', trim: '#a5f3fc', charges: 6, icon: '💎' },
+            { id: 'leafdrive', name: '🌿 Bộ Pin Sinh Học', desc: '7 lần dùng/ván · Công nghệ lá xanh', price: 24000, color: '#15803d', trim: '#bbf7d0', charges: 7, icon: '🌿' },
+            { id: 'auroracore', name: '🌈 Lõi Cực Quang', desc: '8 lần dùng/ván · Năng lượng quang phổ', price: 34000, color: '#9333ea', trim: '#e9d5ff', charges: 8, icon: '🌈' },
+            { id: 'zeroreactor', name: '🚀 Động Cơ Net-Zero X', desc: '9 lần dùng/ván · Cấp tối thượng', price: 48000, color: '#be123c', trim: '#fecdd3', charges: 9, icon: '🚀' }
         ];
 
         const THEMES_POOL = [
@@ -764,20 +780,20 @@
                 } else {
                     const canAfford = gameState.totalCoins >= char.price;
                     btnHtml = `
-                        <div class="flex items-center gap-1.5">
-                            <button onclick="openReviewModal('${char.id}')" class="vintage-btn w-8 h-8 text-sm rounded-lg bg-[#d6c9b4] flex items-center justify-center" title="Xem review">🔍</button>
-                            <button onclick="buyChar('${char.id}')" class="vintage-btn px-2.5 py-1.5 text-[11px] rounded-lg ${canAfford ? 'bg-[#f5e1a4] text-[#5c4738]' : 'opacity-50 cursor-not-allowed'}" ${!canAfford ? 'disabled' : ''}>Mua ${char.price}</button>
+                        <div class="w-full flex items-center justify-end gap-1.5">
+                            <button onclick="openReviewModal('${char.id}')" class="vintage-btn shrink-0 w-8 h-8 text-sm rounded-lg bg-[#d6c9b4] flex items-center justify-center" title="Xem review">🔍</button>
+                            <button onclick="buyChar('${char.id}')" class="vintage-btn shrink-0 w-[76px] px-1 py-1.5 text-[10px] whitespace-nowrap rounded-lg ${canAfford ? 'bg-[#f5e1a4] text-[#5c4738]' : 'opacity-50 cursor-not-allowed'}" ${!canAfford ? 'disabled' : ''}>Mua ${char.price}</button>
                         </div>
                     `;
                 }
 
                 charList.innerHTML += `
-                    <div class="p-2.5 rounded-xl border border-[#c4b59d] bg-[#f2ecdc] flex justify-between items-center">
-                        <div class="pr-2">
-                            <p class="font-bold text-xs text-[#4a3b32]">${char.name}</p>
-                            <p class="text-[10px] text-[#735d4c]">Trang bị: ${char.outfit}</p>
+                    <div class="p-2.5 rounded-xl border border-[#c4b59d] bg-[#f2ecdc] grid grid-cols-[minmax(0,1fr)_116px] gap-2 items-center">
+                        <div class="min-w-0">
+                            <p class="font-bold text-xs text-[#4a3b32] break-words">${char.name}</p>
+                            <p class="text-[10px] text-[#735d4c] break-words">Trang bị: ${char.outfit}</p>
                         </div>
-                        ${btnHtml}
+                        <div class="w-[116px] flex items-center justify-end gap-1.5">${btnHtml}</div>
                     </div>
                 `;
             });
@@ -790,19 +806,19 @@
                 if (isEquipped) {
                     btnHtml = `<span class="px-2.5 py-1 text-[11px] font-bold rounded-lg bg-[#467551] text-white">Đang dùng</span>`;
                 } else if (isUnlocked) {
-                    btnHtml = `<button onclick="equipPack('${pack.id}')" class="vintage-btn px-2.5 py-1 text-[11px] rounded-lg bg-[#e6dfcd]">Chọn</button>`;
+                    btnHtml = `<button onclick="equipPack('${pack.id}')" class="vintage-btn w-[116px] px-1 py-1.5 text-[10px] whitespace-nowrap rounded-lg bg-[#e6dfcd]">Chọn</button>`;
                 } else {
                     const canAfford = gameState.totalCoins >= pack.price;
-                    btnHtml = `<button onclick="buyPack('${pack.id}')" class="vintage-btn px-2.5 py-1 text-[11px] rounded-lg ${canAfford ? 'bg-[#f5e1a4] text-[#5c4738]' : 'opacity-50 cursor-not-allowed'}" ${!canAfford ? 'disabled' : ''}>Mua ${pack.price}</button>`;
+                    btnHtml = `<button onclick="buyPack('${pack.id}')" class="vintage-btn w-[116px] px-1 py-1.5 text-[10px] whitespace-nowrap rounded-lg ${canAfford ? 'bg-[#f5e1a4] text-[#5c4738]' : 'opacity-50 cursor-not-allowed'}" ${!canAfford ? 'disabled' : ''}>Mua ${pack.price}</button>`;
                 }
 
                 packList.innerHTML += `
-                    <div class="p-2.5 rounded-xl border border-[#c4b59d] bg-[#f2ecdc] flex justify-between items-center">
-                        <div class="pr-2">
-                            <p class="font-bold text-xs text-[#4a3b32]">${pack.name}</p>
-                            <p class="text-[10px] text-[#735d4c]">${pack.desc}</p>
+                    <div class="p-2.5 rounded-xl border border-[#c4b59d] bg-[#f2ecdc] grid grid-cols-[minmax(0,1fr)_116px] gap-2 items-center">
+                        <div class="min-w-0">
+                            <p class="font-bold text-xs text-[#4a3b32] break-words">${pack.name}</p>
+                            <p class="text-[10px] text-[#735d4c] break-words">${pack.desc}</p>
                         </div>
-                        ${btnHtml}
+                        <div class="w-[116px] flex justify-end">${btnHtml}</div>
                     </div>
                 `;
             });
@@ -815,7 +831,8 @@
             const palettes = {
                 buddy:{scarf:'#467551',accent:'#a3a875'}, solar:{scarf:'#d97706',accent:'#f5c84c'},
                 wind:{scarf:'#287fa0',accent:'#8ed3dc'}, netzero:{scarf:'#467551',accent:'#b94a39'},
-                quantum:{scarf:'#7652a8',accent:'#c7a4ff'}
+                quantum:{scarf:'#7652a8',accent:'#c7a4ff'}, aurora:{scarf:'#0e7490',accent:'#67e8f9'},
+                ocean:{scarf:'#0369a1',accent:'#38bdf8'}, forest:{scarf:'#15803d',accent:'#86efac'}
             };
             const p=palettes[charId]||palettes.buddy;
             ctx.fillStyle='rgba(0,0,0,0.13)';ctx.beginPath();ctx.ellipse(0,31,19,5,0,0,Math.PI*2);ctx.fill();
@@ -843,6 +860,17 @@
                 ctx.moveTo(-13,-14);ctx.lineTo(-5,-34);ctx.lineTo(1,-20);ctx.lineTo(9,-31);ctx.lineTo(14,-13);
                 ctx.quadraticCurveTo(0,-8,-13,-14);ctx.closePath();ctx.fill();ctx.stroke();
                 ctx.fillStyle='#f5d77b';ctx.beginPath();ctx.arc(-5,-24,2,0,Math.PI*2);ctx.arc(8,-22,2,0,Math.PI*2);ctx.fill();
+            }else if(charId==='aurora'){
+                ctx.strokeStyle=p.accent;ctx.lineWidth=3;ctx.beginPath();ctx.arc(0,-17,17,Math.PI*1.08,Math.PI*1.92);ctx.stroke();
+                ctx.fillStyle='#e0f2fe';ctx.beginPath();ctx.moveTo(0,-35);ctx.lineTo(5,-27);ctx.lineTo(0,-21);ctx.lineTo(-5,-27);ctx.closePath();ctx.fill();
+            }else if(charId==='ocean'){
+                ctx.fillStyle='#075985';ctx.strokeStyle='#164e63';ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(0,-20,15,5,0,Math.PI,Math.PI*2);ctx.fill();ctx.stroke();
+                ctx.fillStyle='#bae6fd';ctx.fillRect(-10,-20,20,3);
+                ctx.strokeStyle=p.accent;ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,-2,13,.15,Math.PI-.15);ctx.stroke();
+            }else if(charId==='forest'){
+                ctx.fillStyle='#15803d';ctx.strokeStyle='#166534';ctx.lineWidth=1.5;ctx.beginPath();
+                ctx.moveTo(-15,-17);ctx.lineTo(-10,-29);ctx.lineTo(-4,-20);ctx.lineTo(2,-34);ctx.lineTo(7,-20);ctx.lineTo(14,-28);ctx.lineTo(17,-15);ctx.closePath();ctx.fill();ctx.stroke();
+                ctx.fillStyle='#fda4af';ctx.beginPath();ctx.arc(20,-8,3,0,Math.PI*2);ctx.fill();
             }
             ctx.fillStyle='#3b302a';ctx.beginPath();ctx.arc(-6.5,1,2,0,Math.PI*2);ctx.arc(6.5,1,2,0,Math.PI*2);ctx.fill();
             ctx.strokeStyle='#3b302a';ctx.lineWidth=1.7;ctx.beginPath();ctx.arc(0,5,3.2,.12,Math.PI-.12);ctx.stroke();
@@ -1440,8 +1468,8 @@
 
                 ctx.fillStyle = pObj.trim;
                 ctx.font = '14px sans-serif';
-                ctx.fillText('⚡', px - 25, py - 10);
-                ctx.fillText('⚡', px + 15, py + 20);
+                ctx.fillText(pObj.icon || '⚡', px - 25, py - 10);
+                ctx.fillText(pObj.icon || '⚡', px + 15, py + 20);
             }
 
             // Vẽ nhân vật (Baby Cloud hoặc Hiệp sĩ bay lướt ngang siêu đẹp)
