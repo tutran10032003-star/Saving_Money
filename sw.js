@@ -1,9 +1,10 @@
-```javascript
-const CACHE_NAME = "eco-buddy-v2";
+const CACHE_NAME = "eco-buddy-v3";
 
 const APP_FILES = [
   "/Saving_Money/",
   "/Saving_Money/index.html",
+  "/Saving_Money/memory-tips-data.js",
+  "/Saving_Money/memory-game.js",
   "/Saving_Money/manifest.json",
   "/Saving_Money/icons/icon-192.png",
   "/Saving_Money/icons/icon-512.png"
@@ -67,4 +68,3 @@ self.addEventListener("fetch", (event) => {
     })
   );
 });
-```
