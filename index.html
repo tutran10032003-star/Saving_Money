@@ -750,11 +750,12 @@
         .memory-hub-logo{width:clamp(88px,12vw,124px)!important;height:auto!important;filter:drop-shadow(0 6px 2px #50345a55)!important;overflow:visible}
         .eco-game-card:has(.memory-hub-logo) strong{font-family:"Arial Rounded MT Bold","Trebuchet MS",system-ui,sans-serif!important;font-size:clamp(17px,2.1vw,21px)!important;font-weight:1000!important;letter-spacing:.35px!important;color:#7842a8!important;-webkit-text-stroke:.25px #fff!important;text-shadow:0 2px 0 #fff,0 4px 0 #e6c8ff,0 5px 9px #76519b55!important}
         /* Make the fullscreen game stage itself the only vertical scroll container. */
-        #eco-game-stage.eco-game-fullscreen{display:block!important;position:fixed!important;inset:0!important;width:100%!important;height:100dvh!important;max-height:none!important;overflow-x:hidden!important;overflow-y:auto!important;overscroll-behavior-y:auto!important;touch-action:pan-y pinch-zoom!important;-webkit-overflow-scrolling:touch!important;scrollbar-width:auto!important;scrollbar-gutter:auto!important;padding:calc(env(safe-area-inset-top,0px) + 58px) 0 calc(28px + env(safe-area-inset-bottom,0px))!important}
-        #eco-game-stage.eco-game-fullscreen #eco-game-play-area{display:block!important;flex:none!important;width:100%!important;height:auto!important;min-height:0!important;overflow:visible!important}
-        #eco-game-stage.eco-game-fullscreen #eco-game-play-area>.eco-playfield{height:auto!important;min-height:0!important;overflow:visible!important}
-        #eco-game-stage.eco-game-fullscreen .eco-playfield{min-height:0!important}
-        #eco-game-stage.eco-game-fullscreen .eco-game-toolbar{position:fixed!important;z-index:2147483001!important}
+        /* Higher-specificity Memory Match overrides: the old memory rules hid stage scrolling. */
+        body.memory-game-playing #eco-game-stage.eco-game-fullscreen{display:block!important;position:fixed!important;inset:0!important;width:100%!important;height:100dvh!important;max-height:none!important;min-height:0!important;overflow-x:hidden!important;overflow-y:scroll!important;overscroll-behavior-y:contain!important;touch-action:pan-y!important;-webkit-overflow-scrolling:touch!important;scrollbar-width:auto!important;scrollbar-gutter:stable!important;padding:calc(env(safe-area-inset-top,0px) + 58px) 0 calc(28px + env(safe-area-inset-bottom,0px))!important}
+        body.memory-game-playing #eco-game-stage.eco-game-fullscreen #eco-game-play-area{display:block!important;flex:0 0 auto!important;width:100%!important;height:auto!important;min-height:max-content!important;overflow:visible!important;transform:none!important}
+        body.memory-game-playing #eco-game-stage.eco-game-fullscreen #eco-game-play-area>.eco-playfield{display:block!important;flex:none!important;height:auto!important;min-height:max-content!important;overflow:visible!important}
+        body.memory-game-playing #eco-game-stage.eco-game-fullscreen .eco-playfield{height:auto!important;min-height:max-content!important;overflow:visible!important}
+        body.memory-game-playing #eco-game-stage.eco-game-fullscreen .eco-game-toolbar{position:fixed!important;z-index:2147483001!important}
 
 </style>
 </head>
