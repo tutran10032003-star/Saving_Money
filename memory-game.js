@@ -113,7 +113,7 @@
       return '<div class="rounded-xl border p-2 text-left '+(seen?'bg-[#e8f1e3] border-[#9eb995]':'bg-[#f1ece3] border-[#d8cbb8 opacity-70')+'"><div class="flex items-center gap-2"><span class="text-lg">'+(seen?t.icon:'🔒')+'</span><span class="text-[10px] font-extrabold">'+escapeHtml(seen?(language()==="vi"?t.vi:t.en):text("Locked tip","Mẹo chưa mở"))+'</span></div><p class="text-[9px] mt-1 opacity-70">'+escapeHtml(seen?(language()==="vi"?t.categoryName.vi:t.categoryName.en):text("Match a pair to discover this tip","Ghép đúng cặp để mở mẹo này"))+'</p></div>';
     }).join("");
     const panel=document.getElementById("eco-memory-vault");
-    if(panel)panel.innerHTML='<div class="flex items-center justify-between gap-2"><b>📚 '+text("Tip Library","Kho mẹo")+'</b><b class="text-xs">'+unlocked.length+' / '+all.length+'</b></div><div class="h-2 rounded-full bg-[#e8dfd1] overflow-hidden mt-2"><div class="h-full bg-[#83a77d]" style="width:'+pct+'%"></div></div><p class="text-[10px] mt-1 mb-2">'+pct+'% '+text("discovered","đã khám phá")+'</p><div class="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-64 overflow-y-auto">'+items+'</div>';
+    if(panel)panel.innerHTML='<div class="flex items-center justify-between gap-2"><b>📚 '+text("Tip Library","Kho mẹo")+'</b><b class="text-xs">'+unlocked.length+' / '+all.length+'</b></div><div class="h-2 rounded-full bg-[#e8dfd1] overflow-hidden mt-2"><div class="h-full bg-[#83a77d]" style="width:'+pct+'%"></div></div><p class="text-[10px] mt-1 mb-2">'+pct+'% '+text("discovered","đã khám phá")+'</p><div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 w-full">'+items+'</div>';
   }
   window.toggleEcoMemoryVault=function(){
     window.showMemoryTips();
@@ -134,7 +134,7 @@
     const area=document.getElementById("eco-game-play-area");if(!area)return;
     if(document.getElementById("eco-memory-grid"))savedGameMarkup=area.innerHTML;
     const vi=language()==="vi";
-    area.innerHTML='<div class="eco-playfield space-y-3"><div class="flex items-center justify-between gap-2"><h3 class="text-lg font-black">📚 '+text("Tip Library","Thư viện mẹo")+'</h3><button type="button" class="eco-action" onclick="returnToMemoryView()">← '+text("Back","Quay lại")+'</button></div><div id="eco-memory-vault" class="rounded-xl border border-[#cdbb9f] bg-[#fffaf1] p-3"></div></div>';
+    area.innerHTML='<div class="eco-playfield space-y-3"><div class="flex items-center justify-between gap-2"><h3 class="text-lg font-black">📚 '+text("Tip Library","Thư viện mẹo")+'</h3><button type="button" class="eco-action" onclick="returnToMemoryView()">← '+text("Back","Quay lại")+'</button></div><div id="eco-memory-vault" class="w-full min-w-0"></div></div>';
     renderVault();
   };
   window.returnToMemoryView=function(){
