@@ -584,10 +584,21 @@
             padding:0!important;
             transform:none!important;
         }
-        body.memory-game-playing #eco-game-stage #eco-memory-grid .eco-memory-inner,
-        body.memory-game-playing #eco-game-stage #eco-memory-grid .eco-memory-face{
+        body.memory-game-playing #eco-game-stage #eco-memory-grid .eco-memory-inner{
             position:absolute!important;
             display:block!important;
+            inset:0!important;
+            width:100%!important;
+            height:100%!important;
+        }
+        /* Preserve the original card-face layout: centered logo and ECO label on the back. */
+        body.memory-game-playing #eco-game-stage #eco-memory-grid .eco-memory-face{
+            position:absolute!important;
+            display:flex!important;
+            flex-direction:column!important;
+            align-items:center!important;
+            justify-content:center!important;
+            gap:8px!important;
             inset:0!important;
             width:100%!important;
             height:100%!important;
