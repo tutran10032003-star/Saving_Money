@@ -134,7 +134,7 @@
     const area=document.getElementById("eco-game-play-area");if(!area)return;
     if(document.getElementById("eco-memory-grid"))savedGameMarkup=area.innerHTML;
     const vi=language()==="vi";
-    area.innerHTML='<div class="eco-playfield space-y-3"><div class="flex items-center justify-between gap-2"><h3 class="text-lg font-black">📚 '+text("Tip Library","Thư viện mẹo")+'</h3><button type="button" class="eco-action" onclick="returnToMemoryView()">← '+text("Back","Quay lại")+'</button></div><div id="eco-memory-vault" class="w-full min-w-0"></div></div>';
+    area.innerHTML='<div class="eco-playfield space-y-3"><div class="flex items-center justify-between gap-2"><h3 class="text-lg font-black">📚 '+text("Tip Library","Thư viện mẹo")+'</h3><button type="button" class="eco-action" onclick="returnToMemoryView()">← '+text("Back","Quay lại")+'</button></div><div id="eco-memory-vault" class="w-full min-w-0 max-h-none h-auto overflow-visible border-0 rounded-none bg-transparent p-0"></div></div>';
     renderVault();
   };
   window.returnToMemoryView=function(){
