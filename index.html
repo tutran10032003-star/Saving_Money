@@ -3038,5 +3038,31 @@ document.addEventListener("DOMContentLoaded",()=>{
 
 </style>
 
+
+<style id="memory-mobile-compact-six-plus">
+@media(max-width:600px){
+  body.memory-game-playing #eco-game-stage #eco-memory-grid.eco-memory-grid-compact{
+    grid-template-columns:repeat(4,minmax(0,1fr))!important;
+    grid-auto-rows:clamp(64px,11vh,82px)!important;
+    gap:7px!important;
+    width:94vw!important;
+    max-width:440px!important;
+    margin:8px auto!important;
+  }
+  body.memory-game-playing #eco-game-stage #eco-memory-grid.eco-memory-grid-compact .eco-memory-face{
+    gap:3px!important;
+    padding:3px 2px!important;
+  }
+  body.memory-game-playing #eco-game-stage #eco-memory-grid.eco-memory-grid-compact .eco-card-front .eco-memory-icon{font-size:18px!important}
+  body.memory-game-playing #eco-game-stage #eco-memory-grid.eco-memory-grid-compact .eco-card-front .eco-memory-tip-text{
+    font-size:7px!important;line-height:1.08!important;-webkit-line-clamp:3!important;
+  }
+  body.memory-game-playing #eco-game-stage #eco-memory-grid.eco-memory-grid-compact .eco-card-front .eco-memory-category{font-size:6px!important;line-height:1!important}
+  body.memory-game-playing #eco-game-stage #eco-memory-grid.eco-memory-grid-compact .eco-card-back b{font-size:22px!important}
+  body.memory-game-playing #eco-game-stage #eco-memory-grid.eco-memory-grid-compact .eco-card-back small{font-size:7px!important}
+  body.memory-game-playing #eco-game-stage .eco-memory-feedback{margin-top:7px!important;padding:6px!important;font-size:10px!important}
+}
+</style>
+
 </body>
 </html>
