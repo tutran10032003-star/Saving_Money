@@ -1855,34 +1855,55 @@
         function parseBillBandsFromWords(words){
             const usable=(words||[]).filter(w=>w&&w.bbox&&String(w.text||"").trim());
             if(!usable.length)return {};
-            const heights=usable.map(w=>Math.max(1,w.bbox.y1-w.bbox.y0)).sort((a,b)=>a-b);
-            const tolerance=Math.max(4,heights[Math.floor(heights.length/2)]*.8);
-            const sorted=usable.slice().sort((a,b)=>((a.bbox.y0+a.bbox.y1)/2)-((b.bbox.y0+b.bbox.y1)/2));
+            const center=w=>(w.bbox.x0+w.bbox.x1)/2;
+            const cy=w=>(w.bbox.y0+w.bbox.y1)/2;
+            const median=a=>{const v=a.slice().sort((x,y)=>x-y);return v.length?v[Math.floor(v.length/2)]:0;};
+            const heights=usable.map(w=>Math.max(1,w.bbox.y1-w.bbox.y0));
+            const rowTolerance=Math.max(3,median(heights)*0.62);
+            const clean=w=>String(w.text||"").trim().toLowerCase().replace(/[^a-z]/g,"");
+            // Locate the Unit Usage / Unit Rate columns from their printed headings.
+            const usageHeads=usable.filter(w=>/^(usage|kwh|units?)$/.test(clean(w)));
+            const rateHeads=usable.filter(w=>/^(rate|price)$/.test(clean(w)));
+            const usageX=usageHeads.length?median(usageHeads.map(center)):null;
+            const rateX=rateHeads.length?median(rateHeads.map(center)):null;
             const rows=[];
-            sorted.forEach(w=>{
-                const cy=(w.bbox.y0+w.bbox.y1)/2;
-                let row=rows.find(r=>Math.abs(r.cy-cy)<=tolerance);
-                if(!row){row={cy,words:[]};rows.push(row);}
+            usable.slice().sort((a,b)=>cy(a)-cy(b)).forEach(w=>{
+                let row=rows.find(r=>Math.abs(r.cy-cy(w))<=rowTolerance);
+                if(!row){row={cy:cy(w),words:[]};rows.push(row);}
                 row.words.push(w);
-                row.cy=row.words.reduce((sum,x)=>sum+(x.bbox.y0+x.bbox.y1)/2,0)/row.words.length;
+                row.cy=row.words.reduce((sum,x)=>sum+cy(x),0)/row.words.length;
             });
             const out={};
             rows.forEach(row=>{
                 const line=row.words.slice().sort((a,b)=>a.bbox.x0-b.bbox.x0);
-                const text=line.map(w=>String(w.text).trim()).join(" ");
-                const match=text.match(/\b(day|peak|night)\b/i);
+                const match=line.map(w=>String(w.text||"").trim()).join(" ").match(/\b(day|peak|night)\b/i);
                 if(!match)return;
                 const key=match[1].toLowerCase();
-                if(out[key])return;
-                const tokens=line.map(w=>String(w.text).trim().replace(/[€£]/g,""));
-                const priceIndex=tokens.findIndex(t=>/^0[.,]\d{3,6}$/.test(t));
-                if(priceIndex<1)return;
-                const number=t=>/^\d{1,6}(?:[.,]\d+)?$/.test(t)?Number(t.replace(",",".")):NaN;
-                let kwh=null;
-                for(let i=priceIndex-1;i>=0;i--){const n=number(tokens[i]);if(Number.isFinite(n)&&n>=1){kwh=n;break;}}
-                let amount=null;
-                for(let i=priceIndex+1;i<tokens.length;i++){if(/^\d{1,5}[.,]\d{2}$/.test(tokens[i]))amount=number(tokens[i]);}
-                if(kwh!==null)out[key]={kwh,price:number(tokens[priceIndex]),amount};
+                if(out[key]&&validBillBand(out[key]))return;
+                const label=line.find(w=>new RegExp("^"+key+"$","i").test(String(w.text||"").trim()));
+                if(!label)return;
+                const labelX=center(label);
+                const numeric=line.map(w=>({raw:String(w.text||"").trim().replace(/[€£]/g,""),x:center(w)}))
+                    .filter(t=>/^\d{1,6}(?:[.,]\d+)?$/.test(t.raw));
+                const price=numeric.find(t=>/^0[.,]\d{3,6}$/.test(t.raw)&&t.x>labelX);
+                if(!price)return;
+                // Never mistake the time range beside Day/Peak/Night for the usage figure:
+                // take an integer from the Unit Usage column, to the right of the label and left of rate.
+                const usageCandidates=numeric.filter(t=>{
+                    const n=Number(t.raw.replace(",","."));
+                    if(!/^\d{1,4}$/.test(t.raw)||n<1||t.x<=labelX||t.x>=price.x)return false;
+                    if(usageX!==null&&Math.abs(t.x-usageX)>Math.max(45,Math.abs(price.x-usageX)*0.7))return false;
+                    return true;
+                });
+                if(!usageCandidates.length)return;
+                const usage=usageX!==null
+                    ?usageCandidates.sort((a,b)=>Math.abs(a.x-usageX)-Math.abs(b.x-usageX))[0]
+                    :usageCandidates[usageCandidates.length-1];
+                if(rateX!==null&&price.x>rateX+Math.max(50,Math.abs(rateX-labelX)*0.5))return;
+                const amountToken=numeric.filter(t=>/^\d{1,5}[.,]\d{2}$/.test(t.raw)&&t.x>price.x).pop();
+                const val=t=>Number(t.raw.replace(",","."));
+                const parsed={kwh:val(usage),price:val(price),amount:amountToken?val(amountToken):null};
+                if(!out[key]||validBillBand(parsed))out[key]=parsed;
             });
             return out;
         }
