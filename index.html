@@ -1600,7 +1600,8 @@
         function renderBillTotalPreviews(){
             const preview=document.getElementById("bill-preview-img");
             if(!preview)return;
-            preview.innerHTML=(billImageUrls.total||[]).map((url,index)=>'<div class="min-w-0 relative"><img src="'+url+'" alt="Bill page '+(index+1)+'" class="max-h-40 w-full object-contain rounded-xl border"><p class="text-[10px] text-center text-[#7a6452] mt-1">Trang '+(index+1)+'</p><button type="button" onclick="removeBillTotalImage('+index+')" class="mt-1 w-full px-2 py-1 rounded-lg bg-[#f3e2dc] text-[#8b4035] text-[11px] font-bold">✕ Xoá ảnh này</button></div>').join("");
+            const vi=lang()==="vi";
+            preview.innerHTML=(billImageUrls.total||[]).map((url,index)=>'<div class="min-w-0 relative"><img src="'+url+'" alt="'+(vi?"Trang ":"Page ")+(index+1)+'" class="max-h-40 w-full object-contain rounded-xl border"><p class="text-[10px] text-center text-[#7a6452] mt-1">'+(vi?"Trang ":"Page ")+(index+1)+'</p><button type="button" onclick="removeBillTotalImage('+index+')" class="mt-1 w-full px-2 py-1 rounded-lg bg-[#f3e2dc] text-[#8b4035] text-[11px] font-bold">'+(vi?"✕ Xóa ảnh này":"✕ Delete this image")+'</button></div>').join("");
         }
         function removeBillTotalImage(index){
             const files=billImageFiles.total||[],urls=billImageUrls.total||[];
@@ -1610,15 +1611,19 @@
             billImageUrls.total=urls.filter((_,i)=>i!==index);
             renderBillTotalPreviews();
             const input=document.getElementById("bill-img-file");if(input)input.value="";
-            document.getElementById("upload-status-text").textContent=billImageFiles.total.length?"Đã xoá ảnh. Bạn có thể chọn ảnh khác.":"Đã xoá ảnh. Hãy tải ảnh hoá đơn lên.";
-            document.getElementById("bill-ocr-status").textContent="Có thay đổi ảnh — cần đọc lại";
+            const vi=lang()==="vi",uploadStatus=document.getElementById("upload-status-text"),ocrStatus=document.getElementById("bill-ocr-status");
+            if(uploadStatus)uploadStatus.textContent=billImageFiles.total.length?(vi?"Đã xóa ảnh. Bạn có thể chọn ảnh khác.":"Image deleted. You can choose another one."):(vi?"Đã xóa ảnh. Hãy tải ảnh hóa đơn lên.":"Image deleted. Please upload a bill image.");
+            if(ocrStatus)ocrStatus.textContent=vi?"Ảnh đã thay đổi — cần đọc lại":"Images changed — run OCR again";
         }
         function previewUploadedBill(event,type){
             type=type||"total";const selected=Array.from(event.target.files||[]);if(!selected.length)return;
-            if(selected.some(file=>!file.type.startsWith("image/"))){alert("Please choose image files.");event.target.value="";return;}
+            if(selected.some(file=>!file.type.startsWith("image/"))){alert(lang()==="vi"?"Vui lòng chọn tệp hình ảnh.":"Please choose image files.");event.target.value="";return;}
             if(type==="total"){
-                const combined=[...(billImageFiles.total||[]),...selected].slice(0,2);
-                if((billImageFiles.total||[]).length+selected.length>2)alert("Ảnh A chỉ nhận tối đa 2 ảnh cho cùng một hóa đơn.");
+                const existing=billImageFiles.total||[],remaining=Math.max(0,2-existing.length);
+                if(selected.length>remaining)alert(lang()==="vi"?"Ảnh A chỉ nhận tối đa 2 ảnh cho mỗi hóa đơn.":"Image A accepts a maximum of 2 images per bill.");
+                const accepted=selected.slice(0,remaining);
+                if(!accepted.length){event.target.value="";return;}
+                const combined=[...existing,...accepted];
                 billImageFiles.total=combined;
                 (billImageUrls.total||[]).forEach(url=>URL.revokeObjectURL(url));
                 billImageUrls.total=combined.map(file=>URL.createObjectURL(file));
@@ -2962,6 +2967,8 @@ function renderBillUploadLanguage(){
   const known={
    "Đang chờ ảnh":["Waiting for images","Đang chờ ảnh"],
    "Có ảnh mới — cần đọc lại":["New image selected — run OCR again","Có ảnh mới — cần đọc lại"],
+   "Ảnh đã thay đổi — cần đọc lại":["Images changed — run OCR again","Ảnh đã thay đổi — cần đọc lại"],
+   "Có thay đổi ảnh — cần đọc lại":["Images changed — run OCR again","Có thay đổi ảnh — cần đọc lại"],
    "Chưa có ảnh để đọc":["No image selected for reading","Chưa có ảnh để đọc"],
    "OCR chưa tải được — nhập tay nhé":["OCR unavailable — enter values manually","OCR chưa tải được — nhập tay nhé"],
    "Đang đọc ảnh...":["Reading images...","Đang đọc ảnh..."],
@@ -2971,6 +2978,18 @@ function renderBillUploadLanguage(){
   if(pair)status.textContent=target==="vi"?pair[1]:pair[0];
   else status.textContent=translateText(current,target);
  }
+ if(uploadStatus){
+  const current=uploadStatus.textContent.trim();
+  const messages={
+   "Đã xóa ảnh. Bạn có thể chọn ảnh khác.":["Image deleted. You can choose another one.","Đã xóa ảnh. Bạn có thể chọn ảnh khác."],
+   "Đã xóa ảnh. Hãy tải ảnh hóa đơn lên.":["Image deleted. Please upload a bill image.","Đã xóa ảnh. Hãy tải ảnh hóa đơn lên."],
+   "Image deleted. You can choose another one.":["Image deleted. You can choose another one.","Đã xóa ảnh. Bạn có thể chọn ảnh khác."],
+   "Image deleted. Please upload a bill image.":["Image deleted. Please upload a bill image.","Đã xóa ảnh. Hãy tải ảnh hóa đơn lên."]
+  };
+  const pair=messages[current];
+  if(pair)uploadStatus.textContent=target==="vi"?pair[1]:pair[0];
+ }
+ if(typeof renderBillTotalPreviews==="function")renderBillTotalPreviews();
 }
 window.applyAppLanguage=applyAppLanguage;
 const originalSetLanguage=window.setAppLanguage;
