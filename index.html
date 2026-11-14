@@ -2933,9 +2933,24 @@ document.addEventListener("DOMContentLoaded",()=>{
 
 </script>
 
-    <script src="./eco-games.js?v=16"></script>
+    <script src="./eco-games.js?v=17"></script>
     <script src="./memory-tips-data.js?v=16"></script>
     <script src="./memory-game.js?v=16"></script>
+
+
+<style id="eco-game-font-reset">
+/* Game typography: match the original website font, never use decorative display fonts */
+#eco-game-stage, #eco-game-stage *,
+#eco-game-hub-panel, #eco-game-hub-panel *,
+#eco-game-grid, #eco-game-grid *,
+.eco-game-scene, .eco-game-scene *,
+.eco-memory-playfield, .eco-memory-playfield * {
+  font-family:'Quicksand',sans-serif!important;
+}
+#eco-game-stage svg text, #eco-game-hub-panel svg text {
+  font-family:'Quicksand',sans-serif!important;
+}
+</style>
 
 </body>
 </html>
