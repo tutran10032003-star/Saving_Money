@@ -1907,7 +1907,7 @@
             });
             return out;
         }
-        function validBillBand(r){return !!r&&Number.isFinite(r.kwh)&&r.kwh>=0&&Number.isFinite(r.price)&&r.price>0&&r.amount!==null&&Number.isFinite(r.amount)&&Math.abs(r.kwh*r.price-r.amount)<=0.06;}
+        function validBillBand(r){return !!r&&Number.isFinite(r.kwh)&&r.kwh>=0&&Number.isFinite(r.price)&&r.price>0&&(r.amount===null||r.amount===undefined||(Number.isFinite(r.amount)&&Math.abs(r.kwh*r.price-r.amount)<=0.06));}
         function scoreBillBands(o){return Object.values(o||{}).filter(validBillBand).length;}
         function billBandsRect(words,W,H,above,below){
             above=above||4;below=below||6;
