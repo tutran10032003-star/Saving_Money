@@ -76,7 +76,7 @@
       ["Use a water-efficient showerhead where suitable.", "Dùng vòi sen tiết kiệm nước khi phù hợp.", "Efficient showerhead", "Vòi sen tiết kiệm", "🚰"],
       ["Fix dripping hot taps promptly.", "Sửa vòi nước nóng bị rò rỉ sớm.", "Fix hot taps", "Sửa vòi rò", "🛠️"],
       ["Set hot-water temperature safely and avoid excessive heating.", "Cài nhiệt độ nước nóng an toàn và tránh làm nóng quá mức.", "Set safe temperature", "Chỉnh nhiệt an toàn", "🧪"],
-      ["Turn off the tap while brushing your teeth.", "Khóa vòi nước khi đánh răng.", "Turn off tap", "Khóa vòi nước", "🪥"],
+      ["Turn off the tap while brushing your teeth.", "Khóa vòi nước khi đánh răng.", "Turn off tap", "Khóa vòi nước", "💧"],
       ["Use cold water for handwashing when appropriate.", "Dùng nước lạnh để rửa tay khi phù hợp.", "Wash with cold", "Rửa bằng nước lạnh", "🧼"],
       ["Insulate accessible hot-water pipes where suitable.", "Bọc cách nhiệt đường ống nước nóng ở vị trí phù hợp.", "Insulate hot pipes", "Bọc ống nước nóng", "🧣"],
       ["Avoid reheating more hot water than you need.", "Tránh đun lại nhiều nước nóng hơn mức cần dùng.", "Heat needed water", "Đun đủ nước nóng", "🛁"]
