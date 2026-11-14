@@ -1399,11 +1399,64 @@
             }
         }
 
+        function drawEcoBackdrop() {
+            const w = canvas.width, h = canvas.height;
+            const isDay = gameState.zone === 'day';
+            const isPeak = gameState.zone === 'peak';
+            const base = isDay ? ['#dcebdc', '#b9d5bd'] : isPeak ? ['#f7dfc7', '#e9bda4'] : ['#263b50', '#526b80'];
+            const sky = ctx.createLinearGradient(0, 0, 0, h);
+            sky.addColorStop(0, base[0]);
+            sky.addColorStop(1, base[1]);
+            ctx.fillStyle = sky;
+            ctx.fillRect(0, 0, w, h);
+
+            ctx.save();
+            ctx.globalAlpha = isPeak ? 0.16 : 0.20;
+            const glow = ctx.createRadialGradient(w * 0.5, h * 0.18, 4, w * 0.5, h * 0.18, w * 0.72);
+            glow.addColorStop(0, isDay ? '#fff8cf' : isPeak ? '#fff0c9' : '#b7d7ed');
+            glow.addColorStop(1, 'rgba(255,255,255,0)');
+            ctx.fillStyle = glow;
+            ctx.fillRect(0, 0, w, h * 0.62);
+
+            const drift = (roadOffset * 0.12) % (h + 90);
+            const cloud = (x, y, scale) => {
+                ctx.save();
+                ctx.translate(x, y);
+                ctx.scale(scale, scale);
+                ctx.fillStyle = isDay ? '#fffdf0' : isPeak ? '#fff4e8' : '#d7e5f0';
+                ctx.beginPath();
+                ctx.arc(-15, 3, 10, Math.PI, 0);
+                ctx.arc(-3, -4, 14, Math.PI, 0);
+                ctx.arc(12, 2, 10, Math.PI, 0);
+                ctx.lineTo(22, 8); ctx.lineTo(-25, 8); ctx.closePath();
+                ctx.fill();
+                ctx.restore();
+            };
+            cloud(w * 0.18, ((-drift + h + 90) % (h + 90)) - 35, 0.75);
+            cloud(w * 0.78, ((-drift * 0.72 + h * 0.48 + h + 90) % (h + 90)) - 35, 0.58);
+
+            ctx.globalAlpha = isDay ? 0.20 : 0.13;
+            ctx.fillStyle = isDay ? '#6f9c69' : '#fff0c2';
+            for (let i = 0; i < 18; i++) {
+                const x = ((i * 73) % Math.max(1, w - 18)) + 9;
+                const y = ((i * 97 + roadOffset * (0.18 + (i % 3) * 0.05)) % h);
+                ctx.beginPath();
+                ctx.arc(x, y, i % 4 === 0 ? 2.2 : 1.2, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            ctx.restore();
+
+            const edge = ctx.createLinearGradient(0, 0, w, 0);
+            edge.addColorStop(0, 'rgba(48,72,48,0.13)');
+            edge.addColorStop(0.12, 'rgba(255,255,255,0)');
+            edge.addColorStop(0.88, 'rgba(255,255,255,0)');
+            edge.addColorStop(1, 'rgba(48,72,48,0.13)');
+            ctx.fillStyle = edge;
+            ctx.fillRect(0, 0, w, h);
+        }
+
         function renderGame() {
-            if (gameState.zone === 'day') ctx.fillStyle = '#eaf0e6';
-            else if (gameState.zone === 'peak') ctx.fillStyle = '#fceade';
-            else ctx.fillStyle = '#dce3ed';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            drawEcoBackdrop();
 
             let laneWidth = canvas.width / 3;
             ctx.strokeStyle = '#c8bc9f';
