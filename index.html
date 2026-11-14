@@ -1895,14 +1895,24 @@
                     if(usageX!==null&&Math.abs(t.x-usageX)>Math.max(45,Math.abs(price.x-usageX)*0.7))return false;
                     return true;
                 });
-                if(!usageCandidates.length)return;
-                const usage=usageX!==null
-                    ?usageCandidates.sort((a,b)=>Math.abs(a.x-usageX)-Math.abs(b.x-usageX))[0]
-                    :usageCandidates[usageCandidates.length-1];
                 if(rateX!==null&&price.x>rateX+Math.max(50,Math.abs(rateX-labelX)*0.5))return;
                 const amountToken=numeric.filter(t=>/^\d{1,5}[.,]\d{2}$/.test(t.raw)&&t.x>price.x).pop();
                 const val=t=>Number(t.raw.replace(",","."));
-                const parsed={kwh:val(usage),price:val(price),amount:amountToken?val(amountToken):null};
+                let usage=usageCandidates.length
+                    ?(usageX!==null
+                        ?usageCandidates.sort((a,b)=>Math.abs(a.x-usageX)-Math.abs(b.x-usageX))[0]
+                        :usageCandidates[usageCandidates.length-1])
+                    :null;
+                let kwh=usage?val(usage):null;
+                const rateValue=val(price),amountValue=amountToken?val(amountToken):null;
+                // If OCR missed the Unit Usage cell, derive only when the printed amount/rate
+                // independently resolve to an almost exact whole-kWh value.
+                if(kwh===null&&amountValue!==null&&rateValue>0){
+                    const calculated=amountValue/rateValue,rounded=Math.round(calculated);
+                    if(rounded>0&&Math.abs(calculated-rounded)<=0.12&&Math.abs(rounded*rateValue-amountValue)<=0.06)kwh=rounded;
+                }
+                if(kwh===null)return;
+                const parsed={kwh,price:rateValue,amount:amountValue};
                 if(!out[key]||validBillBand(parsed))out[key]=parsed;
             });
             return out;
