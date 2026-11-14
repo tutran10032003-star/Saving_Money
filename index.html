@@ -785,7 +785,15 @@
         #eco-game-stage .eco-game-scene h4{font-size:clamp(20px,3vw,28px)!important;line-height:1.15}
         #eco-game-stage .eco-playfield>div:first-child>span:first-child{font-size:clamp(16px,2.2vw,21px)!important}
 
-    </style>
+    
+        /* Memory Match matched cards blend into the warm playfield */
+        body.memory-game-playing #eco-game-stage #eco-memory-grid .eco-memory-card.matched,
+        body.memory-playing #eco-memory-grid .eco-memory-card.matched {background:transparent!important;border-color:transparent!important;box-shadow:none!important;outline:0!important}
+        body.memory-game-playing #eco-game-stage #eco-memory-grid .eco-memory-card.matched .eco-memory-inner,
+        body.memory-playing #eco-memory-grid .eco-memory-card.matched .eco-memory-inner {box-shadow:none!important}
+        body.memory-game-playing #eco-game-stage #eco-memory-grid .eco-memory-card.matched .eco-card-front,
+        body.memory-playing #eco-memory-grid .eco-memory-card.matched .eco-card-front {background:#f6f0e3!important;border-color:#f6f0e3!important;box-shadow:none!important;color:#594b3e!important}
+</style>
 </head>
 
 <body class="min-h-screen flex flex-col justify-between selection:bg-amber-200">
