@@ -1870,18 +1870,18 @@
             rows.forEach(row=>{
                 const line=row.words.slice().sort((a,b)=>a.bbox.x0-b.bbox.x0);
                 const text=line.map(w=>String(w.text).trim()).join(" ");
-                const match=text.match(/\\b(day|peak|night)\\b/i);
+                const match=text.match(/\b(day|peak|night)\b/i);
                 if(!match)return;
                 const key=match[1].toLowerCase();
                 if(out[key])return;
                 const tokens=line.map(w=>String(w.text).trim().replace(/[€£]/g,""));
-                const priceIndex=tokens.findIndex(t=>/^0[.,]\\d{3,6}$/.test(t));
+                const priceIndex=tokens.findIndex(t=>/^0[.,]\d{3,6}$/.test(t));
                 if(priceIndex<1)return;
-                const number=t=>/^\\d{1,6}(?:[.,]\\d+)?$/.test(t)?Number(t.replace(",",".")):NaN;
+                const number=t=>/^\d{1,6}(?:[.,]\d+)?$/.test(t)?Number(t.replace(",",".")):NaN;
                 let kwh=null;
                 for(let i=priceIndex-1;i>=0;i--){const n=number(tokens[i]);if(Number.isFinite(n)&&n>=1){kwh=n;break;}}
                 let amount=null;
-                for(let i=priceIndex+1;i<tokens.length;i++){if(/^\\d{1,5}[.,]\\d{2}$/.test(tokens[i]))amount=number(tokens[i]);}
+                for(let i=priceIndex+1;i<tokens.length;i++){if(/^\d{1,5}[.,]\d{2}$/.test(tokens[i]))amount=number(tokens[i]);}
                 if(kwh!==null)out[key]={kwh,price:number(tokens[priceIndex]),amount};
             });
             return out;
