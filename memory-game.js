@@ -14,7 +14,7 @@
   const getRound = () => { try{return Math.max(0,Number(localStorage.getItem(ROUND_KEY))||0);}catch(e){return 0;} };
   const setRound = n => { try{localStorage.setItem(ROUND_KEY,String(n));}catch(e){} };
   const pairCountForRound = n => n<=2?4:(n<=5?6:8);
-  let open=[],matched=[],locked=false,deck=[],currentTips=[];
+  let open=[],matched=[],locked=false,deck=[],currentTips=[],savedGameMarkup=null;
 
   function renderVault(){
     const unlocked=readUnlocked(),all=BANK(),pct=all.length?Math.round(unlocked.length/all.length*100):0;
@@ -26,11 +26,7 @@
     if(panel)panel.innerHTML='<div class="flex items-center justify-between gap-2"><b>📚 '+text("Tip Library","Kho mẹo")+'</b><b class="text-xs">'+unlocked.length+' / '+all.length+'</b></div><div class="h-2 rounded-full bg-[#e8dfd1] overflow-hidden mt-2"><div class="h-full bg-[#83a77d]" style="width:'+pct+'%"></div></div><p class="text-[10px] mt-1 mb-2">'+pct+'% '+text("discovered","đã khám phá")+'</p><div class="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-64 overflow-y-auto">'+items+'</div>';
   }
   window.toggleEcoMemoryVault=function(){
-    let panel=document.getElementById("eco-memory-vault");
-    if(!panel)return;
-    const opening=panel.classList.contains("hidden");
-    panel.classList.toggle("hidden");
-    if(opening)renderVault();
+    window.showMemoryTips();
   };
   const LEVEL_KEY="eco_buddy_memory_levels_v1";
   const LEVELS=[4,4,4,5,5,5,6,6,6,7,7,7,8,8,8,9,9,9,10,10,10,10,10,10,10,10,10,10,10,10];
@@ -44,9 +40,15 @@
   };
   window.showMemoryTips=function(){
     const area=document.getElementById("eco-game-play-area");if(!area)return;
+    if(document.getElementById("eco-memory-grid"))savedGameMarkup=area.innerHTML;
     const vi=language()==="vi";
-    area.innerHTML='<div class="eco-playfield space-y-3"><div class="flex items-center justify-between gap-2"><h3 class="text-lg font-black">📚 '+text("Tip Library","Thư viện mẹo")+'</h3><button type="button" class="eco-action" onclick="showMemoryHome()">← '+text("Back","Quay lại")+'</button></div><div id="eco-memory-vault" class="rounded-xl border border-[#cdbb9f] bg-[#fffaf1] p-3"></div></div>';
+    area.innerHTML='<div class="eco-playfield space-y-3"><div class="flex items-center justify-between gap-2"><h3 class="text-lg font-black">📚 '+text("Tip Library","Thư viện mẹo")+'</h3><button type="button" class="eco-action" onclick="returnToMemoryView()">← '+text("Back","Quay lại")+'</button></div><div id="eco-memory-vault" class="rounded-xl border border-[#cdbb9f] bg-[#fffaf1] p-3"></div></div>';
     renderVault();
+  };
+  window.returnToMemoryView=function(){
+    const area=document.getElementById("eco-game-play-area");if(!area)return;
+    if(savedGameMarkup!==null){area.innerHTML=savedGameMarkup;savedGameMarkup=null;}
+    else window.showMemoryHome();
   };
   window.showMemoryLevels=function(){
     const area=document.getElementById("eco-game-play-area");if(!area)return;
@@ -67,7 +69,7 @@
     deck=shuffled(chosen.flatMap((t,index)=>[{...t,uid:t.id+"-a",pairId:t.id},{...t,uid:t.id+"-b",pairId:t.id}]));
     open=[];matched=[];locked=false;window.ecoMemoryDeck=deck;ecoMemoryOpen=[];ecoMemoryMatched=[];window.ecoMemoryMoves=0;
     const area=document.getElementById("eco-game-play-area"),vi=language();if(!area)return;
-    area.innerHTML='<div class="eco-playfield eco-memory-playfield space-y-3"><div class="flex flex-wrap items-center justify-between gap-2"><div class="eco-memory-status !m-0"><span id="memory-progress">0 / '+count+'</span><span id="memory-moves">0 '+(vi==="vi"?"lượt":"moves")+'</span></div><button type="button" class="eco-action" onclick="showMemoryHome()">⌂ '+(vi==="vi"?"Trang chủ":"Home")+'</button><button type="button" class="eco-action" onclick="toggleEcoMemoryVault()">📚 '+(vi==="vi"?"Kho mẹo":"Tip Library")+'</button></div><div id="eco-memory-vault" class="hidden rounded-xl border border-[#cdbb9f] bg-[#fffaf1] p-3"></div><div class="text-[10px] font-extrabold text-[#7a6452]">'+(vi==="vi"?"VÒNG ":"LEVEL ")+level+' / 30 · '+count+' '+(vi==="vi"?"CẶP":"PAIRS")+'</div><div id="eco-memory-grid" class="eco-memory-grid">'+deck.map((card,i)=>'<button type="button" class="eco-memory-card" data-card-index="'+i+'" aria-label="'+(vi==="vi"?"Lá bài úp":"Face-down card")+'" onclick="flipMemoryCard('+i+')"><span class="eco-memory-inner"><span class="eco-memory-face eco-card-back"><b>☘</b><small>ECO</small></span><span class="eco-memory-face eco-card-front"><b class="eco-memory-icon" aria-hidden="true">'+card.icon+'</b><small class="eco-memory-tip-text">'+escapeHtml(card.short?(vi?card.short.vi:card.short.en):(vi?card.vi:card.en))+'</small><span class="eco-memory-category">'+(vi?escapeHtml(card.categoryName.vi):escapeHtml(card.categoryName.en))+'</span></span></span></button>').join("")+'</div><div id="memory-feedback" class="eco-memory-feedback rounded-xl bg-[#f5efe4] p-3 text-center text-xs font-bold">'+(vi==="vi"?"Ghép hai lá có cùng mẹo tiết kiệm điện nhé!":"Match the two cards with the same energy-saving tip!")+'</div><div id="memory-tip-reveal" class="rounded-xl border border-[#c7d8bd] bg-[#edf4e8] p-3 text-xs hidden"></div></div>';
+    area.innerHTML='<div class="eco-playfield eco-memory-playfield space-y-3"><div class="flex flex-wrap items-center justify-between gap-2"><div class="eco-memory-status !m-0"><span id="memory-progress">0 / '+count+'</span><span id="memory-moves">0 '+(vi==="vi"?"lượt":"moves")+'</span></div><button type="button" class="eco-action" onclick="showMemoryHome()">⌂ '+(vi==="vi"?"Trang chủ":"Home")+'</button><button type="button" class="eco-action" onclick="showMemoryTips()">📚 '+(vi==="vi"?"Kho mẹo":"Tip Library")+'</button></div><div id="eco-memory-vault" class="hidden rounded-xl border border-[#cdbb9f] bg-[#fffaf1] p-3"></div><div class="text-[10px] font-extrabold text-[#7a6452]">'+(vi==="vi"?"VÒNG ":"LEVEL ")+level+' / 30 · '+count+' '+(vi==="vi"?"CẶP":"PAIRS")+'</div><div id="eco-memory-grid" class="eco-memory-grid">'+deck.map((card,i)=>'<button type="button" class="eco-memory-card" data-card-index="'+i+'" aria-label="'+(vi==="vi"?"Lá bài úp":"Face-down card")+'" onclick="flipMemoryCard('+i+')"><span class="eco-memory-inner"><span class="eco-memory-face eco-card-back"><b>☘</b><small>ECO</small></span><span class="eco-memory-face eco-card-front"><b class="eco-memory-icon" aria-hidden="true">'+card.icon+'</b><small class="eco-memory-tip-text">'+escapeHtml(card.short?(vi?card.short.vi:card.short.en):(vi?card.vi:card.en))+'</small><span class="eco-memory-category">'+(vi?escapeHtml(card.categoryName.vi):escapeHtml(card.categoryName.en))+'</span></span></span></button>').join("")+'</div><div id="memory-feedback" class="eco-memory-feedback rounded-xl bg-[#f5efe4] p-3 text-center text-xs font-bold">'+(vi==="vi"?"Ghép hai lá có cùng mẹo tiết kiệm điện nhé!":"Match the two cards with the same energy-saving tip!")+'</div><div id="memory-tip-reveal" class="rounded-xl border border-[#c7d8bd] bg-[#edf4e8] p-3 text-xs hidden"></div></div>';
   };
   window.renderMemoryGame=function(){window.showMemoryHome();};
   window.flipMemoryCard=function(i){
