@@ -748,7 +748,6 @@
 
         /* Memory Match hub: rounded, colorful bubble-game identity. */
         .memory-hub-logo{width:clamp(88px,12vw,124px)!important;height:auto!important;filter:drop-shadow(0 6px 2px #50345a55)!important;overflow:visible}
-        .eco-game-card:has(.memory-hub-logo) strong{font-family:"Arial Rounded MT Bold","Trebuchet MS",system-ui,sans-serif!important;font-size:clamp(17px,2.1vw,21px)!important;font-weight:1000!important;letter-spacing:.35px!important;color:#7842a8!important;-webkit-text-stroke:.25px #fff!important;text-shadow:0 2px 0 #fff,0 4px 0 #e6c8ff,0 5px 9px #76519b55!important}
         /* Make the fullscreen game stage itself the only vertical scroll container. */
         /* Higher-specificity Memory Match overrides: the old memory rules hid stage scrolling. */
         body.memory-game-playing #eco-game-stage.eco-game-fullscreen{display:block!important;position:fixed!important;inset:0!important;width:100%!important;height:100dvh!important;max-height:none!important;min-height:0!important;overflow-x:hidden!important;overflow-y:scroll!important;overscroll-behavior-y:contain!important;touch-action:pan-y!important;-webkit-overflow-scrolling:touch!important;scrollbar-width:auto!important;scrollbar-gutter:stable!important;padding:calc(env(safe-area-inset-top,0px) + 58px) 0 calc(28px + env(safe-area-inset-bottom,0px))!important}
@@ -758,41 +757,6 @@
         body.memory-game-playing #eco-game-stage.eco-game-fullscreen .eco-game-toolbar{position:fixed!important;z-index:2147483001!important}
 
 
-        /* Eco Games: playful FORTE graffiti-style display lettering */
-        #eco-game-hub-panel h2,
-        #eco-game-grid .eco-game-card strong,
-        #eco-game-stage .eco-playfield h3,
-        #eco-game-stage .eco-playfield h4,
-        #eco-game-stage .eco-game-scene h4,
-        #eco-game-stage .eco-game-scene>div>p:first-child,
-        #eco-game-stage .eco-playfield>div:first-child>span:first-child {
-            font-family:"Forte","Cooper Black","Comic Sans MS",cursive!important;
-            font-weight:900!important;
-            letter-spacing:.35px!important;
-            color:#ff4f9a!important;
-            background:linear-gradient(100deg,#ff4f9a 0%,#ff9f32 24%,#ffe34f 45%,#43c9a2 67%,#4b8dff 84%,#a66bff 100%);
-            -webkit-background-clip:text!important;
-            background-clip:text!important;
-            -webkit-text-fill-color:transparent!important;
-            -webkit-text-stroke:1px #fff!important;
-            paint-order:stroke fill;
-            filter:drop-shadow(2px 3px 0 #633d83) drop-shadow(0 5px 5px #30204455);
-            text-shadow:2px 3px 0 #633d83, 0 0 8px #ffb5d8aa!important;
-        }
-        #eco-game-grid .eco-game-card strong{font-size:clamp(18px,2.3vw,23px)!important;line-height:1.12}
-        #eco-game-stage .eco-playfield h3,
-        #eco-game-stage .eco-playfield h4,
-        #eco-game-stage .eco-game-scene h4{font-size:clamp(20px,3vw,28px)!important;line-height:1.15}
-        #eco-game-stage .eco-playfield>div:first-child>span:first-child{font-size:clamp(16px,2.2vw,21px)!important}
-
-    
-        /* Memory Match matched cards blend into the warm playfield */
-        body.memory-game-playing #eco-game-stage #eco-memory-grid .eco-memory-card.matched,
-        body.memory-playing #eco-memory-grid .eco-memory-card.matched {background:transparent!important;border-color:transparent!important;box-shadow:none!important;outline:0!important}
-        body.memory-game-playing #eco-game-stage #eco-memory-grid .eco-memory-card.matched .eco-memory-inner,
-        body.memory-playing #eco-memory-grid .eco-memory-card.matched .eco-memory-inner {box-shadow:none!important}
-        body.memory-game-playing #eco-game-stage #eco-memory-grid .eco-memory-card.matched .eco-card-front,
-        body.memory-playing #eco-memory-grid .eco-memory-card.matched .eco-card-front {background:#f6f0e3!important;border-color:#f6f0e3!important;box-shadow:none!important;color:#594b3e!important}
 </style>
 </head>
 
