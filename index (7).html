@@ -65,9 +65,21 @@
         
         <!-- HEADER -->
         <div class="w-full flex justify-between items-center mb-3 border-b-2 border-dashed border-[#8c7355] pb-2">
-            <div>
-                <h1 class="font-black text-lg sm:text-xl text-[#4a3b32] tracking-wider" style="font-family: 'Playfair Display', serif;">ECO SURFER</h1>
-                <p class="text-[11px] text-[#735d4c] font-semibold">Tích Hũ Năng Lượng & Thanh Toán Hóa Đơn</p>
+            <div class="flex items-center gap-2.5 min-w-0">
+                <svg class="w-12 h-12 shrink-0" viewBox="0 0 64 64" role="img" aria-label="Logo Bé Mây Eco Surfer">
+                    <path d="M13 39c-7-1-9-11-3-16 2-2 5-3 8-2C21 9 39 7 45 20c9-2 16 5 14 13-1 5-5 8-11 8H13Z" fill="#fffdf7" stroke="#5c4738" stroke-width="2.5"/>
+                    <path d="M17 20 11 8l13 6M43 18l8-10 1 15" fill="#a3a875" stroke="#5c4738" stroke-width="2" stroke-linejoin="round"/>
+                    <circle cx="25" cy="29" r="2" fill="#3b302a"/><circle cx="39" cy="29" r="2" fill="#3b302a"/>
+                    <path d="M29 34q3 4 6 0" fill="none" stroke="#3b302a" stroke-width="1.8" stroke-linecap="round"/>
+                    <circle cx="19" cy="34" r="3" fill="#e99a91" opacity=".8"/><circle cx="45" cy="34" r="3" fill="#e99a91" opacity=".8"/>
+                    <path d="M17 42q15 7 31-1l-3 8-23 1Z" fill="#467551" stroke="#5c4738" stroke-width="1.8"/>
+                    <path d="M8 55q22-7 48 0l-5 4H14Z" fill="#d4af37" stroke="#5c4738" stroke-width="2"/>
+                    <path d="m25 52 5-5 5 5" fill="none" stroke="#fffdf7" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <div class="min-w-0">
+                    <h1 class="font-black text-lg sm:text-xl text-[#4a3b32] tracking-wider leading-tight" style="font-family: 'Playfair Display', serif;">ECO SURFER</h1>
+                    <p class="text-[10px] sm:text-[11px] text-[#735d4c] font-semibold">Tích Hũ Năng Lượng & Thanh Toán Hóa Đơn</p>
+                </div>
             </div>
             <div class="flex items-center gap-1.5">
                 <button onclick="openShopModal()" title="Kho Đồ" class="vintage-btn w-9 h-9 text-base rounded-lg bg-[#f5e1a4] text-[#5c4738] flex items-center justify-center">
@@ -92,10 +104,7 @@
                         <span id="total-coins" class="text-xl font-black text-[#8c4a32]">0</span>
                     </div>
                 </div>
-                <div class="text-right text-[11px] text-[#4a3b32] bg-[#fdfbf7] px-2.5 py-1.5 rounded-lg border border-[#d6c9b4]">
-                    <p class="font-bold" id="equipped-char-label">☁️ Eco Buddy</p>
-                    <p class="text-[#735d4c] font-semibold" id="equipped-pack-label">🔋 Pin Dự Phòng</p>
-                </div>
+
             </div>
 
             <div class="w-full">
@@ -173,9 +182,16 @@
                 <div class="flex justify-between"><span>Đánh giá sao:</span> <strong id="res-stars">⭐⭐⭐</strong></div>
             </div>
 
-            <div class="w-full flex gap-2">
-                <button onclick="returnToMenu()" class="flex-1 vintage-btn py-2.5 rounded-xl text-xs bg-[#e6dfcd]">🏠 Về Menu</button>
-                <button onclick="restartCurrentGame()" class="flex-1 vintage-btn py-2.5 rounded-xl text-xs bg-[#d4e4bc] text-[#2c4a1d]">🔄 Chạy Lại</button>
+            <div class="w-full flex justify-center gap-4 pt-1">
+                <button onclick="returnToMenu()" title="Về menu" aria-label="Về menu" class="vintage-btn w-12 h-12 rounded-xl bg-[#e6dfcd] flex items-center justify-center text-2xl" style="font-size:0">
+                    <svg viewBox="0 0 24 24" width="25" height="25" fill="none" stroke="#5c4738" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-6v-7h-4v7H4a1 1 0 0 1-1-1z"/></svg>
+                </button>
+                <button onclick="restartCurrentGame()" title="Chơi lại" aria-label="Chơi lại" class="vintage-btn w-12 h-12 rounded-xl bg-[#d4e4bc] flex items-center justify-center" style="font-size:0">
+                    <svg viewBox="0 0 24 24" width="25" height="25" fill="none" stroke="#2c4a1d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 7v5h-5"/><path d="M4 17a8 8 0 0 0 13.7 2.3L20 17M4 7l2.3-2.3A8 8 0 0 1 20 12"/></svg>
+                </button>
+                <button id="btn-next-board" onclick="goToNextBoard()" title="Bàn tiếp theo" aria-label="Bàn tiếp theo" class="vintage-btn w-12 h-12 rounded-xl bg-[#f5e1a4] flex items-center justify-center" style="font-size:0">
+                    <svg viewBox="0 0 24 24" width="25" height="25" fill="none" stroke="#5c4738" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4v16l11-8z"/><path d="M19 5v14"/></svg>
+                </button>
             </div>
         </div>
 
@@ -1524,6 +1540,19 @@
 
         function returnToMenu() {
             switchScreen('menu');
+        }
+
+        function goToNextBoard() {
+            if (gameState.isEndless || !gameState.currentMonthId) {
+                switchScreen('menu');
+                return;
+            }
+            const nextM = MONTHS_DATA.find(m => m.id === gameState.currentMonthId + 1);
+            if (nextM && nextM.unlocked) {
+                startMonthGame(nextM.id);
+            } else {
+                switchScreen('menu');
+            }
         }
 
         window.addEventListener('resize', () => {
