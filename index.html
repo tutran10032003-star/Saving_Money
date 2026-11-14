@@ -559,122 +559,17 @@
             body.memory-playing #eco-memory-grid .eco-memory-card{aspect-ratio:.72}
         }
 
-        /* Memory Match: restore generous card size and add a soft animated eco backdrop */
-        body.memory-game-playing #eco-game-stage.eco-game-fullscreen{background:linear-gradient(145deg,#fffaf0 0%,#f6f0e3 48%,#edf3e8 100%)!important}
-        body.memory-game-playing #eco-game-stage.eco-game-fullscreen:before,
-        body.memory-game-playing #eco-game-stage.eco-game-fullscreen:after{
-            content:"☁️   🌿   ✨   🍃   🌼   ☀️";position:fixed;left:-10%;width:120%;z-index:0;
-            pointer-events:none;white-space:nowrap;letter-spacing:clamp(18px,5vw,64px);
-            font-size:clamp(19px,3vw,34px);opacity:.23;animation:ecoMemoryFloat 24s ease-in-out infinite alternate
-        }
-        body.memory-game-playing #eco-game-stage.eco-game-fullscreen:before{top:18%;transform:rotate(-7deg)}
-        body.memory-game-playing #eco-game-stage.eco-game-fullscreen:after{
-            content:"🌱   🦋   ☁️   🌸   🍀   ✨";top:70%;opacity:.18;animation-duration:31s;animation-direction:alternate-reverse
-        }
-        @keyframes ecoMemoryFloat{0%{translate:-2% 0;rotate:-5deg}50%{translate:2% 12px;rotate:3deg}100%{translate:-1% -8px;rotate:-2deg}}
-        body.memory-game-playing #eco-game-stage.eco-game-fullscreen>*{position:relative;z-index:1}
-        body.memory-game-playing #eco-game-stage #eco-memory-grid{
-            width:min(94vw,900px)!important;max-width:900px!important;margin:8px auto 14px!important;
-            grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:clamp(10px,1.8vw,18px)!important
-        }
-        body.memory-game-playing #eco-game-stage #eco-memory-grid .eco-memory-card{
-            width:100%!important;aspect-ratio:.72!important;min-height:clamp(125px,19vh,185px)!important
-        }
-        body.memory-game-playing #eco-game-stage #eco-memory-grid .eco-memory-inner{
-            border:2px solid #8c7355!important;box-shadow:0 5px 0 #6b5743,0 11px 19px #34291f45!important
-        }
-        body.memory-game-playing #eco-game-stage #eco-memory-grid .eco-memory-card.matched .eco-card-front,
-        body.memory-game-playing #eco-game-stage #eco-memory-grid .eco-memory-card.matched .eco-memory-front{
-            background:linear-gradient(145deg,#e7f2df,#c9dfbd)!important;border-color:#54794f!important;color:#3e5038!important
-        }
-        @media(max-width:520px){
-            body.memory-game-playing #eco-game-stage #eco-memory-grid{width:min(92vw,430px)!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:12px!important}
-            body.memory-game-playing #eco-game-stage #eco-memory-grid .eco-memory-card{min-height:clamp(125px,18vh,165px)!important;aspect-ratio:.82!important}
-        }
-        @media(prefers-reduced-motion:reduce){body.memory-game-playing #eco-game-stage:before,body.memory-game-playing #eco-game-stage:after{animation:none!important}}
-
-        /* Memory Match layout repair: stack the fullscreen stage and keep cards compact */
-        #eco-game-stage.eco-game-fullscreen{
-            flex-direction:column!important;
-            align-items:stretch!important;
-            justify-content:flex-start!important;
-        }
-        #eco-game-stage.eco-game-fullscreen #eco-game-play-area{
-            flex:1 1 auto!important;
-            min-width:0!important;
-        }
-        body.memory-game-playing #eco-game-stage.eco-game-fullscreen{
-            overflow:hidden!important;
-        }
-        body.memory-game-playing #eco-game-stage .eco-memory-playfield{
-            width:100%!important;
-            min-height:0!important;
-            height:auto!important;
-            margin:0 auto!important;
-            padding:6px 12px 10px!important;
-            border:0!important;
-            border-radius:0!important;
-            box-shadow:none!important;
-            background:transparent!important;
-        }
-        body.memory-game-playing #eco-game-stage .eco-memory-status{
-            width:min(94vw,760px)!important;
-            max-width:760px!important;
-            margin:0 auto 8px!important;
-        }
-        body.memory-game-playing #eco-game-stage #eco-memory-grid{
-            display:grid!important;
-            width:min(94vw,760px)!important;
-            max-width:760px!important;
-            grid-template-columns:repeat(4,minmax(0,1fr))!important;
-            gap:clamp(7px,1.5vw,13px)!important;
-            margin:8px auto 10px!important;
-        }
-        body.memory-game-playing #eco-game-stage #eco-memory-grid .eco-memory-card{
-            width:100%!important;
-            min-width:0!important;
-            min-height:0!important;
-            height:auto!important;
-            max-height:150px!important;
-            aspect-ratio:1.2!important;
-        }
-        body.memory-game-playing #eco-game-stage #eco-memory-grid .eco-memory-inner{
-            position:absolute!important;
-            inset:0!important;
-        }
-        body.memory-game-playing #eco-game-stage .eco-memory-feedback{
-            width:min(94vw,760px)!important;
-            max-width:760px!important;
-            margin:8px auto 0!important;
-        }
-        @media(max-width:600px){
-            body.memory-game-playing #eco-game-stage .eco-memory-playfield{padding:4px 8px 8px!important}
-            body.memory-game-playing #eco-game-stage #eco-memory-grid{
-                width:94vw!important;
-                gap:7px!important;
-                grid-template-columns:repeat(4,minmax(0,1fr))!important;
-            }
-            body.memory-game-playing #eco-game-stage #eco-memory-grid .eco-memory-card{
-                min-height:0!important;
-                max-height:100px!important;
-                aspect-ratio:1.12!important;
-            }
-        }
-
-
-        /* Memory Match board: balanced five-column desktop layout. */
+        /* Memory Match: one authoritative responsive card grid (replaces conflicting legacy rules). */
         body.memory-game-playing #eco-game-stage #eco-memory-grid{
             display:grid!important;
             grid-template-columns:repeat(5,minmax(0,1fr))!important;
-            grid-auto-rows:clamp(92px,14vh,122px)!important;
+            grid-auto-rows:clamp(104px,15vh,132px)!important;
+            width:min(92vw,900px)!important;
+            max-width:900px!important;
+            gap:18px!important;
             align-items:stretch!important;
             justify-items:stretch!important;
-            column-gap:18px!important;
-            row-gap:20px!important;
-            width:min(94vw,900px)!important;
-            max-width:900px!important;
-            height:auto!important;
-            margin:12px auto!important;
+            margin:14px auto!important;
         }
         body.memory-game-playing #eco-game-stage #eco-memory-grid .eco-memory-card{
             display:block!important;
@@ -685,32 +580,32 @@
             min-height:0!important;
             max-height:none!important;
             aspect-ratio:auto!important;
-            align-self:stretch!important;
-            justify-self:stretch!important;
             margin:0!important;
             padding:0!important;
             transform:none!important;
         }
-        body.memory-game-playing #eco-game-stage #eco-memory-grid .eco-memory-inner{
+        body.memory-game-playing #eco-game-stage #eco-memory-grid .eco-memory-inner,
+        body.memory-game-playing #eco-game-stage #eco-memory-grid .eco-memory-face{
             position:absolute!important;
             display:block!important;
             inset:0!important;
             width:100%!important;
             height:100%!important;
         }
-        body.memory-game-playing #eco-game-stage #eco-memory-grid .eco-memory-face{
-            position:absolute!important;
-            inset:0!important;
-            width:100%!important;
-            height:100%!important;
+        @media(max-width:900px){
+            body.memory-game-playing #eco-game-stage #eco-memory-grid{
+                grid-template-columns:repeat(4,minmax(0,1fr))!important;
+                grid-auto-rows:clamp(90px,13vh,112px)!important;
+                gap:12px!important;
+                width:min(94vw,720px)!important;
+            }
         }
         @media(max-width:600px){
             body.memory-game-playing #eco-game-stage #eco-memory-grid{
-                grid-template-columns:repeat(4,minmax(0,1fr))!important;
-                grid-auto-rows:clamp(76px,12vh,96px)!important;
-                column-gap:10px!important;
-                row-gap:14px!important;
-                width:94vw!important;
+                grid-template-columns:repeat(2,minmax(0,1fr))!important;
+                grid-auto-rows:clamp(120px,17vh,158px)!important;
+                gap:12px!important;
+                width:min(92vw,440px)!important;
             }
         }
 
@@ -2983,7 +2878,7 @@ document.addEventListener("DOMContentLoaded",()=>{
 
     <script src="./eco-games.js?v=17"></script>
     <script src="./memory-tips-data.js?v=17"></script>
-    <script src="./memory-game.js?v=19"></script>
+    <script src="./memory-game.js?v=20"></script>
 
 
 <style id="eco-game-font-reset">
