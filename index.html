@@ -662,19 +662,19 @@
         }
 
 
-        /* Hard fix: give every memory card a real grid cell and fixed row height */
+        /* Memory Match board: balanced five-column desktop layout. */
         body.memory-game-playing #eco-game-stage #eco-memory-grid{
             display:grid!important;
-            grid-template-columns:repeat(4,minmax(0,1fr))!important;
-            grid-auto-rows:clamp(82px,14vh,116px)!important;
+            grid-template-columns:repeat(5,minmax(0,1fr))!important;
+            grid-auto-rows:clamp(92px,14vh,122px)!important;
             align-items:stretch!important;
             justify-items:stretch!important;
-            column-gap:20px!important;
-            row-gap:40px!important;
-            width:min(94vw,680px)!important;
-            max-width:680px!important;
+            column-gap:18px!important;
+            row-gap:20px!important;
+            width:min(94vw,900px)!important;
+            max-width:900px!important;
             height:auto!important;
-            margin:8px auto!important;
+            margin:12px auto!important;
         }
         body.memory-game-playing #eco-game-stage #eco-memory-grid .eco-memory-card{
             display:block!important;
@@ -707,9 +707,9 @@
         @media(max-width:600px){
             body.memory-game-playing #eco-game-stage #eco-memory-grid{
                 grid-template-columns:repeat(4,minmax(0,1fr))!important;
-                grid-auto-rows:clamp(72px,12vh,94px)!important;
-                column-gap:17px!important;
-                row-gap:30px!important;
+                grid-auto-rows:clamp(76px,12vh,96px)!important;
+                column-gap:10px!important;
+                row-gap:14px!important;
                 width:94vw!important;
             }
         }
