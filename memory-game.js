@@ -60,6 +60,7 @@
       matched.push(a,b);ecoMemoryMatched=matched.slice();ecoGameScore=(ecoGameScore||0)+1;
       [a,b].forEach(n=>{buttons[n].classList.add("matched");buttons[n].disabled=true;});
       const unlocked=readUnlocked(),isNew=!unlocked.includes(first.id);
+      if(typeof ecoGameLearned!=="undefined")ecoGameLearned.push(vi?first.vi:first.en);
       if(isNew){
         unlocked.push(first.id);saveUnlocked(unlocked);
         try{currentXP+=2;saveUserData();updateMascotLevel();}catch(e){}
