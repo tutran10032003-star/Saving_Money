@@ -1852,6 +1852,40 @@
             });
             return out;
         }
+        function parseBillBandsFromWords(words){
+            const usable=(words||[]).filter(w=>w&&w.bbox&&String(w.text||"").trim());
+            if(!usable.length)return {};
+            const heights=usable.map(w=>Math.max(1,w.bbox.y1-w.bbox.y0)).sort((a,b)=>a-b);
+            const tolerance=Math.max(4,heights[Math.floor(heights.length/2)]*.8);
+            const sorted=usable.slice().sort((a,b)=>((a.bbox.y0+a.bbox.y1)/2)-((b.bbox.y0+b.bbox.y1)/2));
+            const rows=[];
+            sorted.forEach(w=>{
+                const cy=(w.bbox.y0+w.bbox.y1)/2;
+                let row=rows.find(r=>Math.abs(r.cy-cy)<=tolerance);
+                if(!row){row={cy,words:[]};rows.push(row);}
+                row.words.push(w);
+                row.cy=row.words.reduce((sum,x)=>sum+(x.bbox.y0+x.bbox.y1)/2,0)/row.words.length;
+            });
+            const out={};
+            rows.forEach(row=>{
+                const line=row.words.slice().sort((a,b)=>a.bbox.x0-b.bbox.x0);
+                const text=line.map(w=>String(w.text).trim()).join(" ");
+                const match=text.match(/\\b(day|peak|night)\\b/i);
+                if(!match)return;
+                const key=match[1].toLowerCase();
+                if(out[key])return;
+                const tokens=line.map(w=>String(w.text).trim().replace(/[€£]/g,""));
+                const priceIndex=tokens.findIndex(t=>/^0[.,]\\d{3,6}$/.test(t));
+                if(priceIndex<1)return;
+                const number=t=>/^\\d{1,6}(?:[.,]\\d+)?$/.test(t)?Number(t.replace(",",".")):NaN;
+                let kwh=null;
+                for(let i=priceIndex-1;i>=0;i--){const n=number(tokens[i]);if(Number.isFinite(n)&&n>=1){kwh=n;break;}}
+                let amount=null;
+                for(let i=priceIndex+1;i<tokens.length;i++){if(/^\\d{1,5}[.,]\\d{2}$/.test(tokens[i]))amount=number(tokens[i]);}
+                if(kwh!==null)out[key]={kwh,price:number(tokens[priceIndex]),amount};
+            });
+            return out;
+        }
         function validBillBand(r){return !!r&&Number.isFinite(r.kwh)&&r.kwh>=0&&Number.isFinite(r.price)&&r.price>0&&r.amount!==null&&Number.isFinite(r.amount)&&Math.abs(r.kwh*r.price-r.amount)<=0.06;}
         function scoreBillBands(o){return Object.values(o||{}).filter(validBillBand).length;}
         function billBandsRect(words,W,H,above,below){
@@ -1878,7 +1912,7 @@
             return out;
         }
         async function readBillBandsFromImage(worker,file,words,fullText){
-            const candidates=[parseBillBands(fullText)];
+            const candidates=[parseBillBands(fullText),parseBillBandsFromWords(words)];
             if(scoreBillBands(mergeBillBands(candidates))<3){
                 try{
                     const bmp=await createImageBitmap(file),W=bmp.width,H=bmp.height;bmp.close();
