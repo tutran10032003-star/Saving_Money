@@ -21,7 +21,6 @@
       const AudioContextClass=window.AudioContext||window.webkitAudioContext;
       if(!AudioContextClass)return null;
       if(!memoryAudioContext)memoryAudioContext=new AudioContextClass();
-      if(memoryAudioContext.state==="suspended")memoryAudioContext.resume().catch(()=>{});
       return memoryAudioContext;
     }catch(e){return null;}
   }
@@ -38,38 +37,49 @@
       osc.start(start);osc.stop(start+duration+0.015);
     }catch(e){}
   }
-  let memoryMusicEnabled=true,memoryMusicTimer=null,memoryMusicStep=0,memoryMusicGain=null;
+  let memoryMusicEnabled=true,memoryMusicTimer=null,memoryMusicStep=0,memoryMusicGain=null,memoryMusicStarting=false;
   function updateMemoryMusicButton(){
     const button=document.getElementById("memory-music-toggle");
     if(button)button.textContent=memoryMusicEnabled?text("♫ Music: On","♫ Nhạc nền: Bật"):text("♫ Music: Off","♫ Nhạc nền: Tắt");
   }
   function startMemoryMusic(){
-    if(!memoryMusicEnabled||memoryMusicTimer)return;
+    if(!memoryMusicEnabled||memoryMusicTimer||memoryMusicStarting)return;
     const ctx=getMemoryAudio();if(!ctx)return;
+    if(ctx.state==="suspended"){
+      memoryMusicStarting=true;
+      ctx.resume().then(()=>{memoryMusicStarting=false;if(memoryMusicEnabled)startMemoryMusic();}).catch(()=>{memoryMusicStarting=false;});
+      return;
+    }
     try{
-      if(!memoryMusicGain){memoryMusicGain=ctx.createGain();memoryMusicGain.gain.value=0;memoryMusicGain.connect(ctx.destination);}
+      if(!memoryMusicGain){memoryMusicGain=ctx.createGain();memoryMusicGain.gain.value=0.0001;memoryMusicGain.connect(ctx.destination);}
       memoryMusicGain.gain.cancelScheduledValues(ctx.currentTime);
-      memoryMusicGain.gain.setTargetAtTime(0.2,ctx.currentTime,0.18);
+      memoryMusicGain.gain.setTargetAtTime(0.42,ctx.currentTime,0.25);
+      // A light, cheerful major-key loop with bass notes and a soft off-beat pulse.
       const melody=[523.25,659.25,783.99,659.25,587.33,698.46,880,698.46,523.25,659.25,783.99,1046.5,880,783.99,659.25,587.33];
+      const bass=[130.81,130.81,164.81,164.81,146.83,146.83,174.61,174.61];
       memoryMusicStep=0;
-      const playNote=()=>{
-        if(!memoryMusicEnabled||!memoryMusicGain)return;
-        const now=ctx.currentTime,frequency=melody[memoryMusicStep%melody.length];
-        const osc=ctx.createOscillator(),gain=ctx.createGain();
-        osc.type="sine";osc.frequency.setValueAtTime(frequency,now);
+      const playNote=(frequency,duration,volume,wave)=>{
+        const now=ctx.currentTime,osc=ctx.createOscillator(),gain=ctx.createGain();
+        osc.type=wave||"sine";osc.frequency.setValueAtTime(frequency,now);
         gain.gain.setValueAtTime(0.0001,now);
-        gain.gain.exponentialRampToValueAtTime(0.12,now+0.025);
-        gain.gain.exponentialRampToValueAtTime(0.0001,now+0.24);
-        osc.connect(gain);gain.connect(memoryMusicGain);
-        osc.start(now);osc.stop(now+0.26);memoryMusicStep++;
+        gain.gain.exponentialRampToValueAtTime(volume,now+0.025);
+        gain.gain.exponentialRampToValueAtTime(0.0001,now+duration);
+        osc.connect(gain);gain.connect(memoryMusicGain);osc.start(now);osc.stop(now+duration+0.02);
       };
-      playNote();memoryMusicTimer=setInterval(playNote,320);
-    }catch(e){}
+      const tick=()=>{
+        if(!memoryMusicEnabled||!memoryMusicGain)return;
+        const n=memoryMusicStep;
+        playNote(melody[n%melody.length],0.25,0.12,"sine");
+        if(n%2===0)playNote(bass[Math.floor(n/2)%bass.length],0.42,0.075,"triangle");
+        memoryMusicStep++;
+      };
+      tick();memoryMusicTimer=setInterval(tick,300);
+    }catch(e){memoryMusicTimer=null;}
   }
   function stopMemoryMusic(){
     if(memoryMusicTimer){clearInterval(memoryMusicTimer);memoryMusicTimer=null;}
     if(memoryMusicGain&&memoryAudioContext){
-      try{memoryMusicGain.gain.cancelScheduledValues(memoryAudioContext.currentTime);memoryMusicGain.gain.setTargetAtTime(0,memoryAudioContext.currentTime,0.08);}catch(e){}
+      try{memoryMusicGain.gain.cancelScheduledValues(memoryAudioContext.currentTime);memoryMusicGain.gain.setTargetAtTime(0.0001,memoryAudioContext.currentTime,0.08);}catch(e){}
     }
   }
   window.toggleMemoryMusic=function(){
@@ -77,6 +87,13 @@
     if(memoryMusicEnabled)startMemoryMusic();else stopMemoryMusic();
     updateMemoryMusicButton();
   };
+  function playMemoryWinSound(){
+    playMemoryTone(523.25,0,0.18,0.045,"sine");
+    playMemoryTone(659.25,0.13,0.18,0.045,"sine");
+    playMemoryTone(783.99,0.26,0.2,0.05,"sine");
+    playMemoryTone(1046.5,0.42,0.42,0.055,"sine");
+    playMemoryTone(1318.51,0.58,0.48,0.04,"sine");
+  }
   function playMemoryFlipSound(){
     playMemoryTone(590,0,0.075,0.022,"triangle");
   }
@@ -152,6 +169,7 @@
   window.renderMemoryGame=function(){window.showMemoryHome();};
   window.flipMemoryCard=function(i){
     if(locked||matched.includes(i)||open.includes(i))return;
+    startMemoryMusic();
     const card=deck[i],buttons=document.querySelectorAll("#eco-memory-grid .eco-memory-card");
     if(!card||!buttons[i])return;
     const vi=language()==="vi",button=buttons[i];playMemoryFlipSound();button.classList.add("flipped");button.setAttribute("aria-label",vi?card.categoryName.vi:card.categoryName.en);open.push(i);
@@ -192,6 +210,7 @@
       const isMemory=typeof activeEcoGame!=="undefined"&&activeEcoGame==="memory";
       if(!isMemory){return originalFinish.apply(this,arguments);}
       stopMemoryMusic();
+      playMemoryWinSound();
       originalFinish.apply(this,arguments);
       const area=document.getElementById("eco-game-play-area");if(!area)return;
       const done=readLevels();if(!done.includes(-activeLevel))done.push(-activeLevel);
