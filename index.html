@@ -757,7 +757,35 @@
         body.memory-game-playing #eco-game-stage.eco-game-fullscreen .eco-playfield{height:auto!important;min-height:max-content!important;overflow:visible!important}
         body.memory-game-playing #eco-game-stage.eco-game-fullscreen .eco-game-toolbar{position:fixed!important;z-index:2147483001!important}
 
-</style>
+
+        /* Eco Games: playful FORTE graffiti-style display lettering */
+        #eco-game-hub-panel h2,
+        #eco-game-grid .eco-game-card strong,
+        #eco-game-stage .eco-playfield h3,
+        #eco-game-stage .eco-playfield h4,
+        #eco-game-stage .eco-game-scene h4,
+        #eco-game-stage .eco-game-scene>div>p:first-child,
+        #eco-game-stage .eco-playfield>div:first-child>span:first-child {
+            font-family:"Forte","Cooper Black","Comic Sans MS",cursive!important;
+            font-weight:900!important;
+            letter-spacing:.35px!important;
+            color:#ff4f9a!important;
+            background:linear-gradient(100deg,#ff4f9a 0%,#ff9f32 24%,#ffe34f 45%,#43c9a2 67%,#4b8dff 84%,#a66bff 100%);
+            -webkit-background-clip:text!important;
+            background-clip:text!important;
+            -webkit-text-fill-color:transparent!important;
+            -webkit-text-stroke:1px #fff!important;
+            paint-order:stroke fill;
+            filter:drop-shadow(2px 3px 0 #633d83) drop-shadow(0 5px 5px #30204455);
+            text-shadow:2px 3px 0 #633d83, 0 0 8px #ffb5d8aa!important;
+        }
+        #eco-game-grid .eco-game-card strong{font-size:clamp(18px,2.3vw,23px)!important;line-height:1.12}
+        #eco-game-stage .eco-playfield h3,
+        #eco-game-stage .eco-playfield h4,
+        #eco-game-stage .eco-game-scene h4{font-size:clamp(20px,3vw,28px)!important;line-height:1.15}
+        #eco-game-stage .eco-playfield>div:first-child>span:first-child{font-size:clamp(16px,2.2vw,21px)!important}
+
+    </style>
 </head>
 
 <body class="min-h-screen flex flex-col justify-between selection:bg-amber-200">
