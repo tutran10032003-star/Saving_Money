@@ -1869,10 +1869,9 @@
             const totalInput=_bbEl("edit-bill-kwh"),total=totalInput&&totalInput.value!==""?Number(totalInput.value):null;
             const good={},bad=[],values={};
             BILL_BANDS.forEach(([key,,,defaultPrice])=>{const row=found&&found[key];if(validBillBand(row))good[key]=row;else bad.push(key);values[key]={kwh:good[key]?good[key].kwh:null,price:good[key]?good[key].price:defaultPrice};});
-            let derived=null;
-            if(bad.length===1&&total!==null&&Number.isFinite(total)){const rest=Object.keys(good).reduce((n,key)=>n+good[key].kwh,0),missing=Math.round((total-rest)*100)/100;if(missing>=0){values[bad[0]].kwh=missing;derived=bad[0];}}
+            // Missing time bands stay blank: never infer a band from the bill total.
             BILL_BANDS.forEach(([key])=>{const k=_bbEl("bb-kwh-"+key),p=_bbEl("bb-price-"+key);if(k)k.value=values[key].kwh===null?"":values[key].kwh;if(p)p.value=values[key].price;});
-            updateBillBands();return{good:Object.keys(good).length,derived};
+            updateBillBands();return{good:Object.keys(good).length,derived:null};
         }
         async function runBillOCR(){
             const files=[billImageFiles.total,billImageFiles.breakdown].filter(Boolean),status=_bbEl("bill-ocr-status"),button=_bbEl("bill-ocr-button");
@@ -1893,31 +1892,39 @@
                     if(detected.ok)window.currentBillDonutSegments=detected.segments;
                     else console.warn("Image B distribution reading:",detected.reason||"not detected");
                 }
-                const parsed=parseBillOcrText(raw);
-                const imageBParsed=breakdownResult?parseBillOcrText(breakdownResult.text):{};
                 const imageAParsed=totalResult?parseBillOcrText(totalResult.text):{};
-                const totalEnergyKwh=imageBParsed.kwh!==undefined?imageBParsed.kwh:(imageAParsed.kwh!==undefined?imageAParsed.kwh:parsed.kwh);
-                if(parsed.amount!==undefined)_bbEl("edit-bill-amount").value=parsed.amount.toFixed(2);
-                if(totalEnergyKwh!==undefined){
-                    _bbEl("edit-bill-kwh").value=totalEnergyKwh;
-                    const readout=_bbEl("bill-total-energy-readout");if(readout)readout.textContent=Number(totalEnergyKwh).toLocaleString();
+                const imageBParsed=breakdownResult?parseBillOcrText(breakdownResult.text):{};
+                const parsed=parseBillOcrText(raw);
+                // Image A is authoritative for bill amount, billing dates and total kWh.
+                // Image B is the detailed energy page; use it only as a fallback for summary fields.
+                const billData={
+                    amount:imageAParsed.amount!==undefined?imageAParsed.amount:imageBParsed.amount!==undefined?imageBParsed.amount:parsed.amount,
+                    kwh:imageAParsed.kwh!==undefined?imageAParsed.kwh:imageBParsed.kwh!==undefined?imageBParsed.kwh:parsed.kwh,
+                    start:imageAParsed.start||imageBParsed.start||parsed.start,
+                    end:imageAParsed.end||imageBParsed.end||parsed.end,
+                    month:imageAParsed.month||imageBParsed.month||parsed.month,
+                    year:imageAParsed.year||imageBParsed.year||parsed.year
+                };
+                if(billData.amount!==undefined)_bbEl("edit-bill-amount").value=Number(billData.amount).toFixed(2);
+                if(billData.kwh!==undefined){
+                    _bbEl("edit-bill-kwh").value=billData.kwh;
+                    const readout=_bbEl("bill-total-energy-readout");if(readout)readout.textContent=Number(billData.kwh).toLocaleString();
                 }
-                if(parsed.start)_bbEl("edit-bill-start").value=parsed.start;
-                if(parsed.end)_bbEl("edit-bill-end").value=parsed.end;
-                if(parsed.month)_bbEl("edit-bill-month").value=parsed.month;else if(parsed.start){const d=new Date(parsed.start+"T12:00:00");_bbEl("edit-bill-month").value=d.toLocaleString("en",{month:"long"});if(!parsed.year)_bbEl("edit-bill-year").value=d.getFullYear();}
-                if(parsed.year)_bbEl("edit-bill-year").value=parsed.year;
+                if(billData.start)_bbEl("edit-bill-start").value=billData.start;
+                if(billData.end)_bbEl("edit-bill-end").value=billData.end;
+                if(billData.month)_bbEl("edit-bill-month").value=billData.month;else if(billData.start){const d=new Date(billData.start+"T12:00:00");_bbEl("edit-bill-month").value=d.toLocaleString("en",{month:"long"});if(!billData.year)_bbEl("edit-bill-year").value=d.getFullYear();}
+                if(billData.year)_bbEl("edit-bill-year").value=billData.year;
                 let bandMessage="";
-                if(totalResult){
-                    const found=await readBillBandsFromImage(worker,totalResult.file,totalResult.words,totalResult.text),result=applyBillBands(found),sum=BILL_BANDS.reduce((n,[key])=>n+(validBillBand(found[key])?found[key].kwh:0),0),kwhInput=_bbEl("edit-bill-kwh");
-                    if(result.good===3&&kwhInput&&kwhInput.value==="")kwhInput.value=sum;
+                if(breakdownResult){
+                    // Day / Peak / Night rows belong to Image B, not the bill-summary page.
+                    const found=await readBillBandsFromImage(worker,breakdownResult.file,breakdownResult.words,breakdownResult.text),result=applyBillBands(found);
                     updateBillBands();
                     if(result.good===3)bandMessage=" ✓ Đọc được bảng Day/Peak/Night.";
-                    else if(result.derived)bandMessage=" Bảng khung giờ: dòng "+result.derived+" được suy ra từ tổng kWh — kiểm tra lại nhé.";
                     else if(result.good>0)bandMessage=" Đọc được một phần bảng khung giờ — kiểm tra và nhập nốt.";
-                    else bandMessage=" Chưa đọc được bảng khung giờ. Cần ảnh trang chi tiết bill hoặc nhập tay 3 số kWh nhé.";
+                    else bandMessage=" Chưa đọc được bảng khung giờ từ ảnh B. Kiểm tra ảnh trang chi tiết hoặc nhập tay.";
                 }
                 updateBillPerPerson();
-                const filled=[parsed.start,parsed.end,parsed.amount!==undefined,parsed.kwh!==undefined,parsed.month,parsed.year].filter(Boolean).length;
+                const filled=[billData.start,billData.end,billData.amount!==undefined,billData.kwh!==undefined,billData.month,billData.year].filter(Boolean).length;
                 status.textContent=(filled?"Đã tự điền "+filled+" trường.":"Chưa tự điền được trường nào.")+bandMessage;
             }catch(error){console.error(error);status.textContent="OCR gặp lỗi — vui lòng nhập tay.";}
             finally{if(worker)await worker.terminate();button.disabled=false;button.textContent="✨ Đọc lại ảnh";}
