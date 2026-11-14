@@ -1,4 +1,4 @@
-const CACHE_NAME = "eco-buddy-v10";
+const CACHE_NAME = "eco-buddy-v11";
 
 const APP_FILES = [
   "/Saving_Money/",
