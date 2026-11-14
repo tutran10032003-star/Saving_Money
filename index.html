@@ -1597,6 +1597,22 @@
             if(w)w.textContent=!hasValues?"Chưa có ước tính — hãy tải ảnh phân bổ rõ nét rồi chạy OCR.":(Math.abs(total-100)<0.11?"✓ Tổng phân bổ bằng 100%.":"Tỷ lệ phân bổ phải bằng 100%.");
             renderBillDonut();
         }
+        function renderBillTotalPreviews(){
+            const preview=document.getElementById("bill-preview-img");
+            if(!preview)return;
+            preview.innerHTML=(billImageUrls.total||[]).map((url,index)=>'<div class="min-w-0 relative"><img src="'+url+'" alt="Bill page '+(index+1)+'" class="max-h-40 w-full object-contain rounded-xl border"><p class="text-[10px] text-center text-[#7a6452] mt-1">Trang '+(index+1)+'</p><button type="button" onclick="removeBillTotalImage('+index+')" class="mt-1 w-full px-2 py-1 rounded-lg bg-[#f3e2dc] text-[#8b4035] text-[11px] font-bold">✕ Xoá ảnh này</button></div>').join("");
+        }
+        function removeBillTotalImage(index){
+            const files=billImageFiles.total||[],urls=billImageUrls.total||[];
+            if(index<0||index>=files.length)return;
+            if(urls[index])URL.revokeObjectURL(urls[index]);
+            billImageFiles.total=files.filter((_,i)=>i!==index);
+            billImageUrls.total=urls.filter((_,i)=>i!==index);
+            renderBillTotalPreviews();
+            const input=document.getElementById("bill-img-file");if(input)input.value="";
+            document.getElementById("upload-status-text").textContent=billImageFiles.total.length?"Đã xoá ảnh. Bạn có thể chọn ảnh khác.":"Đã xoá ảnh. Hãy tải ảnh hoá đơn lên.";
+            document.getElementById("bill-ocr-status").textContent="Có thay đổi ảnh — cần đọc lại";
+        }
         function previewUploadedBill(event,type){
             type=type||"total";const selected=Array.from(event.target.files||[]);if(!selected.length)return;
             if(selected.some(file=>!file.type.startsWith("image/"))){alert("Please choose image files.");event.target.value="";return;}
@@ -1606,8 +1622,7 @@
                 billImageFiles.total=combined;
                 (billImageUrls.total||[]).forEach(url=>URL.revokeObjectURL(url));
                 billImageUrls.total=combined.map(file=>URL.createObjectURL(file));
-                const preview=document.getElementById("bill-preview-img");
-                if(preview)preview.innerHTML=billImageUrls.total.map((url,index)=>'<div class="min-w-0"><img src="'+url+'" alt="Bill page '+(index+1)+'" class="max-h-40 w-full object-contain rounded-xl border"><p class="text-[10px] text-center text-[#7a6452] mt-1">Trang '+(index+1)+'</p></div>').join("");
+                renderBillTotalPreviews();
                 event.target.value="";
             }else{
                 const file=selected[0];billImageFiles.breakdown=file;
