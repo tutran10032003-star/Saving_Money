@@ -2885,6 +2885,10 @@ function applyAppLanguage(){
 }
 function renderBillUploadLanguage(){
  const target=lang();
+ const uploadStatus=document.getElementById("upload-status-text");
+ if(uploadStatus && (uploadStatus.textContent.includes("Ảnh đã sẵn sàng") || uploadStatus.textContent.includes("Images ready. Run OCR"))){
+  uploadStatus.textContent=target==="vi"?"Ảnh đã sẵn sàng. Bấm đọc OCR hoặc nhập tay rồi lưu.":"Images ready. Run OCR or enter the values manually, then save.";
+ }
  const button=document.getElementById("bill-ocr-button");
  const status=document.getElementById("bill-ocr-status");
  if(button)button.textContent=target==="vi"?"✨ Đọc thông tin từ ảnh đã tải":"✨ Read information from uploaded images";
